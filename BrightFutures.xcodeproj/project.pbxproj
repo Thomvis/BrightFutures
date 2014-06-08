@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E9DF081B194470060083F7F2 /* BrightFutures.h in Headers */ = {isa = PBXBuildFile; fileRef = E9DF081A194470060083F7F2 /* BrightFutures.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; };
 		E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */; };
 		E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
@@ -33,7 +32,6 @@
 /* Begin PBXFileReference section */
 		E9DF0815194470060083F7F2 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF0819194470060083F7F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E9DF081A194470060083F7F2 /* BrightFutures.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrightFutures.h; sourceTree = "<group>"; };
 		E9DF0820194470060083F7F2 /* BrightFuturesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrightFuturesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF0826194470060083F7F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
@@ -87,7 +85,6 @@
 				E9DF0832194470190083F7F2 /* Future.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
 				E9DF0834194470190083F7F2 /* Queue.swift */,
-				E9DF081A194470060083F7F2 /* BrightFutures.h */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFutures;
@@ -125,7 +122,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9DF081B194470060083F7F2 /* BrightFutures.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,6 +421,7 @@
 				E9DF082D194470060083F7F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9DF082E194470060083F7F2 /* Build configuration list for PBXNativeTarget "BrightFuturesTests" */ = {
 			isa = XCConfigurationList;
@@ -433,6 +430,7 @@
 				E9DF0830194470060083F7F2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
