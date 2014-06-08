@@ -71,5 +71,14 @@ class Future<T: Any>
 
 - I don't particularly like how the error handling is done. It is now an obligatory inout parameter of every future task closure.
 
-# Feedback
-I am looking forward to your feedback. I am very much still learning Swift. We all are. Let me know how I could improve BrightFutures by creating an issue, a pull request or by reaching out on twitter. I'm @thomvis88.
+## Credits
+
+BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am iOS Engineer at [Touchwonders](http://www.touchwonders.com/).
+
+## Contact
+
+I am looking forward to your feedback. I am very much still learning Swift. We all are. Let me know how I could improve BrightFutures by creating an issue, a pull request or by reaching out on twitter. I'm [@thomvis88](https://twitter.com/thomvis88).
+
+## License
+
+BrightFutures is available under the MIT license. See the LICENSE file for more info.
