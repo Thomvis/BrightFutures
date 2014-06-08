@@ -14,7 +14,7 @@ let f = future { error in
   CalculationResult(fibonacci(10))
 }
 
-f.onSuccess { value
+f.onSuccess { value in
   // value will be the CalculationResult containing 55
 }
 ```
