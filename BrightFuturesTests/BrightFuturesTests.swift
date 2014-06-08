@@ -95,7 +95,7 @@ class BrightFuturesTests: XCTestCase {
     
     func testControlFlowSyntax() {
         
-        let f = future {
+        let f = future { _ in
             ComputationResult(fibonacci(10))
         }
         
@@ -111,7 +111,7 @@ class BrightFuturesTests: XCTestCase {
     
     func testControlFlowSyntaxWithError() {
         
-        let f : Future<ComputationResult> = future { (inout error: NSError?) -> ComputationResult? in
+        let f : Future<ComputationResult> = future { error in
             error = NSError(domain: "NaN", code: 0, userInfo: nil)
             return nil
         }
@@ -141,6 +141,20 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testCustomExecutionContext() {
+        let f = future({ _ in
+            ComputationResult(fibonacci(10))
+        }, executionContext: ImmediateExecutionContext())
+        
+        let e = self.expectationWithDescription("immediate success expectation")
+        
+        f.onSuccess { value in
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(0, handler: nil)
     }
 }
 

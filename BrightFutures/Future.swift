@@ -41,15 +41,6 @@ func future<T: AnyObject>(task: (inout NSError?) -> T?, executionContext: Execut
     return promise.future
 }
 
-func future<T: AnyObject>(task: () -> T?, executionContext: ExecutionContext = defaultExecutionContext) -> Future<T> {
-    
-    let wrappedTask : (inout NSError?) -> T? = { error in
-        return task()
-    }
-    
-    return future(wrappedTask)
-}
-
 class Future<T: AnyObject> {
     typealias Callback = (future: Future<T>) -> ()
 
