@@ -10,6 +10,14 @@
 		E9DF081B194470060083F7F2 /* BrightFutures.h in Headers */ = {isa = PBXBuildFile; fileRef = E9DF081A194470060083F7F2 /* BrightFutures.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; };
 		E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */; };
+		E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
+		E9DF0836194470190083F7F2 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
+		E9DF0837194470190083F7F2 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
+		E9DF0838194470190083F7F2 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
+		E9DF0839194470F20083F7F2 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
+		E9DF083A194470F40083F7F2 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
+		E9DF083B194470F60083F7F2 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
+		E9DF083C194470F90083F7F2 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +37,10 @@
 		E9DF0820194470060083F7F2 /* BrightFuturesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrightFuturesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF0826194470060083F7F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
+		E9DF0831194470190083F7F2 /* ExecutionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContext.swift; sourceTree = "<group>"; };
+		E9DF0832194470190083F7F2 /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
+		E9DF0833194470190083F7F2 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		E9DF0834194470190083F7F2 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +83,10 @@
 		E9DF0817194470060083F7F2 /* BrightFutures */ = {
 			isa = PBXGroup;
 			children = (
+				E9DF0831194470190083F7F2 /* ExecutionContext.swift */,
+				E9DF0832194470190083F7F2 /* Future.swift */,
+				E9DF0833194470190083F7F2 /* Promise.swift */,
+				E9DF0834194470190083F7F2 /* Queue.swift */,
 				E9DF081A194470060083F7F2 /* BrightFutures.h */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
@@ -210,6 +226,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
+				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
+				E9DF0837194470190083F7F2 /* Promise.swift in Sources */,
+				E9DF0838194470190083F7F2 /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,7 +237,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9DF083C194470F90083F7F2 /* Queue.swift in Sources */,
+				E9DF083A194470F40083F7F2 /* Future.swift in Sources */,
+				E9DF0839194470F20083F7F2 /* ExecutionContext.swift in Sources */,
 				E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */,
+				E9DF083B194470F60083F7F2 /* Promise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +344,7 @@
 		E9DF082C194470060083F7F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -329,12 +354,14 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		E9DF082D194470060083F7F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
