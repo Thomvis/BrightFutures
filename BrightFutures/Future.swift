@@ -24,7 +24,7 @@ import Foundation
 
 
 
-func future<T: AnyObject>(task: (inout NSError?) -> T?, executionContext: ExecutionContext = defaultExecutionContext) -> Future<T> {
+func future<T: AnyObject>(task: (inout NSError?) -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
     var promise = Promise<T>();
     
     executionContext.execute {
@@ -58,6 +58,8 @@ class Future<T: AnyObject> {
     var result = TaskResult<T>()
     
     var callbacks: Array<Callback> = Array<Callback>()
+    
+    let defaultCallbackExecutionContext = QueueExecutionContext()
     
     class func succeeded(value: T?) -> Future<T> {
         let res = Future<T>();
@@ -126,10 +128,10 @@ class Future<T: AnyObject> {
         })!;
     }
     
-    func onComplete(callback: TaskResult<T> -> (), executionContext: ExecutionContext = defaultExecutionContext) {
+    func onComplete(callback: TaskResult<T> -> (), executionContext: ExecutionContext? = nil) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
-                executionContext.execute {
+                future.callbackExecutionContext(executionContext).execute {
                     callback(future.result)
                 }
             }
@@ -142,7 +144,7 @@ class Future<T: AnyObject> {
         }
     }
     
-    func onSuccess(callback: T? -> (), executionContext: ExecutionContext = defaultExecutionContext) {
+    func onSuccess(callback: T? -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ result in
             if result.state == .Success {
                 callback(result.value)
@@ -150,12 +152,12 @@ class Future<T: AnyObject> {
         }, executionContext: executionContext)
     }
     
-    func onFailure(callback: NSError -> (), executionContext: ExecutionContext = defaultExecutionContext) {
-        self.onComplete { result in
+    func onFailure(callback: NSError -> (), executionContext: ExecutionContext? = nil) {
+        self.onComplete({ result in
             if result.state == .Failure {
                 callback(result.error!)
             }
-        }
+        }, executionContext: executionContext)
     }
     
     func runCallbacks() {
@@ -168,6 +170,13 @@ class Future<T: AnyObject> {
         }
     }
     
+    func callbackExecutionContext(context: ExecutionContext?) -> ExecutionContext {
+        if let givenContext = context {
+            return givenContext
+        } else {
+            return self.defaultCallbackExecutionContext
+        }
+    }
     
 }
 

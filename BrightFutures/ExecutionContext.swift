@@ -22,7 +22,6 @@
 
 import Foundation
 
-let defaultExecutionContext : ExecutionContext = QueueExecutionContext()
 let mainExecutionContext : ExecutionContext = QueueExecutionContext(targetQueue: Queue.main)
 
 protocol ExecutionContext {
