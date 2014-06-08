@@ -73,7 +73,7 @@ class Future<T: Any>
 
 ## Credits
 
-BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am iOS Engineer at [Touchwonders](http://www.touchwonders.com/).
+BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am an iOS Engineer at [Touchwonders](http://www.touchwonders.com/).
 
 ## Contact
 
