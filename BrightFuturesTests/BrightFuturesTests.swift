@@ -149,6 +149,26 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(0, handler: nil)
     }
     
+    func testCompletionChaining() {
+        let e = self.expectationWithDescription("")
+        
+        future { _ in
+            fibonacci(10)
+        }.onComplete { size, error -> String in
+            if size > 5 {
+                return "large"
+            }
+            return "small"
+        }.onComplete { label, error -> Bool in
+            return label == "large"
+        }.onSuccess { (numberIsLarge: Bool) -> () in
+            XCTAssert(numberIsLarge)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testTransparentOnFailure() {
         let e = self.expectationWithDescription("")
         
@@ -187,10 +207,8 @@ class BrightFuturesTests: XCTestCase {
             if r % 2 == 0 {
                 return 2
             }
-            
             return nil
         }
-        
     }
 }
 

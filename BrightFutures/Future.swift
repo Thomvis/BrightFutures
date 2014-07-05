@@ -168,6 +168,12 @@ class Future<T> {
         return p.future
     }
     
+    func onComplete<U>(callback: (value:T?, error: NSError?) -> U, executionContext: ExecutionContext? = nil) -> Future<U> {
+        return self.onComplete({ (value, error) -> Future<U> in
+            return Future<U>.succeeded(callback(value: value, error: error))
+        }, executionContext: executionContext)
+    }
+    
     func onSuccess(callback: T -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if !error {
