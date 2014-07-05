@@ -123,7 +123,6 @@ class Future<T> {
         })!;
     }
     
-    // TODO: private
     func onComplete(callback: (value:T?, error: NSError?) -> (), executionContext: ExecutionContext? = nil) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
@@ -140,7 +139,6 @@ class Future<T> {
         }
     }
     
-    // TODO: private
     func onSuccess(callback: T? -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if !error {
@@ -149,7 +147,6 @@ class Future<T> {
         }, executionContext: executionContext)
     }
     
-    // TODO: private
     func onFailure(callback: NSError -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if error {
