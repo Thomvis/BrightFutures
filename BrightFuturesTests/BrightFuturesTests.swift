@@ -40,7 +40,7 @@ class BrightFuturesTests: XCTestCase {
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
         f.onComplete { (value, error) in
-            XCTAssert(!error && value)
+            XCTAssert(!error)
             completeExpectation.fulfill()
         }
         
@@ -103,7 +103,7 @@ class BrightFuturesTests: XCTestCase {
     
     func testControlFlowSyntaxWithError() {
         
-        let f : Future<String> = future { error in
+        let f : Future<String?> = future { error in
             error = NSError(domain: "NaN", code: 0, userInfo: nil)
             return nil
         }
@@ -178,6 +178,19 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testOptionalFuture() {
+        let r = arc4random()
+        
+        let f: Future<Int?> = future { error in
+            if r % 2 == 0 {
+                return 2
+            }
+            
+            return nil
+        }
+        
     }
 }
 

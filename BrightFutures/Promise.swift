@@ -31,16 +31,16 @@ class Promise<T> {
             if error {
                 self.error(error!)
             } else {
-                self.success(value)
+                self.success(value!)
             }
         }
     }
     
-    func success(value: T?) {
+    func success(value: T) {
         self.future.success(value)
     }
     
-    func trySuccess(value: T?) -> Bool {
+    func trySuccess(value: T) -> Bool {
         return self.future.trySuccess(value)
     }
     
