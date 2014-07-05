@@ -73,7 +73,7 @@ class BrightFuturesTests: XCTestCase {
         
         let failureExpectation = self.expectationWithDescription("immediate failure")
         
-        f.onFailure { (err: NSError) -> () in
+        f.onFailure { err in
             XCTAssert(err == error)
             failureExpectation.fulfill()
         }
@@ -110,7 +110,7 @@ class BrightFuturesTests: XCTestCase {
         
         let failureExpectation = self.expectationWithDescription("failure expected")
         
-        f.onFailure { error -> () in
+        f.onFailure { error in
             XCTAssert(error.domain == "NaN")
             failureExpectation.fulfill()
         }

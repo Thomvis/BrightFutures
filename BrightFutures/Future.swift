@@ -210,27 +210,6 @@ class Future<T> {
             }
         }, executionContext: executionContext)
     }
-
-    func onFailure(callback: NSError -> Future<T>, executionContext: ExecutionContext? = nil) -> Future<T> {
-        let p = Promise<T>()
-        
-        self.onComplete({ (value, error) in
-            if error {
-                let subFuture = callback(error!)
-                p.completeWith(subFuture)
-            } else {
-                p.completeWith(self)
-            }
-        }, executionContext: executionContext)
-        
-        return p.future;
-    }
-    
-    func onFailure(callback: NSError -> T, executionContext: ExecutionContext? = nil) -> Future<T> {
-        return self.onFailure({(error:NSError) -> Future<T> in
-            return Future<T>.succeeded(callback(error))
-        }, executionContext: executionContext)
-    }
     
     func recover(task: (NSError) -> T, executionContext exec: ExecutionContext = QueueExecutionContext()) -> Future<T> {
         return self.recoverWith({ error -> Future<T> in
