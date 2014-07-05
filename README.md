@@ -45,6 +45,44 @@ func complicatedQuestion() -> Future<String> {
 
 `Queue` is a simple wrapper around a dispatch queue.
 
+## Chaining callbacks
+
+Using the `andThen` function on a `Future`, the order of callbacks can be explicitly defined.
+
+```swift
+future { _ in
+    fibonacci(10)
+}.andThen { size, error -> String in
+    if size > 5 {
+        return "large"
+    }
+    return "small"
+}.andThen { label, error -> Bool in
+    return label == "large"
+}.onSuccess { numberIsLarge in
+    XCTAssert(numberIsLarge)
+}
+```
+
+## Recovering from errors
+If a `Future` fails, use `recover` or `recoverWith` to offer a default or alternative value and continue the callback chain.
+
+```swift
+future { (inout error:NSError?) -> Int? in
+    // fetch something from the web
+    if (request.error) { // it could fail
+        error = request.error
+        return nil    
+    }
+}.recoverWith { _ in // do an offline calculation instead
+    return future { _ in
+        fibonacci(5)
+    }
+}.onSuccess { value in // either the request or the recover succeeded
+    XCTAssert(value == 5)
+}
+```
+
 ## Custom execution contexts
 By default, all tasks and callbacks are performed in a background queue. All future-wrapped tasks are performed concurrently, but all callbacks of a single future will be executed serially. You can however change this behavior by providing an execution context when creating a future or adding a callback:
 
