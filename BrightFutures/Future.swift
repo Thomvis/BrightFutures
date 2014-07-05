@@ -64,12 +64,14 @@ class Future<T> {
         return res
     }
     
+    // TODO: private
     func complete(result: TaskResult) {
         if !tryComplete(result) {
             
         }
     }
     
+    // TODO: private
     func tryComplete(result: TaskResult) -> Bool {
         switch result {
         case let res where res.state == State.Success:
@@ -83,10 +85,12 @@ class Future<T> {
         }
     }
     
+    // TODO: private
     func success(value: T?) {
         self.trySuccess(value)
     }
     
+    // TODO: private
     func trySuccess(value: T?) -> Bool {
         return (q.sync {
             if self.result.state != .Pending {
@@ -99,12 +103,14 @@ class Future<T> {
         })!;
     }
     
+    // TODO: private
     func error(error: NSError) {
         if !self.tryError(error) {
 
         }
     }
     
+    // TODO: private
     func tryError(error: NSError) -> Bool {
         return (q.sync {
             if self.result.state != .Pending {
@@ -117,6 +123,7 @@ class Future<T> {
         })!;
     }
     
+    // TODO: private
     func onComplete(callback: (value:T?, error: NSError?) -> (), executionContext: ExecutionContext? = nil) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
@@ -133,6 +140,7 @@ class Future<T> {
         }
     }
     
+    // TODO: private
     func onSuccess(callback: T? -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if !error {
@@ -141,6 +149,7 @@ class Future<T> {
         }, executionContext: executionContext)
     }
     
+    // TODO: private
     func onFailure(callback: NSError -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if error {
@@ -149,6 +158,7 @@ class Future<T> {
         }, executionContext: executionContext)
     }
     
+    // TODO: private
     func runCallbacks() {
         q.async {
             for callback in self.callbacks {
@@ -159,6 +169,7 @@ class Future<T> {
         }
     }
     
+    // TODO: private
     func callbackExecutionContext(context: ExecutionContext?) -> ExecutionContext {
         if let givenContext = context {
             return givenContext
@@ -166,7 +177,6 @@ class Future<T> {
             return self.defaultCallbackExecutionContext
         }
     }
-    
 }
 
 enum State {
