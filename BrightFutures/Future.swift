@@ -30,9 +30,9 @@ func future<T>(task: (inout NSError?) -> T?, executionContext: ExecutionContext 
         let result = task(&error)
         
         if let certainError = error {
-            promise.complete(TaskResult(error: certainError))
+            promise.error(certainError)
         } else {
-            promise.complete(TaskResult(value: result))
+            promise.success(result)
         }
     }
     
