@@ -22,15 +22,15 @@
 
 import Foundation
 
-class Promise<T: AnyObject> {
+class Promise<T> {
 
     let future: Future<T> = Future<T>()
     
-    func complete(result: TaskResult<T>) {
+    func complete(result: TaskResult) {
         self.future.complete(result)
     }
     
-    func tryComplete(result: TaskResult<T>) -> Bool {
+    func tryComplete(result: TaskResult) -> Bool {
         return self.future.tryComplete(result)
     }
     

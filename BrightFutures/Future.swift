@@ -22,9 +22,7 @@
 
 import Foundation
 
-
-
-func future<T: AnyObject>(task: (inout NSError?) -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
+func future<T>(task: (inout NSError?) -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
     var promise = Promise<T>();
     
     executionContext.execute {
@@ -41,12 +39,12 @@ func future<T: AnyObject>(task: (inout NSError?) -> T?, executionContext: Execut
     return promise.future
 }
 
-class Future<T: AnyObject> {
+class Future<T> {
     typealias Callback = (future: Future<T>) -> ()
 
     let q = Queue()
     
-    var result = TaskResult<T>()
+    var result = TaskResult()
     
     var callbacks: Array<Callback> = Array<Callback>()
     
@@ -66,16 +64,16 @@ class Future<T: AnyObject> {
         return res
     }
     
-    func complete(result: TaskResult<T>) {
+    func complete(result: TaskResult) {
         if !tryComplete(result) {
             
         }
     }
     
-    func tryComplete(result: TaskResult<T>) -> Bool {
+    func tryComplete(result: TaskResult) -> Bool {
         switch result {
         case let res where res.state == State.Success:
-            return self.trySuccess(res.value)
+            return self.trySuccess(res.value as T?)
         default:
             if let certainError = result.error {
                 return self.tryError(certainError)
@@ -119,11 +117,11 @@ class Future<T: AnyObject> {
         })!;
     }
     
-    func onComplete(callback: TaskResult<T> -> (), executionContext: ExecutionContext? = nil) {
+    func onComplete(callback: (value:T?, error: NSError?) -> (), executionContext: ExecutionContext? = nil) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
                 future.callbackExecutionContext(executionContext).execute {
-                    callback(future.result)
+                    callback(value: future.result.value as? T, error: future.result.error)
                 }
             }
             
@@ -136,17 +134,17 @@ class Future<T: AnyObject> {
     }
     
     func onSuccess(callback: T? -> (), executionContext: ExecutionContext? = nil) {
-        self.onComplete({ result in
-            if result.state == .Success {
-                callback(result.value)
+        self.onComplete({ (value, error) in
+            if !error {
+                callback(value)
             }
         }, executionContext: executionContext)
     }
     
     func onFailure(callback: NSError -> (), executionContext: ExecutionContext? = nil) {
-        self.onComplete({ result in
-            if result.state == .Failure {
-                callback(result.error!)
+        self.onComplete({ (value, error) in
+            if error {
+                callback(error!)
             }
         }, executionContext: executionContext)
     }
@@ -175,9 +173,9 @@ enum State {
     case Pending, Success, Failure
 }
 
-struct TaskResult<T> {
+struct TaskResult { // should be generic, but compiler issues prevent this
     let state: State
-    let value: T?
+    let value: Any?
     let error: NSError?
     
     init() {
@@ -186,7 +184,7 @@ struct TaskResult<T> {
         self.error = nil
     }
     
-    init(value: T?) {
+    init(value: Any?) {
         self.state = .Success
         self.value = value
         self.error = nil

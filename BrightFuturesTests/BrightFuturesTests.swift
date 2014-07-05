@@ -24,14 +24,6 @@ import XCTest
 
 class BrightFuturesTests: XCTestCase {
     
-    class ComputationResult {
-        let value: Int
-        
-        init(_ value: Int) {
-            self.value = value;
-        }
-    }
-    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -43,20 +35,20 @@ class BrightFuturesTests: XCTestCase {
     }
     
     func testCompletedFuture() {
-        let f = Future<ComputationResult>.succeeded(ComputationResult(2))
+        let f = Future<Int>.succeeded(2)
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { result in
-            XCTAssert(result.state == State.Success)
+        f.onComplete { (value, error) in
+            XCTAssert(!error && value)
             completeExpectation.fulfill()
         }
         
         let successExpectation = self.expectationWithDescription("immediate success")
         
-        f.onSuccess { computation in
-            XCTAssert(computation != nil)
-            XCTAssert(computation!.value == 2, "Computation should be returned")
+        f.onSuccess { value in
+            XCTAssert(value != nil)
+            XCTAssert(value == 2, "Computation should be returned")
             successExpectation.fulfill()
         }
         
@@ -69,13 +61,13 @@ class BrightFuturesTests: XCTestCase {
     
     func testFailedFuture() {
         let error = NSError(domain: "test", code: 0, userInfo: nil)
-        let f = Future<ComputationResult>.failed(error)
+        let f = Future<Bool>.failed(error)
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { result in
-            XCTAssert(result.state == State.Failure)
-            XCTAssert(result.error == error)
+        f.onComplete { (value, futureError) in
+            XCTAssert(!value)
+            XCTAssert(futureError == error)
             completeExpectation.fulfill()
         }
         
@@ -96,13 +88,13 @@ class BrightFuturesTests: XCTestCase {
     func testControlFlowSyntax() {
         
         let f = future { _ in
-            ComputationResult(fibonacci(10))
+            fibonacci(10)
         }
         
         let e = self.expectationWithDescription("the computation succeeds")
         
-        f.onSuccess { computation in
-            XCTAssert(computation?.value == 55)
+        f.onSuccess { value in
+            XCTAssert(value == 55)
             e.fulfill()
         }
         
@@ -111,7 +103,7 @@ class BrightFuturesTests: XCTestCase {
     
     func testControlFlowSyntaxWithError() {
         
-        let f : Future<ComputationResult> = future { error in
+        let f : Future<String> = future { error in
             error = NSError(domain: "NaN", code: 0, userInfo: nil)
             return nil
         }
@@ -127,16 +119,16 @@ class BrightFuturesTests: XCTestCase {
     }
     
     func testPromise() {
-        let p = Promise<ComputationResult>()
+        let p = Promise<Int>()
         
         Queue.global.async {
-            p.success(ComputationResult(fibonacci(10)))
+            p.success(fibonacci(10))
         }
         
         let e = self.expectationWithDescription("complete expectation")
         
-        p.future.onComplete { result in
-            XCTAssert(result.value!.value == 55)
+        p.future.onComplete { (value, error) in
+            XCTAssert(value == 55)
             e.fulfill()
         }
         
@@ -145,7 +137,7 @@ class BrightFuturesTests: XCTestCase {
     
     func testCustomExecutionContext() {
         let f = future({ _ in
-            ComputationResult(fibonacci(10))
+            fibonacci(10)
         }, executionContext: ImmediateExecutionContext())
         
         let e = self.expectationWithDescription("immediate success expectation")
