@@ -46,7 +46,7 @@ class BrightFuturesTests: XCTestCase {
         
         let successExpectation = self.expectationWithDescription("immediate success")
         
-        f.onSuccess { value -> () in
+        f.onSuccess { value in
             XCTAssert(value != nil)
             XCTAssert(value == 2, "Computation should be returned")
             successExpectation.fulfill()
@@ -93,7 +93,7 @@ class BrightFuturesTests: XCTestCase {
         
         let e = self.expectationWithDescription("the computation succeeds")
         
-        f.onSuccess { (value) -> () in
+        f.onSuccess { value in
             XCTAssert(value == 55)
             e.fulfill()
         }
@@ -154,14 +154,14 @@ class BrightFuturesTests: XCTestCase {
         
         future { _ in
             fibonacci(10)
-        }.onComplete { size, error -> String in
+        }.andThen { size, error -> String in
             if size > 5 {
                 return "large"
             }
             return "small"
-        }.onComplete { label, error -> Bool in
+        }.andThen { label, error -> Bool in
             return label == "large"
-        }.onSuccess { (numberIsLarge: Bool) -> () in
+        }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
             e.fulfill()
         }
@@ -176,7 +176,7 @@ class BrightFuturesTests: XCTestCase {
             return 3
         }.recover { _ in
             return 5
-        }.onSuccess { value -> () in
+        }.onSuccess { value in
             XCTAssert(value == 3)
             e.fulfill()
         }
@@ -194,7 +194,7 @@ class BrightFuturesTests: XCTestCase {
             return future { _ in
                 fibonacci(5)
             }
-        }.onSuccess { value -> () in
+        }.onSuccess { value in
             XCTAssert(value == 5)
             e.fulfill()
         }
