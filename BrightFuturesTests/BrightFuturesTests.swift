@@ -46,7 +46,7 @@ class BrightFuturesTests: XCTestCase {
         
         let successExpectation = self.expectationWithDescription("immediate success")
         
-        f.onSuccess { value in
+        f.onSuccess { value -> () in
             XCTAssert(value != nil)
             XCTAssert(value == 2, "Computation should be returned")
             successExpectation.fulfill()
@@ -73,7 +73,7 @@ class BrightFuturesTests: XCTestCase {
         
         let failureExpectation = self.expectationWithDescription("immediate failure")
         
-        f.onFailure { err in
+        f.onFailure { (err: NSError) -> () in
             XCTAssert(err == error)
             failureExpectation.fulfill()
         }
@@ -93,7 +93,7 @@ class BrightFuturesTests: XCTestCase {
         
         let e = self.expectationWithDescription("the computation succeeds")
         
-        f.onSuccess { value in
+        f.onSuccess { (value) -> () in
             XCTAssert(value == 55)
             e.fulfill()
         }
@@ -110,7 +110,7 @@ class BrightFuturesTests: XCTestCase {
         
         let failureExpectation = self.expectationWithDescription("failure expected")
         
-        f.onFailure { error in
+        f.onFailure { error -> () in
             XCTAssert(error.domain == "NaN")
             failureExpectation.fulfill()
         }
@@ -142,11 +142,42 @@ class BrightFuturesTests: XCTestCase {
         
         let e = self.expectationWithDescription("immediate success expectation")
         
-        f.onSuccess { value in
+        f.onSuccess({ value in
+            e.fulfill()
+        }, executionContext: ImmediateExecutionContext())
+        
+        self.waitForExpectationsWithTimeout(0, handler: nil)
+    }
+    
+    func testTransparentOnFailure() {
+        let e = self.expectationWithDescription("")
+        
+        future { (inout error:NSError?) -> Int in
+            return 3
+        }.onFailure { error -> Future<Int> in
+            return Future.succeeded(5)
+        }.onSuccess { value -> () in
+            XCTAssert(value == 3)
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(0, handler: nil)
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testDefaultOnFailure() {
+        let e = self.expectationWithDescription("")
+        
+        future { (inout error:NSError?) -> Int in
+            error = NSError(domain: "NaN", code: 0, userInfo: nil)
+            return 3
+        }.onFailure { error -> Int in
+            return 5;
+        }.onSuccess { value -> () in
+            XCTAssert(value == 5)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 }
 

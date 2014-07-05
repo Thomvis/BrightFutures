@@ -46,6 +46,24 @@ class Future<T> {
     
     var result = TaskResult()
     
+    var value: T? {
+        switch result.state {
+        case .Success:
+            return result.value as? T
+        default:
+            return nil
+        }
+    }
+    
+    var error: NSError? {
+        switch result.state {
+        case .Failure:
+            return result.error
+        default:
+            return nil
+        }
+    }
+    
     var callbacks: Array<Callback> = Array<Callback>()
     
     let defaultCallbackExecutionContext = QueueExecutionContext()
@@ -139,6 +157,17 @@ class Future<T> {
         }
     }
     
+    func onComplete<U>(callback: (value:T?, error: NSError?) -> (Future<U>), executionContext: ExecutionContext? = nil) -> Future<U> {
+        let p = Promise<U>()
+        
+        self.onComplete({ (value, error) in
+            let subFuture = callback(value: value, error: error)
+            p.completeWith(subFuture)
+        }, executionContext: executionContext)
+
+        return p.future
+    }
+    
     func onSuccess(callback: T? -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if !error {
@@ -147,11 +176,53 @@ class Future<T> {
         }, executionContext: executionContext)
     }
     
+    func onSuccess(callback: T? -> (Future<T>), executionContext: ExecutionContext? = nil) -> Future<T> {
+        let p = Promise<T>()
+        
+        self.onComplete({ (value, error) in
+            if !error {
+                let subFuture = callback(value)
+                p.completeWith(subFuture)
+            } else {
+                p.completeWith(self)
+            }
+        }, executionContext: executionContext)
+        
+        return p.future;
+    }
+
+    func onSuccess(callback: T? -> T?, executionContext: ExecutionContext? = nil) -> Future<T> {
+        return self.onSuccess({(value:T?) -> Future<T> in
+            return Future<T>.succeeded(callback(value))
+        }, executionContext: executionContext)
+    }
+    
     func onFailure(callback: NSError -> (), executionContext: ExecutionContext? = nil) {
         self.onComplete({ (value, error) in
             if error {
                 callback(error!)
             }
+        }, executionContext: executionContext)
+    }
+
+    func onFailure(callback: NSError -> Future<T>, executionContext: ExecutionContext? = nil) -> Future<T> {
+        let p = Promise<T>()
+        
+        self.onComplete({ (value, error) in
+            if error {
+                let subFuture = callback(error!)
+                p.completeWith(subFuture)
+            } else {
+                p.completeWith(self)
+            }
+        }, executionContext: executionContext)
+        
+        return p.future;
+    }
+    
+    func onFailure(callback: NSError -> T?, executionContext: ExecutionContext? = nil) -> Future<T> {
+        return self.onFailure({(error:NSError) -> Future<T> in
+            return Future<T>.succeeded(callback(error))
         }, executionContext: executionContext)
     }
     

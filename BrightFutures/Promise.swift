@@ -26,6 +26,16 @@ class Promise<T> {
 
     let future: Future<T> = Future<T>()
     
+    func completeWith(future: Future<T>) {
+        future.onComplete { (value, error) in
+            if error {
+                self.error(error!)
+            } else {
+                self.success(value)
+            }
+        }
+    }
+    
     func success(value: T?) {
         self.future.success(value)
     }
