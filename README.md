@@ -11,34 +11,32 @@ BrightFutures uses Control Flow-like syntax to wrap complicated calculations and
 
 ```swift
 let f = future { error in
-  CalculationResult(fibonacci(10))
+  fibonacci(10)
 }
 
 f.onSuccess { value in
-  // value will be the CalculationResult containing 55
+  // value will be 55
 }
 ```
-
-(`CalculationResult` is a simple class wrapper around an Int, see 'Known Issues' below why.)
 
 `error` is an inout parameter that can be set in the closure if the calculation failed. If `error` is non-nil after the execution of the closure, the future has failed. You can also hide the parameter if you don't need it:
 
 ```swift
 let f = future { _ in
-  CalculationResult(fibonacci(10))
+  fibonacci(10)
 }
 ```
 
 ## Returning a future
 ```swift
-func complicatedComputation() -> Future<CalculationResult> {
-  let promise = Promise<CalculationResult>()
+func complicatedQuestion() -> Future<String> {
+  let promise = Promise<String>()
 
   Queue.async {
   
-    // do a complicated calculation
+    // do a complicated task
     
-    promise.success(CalculationResult(55))
+    promise.success("forty-two")
   }
 
   return promise.future
@@ -52,7 +50,7 @@ By default, all tasks and callbacks are performed in a background queue. All fut
 
 ```swift
 let f = future({ _ in
-  ComputationResult(fibonacci(10))
+  fibonacci(10)
 }, executionContext: ImmediateExecutionContext())
 ```
 
@@ -61,14 +59,6 @@ The calculation of the 10nth Fibonacci number is now performed on the same threa
 You can find more examples in the tests.
 
 ## Known Issues
-- Futures can currently only return class types. I'd like a future to be able to return any value (classes, structs and enum's), but unfortunately I am running into a compiler error when I define my future like this:
-
-```swift
-class Future<T: Any>
-```
-
-  and have optional properties inside that class.
-
 - I don't particularly like how the error handling is done. It is now an obligatory inout parameter of every future task closure.
 
 ## Credits
