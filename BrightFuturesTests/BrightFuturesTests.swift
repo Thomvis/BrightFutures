@@ -103,7 +103,7 @@ class BrightFuturesTests: XCTestCase {
     
     func testControlFlowSyntaxWithError() {
         
-        let f : Future<String?> = future { error in
+        let f : Future<String> = future { error in
             error = NSError(domain: "NaN", code: 0, userInfo: nil)
             return nil
         }
@@ -187,9 +187,9 @@ class BrightFuturesTests: XCTestCase {
     func testDefaultOnFailure() {
         let e = self.expectationWithDescription("")
         
-        future { (inout error:NSError?) -> Int in
+        future { (inout error:NSError?) -> Int? in
             error = NSError(domain: "NaN", code: 0, userInfo: nil)
-            return 3
+            return nil
         }.recoverWith { _ in
             return future { _ in
                 fibonacci(5)
