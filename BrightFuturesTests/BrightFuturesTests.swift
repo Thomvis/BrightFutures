@@ -174,8 +174,8 @@ class BrightFuturesTests: XCTestCase {
         
         future { (inout error:NSError?) -> Int in
             return 3
-        }.onFailure { error -> Future<Int> in
-            return Future.succeeded(5)
+        }.recover { _ in
+            return 5
         }.onSuccess { value -> () in
             XCTAssert(value == 3)
             e.fulfill()
@@ -190,8 +190,10 @@ class BrightFuturesTests: XCTestCase {
         future { (inout error:NSError?) -> Int in
             error = NSError(domain: "NaN", code: 0, userInfo: nil)
             return 3
-        }.onFailure { error -> Int in
-            return 5;
+        }.recoverWith { _ in
+            return future { _ in
+                fibonacci(5)
+            }
         }.onSuccess { value -> () in
             XCTAssert(value == 5)
             e.fulfill()

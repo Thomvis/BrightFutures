@@ -232,6 +232,26 @@ class Future<T> {
         }, executionContext: executionContext)
     }
     
+    func recover(task: (NSError) -> T, executionContext exec: ExecutionContext = QueueExecutionContext()) -> Future<T> {
+        return self.recoverWith({ error -> Future<T> in
+            return Future.succeeded(task(error))
+        }, executionContext: exec)
+    }
+    
+    func recoverWith(task: (NSError) -> Future<T>, executionContext exec: ExecutionContext = QueueExecutionContext()) -> Future<T> {
+        let p = Promise<T>()
+        
+        self.onComplete({ (value, error) -> () in
+            if error {
+                p.completeWith(task(error!))
+            } else {
+                p.completeWith(self)
+            }
+            }, executionContext: exec)
+        
+        return p.future;
+    }
+    
     // TODO: private
     func runCallbacks() {
         q.async {
