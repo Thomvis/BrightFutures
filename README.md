@@ -103,6 +103,8 @@ You can find more examples in the tests.
 
 BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am an iOS Engineer at [Touchwonders](http://www.touchwonders.com/).
 
+I really like Facebook's [BFTasks](https://github.com/BoltsFramework/Bolts-iOS), had a good look at the Promises & Futures implementation in [Scala](http://docs.scala-lang.org/overviews/core/futures.html) and also like what Max Howell is doing with [PromiseKit](https://github.com/mxcl/PromiseKit).
+
 ## Contact
 
 I am looking forward to your feedback. I am very much still learning Swift. We all are. Let me know how I could improve BrightFutures by creating an issue, a pull request or by reaching out on twitter. I'm [@thomvis88](https://twitter.com/thomvis88).
