@@ -171,6 +171,20 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(0, handler: nil)
     }
     
+    func testMainExecutionContext() {
+        let e = self.expectationWithDescription("")
+        
+        future { _ -> Int in
+            XCTAssert(!NSThread.isMainThread())
+            return 1
+        }.onSuccess({ value in
+            XCTAssert(NSThread.isMainThread())
+            e.fulfill()
+        }, executionContext: QueueExecutionContext.main)
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testCompletionChaining() {
         let e = self.expectationWithDescription("")
         

@@ -22,8 +22,6 @@
 
 import Foundation
 
-let mainExecutionContext : ExecutionContext = QueueExecutionContext(targetQueue: Queue.main)
-
 protocol ExecutionContext {
     
     func execute(task: () -> ());
@@ -31,6 +29,14 @@ protocol ExecutionContext {
 }
 
 class QueueExecutionContext : ExecutionContext {
+    
+    // This is Approach B from https://github.com/hpique/SwiftSingleton
+    class var main : QueueExecutionContext {
+        struct Static {
+            static let instance : QueueExecutionContext = QueueExecutionContext(targetQueue: Queue.main)
+        }
+        return Static.instance
+    }
     
     let queue: Queue = Queue();
     
