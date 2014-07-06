@@ -118,6 +118,28 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(3, handler: nil)
     }
     
+    func testAutoClosure() {
+        let names = ["Steve", "Tim"]
+        
+        let f = future(names.count)
+        let e = self.expectationWithDescription("")
+        
+        f.onSuccess { value in
+            XCTAssert(value == 2)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+
+        let e1 = self.expectationWithDescription("-")
+        future(fibonacci(10)).onSuccess { value in
+            XCTAssert(value == 55);
+            e1.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testPromise() {
         let p = Promise<Int>()
         

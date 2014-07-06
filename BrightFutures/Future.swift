@@ -39,6 +39,12 @@ func future<T>(task: (inout NSError?) -> T?, executionContext: ExecutionContext 
     return promise.future
 }
 
+func future<T>(task: @auto_closure () -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
+    return future({ error in
+        return task()
+    }, executionContext: executionContext);
+}
+
 class Future<T> {
     typealias Callback = (future: Future<T>) -> ()
 

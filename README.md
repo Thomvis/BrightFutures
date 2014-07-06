@@ -7,7 +7,7 @@ BrightFutures uses Control Flow-like syntax to wrap complicated calculations and
 
 # Examples
 
-## Inline future
+## Control-flow syntax
 
 ```swift
 let f = future { error in
@@ -26,6 +26,17 @@ let f = future { _ in
   fibonacci(10)
 }
 ```
+
+## Wrapping expressions in a Future
+Using Swift's `@auto_closure` directive, BrightFutures provides a  simple way to wrap any expression into a Future.
+
+```swift
+future(fibonacci(10)).onSuccess { value in
+    XCTAssert(value == 55)
+}
+```
+
+This is great concise syntax if there is no need for a way to report a failure.
 
 ## The Promise of a Future value
 ```swift
