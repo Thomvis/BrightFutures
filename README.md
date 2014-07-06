@@ -27,7 +27,7 @@ let f = future { _ in
 }
 ```
 
-## Returning a future
+## The Promise of a Future value
 ```swift
 func complicatedQuestion() -> Future<String> {
   let promise = Promise<String>()
