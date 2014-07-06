@@ -65,7 +65,7 @@ future { _ in
 ```
 
 ## Recovering from errors
-If a `Future` fails, use `recover` or `recoverWith` to offer a default or alternative value and continue the callback chain.
+If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
 ```swift
 future { (inout error:NSError?) -> Int? in
@@ -74,14 +74,14 @@ future { (inout error:NSError?) -> Int? in
         error = request.error
         return nil    
     }
-}.recoverWith { _ in // do an offline calculation instead
-    return future { _ in
-        fibonacci(5)
-    }
-}.onSuccess { value in // either the request or the recover succeeded
+}.recover { _ in // provide an offline default
+    return 5
+}.onSuccess { value in // either the request or the recovery succeeded
     XCTAssert(value == 5)
 }
 ```
+
+In addition to `recover`, `recoverWith` can be used to provide a Future that will provide the value to recover with.
 
 ## Custom execution contexts
 By default, all tasks and callbacks are performed in a background queue. All future-wrapped tasks are performed concurrently, but all callbacks of a single future will be executed serially. You can however change this behavior by providing an execution context when creating a future or adding a callback:
