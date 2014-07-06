@@ -52,12 +52,12 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 future { _ in
     fibonacci(10)
-}.andThen { size, error -> String in
+}.andThen { size, _ -> String in
     if size > 5 {
         return "large"
     }
     return "small"
-}.andThen { label, error -> Bool in
+}.andThen { label, _ -> Bool in
     return label == "large"
 }.onSuccess { numberIsLarge in
     XCTAssert(numberIsLarge)
