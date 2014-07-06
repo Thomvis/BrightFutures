@@ -101,6 +101,10 @@ By default, all tasks and callbacks are performed in a background queue. All fut
 let f = future({ _ in
   fibonacci(10)
 }, executionContext: ImmediateExecutionContext())
+
+f.onComplete({ value in
+  // update the UI, we're on the main thread
+}, executionContext: QueueExecutionContext.main)
 ```
 
 The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
