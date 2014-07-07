@@ -50,7 +50,7 @@ class Future<T> {
 
     let q = Queue()
     
-    var result = TaskResult()
+    var result = TaskResult<T>()
     
     var value: T? {
         switch result.state {
@@ -89,17 +89,17 @@ class Future<T> {
     }
     
     // TODO: private
-    func complete(result: TaskResult) {
+    func complete(result: TaskResult<T>) {
         if !tryComplete(result) {
             
         }
     }
     
     // TODO: private
-    func tryComplete(result: TaskResult) -> Bool {
+    func tryComplete(result: TaskResult<T>) -> Bool {
         switch result {
         case let res where res.state == State.Success:
-            return self.trySuccess(res.value as T)
+            return self.trySuccess(res.value!)
         default:
             if let certainError = result.error {
                 return self.tryError(certainError)
@@ -241,9 +241,9 @@ enum State {
     case Pending, Success, Failure
 }
 
-struct TaskResult { // should be generic, but compiler issues prevent this
+struct TaskResult<T> { // should be generic, but compiler issues prevent this
     let state: State
-    let value: Any?
+    let value: T?
     let error: NSError?
     
     init() {
@@ -252,7 +252,7 @@ struct TaskResult { // should be generic, but compiler issues prevent this
         self.error = nil
     }
     
-    init(value: Any?) {
+    init(value: T?) {
         self.state = .Success
         self.value = value
         self.error = nil
