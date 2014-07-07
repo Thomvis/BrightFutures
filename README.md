@@ -5,6 +5,15 @@ BrightFutures is a simple Futures &amp; Promises library for iOS and OS X writte
 
 BrightFutures uses Control Flow-like syntax to wrap complicated calculations and provide an asynchronous interface to its result when it becomes available.
 
+## Compatibility
+With the release of Xcode 6 beta 3, the tests _sometimes_ fail with a fatal error:
+
+```
+fatal error: unexpectedly found nil while unwrapping an Optional value
+```
+
+I am investigating this issue.
+
 # Examples
 
 ## Control-flow syntax
