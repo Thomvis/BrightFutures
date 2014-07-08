@@ -38,9 +38,18 @@ class QueueExecutionContext : ExecutionContext {
         return Static.instance
     }
     
-    let queue: Queue = Queue();
+    class var global: QueueExecutionContext {
+        struct Static {
+            static let instance : QueueExecutionContext = QueueExecutionContext(queue: Queue.global)
+        }
+        return Static.instance
+    }
     
-    init(targetQueue: Queue? = nil) {
+    let queue: Queue
+    
+    init(queue q: Queue = Queue(), targetQueue: Queue? = nil) {
+        self.queue = q
+        
         if let unwrappedTargetQueue = targetQueue {
             dispatch_set_target_queue(self.queue.queue, unwrappedTargetQueue.queue)
         }
