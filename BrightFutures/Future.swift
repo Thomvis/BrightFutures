@@ -157,7 +157,7 @@ class Future<T> {
     func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
-                future.callbackExecutionContext(c).execute {
+                c.execute {
                     callback(result: self.result)
                 }
             }
@@ -255,15 +255,6 @@ class Future<T> {
             }
             
             self.callbacks.removeAll()
-        }
-    }
-    
-    // TODO: private
-    func callbackExecutionContext(context: ExecutionContext?) -> ExecutionContext {
-        if let givenContext = context {
-            return givenContext
-        } else {
-            return self.defaultCallbackExecutionContext
         }
     }
 }
