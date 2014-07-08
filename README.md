@@ -67,12 +67,12 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 future { _ in
     fibonacci(10)
 }.andThen { result -> String in
-    if result.value > 5 {
+    if result.value! > 5 {
         return "large"
     }
     return "small"
 }.andThen { result -> Bool in
-    return result.value == "large"
+    return result.value! == "large"
 }.onSuccess { numberIsLarge in
     XCTAssert(numberIsLarge)
 }
