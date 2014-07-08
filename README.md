@@ -6,13 +6,7 @@ BrightFutures is a simple Futures &amp; Promises library for iOS and OS X writte
 BrightFutures uses Control Flow-like syntax to wrap complicated calculations and provide an asynchronous interface to its result when it becomes available.
 
 ## Compatibility
-With the release of Xcode 6 beta 3, the tests _sometimes_ fail with a fatal error:
-
-```
-fatal error: unexpectedly found nil while unwrapping an Optional value
-```
-
-I am investigating this issue.
+BrightFutures is compatible with Xcode 6 beta 3.
 
 # Examples
 
@@ -72,17 +66,19 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 future { _ in
     fibonacci(10)
-}.andThen { size, _ -> String in
-    if size > 5 {
+}.andThen { result -> String in
+    if result.value > 5 {
         return "large"
     }
     return "small"
-}.andThen { label, _ -> Bool in
-    return label == "large"
+}.andThen { result -> Bool in
+    return result.value == "large"
 }.onSuccess { numberIsLarge in
     XCTAssert(numberIsLarge)
 }
 ```
+
+`result` is an instance of `TaskResult`, which mimics a typical `Try` construct as much as the Swift compiler currently allows.
 
 ## Recovering from errors
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
@@ -107,21 +103,18 @@ In addition to `recover`, `recoverWith` can be used to provide a Future that wil
 By default, all tasks and callbacks are performed in a background queue. All future-wrapped tasks are performed concurrently, but all callbacks of a single future will be executed serially. You can however change this behavior by providing an execution context when creating a future or adding a callback:
 
 ```swift
-let f = future({ _ in
+let f = future(context: ImmediateExecutionContext()) { _ in
   fibonacci(10)
-}, executionContext: ImmediateExecutionContext())
+}
 
-f.onComplete({ value in
+f.onComplete(context: QueueExecutionContext.main) { value in
   // update the UI, we're on the main thread
-}, executionContext: QueueExecutionContext.main)
+}
 ```
 
 The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
 
 You can find more examples in the tests.
-
-## Known Issues
-- I don't particularly like how the error handling is done. It is now an obligatory inout parameter of every future task closure.
 
 ## Credits
 
