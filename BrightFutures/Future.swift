@@ -22,10 +22,10 @@
 
 import Foundation
 
-func future<T>(task: (inout NSError?) -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
+func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task: (inout NSError?) -> T?) -> Future<T> {
     let promise = Promise<T>();
     
-    executionContext.execute {
+    c.execute {
         var error: NSError?
         let result = task(&error)
         
@@ -39,15 +39,18 @@ func future<T>(task: (inout NSError?) -> T?, executionContext: ExecutionContext 
     return promise.future
 }
 
-func future<T>(task: @auto_closure () -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
-    return future({ error in
+func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task: @auto_closure () -> T?) -> Future<T> {
+    return future(context: c) { error in
         return task()
-    }, executionContext: executionContext);
+    }
 }
 
 class Future<T> {
-    typealias Callback = (future: Future<T>) -> ()
-
+    typealias CallbackInternal = (future: Future<T>) -> ()
+    typealias CompletionCallback = (result: TaskResult<T>) -> ()
+    typealias SuccessCallback = (T) -> ()
+    typealias FailureCallbacl = (NSError) -> ()
+    
     let q = Queue()
     
     var result = TaskResult<T>()
@@ -70,7 +73,7 @@ class Future<T> {
         }
     }
     
-    var callbacks: Array<Callback> = Array<Callback>()
+    var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     let defaultCallbackExecutionContext = QueueExecutionContext()
     
@@ -147,11 +150,15 @@ class Future<T> {
         })!;
     }
     
-    func onComplete(callback: (value:T?, error: NSError?) -> (), executionContext: ExecutionContext? = nil) {
+    func onComplete(callback: CompletionCallback) {
+        self.onComplete(context: self.defaultCallbackExecutionContext, callback: callback)
+    }
+    
+    func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
-                future.callbackExecutionContext(executionContext).execute {
-                    callback(value: future.value, error: future.result.error)
+                future.callbackExecutionContext(c).execute {
+                    callback(result: self.result)
                 }
             }
             
@@ -163,55 +170,79 @@ class Future<T> {
         }
     }
     
-    func andThen<U>(callback: (value:T?, error: NSError?) -> Future<U>, executionContext: ExecutionContext? = nil) -> Future<U> {
+    func andThen<U>(callback: TaskResult<T> -> Future<U>) -> Future<U> {
+        return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
+    }
+    
+    func andThen<U>(context c: ExecutionContext, callback: TaskResult<T> -> Future<U>) -> Future<U> {
         let p = Promise<U>()
         
-        self.onComplete({ (value, error) in
-            let subFuture = callback(value: value, error: error)
+        self.onComplete(context: c) { result in
+            let subFuture = callback(result)
             p.completeWith(subFuture)
-        }, executionContext: executionContext)
+        }
 
         return p.future
     }
     
-    func andThen<U>(callback: (value:T?, error: NSError?) -> U, executionContext: ExecutionContext? = nil) -> Future<U> {
-        return self.andThen({ value, error in
-            return Future<U>.succeeded(callback(value: value, error: error))
-        }, executionContext: executionContext)
+    func andThen<U>(callback: TaskResult<T> -> U) -> Future<U> {
+        return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
     
-    func onSuccess(callback: T -> (), executionContext: ExecutionContext? = nil) {
-        self.onComplete({ (value, error) in
-            if !error {
-                callback(value!)
+    func andThen<U>(context c: ExecutionContext, callback: TaskResult<T> -> U) -> Future<U> {
+        return self.andThen(context: c) { result -> Future<U> in
+            return Future<U>.succeeded(callback(result))
+        }
+    }
+    
+    func onSuccess(callback: T -> ()) {
+        self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
+    }
+    
+    func onSuccess(context c: ExecutionContext, callback: T -> ()) {
+        self.onComplete(context: c) { result in
+            if !result.error {
+                callback(result.value!)
             }
-        }, executionContext: executionContext)
+        }
     }
     
-    func onFailure(callback: NSError -> (), executionContext: ExecutionContext? = nil) {
-        self.onComplete({ (value, error) in
-            if error {
-                callback(error!)
+    func onFailure(callback: NSError -> ()) {
+        self.onFailure(context: self.defaultCallbackExecutionContext, callback)
+    }
+    
+    func onFailure(context c: ExecutionContext, callback: NSError -> ()) {
+        self.onComplete(context: c) { result in
+            if result.error {
+                callback(result.error!)
             }
-        }, executionContext: executionContext)
+        }
     }
     
-    func recover(task: (NSError) -> T, executionContext exec: ExecutionContext = QueueExecutionContext()) -> Future<T> {
-        return self.recoverWith({ error -> Future<T> in
+    func recover(task: (NSError) -> T) -> Future<T> {
+        return self.recover(context: self.defaultCallbackExecutionContext, task)
+    }
+    
+    func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
+        return self.recoverWith(context: c) { error -> Future<T> in
             return Future.succeeded(task(error))
-        }, executionContext: exec)
+        }
     }
     
-    func recoverWith(task: (NSError) -> Future<T>, executionContext exec: ExecutionContext = QueueExecutionContext()) -> Future<T> {
+    func recoverWith(task: (NSError) -> Future<T>) -> Future<T> {
+        return self.recoverWith(context: self.defaultCallbackExecutionContext, task: task)
+    }
+    
+    func recoverWith(context c: ExecutionContext, task: (NSError) -> Future<T>) -> Future<T> {
         let p = Promise<T>()
         
-        self.onComplete({ (value, error) -> () in
-            if error {
-                p.completeWith(task(error!))
+        self.onComplete(context: c) { result -> () in
+            if result.error {
+                p.completeWith(task(result.error!))
             } else {
                 p.completeWith(self)
             }
-            }, executionContext: exec)
+        }
         
         return p.future;
     }

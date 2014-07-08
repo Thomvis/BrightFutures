@@ -39,8 +39,8 @@ class BrightFuturesTests: XCTestCase {
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { (value, error) in
-            XCTAssert(!error)
+        f.onComplete { result in
+            XCTAssert(!result.error)
             completeExpectation.fulfill()
         }
         
@@ -65,9 +65,9 @@ class BrightFuturesTests: XCTestCase {
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { (value, futureError) in
-            XCTAssert(!value)
-            XCTAssert(futureError == error)
+        f.onComplete { result in
+            XCTAssert(!result.value)
+            XCTAssert(result.error == error)
             completeExpectation.fulfill()
         }
         
@@ -149,8 +149,8 @@ class BrightFuturesTests: XCTestCase {
         
         let e = self.expectationWithDescription("complete expectation")
         
-        p.future.onComplete { (value, error) in
-            XCTAssert(value == 55)
+        p.future.onComplete { result in
+            XCTAssert(result.value == 55)
             e.fulfill()
         }
         
@@ -158,15 +158,15 @@ class BrightFuturesTests: XCTestCase {
     }
     
     func testCustomExecutionContext() {
-        let f = future({ _ in
+        let f = future(context: ImmediateExecutionContext()) { _ in
             fibonacci(10)
-        }, executionContext: ImmediateExecutionContext())
+        }
         
         let e = self.expectationWithDescription("immediate success expectation")
         
-        f.onSuccess({ value in
+        f.onSuccess(context: ImmediateExecutionContext()) { value in
             e.fulfill()
-        }, executionContext: ImmediateExecutionContext())
+        }
         
         self.waitForExpectationsWithTimeout(0, handler: nil)
     }
@@ -177,10 +177,10 @@ class BrightFuturesTests: XCTestCase {
         future { _ -> Int in
             XCTAssert(!NSThread.isMainThread())
             return 1
-        }.onSuccess({ value in
+        }.onSuccess(context: QueueExecutionContext.main) { value in
             XCTAssert(NSThread.isMainThread())
             e.fulfill()
-        }, executionContext: QueueExecutionContext.main)
+        }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
@@ -190,13 +190,13 @@ class BrightFuturesTests: XCTestCase {
         
         future { _ in
             fibonacci(10)
-        }.andThen { size, error -> String in
-            if size > 5 {
+        }.andThen { result -> String in
+            if result.value! > 5 {
                 return "large"
             }
             return "small"
-        }.andThen { label, error -> Bool in
-            return label == "large"
+        }.andThen { result -> Bool in
+            return result.value == "large"
         }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
             e.fulfill()
