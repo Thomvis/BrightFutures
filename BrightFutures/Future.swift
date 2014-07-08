@@ -49,7 +49,7 @@ class Future<T> {
     typealias CallbackInternal = (future: Future<T>) -> ()
     typealias CompletionCallback = (result: TaskResult<T>) -> ()
     typealias SuccessCallback = (T) -> ()
-    typealias FailureCallbacl = (NSError) -> ()
+    typealias FailureCallback = (NSError) -> ()
     
     let q = Queue()
     
@@ -195,11 +195,11 @@ class Future<T> {
         }
     }
     
-    func onSuccess(callback: T -> ()) {
+    func onSuccess(callback: SuccessCallback) {
         self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
     }
     
-    func onSuccess(context c: ExecutionContext, callback: T -> ()) {
+    func onSuccess(context c: ExecutionContext, callback: SuccessCallback) {
         self.onComplete(context: c) { result in
             if !result.error {
                 callback(result.value!)
@@ -207,11 +207,11 @@ class Future<T> {
         }
     }
     
-    func onFailure(callback: NSError -> ()) {
+    func onFailure(callback: FailureCallback) {
         self.onFailure(context: self.defaultCallbackExecutionContext, callback)
     }
     
-    func onFailure(context c: ExecutionContext, callback: NSError -> ()) {
+    func onFailure(context c: ExecutionContext, callback: FailureCallback) {
         self.onComplete(context: c) { result in
             if result.error {
                 callback(result.error!)
