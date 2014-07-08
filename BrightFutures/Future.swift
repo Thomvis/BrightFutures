@@ -23,7 +23,7 @@
 import Foundation
 
 func future<T>(task: (inout NSError?) -> T?, executionContext: ExecutionContext = QueueExecutionContext()) -> Future<T> {
-    var promise = Promise<T>();
+    let promise = Promise<T>();
     
     executionContext.execute {
         var error: NSError?
