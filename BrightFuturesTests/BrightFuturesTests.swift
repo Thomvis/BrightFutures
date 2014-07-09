@@ -185,24 +185,66 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testCompletionChaining() {
+    func testMapSuccess() {
         let e = self.expectationWithDescription("")
         
         future { _ in
             fibonacci(10)
-        }.andThen { result -> String in
-            if result.value! > 5 {
+        }.map { value -> String in
+            if value > 5 {
                 return "large"
             }
             return "small"
-        }.andThen { result -> Bool in
-            return result.value == "large"
+        }.map { sizeString -> Bool in
+            return sizeString == "large"
         }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
             e.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testMapFailure() {
+        
+        let e = self.expectationWithDescription("")
+        
+        future { (inout error:NSError?) -> Int? in
+            error = NSError(domain: "Tests", code: 123, userInfo: nil)
+            return nil
+        }.map { number in
+            XCTAssert(false, "map should not be evaluated because of failure above")
+        }.map { number in
+            XCTAssert(false, "this map should also not be evaluated because of failure above")
+        }.onFailure { error in
+            XCTAssert(error.domain == "Tests")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testAndThen() {
+        
+        var answer = 10
+        
+        let e = self.expectationWithDescription("")
+        
+        let f = future(4)
+        let f1 = f.andThen { result in
+            answer *= result.value!
+        }
+        
+        let f2 = f1.andThen { result in
+            answer += 2
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        XCTAssertEqual(42, answer, "andThens should be executed in order")
+        XCTAssertEqual(f.value!, f1.value!, "future value should be passed transparantly")
+        XCTAssertEqual(f1.value!, f2.value!, "future value should be passed transparantly")
     }
     
     func testTransparentOnFailure() {

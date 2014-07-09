@@ -170,29 +170,40 @@ class Future<T> {
         }
     }
     
-    func andThen<U>(callback: TaskResult<T> -> Future<U>) -> Future<U> {
-        return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
+    func map<U>(f: T -> U) -> Future<U> {
+        return self.map(context: self.defaultCallbackExecutionContext, f)
     }
     
-    func andThen<U>(context c: ExecutionContext, callback: TaskResult<T> -> Future<U>) -> Future<U> {
+    func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
         let p = Promise<U>()
         
-        self.onComplete(context: c) { result in
-            let subFuture = callback(result)
-            p.completeWith(subFuture)
-        }
-
+        self.onComplete(context: c, callback: { result in
+            switch result.state {
+            case .Success:
+                p.success(f(result.value!))
+                break;
+            default:
+                p.error(result.error!)
+                break;
+            }
+        })
+        
         return p.future
     }
     
-    func andThen<U>(callback: TaskResult<T> -> U) -> Future<U> {
+    func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
         return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
     
-    func andThen<U>(context c: ExecutionContext, callback: TaskResult<T> -> U) -> Future<U> {
-        return self.andThen(context: c) { result -> Future<U> in
-            return Future<U>.succeeded(callback(result))
+    func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
+        let p = Promise<T>()
+        
+        self.onComplete(context: c) { result in
+            callback(result)
+            p.completeWith(self)
         }
+
+        return p.future
     }
     
     func onSuccess(callback: SuccessCallback) {
