@@ -258,6 +258,33 @@ class Future<T> {
         return p.future;
     }
     
+    func zip<U>(that: Future<U>) -> Future<(T,U)> {
+        let p = Promise<(T,U)>()
+        self.onComplete { thisResult in
+            switch thisResult.state {
+                case .Success:
+                    that.onComplete { thatResult in
+                        switch thatResult.state {
+                        case .Success:
+                            let combinedResult = (thisResult.value!, thatResult.value!)
+                            p.success(combinedResult)
+                            break
+                        default:
+                            p.error(thatResult.error!)
+                            break
+                        }
+                    }
+                    break
+                default:
+                    p.error(thisResult.error!)
+                    break
+                
+            }
+
+        }
+        return p.future
+    }
+    
     // TODO: private
     func runCallbacks() {
         q.async {

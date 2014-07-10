@@ -279,6 +279,85 @@ class BrightFuturesTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testZip() {
+        let f = future(1)
+        let f1 = future(2)
+        
+        let e = self.expectationWithDescription("")
+        
+        f.zip(f1).onSuccess { (let a, let b) in
+            XCTAssertEqual(a, 1)
+            XCTAssertEqual(b, 2)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testZipThisFails() {
+        let f = future { error -> Int? in
+            sleep(1)
+            error = NSError(domain: "test", code: 2, userInfo: nil)
+            return nil
+        }
+        
+        let f1 = future(2)
+        
+        let e = self.expectationWithDescription("")
+        
+        f.zip(f1).onFailure { error in
+            XCTAssert(error.domain == "test")
+            XCTAssertEqual(error.code, 2)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testZipThatFails() {
+        let f = future { error -> Int? in
+            sleep(1)
+            error = NSError(domain: "tester", code: 3, userInfo: nil)
+            return nil
+        }
+        
+        let f1 = future(2)
+        
+        let e = self.expectationWithDescription("")
+        
+        f1.zip(f).onFailure { error in
+            XCTAssert(error.domain == "tester")
+            XCTAssertEqual(error.code, 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testZipBothFail() {
+        let f = future { error -> Int? in
+            sleep(1)
+            error = NSError(domain: "f-error", code: 3, userInfo: nil)
+            return nil
+        }
+        
+        let f1 = future { error -> Int? in
+            sleep(1)
+            error = NSError(domain: "f1-error", code: 4, userInfo: nil)
+            return nil
+        }
+        
+        let e = self.expectationWithDescription("")
+        
+        f.zip(f1).onFailure { error in
+            XCTAssert(error.domain == "f-error")
+            XCTAssertEqual(error.code, 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
 
 }
 
