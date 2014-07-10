@@ -45,6 +45,8 @@ func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task:
     }
 }
 
+let NoSuchElementError = "NoSuchElementError"
+
 class Future<T> {
     typealias CallbackInternal = (future: Future<T>) -> ()
     typealias CompletionCallback = (result: TaskResult<T>) -> ()
@@ -100,15 +102,13 @@ class Future<T> {
     
     // TODO: private
     func tryComplete(result: TaskResult<T>) -> Bool {
-        switch result {
-        case let res where res.state == State.Success:
-            return self.trySuccess(res.value!)
+        assert(result.value || result.error)
+        
+        switch result.state {
+        case State.Success:
+            return self.trySuccess(result.value!)
         default:
-            if let certainError = result.error {
-                return self.tryError(certainError)
-            } else {
-                return self.tryError(NSError.errorWithDomain("domain", code: 1, userInfo: nil));
-            }
+            return self.tryError(result.error!)
         }
     }
     
@@ -283,6 +283,31 @@ class Future<T> {
 
         }
         return p.future
+    }
+    
+    func filter(p: T -> Bool) -> Future<T> {
+        let promise = Promise<T>()
+        
+        self.onComplete { result in
+            switch result.state {
+            case .Success:
+                if p(result.value!) {
+                    promise.completeWith(self)
+                } else {
+                    promise.error(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
+                }
+                break
+            default:
+                promise.error(result.error!)
+                break
+            }
+        }
+        
+        return promise.future
+    }
+
+    class func foreach<U>(seq: SequenceOf<Future<U>>, pf: U -> ()) {
+
     }
     
     // TODO: private

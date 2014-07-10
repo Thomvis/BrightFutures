@@ -358,6 +358,25 @@ class BrightFuturesTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testFilterNoSuchElement() {
+        let e = self.expectationWithDescription("")
+        future(3).filter { $0 > 5}.onComplete { result in
+            XCTAssert(result.error!.domain == NoSuchElementError, "filter should yield no result")
+            e.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testFilterPasses() {
+        let e = self.expectationWithDescription("")
+        future("Thomas").filter { $0.hasPrefix("Th") }.onComplete { result in
+            XCTAssert(result.value! == "Thomas", "Filter should pass")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
 
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
