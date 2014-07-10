@@ -5,6 +5,8 @@ BrightFutures is a simple Futures &amp; Promises library for iOS and OS X writte
 
 BrightFutures uses Control Flow-like syntax to wrap complicated calculations and provide an asynchronous interface to its result when it becomes available.
 
+The goal of this project is to implement Scala's Future ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future) in Swift.
+
 ## Compatibility
 BrightFutures is compatible with Xcode 6 beta 3.
 
@@ -61,24 +63,57 @@ func complicatedQuestion() -> Future<String> {
 
 ## Chaining callbacks
 
-Using the `andThen` function on a `Future`, the order of callbacks can be explicitly defined.
+Using the `andThen` function on a `Future`, the order of callbacks can be explicitly defined. The closure passed to `andThen` is meant to perform side-effects and does not influence the result. `andThen` returns a new Future with the same result as this future.
+
+
+```swift
+var answer = 10
+
+let f = future(4)
+let f1 = f.andThen { result in
+    answer *= result.value!
+}
+
+let f2 = f1.andThen { result in
+    answer += 2
+}
+
+// answer will be 42 (not 48)
+```
+
+`result` is an instance of `TaskResult`, which mimics a typical `Try` construct as much as the Swift compiler currently allows.
+
+## Functional Composition
+
+### map
+
+`map` returns a new Future that contains the error from this Future if this Future failed, or the return value from the given closure that was applied to the value of this Future.
 
 ```swift
 future { _ in
     fibonacci(10)
-}.andThen { result -> String in
-    if result.value! > 5 {
+}.map { number in
+    if number > 5 {
         return "large"
     }
     return "small"
-}.andThen { result -> Bool in
-    return result.value! == "large"
+}.map { sizeString in
+    return sizeString == "large"
 }.onSuccess { numberIsLarge in
     XCTAssert(numberIsLarge)
 }
 ```
 
-`result` is an instance of `TaskResult`, which mimics a typical `Try` construct as much as the Swift compiler currently allows.
+### zip
+
+```swift
+let f = future(1)
+let f1 = future(2)
+
+f.zip(f1).onSuccess { (let a, let b) in
+    // a is 1, b is 2
+}
+```
 
 ## Recovering from errors
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
