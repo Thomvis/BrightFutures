@@ -5,7 +5,7 @@ BrightFutures is a simple Futures &amp; Promises library for iOS and OS X writte
 
 BrightFutures uses Control Flow-like syntax to wrap complicated calculations and provide an asynchronous interface to its result when it becomes available.
 
-The goal of this project is to implement Scala's Future ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future) in Swift.
+The goal of this project is to implement Scala's Future ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) in Swift. Second to this readme, the Scala documentation should therefore also be of help.
 
 ## Compatibility
 BrightFutures is compatible with Xcode 6 beta 3.
