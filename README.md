@@ -115,6 +115,18 @@ f.zip(f1).onSuccess { (let a, let b) in
 }
 ```
 
+### filter
+```swift
+future(3).filter { $0 > 5 }.onComplete { result in
+  // result is a NoSuchElementError
+}
+
+future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
+  // result is "Swift"
+}
+```
+
+
 ## Recovering from errors
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
