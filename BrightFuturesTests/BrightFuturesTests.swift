@@ -246,7 +246,7 @@ class BrightFuturesTests: XCTestCase {
         XCTAssertEqual(f.value!, f1.value!, "future value should be passed transparantly")
         XCTAssertEqual(f1.value!, f2.value!, "future value should be passed transparantly")
     }
-    
+
     func testTransparentOnFailure() {
         let e = self.expectationWithDescription("")
         
@@ -378,6 +378,17 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 
+    func testForcedFuture() {
+      var x = 10
+      let f: Future<Void> = future { _ in
+        NSThread.sleepForTimeInterval(0.5)
+        x = 3
+        return ()
+      }
+      f.forced
+      XCTAssertEqual(x, 3)
+    }
+ 
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
         let instances = 100;
@@ -450,7 +461,7 @@ class BrightFuturesTests: XCTestCase {
             return val
         }
     }
-    
+
 }
 
 func fibonacci(n: Int) -> Int {

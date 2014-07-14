@@ -74,11 +74,22 @@ class Future<T> {
             return nil
         }
     }
-    
+
+    var forced: TaskResult<T> {
+        let sema = dispatch_semaphore_create(0)
+        var res: TaskResult<T>? = nil
+        self.onComplete {
+            res = $0
+            dispatch_semaphore_signal(sema)
+        }
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER)
+        return res!
+    }
+
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     let defaultCallbackExecutionContext = QueueExecutionContext()
-    
+
     class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
         res.result = TaskResult(value: value)
