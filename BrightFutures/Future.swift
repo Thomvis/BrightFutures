@@ -197,36 +197,49 @@ class Future<T> {
             }
         }
     }
-    
-    func map<U>(f: T -> U) -> Future<U> {
+
+    func map<U>(f: (T, inout NSError?) -> U) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
     }
-    
-    func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
+
+    func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U) -> Future<U> {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
             switch result {
-            case .Success(let val):
-                p.success(f(val))
-            case .Failure(let err):
-                p.error(err)
+            case .Success(let v):
+                var err: NSError? = nil
+                let res = f(v(), &err)
+                if let e = err {
+                    p.error(e)
+                } else {
+                    p.success(res)
+                }
+                break;
+            default:
+                p.error(result.error!)
+                break;
             }
         })
         
         return p.future
     }
-    
-    func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
+
+    func andThen(callback: (TaskResult<T>, inout NSError?) -> ()) -> Future<T> {
         return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
-    
-    func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
+
+    func andThen(context c: ExecutionContext, callback: (TaskResult<T>, inout NSError?) -> ()) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result in
-            callback(result)
-            p.completeWith(self)
+            var err: NSError? = nil
+            callback(result, &err)
+            if let e = err {
+                p.error(e)
+            } else {
+                p.completeWith(self)
+            }
         }
 
         return p.future

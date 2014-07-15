@@ -249,12 +249,12 @@ class BrightFuturesTests: XCTestCase {
         
         future { _ in
             fibonacci(10)
-        }.map { value -> String in
+        }.map { value, _ -> String in
             if value > 5 {
                 return "large"
             }
             return "small"
-        }.map { sizeString -> Bool in
+        }.map { sizeString, _ -> Bool in
             return sizeString == "large"
         }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
@@ -271,9 +271,9 @@ class BrightFuturesTests: XCTestCase {
         future { (inout error:NSError?) -> Int? in
             error = NSError(domain: "Tests", code: 123, userInfo: nil)
             return nil
-        }.map { number in
+        }.map { number, _ in
             XCTAssert(false, "map should not be evaluated because of failure above")
-        }.map { number in
+        }.map { number, _ in
             XCTAssert(false, "this map should also not be evaluated because of failure above")
         }.onFailure { error in
             XCTAssert(error.domain == "Tests")
@@ -297,7 +297,7 @@ class BrightFuturesTests: XCTestCase {
             return
         }
         
-        let f2 = f1.andThen { result in
+        let f2 = f1.andThen { result, _ in
             answer += 2
         }
         
@@ -464,6 +464,45 @@ class BrightFuturesTests: XCTestCase {
         }
         f.forced()
         XCTAssertEqual(x, 3)
+    }
+
+    func testComposedMapError() {
+        let e = self.expectationWithDescription("")
+
+        let error = NSError(domain: "map-error", code: 5, userInfo: nil)
+        future("Thomas").map{ (s: String, inout err: NSError?) -> Int in
+            err = error
+            return 3
+        }.onComplete { result in
+            switch(result) {
+            case .Failure(let e):
+                XCTAssert(error == e, "functional map composition should fail")
+            case .Success(_):
+                XCTFail("functional map composition should fail")
+            }
+            e.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testComposedAndThenError() {
+        let e = self.expectationWithDescription("")
+
+        let error = NSError(domain: "map-error", code: 5, userInfo: nil)
+        future("Thomas").andThen{ (t: TaskResult<String>, inout err: NSError?) in
+            err = error
+        }.onComplete { result in
+            switch(result) {
+            case .Failure(let e):
+                XCTAssert(error == e, "functional map composition should fail")
+            case .Success(_):
+                XCTFail("functional map composition should fail")
+            }
+            e.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
  
     func testUtilsTraverseSuccess() {
