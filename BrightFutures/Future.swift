@@ -35,7 +35,7 @@ func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task:
             promise.success(result!)
         }
     }
-    
+
     return promise.future
 }
 
@@ -55,40 +55,51 @@ class Future<T> {
     
     let q = Queue()
     
-    var result = TaskResult<T>()
+    var result: TaskState<T> = .Pending
     
     var value: T? {
-        switch result.state {
-        case .Success:
-            return result.value as? T
+        switch result {
+        case .Done(.Success(let v)):
+            return v()
         default:
             return nil
         }
     }
     
     var error: NSError? {
-        switch result.state {
-        case .Failure:
-            return result.error
+        switch result {
+        case .Done(.Failure(let e)):
+            return e
         default:
             return nil
         }
     }
-    
+
+    var forced: TaskResult<T> {
+        let sema = dispatch_semaphore_create(0)
+        var res: TaskResult<T>? = nil
+        self.onComplete {
+            res = $0
+            dispatch_semaphore_signal(sema)
+        }
+        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER)
+        return res!
+    }
+
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     let defaultCallbackExecutionContext = QueueExecutionContext()
-    
+
     class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
-        res.result = TaskResult(value: value)
+        res.result = .Done(.Success(value))
         
         return res
     }
     
     class func failed(error: NSError) -> Future<T> {
         let res = Future<T>();
-        res.result = TaskResult(error: error)
+        res.result = .Done(.Failure(error))
         
         return res
     }
@@ -98,21 +109,22 @@ class Future<T> {
     }
     
     // TODO: private
-    func complete(result: TaskResult<T>) {
+    func complete(result: TaskState<T>) {
         if !tryComplete(result) {
             
         }
     }
     
     // TODO: private
-    func tryComplete(result: TaskResult<T>) -> Bool {
-        assert(result.value || result.error)
-        
-        switch result.state {
-        case State.Success:
-            return self.trySuccess(result.value!)
-        default:
-            return self.tryError(result.error!)
+    func tryComplete(result: TaskState<T>) -> Bool {
+        switch result {
+        case .Done(.Success(let v)):
+            return self.trySuccess(v())
+        case .Done(.Failure(let e)):
+            return self.tryError(e)
+        case .Pending:
+            assert(false)
+            return false
         }
     }
     
@@ -124,11 +136,14 @@ class Future<T> {
     // TODO: private
     func trySuccess(value: T) -> Bool {
         return (q.sync {
-            if self.result.state != .Pending {
+            switch (self.result) {
+            case .Pending:
+                break
+            case .Done(_):
                 return false;
             }
-            
-            self.result = TaskResult(value: value)
+
+            self.result = .Done(.Success(value))
             self.runCallbacks()
             return true;
         })!;
@@ -144,11 +159,14 @@ class Future<T> {
     // TODO: private
     func tryError(error: NSError) -> Bool {
         return (q.sync {
-            if self.result.state != .Pending {
-                return false;
+            switch (self.result) {
+            case .Pending:
+                break
+            case .Done(_):
+                return false
             }
-            
-            self.result = TaskResult(error: error)
+
+            self.result = .Done(.Failure(error))
             self.runCallbacks()
             return true;
         })!;
@@ -161,19 +179,26 @@ class Future<T> {
     func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
-                c.execute {
-                    callback(result: self.result)
+                c.execute { _ in
+                    switch(self.result) {
+                    case .Done(let res):
+                        callback(result: res)
+                    case .Pending:
+                        assert(false)
+                        break
+                    }
                 }
             }
-            
-            if self.result.state == .Pending {
+
+            switch (self.result) {
+            case .Pending:
                 self.callbacks.append(wrappedCallback)
-            } else {
+            case .Done(_):
                 wrappedCallback(self)
             }
         }
     }
-    
+
     func map<U>(f: T -> U) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
     }
@@ -182,12 +207,12 @@ class Future<T> {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
-            switch result.state {
-            case .Success:
-                p.success(f(result.value!))
+            switch result {
+            case .Success(let v):
+                p.success(f(v()))
                 break;
-            default:
-                p.error(result.error!)
+            case .Failure(let e):
+                p.error(e)
                 break;
             }
         })
@@ -216,8 +241,11 @@ class Future<T> {
     
     func onSuccess(context c: ExecutionContext, callback: SuccessCallback) {
         self.onComplete(context: c) { result in
-            if !result.error {
-                callback(result.value!)
+            switch (result) {
+            case .Success(let v):
+                callback(v())
+            case .Failure(_):
+                break
             }
         }
     }
@@ -228,8 +256,11 @@ class Future<T> {
     
     func onFailure(context c: ExecutionContext, callback: FailureCallback) {
         self.onComplete(context: c) { result in
-            if result.error {
-                callback(result.error!)
+            switch (result) {
+            case .Failure(let e):
+                callback(e)
+            case .Success(_):
+                break
             }
         }
     }
@@ -252,9 +283,10 @@ class Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result -> () in
-            if result.error {
-                p.completeWith(task(result.error!))
-            } else {
+            switch (result) {
+            case .Failure(let e):
+                p.completeWith(task(e))
+            case .Success(_):
                 p.completeWith(self)
             }
         }
@@ -265,22 +297,22 @@ class Future<T> {
     func zip<U>(that: Future<U>) -> Future<(T,U)> {
         let p = Promise<(T,U)>()
         self.onComplete { thisResult in
-            switch thisResult.state {
-                case .Success:
+            switch thisResult {
+                case .Success(let thisValue):
                     that.onComplete { thatResult in
-                        switch thatResult.state {
-                        case .Success:
-                            let combinedResult = (thisResult.value!, thatResult.value!)
+                        switch thatResult {
+                        case .Success(let thatValue):
+                            let combinedResult = (thisValue(), thatValue())
                             p.success(combinedResult)
                             break
-                        default:
-                            p.error(thatResult.error!)
+                        case .Failure(let error):
+                            p.error(error)
                             break
                         }
                     }
                     break
-                default:
-                    p.error(thisResult.error!)
+                case .Failure(let error):
+                    p.error(error)
                     break
                 
             }
@@ -293,16 +325,16 @@ class Future<T> {
         let promise = Promise<T>()
         
         self.onComplete { result in
-            switch result.state {
-            case .Success:
-                if p(result.value!) {
+            switch result {
+            case .Success(let v):
+                if p(v()) {
                     promise.completeWith(self)
                 } else {
                     promise.error(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
                 }
                 break
-            default:
-                promise.error(result.error!)
+            case .Failure(let e):
+                promise.error(e)
                 break
             }
         }
@@ -322,31 +354,13 @@ class Future<T> {
     }
 }
 
-enum State {
-    case Pending, Success, Failure
+enum TaskState<T> {
+    case Pending
+    case Done(TaskResult<T>)
 }
 
-struct TaskResult<T> { // should be generic, but compiler issues prevent this
-    let state: State
-    let value: T?
-    let error: NSError?
-    
-    init() {
-        self.state = .Pending
-        self.value = nil
-        self.error = nil
-    }
-    
-    init(value: T?) {
-        self.state = .Success
-        self.value = value
-        self.error = nil
-    }
-    
-    init (error: NSError) {
-        self.state = .Failure
-        self.value = nil
-        self.error = error
-    }
-    
+enum TaskResult<T> {
+    // workaround for not having nested generic enums yet
+    case Success(@auto_closure () -> T)
+    case Failure(NSError)
 }

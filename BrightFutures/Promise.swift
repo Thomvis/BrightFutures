@@ -28,10 +28,11 @@ class Promise<T> {
     
     func completeWith(future: Future<T>) {
         future.onComplete { result in
-            if result.error {
-                self.error(result.error!)
-            } else {
-                self.success(result.value!)
+            switch (result) {
+            case .Success(let v):
+                self.success(v())
+            case .Failure(let e):
+                self.error(e)
             }
         }
     }
