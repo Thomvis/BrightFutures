@@ -88,11 +88,11 @@ class BrightFuturesTests: XCTestCase {
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
         let f = Future<Int>.never()
-        XCTAssert(f.value == nil)
+        XCTAssert(f.result.state == State.Pending)
         
-        sleep(UInt32(Double(arc4random_uniform(100))/Double(100)))
+        sleep(UInt32(Double(arc4random_uniform(100))/100.0))
         
-        XCTAssert(f.value == nil)
+        XCTAssert(f.result.state == State.Pending)
     }
     
     func testControlFlowSyntax() {
