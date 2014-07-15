@@ -225,21 +225,16 @@ class Future<T> {
         return p.future
     }
 
-    func andThen(callback: (TaskResult<T>, inout NSError?) -> ()) -> Future<T> {
+    func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
         return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
 
-    func andThen(context c: ExecutionContext, callback: (TaskResult<T>, inout NSError?) -> ()) -> Future<T> {
+    func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result in
-            var err: NSError? = nil
-            callback(result, &err)
-            if let e = err {
-                p.error(e)
-            } else {
-                p.completeWith(self)
-            }
+            callback(result)
+            p.completeWith(self)
         }
 
         return p.future

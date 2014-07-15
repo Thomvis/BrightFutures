@@ -297,7 +297,7 @@ class BrightFuturesTests: XCTestCase {
             return
         }
         
-        let f2 = f1.andThen { result, _ in
+        let f2 = f1.andThen { result in
             answer += 2
         }
         
