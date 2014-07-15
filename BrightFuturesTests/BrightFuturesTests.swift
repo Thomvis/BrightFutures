@@ -85,6 +85,16 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    // this is inherently impossible to test, but we'll give it a try
+    func testNeverCompletingFuture() {
+        let f = Future<Int>.never()
+        XCTAssert(f.value == nil)
+        
+        sleep(UInt32(Double(arc4random_uniform(100))/Double(100)))
+        
+        XCTAssert(f.value == nil)
+    }
+    
     func testControlFlowSyntax() {
         
         let f = future { _ in

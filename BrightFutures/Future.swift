@@ -93,6 +93,10 @@ class Future<T> {
         return res
     }
     
+    class func never() -> Future<T> {
+        return Future<T>()
+    }
+    
     // TODO: private
     func complete(result: TaskResult<T>) {
         if !tryComplete(result) {
