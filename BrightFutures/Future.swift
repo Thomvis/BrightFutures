@@ -198,11 +198,11 @@ class Future<T> {
         }
     }
 
-    func map<U>(f: (T, inout NSError?) -> U) -> Future<U> {
+    func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
     }
 
-    func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U) -> Future<U> {
+    func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U?) -> Future<U> {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
@@ -213,7 +213,7 @@ class Future<T> {
                 if let e = err {
                     p.error(e)
                 } else {
-                    p.success(res)
+                    p.success(res!)
                 }
                 break;
             default:

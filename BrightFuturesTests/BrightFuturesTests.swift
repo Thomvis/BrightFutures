@@ -249,12 +249,12 @@ class BrightFuturesTests: XCTestCase {
         
         future { _ in
             fibonacci(10)
-        }.map { value, _ -> String in
+        }.map { value, _ -> String? in
             if value > 5 {
                 return "large"
             }
             return "small"
-        }.map { sizeString, _ -> Bool in
+        }.map { sizeString, _ -> Bool? in
             return sizeString == "large"
         }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
@@ -470,7 +470,7 @@ class BrightFuturesTests: XCTestCase {
         let e = self.expectationWithDescription("")
 
         let error = NSError(domain: "map-error", code: 5, userInfo: nil)
-        future("Thomas").map{ (s: String, inout err: NSError?) -> Int in
+        future("Thomas").map{ (s: String, inout err: NSError?) -> Int? in
             err = error
             return 3
         }.onComplete { result in
