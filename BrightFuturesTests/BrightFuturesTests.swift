@@ -40,7 +40,12 @@ class BrightFuturesTests: XCTestCase {
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
         f.onComplete { result in
-            XCTAssert(!result.error)
+            switch (result) {
+            case .Failure(let e):
+                XCTFail("future should complete with no errors")
+            case .Success(_):
+                break
+            }
             completeExpectation.fulfill()
         }
         
@@ -66,8 +71,13 @@ class BrightFuturesTests: XCTestCase {
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
         f.onComplete { result in
-            XCTAssert(!result.value)
-            XCTAssert(result.error == error)
+            switch (result) {
+            case .Failure(let e):
+                XCTAssert(e == error)
+            case .Success(let v):
+                XCTAssert("future should complete with error")
+            }
+
             completeExpectation.fulfill()
         }
         
@@ -149,8 +159,8 @@ class BrightFuturesTests: XCTestCase {
         
         let e = self.expectationWithDescription("complete expectation")
         
-        p.future.onComplete { result in
-            XCTAssert(result.value == 55)
+        p.future.onSuccess { result in
+            XCTAssert(result == 55)
             e.fulfill()
         }
         
@@ -232,7 +242,12 @@ class BrightFuturesTests: XCTestCase {
         
         let f = future(4)
         let f1 = f.andThen { result in
-            answer *= result.value!
+            switch (result) {
+            case .Success(let v):
+                answer *= v()
+            case .Failure(_):
+                break
+            }
         }
         
         let f2 = f1.andThen { result in
@@ -362,7 +377,13 @@ class BrightFuturesTests: XCTestCase {
     func testFilterNoSuchElement() {
         let e = self.expectationWithDescription("")
         future(3).filter { $0 > 5}.onComplete { result in
-            XCTAssert(result.error!.domain == NoSuchElementError, "filter should yield no result")
+            switch (result) {
+            case .Failure(let err):
+                XCTAssert(err.domain == NoSuchElementError, "filter should yield no result")
+            case .Success(_):
+                XCTFail("filter should complete the future with an error")
+                break
+            }
             e.fulfill()
         }
         self.waitForExpectationsWithTimeout(2, handler: nil)
@@ -371,7 +392,12 @@ class BrightFuturesTests: XCTestCase {
     func testFilterPasses() {
         let e = self.expectationWithDescription("")
         future("Thomas").filter { $0.hasPrefix("Th") }.onComplete { result in
-            XCTAssert(result.value! == "Thomas", "Filter should pass")
+            switch (result) {
+            case .Failure(_):
+                XCTAssert(false, "filter should complete the future with an error")
+            case .Success(let v):
+                XCTAssert(v() == "Thomas", "Filter should pass")
+            }
             e.fulfill()
         }
         
