@@ -305,10 +305,6 @@ class Future<T> {
         
         return promise.future
     }
-
-    class func foreach<U>(seq: SequenceOf<Future<U>>, pf: U -> ()) {
-
-    }
     
     // TODO: private
     func runCallbacks() {
