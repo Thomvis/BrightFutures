@@ -388,6 +388,96 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 
+    func testUtilsTraverseSuccess() {
+        let n = 10
+        
+        let f = FutureUtils.traverse(1...n) { i in
+            future(fibonacci(i)).andThen { res in
+                println(res.value!)
+            }
+        }
+        
+        let e = self.expectationWithDescription("")
+        
+        f.onSuccess { fibSeq in
+            XCTAssertEqual(fibSeq.count, n)
+            
+            for var i = 0; i < fibSeq.count; i++ {
+                XCTAssertEqual(fibSeq[i], fibonacci(i+1))
+            }
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(4, handler: nil)
+    }
+    
+    func testUtilsTraverseEmpty() {
+        let e = self.expectationWithDescription("")
+        FutureUtils.traverse([Int](), {future($0)}).onSuccess { res in
+            XCTAssertEqual(res.count, 0);
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsTraverseSingleError() {
+        let e = self.expectationWithDescription("")
+        
+        let evenFuture: Int -> Future<Bool> = { i in
+            return future { err in
+                if i % 2 == 0 {
+                    return true
+                } else {
+                    err = NSError(domain: "traverse-single-error", code: i, userInfo: nil)
+                    return false
+                }
+            }
+        }
+        
+        FutureUtils.traverse([2,4,6,8,9,10], evenFuture).onFailure { err in
+            XCTAssertEqual(err.code, 9)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsTraverseMultipleErrors() {
+        let e = self.expectationWithDescription("")
+        
+        let evenFuture: Int -> Future<Bool> = { i in
+            return future { err in
+                if i % 2 == 0 {
+                    return true
+                } else {
+                    err = NSError(domain: "traverse-single-error", code: i, userInfo: nil)
+                    return false
+                }
+            }
+        }
+        
+        FutureUtils.traverse([20,22,23,26,27,30], evenFuture).onFailure { err in
+            XCTAssertEqual(err.code, 23)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsTraverseWithExecutionContext() {
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.traverse(1...10, context: QueueExecutionContext.main) { _ -> Future<Int> in
+            XCTAssert(NSThread.isMainThread())
+            return future(1)
+        }.onComplete { _ in
+            e.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
         let instances = 100;
@@ -470,4 +560,8 @@ func fibonacci(n: Int) -> Int {
     default:
         return fibonacci(n - 1) + fibonacci(n - 2)
     }
+}
+
+func fibonacciFuture(n: Int) -> Future<Int> {
+    return future(fibonacci(n))
 }
