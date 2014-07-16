@@ -13,9 +13,6 @@ import Foundation
  */
 class FutureUtils {
     
-    class func fold<T, U, F : Sequence where F.GeneratorType.Element == Future<T>>(futures: F, zero: U, op: (T, U) -> U) -> Future<U> {
-        return Future<U>.never()
-    }
     
     class func traverse<S : Sequence,T, U where S.GeneratorType.Element == T>(seq: S, fn: T -> Future<U>) -> Future<[U]> {
         return self.traverse(seq, context: QueueExecutionContext.global, fn: fn)
