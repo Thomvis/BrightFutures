@@ -379,14 +379,14 @@ class BrightFuturesTests: XCTestCase {
     }
 
     func testForcedFuture() {
-      var x = 10
-      let f: Future<Void> = future { _ in
-        NSThread.sleepForTimeInterval(0.5)
-        x = 3
-        return ()
-      }
-      f.forced
-      XCTAssertEqual(x, 3)
+        var x = 10
+        let f: Future<Void> = future { _ in
+            NSThread.sleepForTimeInterval(0.5)
+            x = 3
+            return ()
+        }
+        f.forced()
+        XCTAssertEqual(x, 3)
     }
  
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire

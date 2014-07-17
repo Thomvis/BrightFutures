@@ -75,17 +75,6 @@ class Future<T> {
         }
     }
 
-    var forced: TaskResult<T> {
-        let sema = dispatch_semaphore_create(0)
-        var res: TaskResult<T>? = nil
-        self.onComplete {
-            res = $0
-            dispatch_semaphore_signal(sema)
-        }
-        dispatch_semaphore_wait(sema, DISPATCH_TIME_FOREVER)
-        return res!
-    }
-
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     let defaultCallbackExecutionContext = QueueExecutionContext()
@@ -159,6 +148,25 @@ class Future<T> {
             self.runCallbacks()
             return true;
         })!;
+    }
+
+    func forced() -> TaskResult<T> {
+        return forced(DISPATCH_TIME_FOREVER)
+    }
+
+    func forced(time: dispatch_time_t) -> TaskResult<T> {
+        if let v = value {
+            return TaskResult(value: v)
+        } else {
+            let sema = dispatch_semaphore_create(0)
+            var res: TaskResult<T>? = nil
+            self.onComplete {
+                res = $0
+                dispatch_semaphore_signal(sema)
+            }
+            dispatch_semaphore_wait(sema, time)
+            return res!
+        }
     }
     
     func onComplete(callback: CompletionCallback) {
