@@ -62,6 +62,17 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        XCTAssert(f.succeeded())
+        
+        let e = self.expectationWithDescription("")
+        
+        f.succeeded { val in
+            XCTAssertEqual(val, 2)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testFailedFuture() {
@@ -89,6 +100,17 @@ class BrightFuturesTests: XCTestCase {
         
         f.onSuccess { value in
             XCTFail("success should not be called")
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        XCTAssert(f.failed())
+        
+        let e = self.expectationWithDescription("")
+        
+        f.failed { err in
+            XCTAssertEqual(error, err)
+            e.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
@@ -268,14 +290,23 @@ class BrightFuturesTests: XCTestCase {
         
         let f2 = f1.andThen { result in
             answer += 2
-            e.fulfill()
+        }
+        
+        f.onSuccess { fval in
+            f1.onSuccess { f1val in
+                f2.onSuccess { f2val in
+                    
+                    XCTAssertEqual(fval, f1val, "future value should be passed transparantly")
+                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
+                    
+                    e.fulfill()
+                }
+            }
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
         
         XCTAssertEqual(42, answer, "andThens should be executed in order")
-        XCTAssertEqual(f.value!, f1.value!, "future value should be passed transparantly")
-        XCTAssertEqual(f1.value!, f2.value!, "future value should be passed transparantly")
     }
     
     func testTransparentOnFailure() {

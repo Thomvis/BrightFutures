@@ -48,6 +48,7 @@ func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task:
 let NoSuchElementError = "NoSuchElementError"
 
 class Future<T> {
+    
     typealias CallbackInternal = (future: Future<T>) -> ()
     typealias CompletionCallback = (result: TaskResult<T>) -> ()
     typealias SuccessCallback = (T) -> ()
@@ -57,33 +58,23 @@ class Future<T> {
     
     var result: TaskResult<T>? = nil
     
-    var value: T? {
-        if let certainResult = result {
-            switch certainResult {
-            case .Success(let val):
-                return val
-            default:
-                return nil
-            }
-        }
-        return nil
-    }
-    
-    var error: NSError? {
-        if let certainResult = result {
-            switch certainResult {
-            case .Failure(let err):
-                return err
-            default:
-                return nil
-            }
-        }
-        return nil
-    }
-    
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     let defaultCallbackExecutionContext = QueueExecutionContext()
+    
+    func succeeded(fn: (T -> ())? = nil) -> Bool {
+        if let res = result {
+            return res.succeeded(fn)
+        }
+        return false
+    }
+    
+    func failed(fn: (NSError -> ())? = nil) -> Bool {
+        if let res = result {
+            return res.failed(fn)
+        }
+        return false
+    }
     
     class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
@@ -326,41 +317,6 @@ class Future<T> {
     }
 }
 
-//enum State {
-//    case Pending, Success, Failure
-//}
-//
-//struct TaskResult<T> { // should be generic, but compiler issues prevent this
-//    let state: State
-//    let value: T?
-//    let error: NSError?
-//    
-//    init() {
-//        self.state = .Pending
-//        self.value = nil
-//        self.error = nil
-//    }
-//    
-//    init(value: T?) {
-//        self.state = .Success
-//        self.value = value
-//        self.error = nil
-//    }
-//    
-//    init (error: NSError) {
-//        self.state = .Failure
-//        self.value = nil
-//        self.error = error
-//    }
-//    
-//}
-//
-
-//enum FutureState<T> {
-//    case .Pending
-//    case .Done(TaskResult<T>)
-//}
-
 class TaskResultValueWrapper<T> {
     let value: T
     
@@ -388,4 +344,30 @@ enum TaskResult<T> {
     init(_ error: NSError) {
         self = .Failure(error)
     }
+    
+    func failed(fn: (NSError -> ())? = nil) -> Bool {
+        switch self {
+        case .Success(_):
+            return false
+
+        case .Failure(let err):
+            if let fnn = fn {
+                fnn(err)
+            }
+            return true
+        }
+    }
+    
+    func succeeded(fn: (T -> ())? = nil) -> Bool {
+        switch self {
+        case .Success(let val):
+            if let fnn = fn {
+                fnn(val)
+            }
+            return true
+        case .Failure(let err):
+            return false
+        }
+    }
 }
+
