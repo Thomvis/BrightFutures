@@ -70,6 +70,12 @@ class BrightFuturesTests: XCTestCase {
         f.failed { _ in
             XCTAssert(false)
         }
+        
+        f.completed(success: { val in
+            XCTAssert(true)
+        }, failure: { err in
+            XCTAssert(false)
+        })
     }
     
     func testFailedFuture() {
@@ -114,6 +120,12 @@ class BrightFuturesTests: XCTestCase {
         f.succeeded { _ in
             XCTAssert(false)
         }
+        
+        f.completed(success: { val in
+            XCTAssert(false)
+        }, failure: { err in
+            XCTAssert(true)
+        })
     }
     
     // this is inherently impossible to test, but we'll give it a try

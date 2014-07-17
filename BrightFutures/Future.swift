@@ -76,11 +76,9 @@ class Future<T> {
         return false
     }
     
-    func completed(fn: (TaskResult<T> -> ())? = nil) -> Bool {
+    func completed(success: (T->())? = nil, failure: (NSError->())? = nil) -> Bool{
         if let res = self.result {
-            if let fnn = fn {
-                fnn(res)
-            }
+            res.handle(success: success, failure: failure)
             return true
         }
         return false
@@ -379,6 +377,19 @@ enum TaskResult<T> {
             return true
         case .Failure(let err):
             return false
+        }
+    }
+    
+    func handle(success: (T->())? = nil, failure: (NSError->())? = nil) {
+        switch self {
+        case .Success(let val):
+            if let successCb = success {
+                successCb(val)
+            }
+        case .Failure(let err):
+            if let failureCb = failure {
+                failureCb(err)
+            }
         }
     }
 }
