@@ -24,14 +24,19 @@ import Foundation
 
 class Promise<T> {
 
-    let future: Future<T> = Future<T>()
+    let future: Future<T>
+    
+    init() {
+        self.future = Future<T>()
+    }
     
     func completeWith(future: Future<T>) {
         future.onComplete { result in
-            if result.error {
-                self.error(result.error!)
-            } else {
-                self.success(result.value!)
+            switch result {
+            case .Success(let val):
+                self.success(val)
+            case .Failure(let err):
+                self.error(err)
             }
         }
     }

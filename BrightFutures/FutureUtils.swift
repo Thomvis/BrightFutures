@@ -29,12 +29,12 @@ class FutureUtils {
             let p1 = Promise<Void>()
             baseFuture = baseFuture.andThen { _ in
                 future.onComplete(context: c) { res in
-                    switch res.state {
-                    case .Success:
-                        resultingArray.append(res.value!)
+                    switch res {
+                    case .Success(let val):
+                        resultingArray.append(val)
                         p1.success()
-                    default:
-                        p.tryError(res.error!)
+                    case .Failure(let err):
+                        p.tryError(err)
                     }
                 }
             }
