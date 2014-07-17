@@ -71,11 +71,21 @@ var answer = 10
 
 let f = future(4)
 let f1 = f.andThen { result in
-    answer *= result.value!
+    switch result {
+      case .Succeeded(let val):
+        answer *= val
+      case .Failure(_):
+        break
+    }
+    
 }
 
 let f2 = f1.andThen { result in
-    answer += 2
+    // short-hand for the switch statement. Closure is executed immediately iff result is .Succeeded
+    result.succeeded { val in
+      answer += 2
+    }
+    
 }
 
 // answer will be 42 (not 48)

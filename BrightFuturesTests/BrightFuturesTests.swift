@@ -40,14 +40,13 @@ class BrightFuturesTests: XCTestCase {
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
         f.onComplete { result in
-            XCTAssert(!result.error)
+            XCTAssert(result.succeeded())
             completeExpectation.fulfill()
         }
         
         let successExpectation = self.expectationWithDescription("immediate success")
         
         f.onSuccess { value in
-            XCTAssert(value != nil)
             XCTAssert(value == 2, "Computation should be returned")
             successExpectation.fulfill()
         }
@@ -57,6 +56,20 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        XCTAssert(f.succeeded())
+        
+        var didCallSucceeded = false
+        f.succeeded { val in
+            XCTAssertEqual(val, 2)
+            didCallSucceeded = true
+        }
+        
+        XCTAssert(didCallSucceeded)
+        
+        f.failed { _ in
+            XCTAssert(false)
+        }
     }
     
     func testFailedFuture() {
@@ -66,8 +79,12 @@ class BrightFuturesTests: XCTestCase {
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
         f.onComplete { result in
-            XCTAssert(!result.value)
-            XCTAssert(result.error == error)
+            switch result {
+            case .Success(let val):
+                XCTAssert(false)
+            case .Failure(let err):
+                XCTAssertEqual(err, error)
+            }
             completeExpectation.fulfill()
         }
         
@@ -83,16 +100,30 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        XCTAssert(f.failed())
+        
+        var didCallFailed = false
+        f.failed { err in
+            XCTAssertEqual(error, err)
+            didCallFailed = true
+        }
+        
+        XCTAssert(didCallFailed)
+        
+        f.succeeded { _ in
+            XCTAssert(false)
+        }
     }
     
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
         let f = Future<Int>.never()
-        XCTAssert(f.result.state == State.Pending)
+        XCTAssert(!f.completed())
         
         sleep(UInt32(Double(arc4random_uniform(100))/100.0))
         
-        XCTAssert(f.result.state == State.Pending)
+        XCTAssert(!f.completed())
     }
     
     func testControlFlowSyntax() {
@@ -160,7 +191,13 @@ class BrightFuturesTests: XCTestCase {
         let e = self.expectationWithDescription("complete expectation")
         
         p.future.onComplete { result in
-            XCTAssert(result.value == 55)
+            switch result {
+            case .Success(let val):
+                XCTAssert(val == 55)
+            case .Failure(_):
+                XCTAssert(false)
+            }
+            
             e.fulfill()
         }
         
@@ -242,19 +279,31 @@ class BrightFuturesTests: XCTestCase {
         
         let f = future(4)
         let f1 = f.andThen { result in
-            answer *= result.value!
+            result.succeeded { val in
+                answer *= val
+            }
+            return
         }
         
         let f2 = f1.andThen { result in
             answer += 2
-            e.fulfill()
+        }
+        
+        f.onSuccess { fval in
+            f1.onSuccess { f1val in
+                f2.onSuccess { f2val in
+                    
+                    XCTAssertEqual(fval, f1val, "future value should be passed transparantly")
+                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
+                    
+                    e.fulfill()
+                }
+            }
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
         
         XCTAssertEqual(42, answer, "andThens should be executed in order")
-        XCTAssertEqual(f.value!, f1.value!, "future value should be passed transparantly")
-        XCTAssertEqual(f1.value!, f2.value!, "future value should be passed transparantly")
     }
     
     func testTransparentOnFailure() {
@@ -372,7 +421,10 @@ class BrightFuturesTests: XCTestCase {
     func testFilterNoSuchElement() {
         let e = self.expectationWithDescription("")
         future(3).filter { $0 > 5}.onComplete { result in
-            XCTAssert(result.error!.domain == NoSuchElementError, "filter should yield no result")
+            result.failed { err in
+                XCTAssert(err.domain == NoSuchElementError, "filter should yield no result")
+            }
+
             e.fulfill()
         }
         self.waitForExpectationsWithTimeout(2, handler: nil)
@@ -381,7 +433,10 @@ class BrightFuturesTests: XCTestCase {
     func testFilterPasses() {
         let e = self.expectationWithDescription("")
         future("Thomas").filter { $0.hasPrefix("Th") }.onComplete { result in
-            XCTAssert(result.value! == "Thomas", "Filter should pass")
+            result.succeeded { val in
+                XCTAssert(val == "Thomas", "Filter should pass")
+            }
+
             e.fulfill()
         }
         
@@ -393,7 +448,8 @@ class BrightFuturesTests: XCTestCase {
         
         let f = FutureUtils.traverse(1...n) { i in
             future(fibonacci(i)).andThen { res in
-                println(res.value!)
+                res.succeeded(println)
+                return
             }
         }
         
