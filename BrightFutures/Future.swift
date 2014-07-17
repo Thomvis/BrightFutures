@@ -31,8 +31,8 @@ func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task:
         
         if let certainError = error {
             promise.error(certainError)
-        } else {
-            promise.success(result!)
+        } else if let certainResult = result {
+            promise.success(certainResult)
         }
     }
     
@@ -63,15 +63,25 @@ class Future<T> {
     let defaultCallbackExecutionContext = QueueExecutionContext()
     
     func succeeded(fn: (T -> ())? = nil) -> Bool {
-        if let res = result {
+        if let res = self.result {
             return res.succeeded(fn)
         }
         return false
     }
     
     func failed(fn: (NSError -> ())? = nil) -> Bool {
-        if let res = result {
+        if let res = self.result {
             return res.failed(fn)
+        }
+        return false
+    }
+    
+    func completed(fn: (TaskResult<T> -> ())? = nil) -> Bool {
+        if let res = self.result {
+            if let fnn = fn {
+                fnn(res)
+            }
+            return true
         }
         return false
     }
@@ -118,7 +128,7 @@ class Future<T> {
     
     // TODO: private
     func trySuccess(value: T) -> Bool {
-        return (q.sync {
+        return q.sync {
             if self.result {
                 return false;
             }
@@ -126,7 +136,7 @@ class Future<T> {
             self.result = TaskResult(value)
             self.runCallbacks()
             return true;
-        })!;
+        };
     }
     
     // TODO: private
@@ -138,7 +148,7 @@ class Future<T> {
     
     // TODO: private
     func tryError(error: NSError) -> Bool {
-        return (q.sync {
+        return q.sync {
             if self.result {
                 return false;
             }
@@ -146,7 +156,7 @@ class Future<T> {
             self.result = TaskResult(error)
             self.runCallbacks()
             return true;
-        })!;
+        };
     }
     
     func onComplete(callback: CompletionCallback) {
@@ -156,8 +166,10 @@ class Future<T> {
     func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
-                c.execute {
-                    callback(result: self.result!)
+                if let realRes = self.result {
+                    c.execute {
+                        callback(result: realRes)
+                    }
                 }
             }
             

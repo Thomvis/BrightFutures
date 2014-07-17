@@ -52,7 +52,6 @@ class BrightFuturesTests: XCTestCase {
         let successExpectation = self.expectationWithDescription("immediate success")
         
         f.onSuccess { value in
-            XCTAssert(value != nil)
             XCTAssert(value == 2, "Computation should be returned")
             successExpectation.fulfill()
         }
@@ -119,11 +118,11 @@ class BrightFuturesTests: XCTestCase {
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
         let f = Future<Int>.never()
-        XCTAssert(!f.result)
+        XCTAssert(!f.completed())
         
         sleep(UInt32(Double(arc4random_uniform(100))/100.0))
         
-        XCTAssert(!f.result)
+        XCTAssert(!f.completed())
     }
     
     func testControlFlowSyntax() {
