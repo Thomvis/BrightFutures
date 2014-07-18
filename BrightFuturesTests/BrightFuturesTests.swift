@@ -317,7 +317,7 @@ class BrightFuturesTests: XCTestCase {
         
         XCTAssertEqual(42, answer, "andThens should be executed in order")
     }
-    
+
     func testTransparentOnFailure() {
         let e = self.expectationWithDescription("")
         
@@ -455,6 +455,17 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 
+    func testForcedFuture() {
+        var x = 10
+        let f: Future<Void> = future { _ in
+            NSThread.sleepForTimeInterval(0.5)
+            x = 3
+            return ()
+        }
+        f.forced()
+        XCTAssertEqual(x, 3)
+    }
+ 
     func testUtilsTraverseSuccess() {
         let n = 10
         
@@ -618,7 +629,7 @@ class BrightFuturesTests: XCTestCase {
             return val
         }
     }
-    
+
 }
 
 func fibonacci(n: Int) -> Int {

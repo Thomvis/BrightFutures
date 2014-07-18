@@ -156,6 +156,25 @@ class Future<T> {
             return true;
         };
     }
+
+    func forced() -> TaskResult<T> {
+        return forced(DISPATCH_TIME_FOREVER)
+    }
+
+    func forced(time: dispatch_time_t) -> TaskResult<T> {
+        if let certainResult = self.result {
+            return certainResult
+        } else {
+            let sema = dispatch_semaphore_create(0)
+            var res: TaskResult<T>? = nil
+            self.onComplete {
+                res = $0
+                dispatch_semaphore_signal(sema)
+            }
+            dispatch_semaphore_wait(sema, time)
+            return res!
+        }
+    }
     
     func onComplete(callback: CompletionCallback) {
         self.onComplete(context: self.defaultCallbackExecutionContext, callback: callback)
