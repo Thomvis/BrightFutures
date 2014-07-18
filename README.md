@@ -106,7 +106,7 @@ future { _ in
         return "large"
     }
     return "small"
-}.map { sizeString, error in
+}.map { sizeString, _ in
     return sizeString == "large"
 }.onSuccess { numberIsLarge in
     XCTAssert(numberIsLarge)
