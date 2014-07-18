@@ -236,7 +236,7 @@ class BrightFuturesTests: XCTestCase {
         future { _ -> Int in
             XCTAssert(!NSThread.isMainThread())
             return 1
-        }.onSuccess(context: QueueExecutionContext.main) { value in
+        }.onSuccess(context: Queue.main) { value in
             XCTAssert(NSThread.isMainThread())
             e.fulfill()
         }
@@ -536,7 +536,7 @@ class BrightFuturesTests: XCTestCase {
     func testUtilsTraverseWithExecutionContext() {
         let e = self.expectationWithDescription("")
         
-        FutureUtils.traverse(1...10, context: QueueExecutionContext.main) { _ -> Future<Int> in
+        FutureUtils.traverse(1...10, context: Queue.main) { _ -> Future<Int> in
             XCTAssert(NSThread.isMainThread())
             return future(1)
         }.onComplete { _ in
@@ -551,7 +551,7 @@ class BrightFuturesTests: XCTestCase {
         let instances = 100;
         var successfulFutures = [Future<Int>]()
         var failingFutures = [Future<Int>]()
-        let contexts: [ExecutionContext] = [ImmediateExecutionContext(), QueueExecutionContext.main, QueueExecutionContext.global]
+        let contexts: [ExecutionContext] = [ImmediateExecutionContext(), Queue.main, Queue.global]
         
         let randomContext: () -> ExecutionContext = { contexts[Int(arc4random_uniform(UInt32(contexts.count)))] }
         let randomFuture: () -> Future<Int> = {

@@ -15,7 +15,7 @@ class FutureUtils {
     
     
     class func traverse<S : Sequence,T, U where S.GeneratorType.Element == T>(seq: S, fn: T -> Future<U>) -> Future<[U]> {
-        return self.traverse(seq, context: QueueExecutionContext.global, fn: fn)
+        return self.traverse(seq, context: Queue.global, fn: fn)
     }
     
     class func traverse<S : Sequence,T, U where S.GeneratorType.Element == T>(seq: S, context c: ExecutionContext, fn: T -> Future<U>) -> Future<[U]> {

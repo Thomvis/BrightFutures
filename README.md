@@ -164,7 +164,7 @@ let f = future(context: ImmediateExecutionContext()) { _ in
   fibonacci(10)
 }
 
-f.onComplete(context: QueueExecutionContext.main) { value in
+f.onComplete(context: Queue.main) { value in
   // update the UI, we're on the main thread
 }
 ```

@@ -56,7 +56,7 @@ class QueueExecutionContext : ExecutionContext {
     }
     
     func execute(task: () -> ()) {
-        self.queue.async(task)
+        self.queue.execute(task)
     }
 }
 

@@ -22,7 +22,7 @@
 
 import Foundation
 
-struct Queue {
+struct Queue : ExecutionContext {
     
     static let main = Queue(queue: dispatch_get_main_queue());
     static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
@@ -49,4 +49,9 @@ struct Queue {
     func async(block: dispatch_block_t) {
         dispatch_async(queue, block);
     }
+    
+    func execute(task: () -> ()) {
+        self.async(task)
+    }
+    
 }

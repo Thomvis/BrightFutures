@@ -22,7 +22,7 @@
 
 import Foundation
 
-func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task: (inout NSError?) -> T?) -> Future<T> {
+func future<T>(context c: ExecutionContext = Queue.global, task: (inout NSError?) -> T?) -> Future<T> {
     let promise = Promise<T>();
     
     c.execute {
@@ -39,7 +39,7 @@ func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task:
     return promise.future
 }
 
-func future<T>(context c: ExecutionContext = QueueExecutionContext.global, task: @auto_closure () -> T?) -> Future<T> {
+func future<T>(context c: ExecutionContext = Queue.global, task: @auto_closure () -> T?) -> Future<T> {
     return future(context: c) { error in
         return task()
     }
@@ -60,7 +60,7 @@ class Future<T> {
     
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
-    let defaultCallbackExecutionContext = QueueExecutionContext()
+    let defaultCallbackExecutionContext = Queue()
     
     func succeeded(fn: (T -> ())? = nil) -> Bool {
         if let res = self.result {
