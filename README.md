@@ -85,7 +85,6 @@ let f2 = f1.andThen { result in
     result.succeeded { val in
       answer += 2
     }
-    
 }
 
 // answer will be 42 (not 48)
@@ -102,12 +101,12 @@ let f2 = f1.andThen { result in
 ```swift
 future { _ in
     fibonacci(10)
-}.map { number in
+}.map { number, error in
     if number > 5 {
         return "large"
     }
     return "small"
-}.map { sizeString in
+}.map { sizeString, error in
     return sizeString == "large"
 }.onSuccess { numberIsLarge in
     XCTAssert(numberIsLarge)

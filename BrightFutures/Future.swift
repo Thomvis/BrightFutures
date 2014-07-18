@@ -197,30 +197,38 @@ class Future<T> {
             }
         }
     }
-    
-    func map<U>(f: T -> U) -> Future<U> {
+
+    func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
     }
-    
-    func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
+
+    func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U?) -> Future<U> {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
             switch result {
-            case .Success(let val):
-                p.success(f(val))
-            case .Failure(let err):
-                p.error(err)
+            case .Success(let v):
+                var err: NSError? = nil
+                let res = f(v, &err)
+                if let e = err {
+                    p.error(e)
+                } else {
+                    p.success(res!)
+                }
+                break;
+            case .Failure(let e):
+                p.error(e)
+                break;
             }
         })
         
         return p.future
     }
-    
+
     func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
         return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
-    
+
     func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
         let p = Promise<T>()
         
