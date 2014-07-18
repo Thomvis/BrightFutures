@@ -43,24 +43,6 @@ future(fibonacci(10)).onSuccess { value in
 
 This is great concise syntax if there is no need for a way to report a failure.
 
-## The Promise of a Future value
-```swift
-func complicatedQuestion() -> Future<String> {
-  let promise = Promise<String>()
-
-  Queue.async {
-  
-    // do a complicated task
-    
-    promise.success("forty-two")
-  }
-
-  return promise.future
-}
-```
-
-`Queue` is a simple wrapper around a dispatch queue.
-
 ## Chaining callbacks
 
 Using the `andThen` function on a `Future`, the order of callbacks can be explicitly defined. The closure passed to `andThen` is meant to perform side-effects and does not influence the result. `andThen` returns a new Future with the same result as this future.
@@ -135,7 +117,6 @@ future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
 }
 ```
 
-
 ## Recovering from errors
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
@@ -171,6 +152,26 @@ f.onComplete(context: Queue.main) { value in
 The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
 
 You can find more examples in the tests.
+
+## The Promise of a Future value
+If you want to provide `Future`s to your own asynchronous calls, you'll typically need a `Promise`.
+
+```swift
+func complicatedQuestion() -> Future<String> {
+  let promise = Promise<String>()
+
+  Queue.async {
+  
+    // do a complicated task
+    
+    promise.success("forty-two")
+  }
+
+  return promise.future
+}
+```
+
+`Queue` is a simple wrapper around a dispatch queue.
 
 ## Credits
 
