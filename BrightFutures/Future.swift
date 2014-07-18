@@ -209,15 +209,15 @@ class Future<T> {
             switch result {
             case .Success(let v):
                 var err: NSError? = nil
-                let res = f(v(), &err)
+                let res = f(v, &err)
                 if let e = err {
                     p.error(e)
                 } else {
                     p.success(res!)
                 }
                 break;
-            default:
-                p.error(result.error!)
+            case .Failure(let e):
+                p.error(e)
                 break;
             }
         })

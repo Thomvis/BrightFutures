@@ -486,25 +486,6 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 
-    func testComposedAndThenError() {
-        let e = self.expectationWithDescription("")
-
-        let error = NSError(domain: "map-error", code: 5, userInfo: nil)
-        future("Thomas").andThen{ (t: TaskResult<String>, inout err: NSError?) in
-            err = error
-        }.onComplete { result in
-            switch(result) {
-            case .Failure(let e):
-                XCTAssert(error == e, "functional map composition should fail")
-            case .Success(_):
-                XCTFail("functional map composition should fail")
-            }
-            e.fulfill()
-        }
-
-        self.waitForExpectationsWithTimeout(2, handler: nil)
-    }
- 
     func testUtilsTraverseSuccess() {
         let n = 10
         
