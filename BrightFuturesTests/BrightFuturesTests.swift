@@ -576,7 +576,23 @@ class BrightFuturesTests: XCTestCase {
 
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
-    
+
+    func testFlatMap() {
+        let e = self.expectationWithDescription("")
+
+        let finalString = "Greg"
+        let flatMapped: Future<String> = future("Thomas").flatMap { _ in
+            return future(finalString)
+        }
+
+        flatMapped.onSuccess { s in
+            XCTAssertEqual(s, finalString, "strings are not equal")
+            e.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+ 
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
         let instances = 100;

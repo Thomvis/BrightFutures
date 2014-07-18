@@ -198,7 +198,24 @@ class Future<T> {
         }
     }
 
-    func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
+    func flatMap<U>(f: T -> Future<U>) -> Future<U> {
+        return self.flatMap(context: self.defaultCallbackExecutionContext, f)
+    }
+
+    func flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U> {
+        let p: Promise<U> = Promise()
+        self.onComplete(context: c) { res in
+            switch (res) {
+            case .Failure(let e):
+                p.error(e)
+            case .Success(let v):
+                p.completeWith(f(v))
+            }
+        }
+        return p.future
+    }
+
+	func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
     }
 
@@ -239,7 +256,7 @@ class Future<T> {
 
         return p.future
     }
-    
+
     func onSuccess(callback: SuccessCallback) {
         self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
     }
