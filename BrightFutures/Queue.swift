@@ -29,7 +29,7 @@ public struct Queue : ExecutionContext {
     
     var queue: dispatch_queue_t
     
-    init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
+    public init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
         self.queue = queue
     }
     

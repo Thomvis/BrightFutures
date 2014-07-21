@@ -47,7 +47,7 @@ public class QueueExecutionContext : ExecutionContext {
     
     let queue: Queue
     
-    init(queue q: Queue = Queue(), targetQueue: Queue? = nil) {
+    public init(queue q: Queue = Queue(), targetQueue: Queue? = nil) {
         self.queue = q
         
         if let unwrappedTargetQueue = targetQueue {
