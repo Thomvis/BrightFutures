@@ -22,10 +22,10 @@
 
 import Foundation
 
-struct Queue : ExecutionContext {
+public struct Queue : ExecutionContext {
     
-    static let main = Queue(queue: dispatch_get_main_queue());
-    static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
+    public static let main = Queue(queue: dispatch_get_main_queue());
+    public static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
     
     var queue: dispatch_queue_t
     
@@ -33,11 +33,11 @@ struct Queue : ExecutionContext {
         self.queue = queue
     }
     
-    func sync(block: () -> ()) {
+    public func sync(block: () -> ()) {
         dispatch_sync(queue, block)
     }
     
-    func sync<T>(block: () -> T) -> T {
+    public func sync<T>(block: () -> T) -> T {
         var res: T? = nil;
         dispatch_sync(queue, {
             res = block();
@@ -46,11 +46,11 @@ struct Queue : ExecutionContext {
         return res!;
     }
     
-    func async(block: dispatch_block_t) {
+    public func async(block: dispatch_block_t) {
         dispatch_async(queue, block);
     }
     
-    func execute(task: () -> ()) {
+    public func execute(task: () -> ()) {
         self.async(task)
     }
     

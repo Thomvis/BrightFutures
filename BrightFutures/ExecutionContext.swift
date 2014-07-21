@@ -22,23 +22,23 @@
 
 import Foundation
 
-protocol ExecutionContext {
+public protocol ExecutionContext {
     
     func execute(task: () -> ());
 
 }
 
-class QueueExecutionContext : ExecutionContext {
+public class QueueExecutionContext : ExecutionContext {
     
     // This is Approach B from https://github.com/hpique/SwiftSingleton
-    class var main : QueueExecutionContext {
+    public class var main : QueueExecutionContext {
         struct Static {
             static let instance : QueueExecutionContext = QueueExecutionContext(targetQueue: Queue.main)
         }
         return Static.instance
     }
     
-    class var global: QueueExecutionContext {
+    public class var global: QueueExecutionContext {
         struct Static {
             static let instance : QueueExecutionContext = QueueExecutionContext(queue: Queue.global)
         }
@@ -55,14 +55,14 @@ class QueueExecutionContext : ExecutionContext {
         }
     }
     
-    func execute(task: () -> ()) {
+    public func execute(task: () -> ()) {
         self.queue.execute(task)
     }
 }
 
-class ImmediateExecutionContext : ExecutionContext {
+public class ImmediateExecutionContext : ExecutionContext {
     
-    func execute(task: () -> ())  {
+    public func execute(task: () -> ())  {
         task()
     }
 }
