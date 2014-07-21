@@ -22,7 +22,7 @@
 
 import Foundation
 
-func future<T>(context c: ExecutionContext = Queue.global, task: (inout NSError?) -> T?) -> Future<T> {
+public func future<T>(context c: ExecutionContext = Queue.global, task: (inout NSError?) -> T?) -> Future<T> {
     let promise = Promise<T>();
     
     c.execute {
@@ -39,7 +39,7 @@ func future<T>(context c: ExecutionContext = Queue.global, task: (inout NSError?
     return promise.future
 }
 
-func future<T>(context c: ExecutionContext = Queue.global, task: @auto_closure () -> T?) -> Future<T> {
+public func future<T>(context c: ExecutionContext = Queue.global, task: @auto_closure () -> T?) -> Future<T> {
     return future(context: c) { error in
         return task()
     }
@@ -47,12 +47,12 @@ func future<T>(context c: ExecutionContext = Queue.global, task: @auto_closure (
 
 let NoSuchElementError = "NoSuchElementError"
 
-class Future<T> {
+public class Future<T> {
     
     typealias CallbackInternal = (future: Future<T>) -> ()
     typealias CompletionCallback = (result: TaskResult<T>) -> ()
     typealias SuccessCallback = (T) -> ()
-    typealias FailureCallback = (NSError) -> ()
+    public typealias FailureCallback = (NSError) -> ()
     
     let q = Queue()
     
@@ -62,21 +62,21 @@ class Future<T> {
     
     let defaultCallbackExecutionContext = Queue()
     
-    func succeeded(fn: (T -> ())? = nil) -> Bool {
+    public func succeeded(fn: (T -> ())? = nil) -> Bool {
         if let res = self.result {
             return res.succeeded(fn)
         }
         return false
     }
     
-    func failed(fn: (NSError -> ())? = nil) -> Bool {
+    public func failed(fn: (NSError -> ())? = nil) -> Bool {
         if let res = self.result {
             return res.failed(fn)
         }
         return false
     }
     
-    func completed(success: (T->())? = nil, failure: (NSError->())? = nil) -> Bool{
+    public func completed(success: (T->())? = nil, failure: (NSError->())? = nil) -> Bool{
         if let res = self.result {
             res.handle(success: success, failure: failure)
             return true
@@ -84,32 +84,30 @@ class Future<T> {
         return false
     }
     
-    class func succeeded(value: T) -> Future<T> {
+    public class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
         res.result = TaskResult(value)
         
         return res
     }
     
-    class func failed(error: NSError) -> Future<T> {
+    public class func failed(error: NSError) -> Future<T> {
         let res = Future<T>();
         res.result = TaskResult(error)
         
         return res
     }
     
-    class func never() -> Future<T> {
+    public class func never() -> Future<T> {
         return Future<T>()
     }
     
-    // TODO: private
     func complete(result: TaskResult<T>) {
         if !tryComplete(result) {
             
         }
     }
     
-    // TODO: private
     func tryComplete(result: TaskResult<T>) -> Bool {
         switch result {
         case .Success(let val):
@@ -119,12 +117,10 @@ class Future<T> {
         }
     }
     
-    // TODO: private
     func success(value: T) {
         self.trySuccess(value)
     }
     
-    // TODO: private
     func trySuccess(value: T) -> Bool {
         return q.sync {
             if self.result {
@@ -137,14 +133,12 @@ class Future<T> {
         };
     }
     
-    // TODO: private
     func error(error: NSError) {
         if !self.tryError(error) {
 
         }
     }
     
-    // TODO: private
     func tryError(error: NSError) -> Bool {
         return q.sync {
             if self.result {
@@ -157,11 +151,11 @@ class Future<T> {
         };
     }
 
-    func forced() -> TaskResult<T> {
+    public func forced() -> TaskResult<T> {
         return forced(DISPATCH_TIME_FOREVER)
     }
 
-    func forced(time: dispatch_time_t) -> TaskResult<T> {
+    public func forced(time: dispatch_time_t) -> TaskResult<T> {
         if let certainResult = self.result {
             return certainResult
         } else {
@@ -176,11 +170,11 @@ class Future<T> {
         }
     }
     
-    func onComplete(callback: CompletionCallback) {
+    public func onComplete(callback: CompletionCallback) {
         self.onComplete(context: self.defaultCallbackExecutionContext, callback: callback)
     }
     
-    func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
+    public func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
                 if let realRes = self.result {
@@ -198,11 +192,11 @@ class Future<T> {
         }
     }
 
-    func flatMap<U>(f: T -> Future<U>) -> Future<U> {
+    public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
         return self.flatMap(context: self.defaultCallbackExecutionContext, f)
     }
 
-    func flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U> {
+    public func flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U> {
         let p: Promise<U> = Promise()
         self.onComplete(context: c) { res in
             switch (res) {
@@ -215,11 +209,11 @@ class Future<T> {
         return p.future
     }
 
-	func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
+    public func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
     }
 
-    func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U?) -> Future<U> {
+    public func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U?) -> Future<U> {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
@@ -242,11 +236,11 @@ class Future<T> {
         return p.future
     }
 
-    func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
+    public func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
         return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
 
-    func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
+    public func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result in
@@ -257,11 +251,11 @@ class Future<T> {
         return p.future
     }
 
-    func onSuccess(callback: SuccessCallback) {
+    public func onSuccess(callback: SuccessCallback) {
         self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
     }
     
-    func onSuccess(context c: ExecutionContext, callback: SuccessCallback) {
+    public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) {
         self.onComplete(context: c) { result in
             switch result {
             case .Success(let val):
@@ -272,11 +266,11 @@ class Future<T> {
         }
     }
     
-    func onFailure(callback: FailureCallback) {
+    public func onFailure(callback: FailureCallback) {
         self.onFailure(context: self.defaultCallbackExecutionContext, callback)
     }
     
-    func onFailure(context c: ExecutionContext, callback: FailureCallback) {
+    public func onFailure(context c: ExecutionContext, callback: FailureCallback) {
         self.onComplete(context: c) { result in
             switch result {
             case .Failure(let err):
@@ -287,21 +281,21 @@ class Future<T> {
         }
     }
     
-    func recover(task: (NSError) -> T) -> Future<T> {
+    public func recover(task: (NSError) -> T) -> Future<T> {
         return self.recover(context: self.defaultCallbackExecutionContext, task)
     }
     
-    func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
+    public func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
         return self.recoverWith(context: c) { error -> Future<T> in
             return Future.succeeded(task(error))
         }
     }
     
-    func recoverWith(task: (NSError) -> Future<T>) -> Future<T> {
+    public func recoverWith(task: (NSError) -> Future<T>) -> Future<T> {
         return self.recoverWith(context: self.defaultCallbackExecutionContext, task: task)
     }
     
-    func recoverWith(context c: ExecutionContext, task: (NSError) -> Future<T>) -> Future<T> {
+    public func recoverWith(context c: ExecutionContext, task: (NSError) -> Future<T>) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result -> () in
@@ -316,7 +310,7 @@ class Future<T> {
         return p.future;
     }
     
-    func zip<U>(that: Future<U>) -> Future<(T,U)> {
+    public func zip<U>(that: Future<U>) -> Future<(T,U)> {
         let p = Promise<(T,U)>()
         self.onComplete { thisResult in
             switch thisResult {
@@ -339,7 +333,7 @@ class Future<T> {
         return p.future
     }
     
-    func filter(p: T -> Bool) -> Future<T> {
+    public func filter(p: T -> Bool) -> Future<T> {
         let promise = Promise<T>()
         
         self.onComplete { result in
@@ -359,8 +353,7 @@ class Future<T> {
         return promise.future
     }
     
-    // TODO: private
-    func runCallbacks() {
+    private func runCallbacks() {
         q.async {
             for callback in self.callbacks {
                 callback(future: self)
@@ -371,7 +364,7 @@ class Future<T> {
     }
 }
 
-class TaskResultValueWrapper<T> {
+public class TaskResultValueWrapper<T> {
     let value: T
     
     init(_ value: T) {
@@ -387,7 +380,7 @@ func ==<T: Equatable>(lhs: TaskResultValueWrapper<T>, rhs: T) -> Bool {
     return lhs.value == rhs
 }
 
-enum TaskResult<T> {
+public enum TaskResult<T> {
     case Success(TaskResultValueWrapper<T>)
     case Failure(NSError)
     
@@ -412,7 +405,7 @@ enum TaskResult<T> {
         }
     }
     
-    func succeeded(fn: (T -> ())? = nil) -> Bool {
+    public func succeeded(fn: (T -> ())? = nil) -> Bool {
         switch self {
         case .Success(let val):
             if let fnn = fn {
@@ -424,7 +417,7 @@ enum TaskResult<T> {
         }
     }
     
-    func handle(success: (T->())? = nil, failure: (NSError->())? = nil) {
+    public func handle(success: (T->())? = nil, failure: (NSError->())? = nil) {
         switch self {
         case .Success(let val):
             if let successCb = success {

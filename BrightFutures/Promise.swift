@@ -22,15 +22,15 @@
 
 import Foundation
 
-class Promise<T> {
+public class Promise<T> {
 
-    let future: Future<T>
+    public let future: Future<T>
     
-    init() {
+    public init() {
         self.future = Future<T>()
     }
     
-    func completeWith(future: Future<T>) {
+    public func completeWith(future: Future<T>) {
         future.onComplete { result in
             switch result {
             case .Success(let val):
@@ -41,19 +41,19 @@ class Promise<T> {
         }
     }
     
-    func success(value: T) {
+    public func success(value: T) {
         self.future.success(value)
     }
     
-    func trySuccess(value: T) -> Bool {
+    public func trySuccess(value: T) -> Bool {
         return self.future.trySuccess(value)
     }
     
-    func error(error: NSError) {
+    public func error(error: NSError) {
         self.future.error(error)
     }
     
-    func tryError(error: NSError) -> Bool {
+    public func tryError(error: NSError) -> Bool {
         return self.future.tryError(error)
     }
     
