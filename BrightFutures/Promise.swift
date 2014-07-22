@@ -26,7 +26,7 @@ public class Promise<T> {
 
     public let future: Future<T>
     
-    public init() {
+    internal init() {
         self.future = Future<T>()
     }
     
