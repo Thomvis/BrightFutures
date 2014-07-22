@@ -45,7 +45,7 @@ public func future<T>(context c: ExecutionContext = Queue.global, task: @auto_cl
     }
 }
 
-let NoSuchElementError = "NoSuchElementError"
+public let NoSuchElementError = "NoSuchElementError"
 
 public class Future<T> {
     
@@ -365,13 +365,13 @@ public class Future<T> {
 }
 
 public class TaskResultValueWrapper<T> {
-    let value: T
+    public let value: T
     
     init(_ value: T) {
         self.value = value
     }
     
-    func __conversion() -> T {
+    public func __conversion() -> T {
         return self.value
     }
 }
@@ -392,7 +392,7 @@ public enum TaskResult<T> {
         self = .Failure(error)
     }
     
-    func failed(fn: (NSError -> ())? = nil) -> Bool {
+    public func failed(fn: (NSError -> ())? = nil) -> Bool {
         switch self {
         case .Success(_):
             return false

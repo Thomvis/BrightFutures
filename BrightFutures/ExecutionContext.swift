@@ -62,6 +62,8 @@ public class QueueExecutionContext : ExecutionContext {
 
 public class ImmediateExecutionContext : ExecutionContext {
     
+    public init() { }
+    
     public func execute(task: () -> ())  {
         task()
     }

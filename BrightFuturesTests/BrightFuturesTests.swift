@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import XCTest
+import BrightFutures
 
 class BrightFuturesTests: XCTestCase {
     
@@ -205,7 +206,7 @@ class BrightFuturesTests: XCTestCase {
         p.future.onComplete { result in
             switch result {
             case .Success(let val):
-                XCTAssert(val == 55)
+                XCTAssert(55 == val)
             case .Failure(_):
                 XCTAssert(false)
             }
@@ -310,7 +311,9 @@ class BrightFuturesTests: XCTestCase {
                     
                     e.fulfill()
                 }
+                return
             }
+            return
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
