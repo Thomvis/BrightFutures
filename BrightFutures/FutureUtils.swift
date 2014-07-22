@@ -37,6 +37,7 @@ public class FutureUtils {
                         p.tryError(err)
                     }
                 }
+                return
             }
             baseFuture = p1.future
         }

@@ -170,11 +170,11 @@ public class Future<T> {
         }
     }
     
-    public func onComplete(callback: CompletionCallback) {
-        self.onComplete(context: self.defaultCallbackExecutionContext, callback: callback)
+    public func onComplete(callback: CompletionCallback) -> Future<T> {
+        return self.onComplete(context: self.defaultCallbackExecutionContext, callback: callback)
     }
     
-    public func onComplete(context c: ExecutionContext, callback: CompletionCallback) {
+    public func onComplete(context c: ExecutionContext, callback: CompletionCallback) -> Future<T> {
         q.sync {
             let wrappedCallback : Future<T> -> () = { future in
                 if let realRes = self.result {
@@ -190,6 +190,8 @@ public class Future<T> {
                 wrappedCallback(self)
             }
         }
+        
+        return self
     }
 
     public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
@@ -251,11 +253,11 @@ public class Future<T> {
         return p.future
     }
 
-    public func onSuccess(callback: SuccessCallback) {
-        self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
+    public func onSuccess(callback: SuccessCallback) -> Future<T> {
+        return self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
     }
     
-    public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) {
+    public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
         self.onComplete(context: c) { result in
             switch result {
             case .Success(let val):
@@ -264,13 +266,15 @@ public class Future<T> {
                 break
             }
         }
+        
+        return self
     }
     
-    public func onFailure(callback: FailureCallback) {
-        self.onFailure(context: self.defaultCallbackExecutionContext, callback)
+    public func onFailure(callback: FailureCallback) -> Future<T> {
+        return self.onFailure(context: self.defaultCallbackExecutionContext, callback)
     }
     
-    public func onFailure(context c: ExecutionContext, callback: FailureCallback) {
+    public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
         self.onComplete(context: c) { result in
             switch result {
             case .Failure(let err):
@@ -279,6 +283,7 @@ public class Future<T> {
                 break
             }
         }
+        return self
     }
     
     public func recover(task: (NSError) -> T) -> Future<T> {
