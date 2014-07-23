@@ -324,10 +324,10 @@ class BrightFuturesTests: XCTestCase {
     func testTransparentOnFailure() {
         let e = self.expectationWithDescription("")
         
-        future { (inout error:NSError?) -> Int in
-            return 3
+        future { _ in
+            3
         }.recover { _ in
-            return 5
+            5
         }.onSuccess { value in
             XCTAssert(value == 3)
             e.fulfill()
