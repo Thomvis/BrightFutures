@@ -1,18 +1,63 @@
 BrightFutures
 =============
 
-BrightFutures is a simple Futures &amp; Promises library for iOS and OS X written in Swift. I wrote BrightFutures to learn Swift and hope that in the process, I've created a library that proves to be useful.
+BrightFutures is a simple Futures &amp; Promises library for iOS and OS X written in Swift.
 
-BrightFutures uses Control Flow-like syntax to wrap complicated calculations and provide an asynchronous interface to its result when it becomes available.
+BrightFutures uses Control Flow-like syntax to wrap complicated calculations and provide an asynchronous interface to their result when it becomes available.
 
-The goal of this project is to implement Scala's Future ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) in Swift. Second to this readme, the Scala documentation should therefore also be of help.
+The goal of this project is to port Scala's Futures & Promises ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) to Swift. Second to this readme, the Scala documentation should therefore also be of help.
 
 ## Compatibility
-BrightFutures is compatible with Xcode 6 beta 3.
+BrightFutures is compatible with Xcode 6 beta 4.
 
-# Examples
+## Examples
+### Motivating Use Case
+We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
+
+```swift
+User.logIn(username, password) { user, error in
+  if !error {
+    Posts.fetchPosts(user, success: { posts in
+        // do something with the user's posts
+    }, failure: handleError)
+  } else {
+    handleError(error) // handeError is a custom function to handle errors
+  }
+}
+```
+
+Now let's see what BrightFutures can do for you:
+
+```swift
+User.logIn(username,password).flatMap { user, _ in
+  return Posts.fetchPosts(user)
+}.onSuccess { posts in
+  // do something with the user's posts
+}.onFailure { error in
+  // either logging in or fetching posts failed
+}
+```
+
+Both `User.logIn` and `Posts.fetchPosts` now immediately return a `Future`. A future can either fail with an error or succeed with a value, which can be anything from an Int to your custom struct, class or tuple. You can keep a future around and register for callbacks for when the future succeeds or fails at your convenience.
+
+When the future returned from `User.logIn` fails, e.g. the username and password did not match, `flatMap` and `onSuccess` are skipped and `onFailure` is called with the error that occurred while logging in. If the login attempt succeeded, the resulting user object is passed to `flatMap`, which 'turns' the user into an array of his or her posts. If the posts could not be fetched, `onSuccess` is skipped and `onFailure` is called with the error that occurred when fetching the posts. If the posts could be fetched successfully, `onSuccess` is called with the user's posts.
+
+This is just the tip of the proverbial iceberg. A lot more examples and techniques can be found in this readme or by looking at the tests.
+
+## The base case
+If you already have a function (or really any expression) defined that you just want to execute asynchronously, you can just wrap it in a `future()` call and turn it into a Future:
+
+```swift
+future(fibonacci(10)).onSuccess { value in
+  // value is 55
+}
+```
+
+While this is really short and simple, it is equally limited. In many cases, you will need a way to indicate that the task failed. That is where the control-flow syntax comes in.
 
 ## Control-flow syntax
+
+Because Swift allows to omit parenthesis for a function call if the only parameter is closure, we can pretend to add a `future` construct to the language:
 
 ```swift
 let f = future { error in
@@ -24,45 +69,43 @@ f.onSuccess { value in
 }
 ```
 
-`error` is an inout parameter that can be set in the closure if the calculation failed. If `error` is non-nil after the execution of the closure, the future has failed. You can also hide the parameter if you don't need it:
+`error` is an inout parameter that can be set in the closure if the calculation failed. If `error` is non-nil after the execution of the closure, the future is considered to have failed.
+
+## Providing Futures
+Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.error(error)` when the operation ended. Futures can only be completed through a Promise.
 
 ```swift
-let f = future { _ in
-  fibonacci(10)
+func complicatedQuestion() -> Future<String> {
+  let promise = Promise<String>()
+
+  Queue.async {
+  
+    // do a complicated task
+    
+    promise.success("forty-two")
+  }
+
+  return promise.future
 }
 ```
 
-## Wrapping expressions in a Future
-Using Swift's `@auto_closure` directive, BrightFutures provides a  simple way to wrap any expression into a Future.
-
-```swift
-future(fibonacci(10)).onSuccess { value in
-    XCTAssert(value == 55)
-}
-```
-
-This is great concise syntax if there is no need for a way to report a failure.
+`Queue` is a simple wrapper around a dispatch queue.
 
 ## Chaining callbacks
 
 Using the `andThen` function on a `Future`, the order of callbacks can be explicitly defined. The closure passed to `andThen` is meant to perform side-effects and does not influence the result. `andThen` returns a new Future with the same result as this future.
 
-
 ```swift
 var answer = 10
 
-let f = future(4)
-let f1 = f.andThen { result in
+future(4).andThen { result in
     switch result {
       case .Succeeded(let val):
         answer *= val
       case .Failure(_):
         break
-    }
-    
-}
-
-let f2 = f1.andThen { result in
+    }    
+}.andThen { result in
     // short-hand for the switch statement. Closure is executed immediately iff result is .Succeeded
     result.succeeded { val in
       answer += 2
@@ -78,7 +121,7 @@ let f2 = f1.andThen { result in
 
 ### map
 
-`map` returns a new Future that contains the error from this Future if this Future failed, or the return value from the given closure that was applied to the value of this Future.
+`map` returns a new Future that contains the error from this Future if this Future failed, or the return value from the given closure that was applied to the value of this Future. There's also a `flatMap` function that can be used to map the result of a future to the value of a new Future.
 
 ```swift
 future { _ in
@@ -121,7 +164,7 @@ future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
 ```swift
-future { (inout error:NSError?) -> Int? in
+future { _ in
     // fetch something from the web
     if (request.error) { // it could fail
         error = request.error
@@ -137,7 +180,7 @@ future { (inout error:NSError?) -> Int? in
 In addition to `recover`, `recoverWith` can be used to provide a Future that will provide the value to recover with.
 
 ## Custom execution contexts
-By default, all tasks and callbacks are performed in a background queue. All future-wrapped tasks are performed concurrently, but all callbacks of a single future will be executed serially. You can however change this behavior by providing an execution context when creating a future or adding a callback:
+By default, all tasks and callbacks are performed on the global GCD queue. All future-wrapped tasks are performed concurrently, but all callbacks of a single future will be executed serially. You can however change this behavior by providing an execution context when creating a future or adding a callback:
 
 ```swift
 let f = future(context: ImmediateExecutionContext()) { _ in
@@ -153,29 +196,9 @@ The calculation of the 10nth Fibonacci number is now performed on the same threa
 
 You can find more examples in the tests.
 
-## The Promise of a Future value
-If you want to provide `Future`s to your own asynchronous calls, you'll typically need a `Promise`.
-
-```swift
-func complicatedQuestion() -> Future<String> {
-  let promise = Promise<String>()
-
-  Queue.async {
-  
-    // do a complicated task
-    
-    promise.success("forty-two")
-  }
-
-  return promise.future
-}
-```
-
-`Queue` is a simple wrapper around a dispatch queue.
-
 ## Credits
 
-BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am an iOS Engineer at [Touchwonders](http://www.touchwonders.com/).
+BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am an iOS Engineer at [Touchwonders](http://www.touchwonders.com/). I aspire for this project to have a growing list of [contributors](https://github.com/Thomvis/BrightFutures/graphs/contributors).
 
 I really like Facebook's [BFTasks](https://github.com/BoltsFramework/Bolts-iOS), had a good look at the Promises & Futures implementation in [Scala](http://docs.scala-lang.org/overviews/core/futures.html) and also like what Max Howell is doing with [PromiseKit](https://github.com/mxcl/PromiseKit).
 
