@@ -152,10 +152,10 @@ public class Future<T> {
     }
 
     public func forced() -> TaskResult<T> {
-        return forced(DISPATCH_TIME_FOREVER)
+        return forced(Double.infinity)!
     }
 
-    public func forced(time: dispatch_time_t) -> TaskResult<T> {
+    public func forced(time: NSTimeInterval) -> TaskResult<T>? {
         if let certainResult = self.result {
             return certainResult
         } else {
@@ -165,8 +165,17 @@ public class Future<T> {
                 res = $0
                 dispatch_semaphore_signal(sema)
             }
-            dispatch_semaphore_wait(sema, time)
-            return res!
+
+            var timeout: dispatch_time_t
+            if time.isFinite {
+                timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(time * NSTimeInterval(NSEC_PER_SEC)))
+            } else {
+                timeout = DISPATCH_TIME_FOREVER
+            }
+            
+            dispatch_semaphore_wait(sema, timeout)
+            
+            return res
         }
     }
     

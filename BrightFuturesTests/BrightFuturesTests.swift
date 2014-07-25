@@ -468,6 +468,17 @@ class BrightFuturesTests: XCTestCase {
         f.forced()
         XCTAssertEqual(x, 3)
     }
+    
+    func testForcedFutureWithTimeout() {
+        let f: Future<Void> = future { _ in
+            NSThread.sleepForTimeInterval(0.5)
+            return ()
+        }
+        
+        XCTAssert(!f.forced(0.2))
+        
+        XCTAssert(f.forced(0.3))
+    }
 
     func testComposedMapError() {
         let e = self.expectationWithDescription("")
