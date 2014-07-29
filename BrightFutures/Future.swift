@@ -378,7 +378,7 @@ public class Future<T> {
     }
 }
 
-public class TaskResultValueWrapper<T> {
+public final class TaskResultValueWrapper<T> {
     public let value: T
     
     init(_ value: T) {
