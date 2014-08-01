@@ -103,9 +103,8 @@ public class Future<T> {
     }
     
     func complete(result: TaskResult<T>) {
-        if !tryComplete(result) {
-            
-        }
+        let succeeded = tryComplete(result)
+        assert(succeeded)
     }
     
     func tryComplete(result: TaskResult<T>) -> Bool {
@@ -118,7 +117,8 @@ public class Future<T> {
     }
     
     func success(value: T) {
-        self.trySuccess(value)
+        let succeeded = self.trySuccess(value)
+        assert(succeeded)
     }
     
     func trySuccess(value: T) -> Bool {
@@ -134,9 +134,8 @@ public class Future<T> {
     }
     
     func error(error: NSError) {
-        if !self.tryError(error) {
-
-        }
+        let succeeded = self.tryError(error)
+        assert(succeeded)
     }
     
     func tryError(error: NSError) -> Bool {
