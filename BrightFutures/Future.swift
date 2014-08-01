@@ -324,26 +324,11 @@ public class Future<T> {
     }
     
     public func zip<U>(that: Future<U>) -> Future<(T,U)> {
-        let p = Promise<(T,U)>()
-        self.onComplete { thisResult in
-            switch thisResult {
-                case .Success(let thisValue):
-                    that.onComplete { thatResult in
-                        switch thatResult {
-                        case .Success(let thatValue):
-                            let combinedResult: (T,U) = (thisValue, thatValue)
-                            p.success(combinedResult)
-                        case .Failure(let thatError):
-                            p.error(thatError)
-                        }
-                    }
-                    break
-                case .Failure(let thisError):
-                    p.error(thisError)
+        return self.flatMap { thisVal in
+            return that.map { thatVal, _ in
+                return (thisVal, thatVal)
             }
-
         }
-        return p.future
     }
     
     public func filter(p: T -> Bool) -> Future<T> {
