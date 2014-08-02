@@ -590,6 +590,44 @@ class BrightFuturesTests: XCTestCase {
 
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testUtilsFold() {
+        // create a list of Futures containing the Fibonacci sequence
+        let fibonacciList = (1...10).map { val in
+            fibonacciFuture(val)
+        }
+        
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.fold(fibonacciList, zero: 0, op: { $0 + $1 }).onSuccess { val in
+            XCTAssertEqual(val, 143)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsFoldWithError() {
+        let error = NSError(domain: "fold-with-error", code: 0, userInfo: nil)
+        
+        // create a list of Futures containing the Fibonacci sequence and one error
+        let fibonacciList = (1...10).map { val -> Future<Int> in
+            if val == 3 {
+                return Future<Int>.failed(error)
+            } else {
+                return fibonacciFuture(val)
+            }
+        }
+        
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.fold(fibonacciList, zero: 0, op: { $0 + $1 }).onFailure { err in
+            XCTAssertEqual(err, error)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
 
     func testFlatMap() {
         let e = self.expectationWithDescription("")

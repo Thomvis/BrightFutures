@@ -13,6 +13,15 @@ import Foundation
  */
 public class FutureUtils {
     
+    public class func fold<T,R>(seq: [Future<T>], zero: R, op: (R, T) -> R) -> Future<R> {
+        return seq.reduce(Future.succeeded(zero), combine: { zero, elem in
+            return zero.flatMap { zeroVal in
+                elem.map { elemVal, _ in
+                    return op(zeroVal, elemVal)
+                }
+            }
+        })
+    }
     
     public class func traverse<S : Sequence,T, U where S.GeneratorType.Element == T>(seq: S, fn: T -> Future<U>) -> Future<[U]> {
         return self.traverse(seq, context: Queue.global, fn: fn)
