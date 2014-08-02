@@ -13,10 +13,10 @@ import Foundation
  */
 public class FutureUtils {
     
-    public class func fold<T,R>(seq: [Future<T>], zero: R, op: (R, T) -> R) -> Future<R> {
+    public class func fold<T,R>(seq: [Future<T>], context c: ExecutionContext = Queue.global, zero: R, op: (R, T) -> R) -> Future<R> {
         return seq.reduce(Future.succeeded(zero), combine: { zero, elem in
             return zero.flatMap { zeroVal in
-                elem.map { elemVal, _ in
+                elem.map(context: c) { elemVal, _ in
                     return op(zeroVal, elemVal)
                 }
             }

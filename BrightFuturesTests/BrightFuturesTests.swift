@@ -628,6 +628,33 @@ class BrightFuturesTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testUtilsFoldWithExecutionContext() {
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.fold([Future.succeeded(1)], context: Queue.main, zero: 10) { remainder, elem -> Int in
+            XCTAssert(NSThread.isMainThread())
+            return remainder + elem
+        }.onSuccess { val in
+            XCTAssertEqual(val, 11)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsFoldWithEmptyList() {
+        let z = "NaN"
+        
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.fold([Future<String>](), zero: z, op: { $0 + $1 }).onSuccess { val in
+            XCTAssertEqual(val, z)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
 
     func testFlatMap() {
         let e = self.expectationWithDescription("")
