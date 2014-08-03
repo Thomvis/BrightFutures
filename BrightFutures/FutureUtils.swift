@@ -10,6 +10,9 @@ import Foundation
 
 /**
  * This class is the equivalent to Scala's Future object (i.e. singleton/static class)
+ *
+ * NOTE: the methods in this class should work on any Sequence, but the Swift compiler is currently
+ * not supporting this fully.
  */
 public class FutureUtils {
     
@@ -36,11 +39,17 @@ public class FutureUtils {
         })
     }
     
-    public class func traverse<S : Sequence,T, U where S.GeneratorType.Element == T>(seq: S, fn: T -> Future<U>) -> Future<[U]> {
+    public class func sequence<T>(seq: [Future<T>]) -> Future<[T]> {
+        return self.traverse(seq, fn: { (fut: Future<T>) -> Future<T> in
+            return fut
+        })
+    }
+    
+    public class func traverse<T, U>(seq: [T], fn: T -> Future<U>) -> Future<[U]> {
         return self.traverse(seq, context: Queue.global, fn: fn)
     }
     
-    public class func traverse<S : Sequence,T, U where S.GeneratorType.Element == T>(seq: S, context c: ExecutionContext, fn: T -> Future<U>) -> Future<[U]> {
+    public class func traverse<T, U>(seq: [T], context c: ExecutionContext, fn: T -> Future<U>) -> Future<[U]> {
         
         return self.fold(map(seq, fn), context: c, zero: [U](), op: { (list: [U], elem: U) -> [U] in
             // this should be even nicer in beta 5

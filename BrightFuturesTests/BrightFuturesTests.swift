@@ -521,7 +521,7 @@ class BrightFuturesTests: XCTestCase {
     func testUtilsTraverseSuccess() {
         let n = 10
         
-        let f = FutureUtils.traverse(1...n) { i in
+        let f = FutureUtils.traverse(Array(1...n)) { i in
             future(fibonacci(i)).andThen { res in
                 res.succeeded(println)
                 return
@@ -599,7 +599,7 @@ class BrightFuturesTests: XCTestCase {
     func testUtilsTraverseWithExecutionContext() {
         let e = self.expectationWithDescription("")
         
-        FutureUtils.traverse(1...10, context: Queue.main) { _ -> Future<Int> in
+        FutureUtils.traverse(Array(1...10), context: Queue.main) { _ -> Future<Int> in
             XCTAssert(NSThread.isMainThread())
             return future(1)
         }.onComplete { _ in
@@ -688,6 +688,34 @@ class BrightFuturesTests: XCTestCase {
         
         FutureUtils.firstCompletedOf(futures).onSuccess { val in
             XCTAssertEqual(val, 9)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsSequence() {
+        let futures = (1...10).map { fibonacciFuture($0) }
+        
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.sequence(futures).onSuccess { fibs in
+            for (index, num) in enumerate(fibs) {
+                XCTAssertEqual(fibonacci(index+1), num)
+            }
+            
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsSequenceEmpty() {
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.sequence([Future<Int>]()).onSuccess { val in
+            XCTAssertEqual(val.count, 0)
+            
             e.fulfill()
         }
         
