@@ -673,6 +673,26 @@ class BrightFuturesTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testUtilsFirstCompleted() {
+        let futures = [
+            Future.completeAfter(0.2, withValue: 3),
+            Future.completeAfter(0.3, withValue: 13),
+            Future.completeAfter(0.4, withValue: 23),
+            Future.completeAfter(0.3, withValue: 4),
+            Future.completeAfter(0.1, withValue: 9),
+            Future.completeAfter(0.4, withValue: 83),
+        ]
+        
+        let e = self.expectationWithDescription("")
+        
+        FutureUtils.firstCompletedOf(futures).onSuccess { val in
+            XCTAssertEqual(val, 9)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
 
     func testFlatMap() {
         let e = self.expectationWithDescription("")

@@ -13,6 +13,19 @@ import Foundation
  */
 public class FutureUtils {
     
+    public class func firstCompletedOf<T>(seq: [Future<T>]) -> Future<T> {
+        let p = Promise<T>()
+        
+        for fut in seq {
+            fut.onComplete { res in
+                p.tryComplete(res)
+                return
+            }
+        }
+        
+        return p.future
+    }
+    
     public class func fold<T,R>(seq: [Future<T>], context c: ExecutionContext = Queue.global, zero: R, op: (R, T) -> R) -> Future<R> {
         return seq.reduce(Future.succeeded(zero), combine: { zero, elem in
             return zero.flatMap { zeroVal in

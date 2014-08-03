@@ -57,4 +57,8 @@ public class Promise<T> {
         return self.future.tryError(error)
     }
     
+    public func tryComplete(result: TaskResult<T>) -> Bool {
+        return self.future.tryComplete(result)
+    }
+    
 }
