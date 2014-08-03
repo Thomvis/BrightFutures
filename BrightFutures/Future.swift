@@ -98,6 +98,19 @@ public class Future<T> {
         return res
     }
     
+    public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
+        let res = Future<T>()
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.queue) {
+            res.success(value)
+        }
+        
+        return res
+    }
+    
+    /**
+     * Returns a Future that will never succeed
+     */
     public class func never() -> Future<T> {
         return Future<T>()
     }

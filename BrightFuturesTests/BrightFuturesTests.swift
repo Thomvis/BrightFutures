@@ -129,6 +129,24 @@ class BrightFuturesTests: XCTestCase {
         })
     }
     
+    func testCompleteAfterFuture() {
+        let f = Future.completeAfter(1, withValue: 3)
+        
+        XCTAssertFalse(f.completed())
+        
+        NSThread.sleepForTimeInterval(0.2)
+
+        XCTAssertFalse(f.completed())
+        
+        NSThread.sleepForTimeInterval(1.0)
+
+        XCTAssert(f.completed())
+        
+        f.succeeded { val in
+            XCTAssertEqual(val, 3);
+        }
+    }
+    
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
         let f = Future<Int>.never()
