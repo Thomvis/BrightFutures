@@ -224,7 +224,7 @@ class BrightFuturesTests: XCTestCase {
         p.future.onComplete { result in
             switch result {
             case .Success(let val):
-                XCTAssert(55 == val)
+                XCTAssert(Int(55) == val)
             case .Failure(_):
                 XCTAssert(false)
             }
@@ -493,9 +493,9 @@ class BrightFuturesTests: XCTestCase {
             return ()
         }
         
-        XCTAssert(!f.forced(0.2))
+        XCTAssert(f.forced(0.2) == nil)
         
-        XCTAssert(f.forced(0.3))
+        XCTAssert(f.forced(0.3) != nil)
     }
 
     func testComposedMapError() {

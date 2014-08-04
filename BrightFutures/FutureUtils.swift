@@ -54,7 +54,7 @@ public class FutureUtils {
         return self.fold(map(seq, fn), context: c, zero: [U](), op: { (list: [U], elem: U) -> [U] in
             // this should be even nicer in beta 5
             var l = list
-            l += elem
+            l.append(elem)
             return l
         })
     }

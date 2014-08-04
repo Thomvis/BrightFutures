@@ -39,7 +39,7 @@ public func future<T>(context c: ExecutionContext = Queue.global, task: (inout N
     return promise.future
 }
 
-public func future<T>(context c: ExecutionContext = Queue.global, task: @auto_closure () -> T?) -> Future<T> {
+public func future<T>(context c: ExecutionContext = Queue.global, task: @autoclosure () -> T?) -> Future<T> {
     return future(context: c) { error in
         return task()
     }
@@ -136,7 +136,7 @@ public class Future<T> {
     
     func trySuccess(value: T) -> Bool {
         return q.sync {
-            if self.result {
+            if self.result != nil {
                 return false;
             }
             
@@ -153,7 +153,7 @@ public class Future<T> {
     
     func tryError(error: NSError) -> Bool {
         return q.sync {
-            if self.result {
+            if self.result != nil {
                 return false;
             }
             
@@ -205,7 +205,7 @@ public class Future<T> {
                 }
             }
             
-            if !self.result {
+            if self.result == nil {
                 self.callbacks.append(wrappedCallback)
             } else {
                 wrappedCallback(self)
