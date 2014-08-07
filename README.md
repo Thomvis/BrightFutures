@@ -134,7 +134,7 @@ future { _ in
 }.map { sizeString, _ in
     return sizeString == "large"
 }.onSuccess { numberIsLarge in
-    XCTAssert(numberIsLarge)
+  // numberIsLarge is true
 }
 ```
 
@@ -173,7 +173,7 @@ future { _ in
 }.recover { _ in // provide an offline default
     return 5
 }.onSuccess { value in // either the request or the recovery succeeded
-    XCTAssert(value == 5)
+  //value is 5
 }
 ```
 
