@@ -52,10 +52,7 @@ public class FutureUtils {
     public class func traverse<T, U>(seq: [T], context c: ExecutionContext, fn: T -> Future<U>) -> Future<[U]> {
         
         return self.fold(map(seq, fn), context: c, zero: [U](), op: { (list: [U], elem: U) -> [U] in
-            // this should be even nicer in beta 5
-            var l = list
-            l.append(elem)
-            return l
+            return list + [elem]
         })
     }
     
