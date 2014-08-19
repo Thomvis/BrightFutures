@@ -123,7 +123,7 @@ public class Future<T> {
     func tryComplete(result: TaskResult<T>) -> Bool {
         switch result {
         case .Success(let val):
-            return self.trySuccess(val)
+            return self.trySuccess(val.value)
         case .Failure(let err):
             return self.tryError(err)
         }
@@ -226,7 +226,7 @@ public class Future<T> {
             case .Failure(let e):
                 p.error(e)
             case .Success(let v):
-                p.completeWith(f(v))
+                p.completeWith(f(v.value))
             }
         }
         return p.future
@@ -243,7 +243,7 @@ public class Future<T> {
             switch result {
             case .Success(let v):
                 var err: NSError? = nil
-                let res = f(v, &err)
+                let res = f(v.value, &err)
                 if let e = err {
                     p.error(e)
                 } else {
@@ -282,7 +282,7 @@ public class Future<T> {
         self.onComplete(context: c) { result in
             switch result {
             case .Success(let val):
-                callback(val)
+                callback(val.value)
             default:
                 break
             }
@@ -350,7 +350,7 @@ public class Future<T> {
         self.onComplete { result in
             switch result {
             case .Success(let val):
-                if p(val) {
+                if p(val.value) {
                     promise.completeWith(self)
                 } else {
                     promise.error(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
@@ -380,10 +380,6 @@ public final class TaskResultValueWrapper<T> {
     
     init(_ value: T) {
         self.value = value
-    }
-    
-    public func __conversion() -> T {
-        return self.value
     }
 }
 
@@ -420,7 +416,7 @@ public enum TaskResult<T> {
         switch self {
         case .Success(let val):
             if let fnn = fn {
-                fnn(val)
+                fnn(val.value)
             }
             return true
         case .Failure(let err):
@@ -432,7 +428,7 @@ public enum TaskResult<T> {
         switch self {
         case .Success(let val):
             if let successCb = success {
-                successCb(val)
+                successCb(val.value)
             }
         case .Failure(let err):
             if let failureCb = failure {

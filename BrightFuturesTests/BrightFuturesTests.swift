@@ -224,7 +224,7 @@ class BrightFuturesTests: XCTestCase {
         p.future.onComplete { result in
             switch result {
             case .Success(let val):
-                XCTAssert(Int(55) == val)
+                XCTAssert(Int(55) == val.value)
             case .Failure(_):
                 XCTAssert(false)
             }

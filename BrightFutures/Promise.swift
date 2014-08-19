@@ -34,7 +34,7 @@ public class Promise<T> {
         future.onComplete { result in
             switch result {
             case .Success(let val):
-                self.success(val)
+                self.success(val.value)
             case .Failure(let err):
                 self.error(err)
             }

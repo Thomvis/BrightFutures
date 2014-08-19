@@ -101,7 +101,7 @@ var answer = 10
 future(4).andThen { result in
     switch result {
       case .Succeeded(let val):
-        answer *= val
+        answer *= val.value
       case .Failure(_):
         break
     }    
@@ -115,7 +115,7 @@ future(4).andThen { result in
 // answer will be 42 (not 48)
 ```
 
-`result` is an instance of `TaskResult`, which mimics a typical `Try` construct as much as the Swift compiler currently allows.
+`result` is an instance of `TaskResult`, which mimics a typical `Try` construct as much as the Swift compiler currently allows. Due to limitations of generic enum types, the actual value needs to be wrapped in the `.value` property. (See [#8](https://github.com/Thomvis/BrightFutures/issues/8).)
 
 ## Functional Composition
 
