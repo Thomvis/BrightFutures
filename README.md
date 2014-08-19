@@ -8,7 +8,7 @@ BrightFutures uses Control Flow-like syntax to wrap complicated calculations and
 The goal of this project is to port Scala's Futures & Promises ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) to Swift. Second to this readme, the Scala documentation should therefore also be of help.
 
 ## Compatibility
-BrightFutures is compatible with Xcode 6 beta 5.
+BrightFutures is compatible with Xcode 6 beta 6. However, the tests currently do not run for me. It's not that they fail, they just don't run. I will investigate this more.
 
 ## Examples
 ### Motivating Use Case
