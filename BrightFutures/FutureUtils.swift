@@ -29,6 +29,10 @@ public class FutureUtils {
         return p.future
     }
     
+    public class func find<T>(seq: [Future<T>], p: T -> Bool) -> Future<T> {
+        return self.find(seq, context: Queue.global, p: p)
+    }
+    
     public class func find<T>(seq: [Future<T>], context c: ExecutionContext, p: T -> Bool) -> Future<T> {
         return self.sequence(seq).map(context: c) { val, error in
             for elem in val {

@@ -771,7 +771,7 @@ class BrightFuturesTests: XCTestCase {
             Future.completeAfter(0.4, withValue: 9),
         ];
         
-        let f = FutureUtils.find(futures, context: Queue.global) { val in
+        let f = FutureUtils.find(futures) { val in
             return val % 2 == 0
         }
         
