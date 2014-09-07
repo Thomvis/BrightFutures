@@ -737,6 +737,53 @@ class BrightFuturesTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testUtilsFindSuccess() {
+        let futures: [Future<Int>] = [
+            Future.succeeded(1),
+            Future.completeAfter(0.2, withValue: 3),
+            Future.succeeded(5),
+            Future.succeeded(7),
+            Future.completeAfter(0.3, withValue: 8),
+            Future.succeeded(9)
+        ];
+        
+        let f = FutureUtils.find(futures, context: Queue.global) { val in
+            return val % 2 == 0
+        }
+        
+        let e = self.expectationWithDescription("")
+        
+        f.onSuccess { val in
+            XCTAssertEqual(val, 8, "First matching value is 8")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsFindNoSuchElement() {
+        let futures: [Future<Int>] = [
+            Future.succeeded(1),
+            Future.completeAfter(0.2, withValue: 3),
+            Future.succeeded(5),
+            Future.succeeded(7),
+            Future.completeAfter(0.4, withValue: 9),
+        ];
+        
+        let f = FutureUtils.find(futures, context: Queue.global) { val in
+            return val % 2 == 0
+        }
+        
+        let e = self.expectationWithDescription("")
+        
+        f.onFailure { err in
+            XCTAssertEqual(err.domain, NoSuchElementError, "No matching elements")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
  
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
