@@ -30,7 +30,7 @@ Now let's see what BrightFutures can do for you:
 
 ```swift
 User.logIn(username,password).flatMap { user, _ in
-  return Posts.fetchPosts(user)
+  Posts.fetchPosts(user)
 }.onSuccess { posts in
   // do something with the user's posts
 }.onFailure { error in
