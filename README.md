@@ -7,8 +7,8 @@ BrightFutures uses Control Flow-like syntax to wrap complicated calculations and
 
 The goal of this project is to port Scala's Futures & Promises ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) to Swift. Second to this readme, the Scala documentation should therefore also be of help.
 
-## Compatibility
-BrightFutures is compatible with Swift 1.0.
+## Current State
+BrightFutures is compatible with Swift 1.0. The project is currently moving towards a 1.0 release. Issue #12 has been created to track the progress towards that goal. Please feel free to chime in with your feedback or requests! Until 1.0, the API could change significantly.
 
 ## Examples
 ### Motivating Use Case
