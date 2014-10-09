@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import Foundation
+import Dispatch
 
 /**
  * Queue is a tiny wrapper around a Grand Central Dispatch queue.
