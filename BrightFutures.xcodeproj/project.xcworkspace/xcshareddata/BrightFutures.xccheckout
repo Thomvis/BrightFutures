@@ -11,17 +11,17 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>93608FFF008CD82ADDFA850BB9C1630FA754586F</key>
-		<string>ssh://github.com/Thomvis/BrightFutures.git</string>
+		<string>github.com:Thomvis/BrightFutures.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>BrightFutures.xcodeproj/project.xcworkspace</string>
+	<string>BrightFutures.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>93608FFF008CD82ADDFA850BB9C1630FA754586F</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/Thomvis/BrightFutures.git</string>
+	<string>github.com:Thomvis/BrightFutures.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
