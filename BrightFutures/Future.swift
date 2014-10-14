@@ -50,13 +50,13 @@ public let NoSuchElementError = "NoSuchElementError"
 public class Future<T> {
     
     typealias CallbackInternal = (future: Future<T>) -> ()
-    typealias CompletionCallback = (result: TaskResult<T>) -> ()
+    typealias CompletionCallback = (result: Result<T>) -> ()
     typealias SuccessCallback = (T) -> ()
     public typealias FailureCallback = (NSError) -> ()
     
     let q = Queue()
     
-    var result: TaskResult<T>? = nil
+    var result: Result<T>? = nil
     
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
@@ -86,14 +86,14 @@ public class Future<T> {
     
     public class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
-        res.result = TaskResult(value)
+        res.result = Result(value)
         
         return res
     }
     
     public class func failed(error: NSError) -> Future<T> {
         let res = Future<T>();
-        res.result = TaskResult(error)
+        res.result = Result(error)
         
         return res
     }
@@ -115,12 +115,12 @@ public class Future<T> {
         return Future<T>()
     }
     
-    func complete(result: TaskResult<T>) {
+    func complete(result: Result<T>) {
         let succeeded = tryComplete(result)
         assert(succeeded)
     }
     
-    func tryComplete(result: TaskResult<T>) -> Bool {
+    func tryComplete(result: Result<T>) -> Bool {
         switch result {
         case .Success(let val):
             return self.trySuccess(val.value)
@@ -140,7 +140,7 @@ public class Future<T> {
                 return false;
             }
             
-            self.result = TaskResult(value)
+            self.result = Result(value)
             self.runCallbacks()
             return true;
         };
@@ -157,22 +157,22 @@ public class Future<T> {
                 return false;
             }
             
-            self.result = TaskResult(error)
+            self.result = Result(error)
             self.runCallbacks()
             return true;
         };
     }
 
-    public func forced() -> TaskResult<T> {
+    public func forced() -> Result<T> {
         return forced(Double.infinity)!
     }
 
-    public func forced(time: NSTimeInterval) -> TaskResult<T>? {
+    public func forced(time: NSTimeInterval) -> Result<T>? {
         if let certainResult = self.result {
             return certainResult
         } else {
             let sema = dispatch_semaphore_create(0)
-            var res: TaskResult<T>? = nil
+            var res: Result<T>? = nil
             self.onComplete {
                 res = $0
                 dispatch_semaphore_signal(sema)
@@ -259,11 +259,11 @@ public class Future<T> {
         return p.future
     }
 
-    public func andThen(callback: TaskResult<T> -> ()) -> Future<T> {
+    public func andThen(callback: Result<T> -> ()) -> Future<T> {
         return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
     }
 
-    public func andThen(context c: ExecutionContext, callback: TaskResult<T> -> ()) -> Future<T> {
+    public func andThen(context c: ExecutionContext, callback: Result<T> -> ()) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result in
@@ -375,7 +375,7 @@ public class Future<T> {
     }
 }
 
-public final class TaskResultValueWrapper<T> {
+public final class Box<T> {
     public let value: T
     
     init(_ value: T) {
@@ -383,16 +383,12 @@ public final class TaskResultValueWrapper<T> {
     }
 }
 
-func ==<T: Equatable>(lhs: TaskResultValueWrapper<T>, rhs: T) -> Bool {
-    return lhs.value == rhs
-}
-
-public enum TaskResult<T> {
-    case Success(TaskResultValueWrapper<T>)
+public enum Result<T> {
+    case Success(Box<T>)
     case Failure(NSError)
     
     init(_ value: T) {
-        self = .Success(TaskResultValueWrapper(value))
+        self = .Success(Box(value))
     }
     
     init(_ error: NSError) {
