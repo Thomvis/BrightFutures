@@ -173,7 +173,7 @@ public class Future<T> {
         } else {
             let sema = dispatch_semaphore_create(0)
             var res: Result<T>? = nil
-            self.onComplete {
+            self.onComplete(context: Queue.global) {
                 res = $0
                 dispatch_semaphore_signal(sema)
             }
