@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
+		E9BD4A4919F3E43100BBD966 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BD4A4819F3E43100BBD966 /* Result.swift */; };
 		E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; };
 		E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */; };
 		E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
@@ -28,6 +29,7 @@
 
 /* Begin PBXFileReference section */
 		E979E5F31975B1AA007FE914 /* FutureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureUtils.swift; sourceTree = "<group>"; };
+		E9BD4A4819F3E43100BBD966 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		E9DF0815194470060083F7F2 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF0819194470060083F7F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9DF0820194470060083F7F2 /* BrightFuturesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrightFuturesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +83,7 @@
 			children = (
 				E9DF0831194470190083F7F2 /* ExecutionContext.swift */,
 				E9DF0832194470190083F7F2 /* Future.swift */,
+				E9BD4A4819F3E43100BBD966 /* Result.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
 				E9DF0834194470190083F7F2 /* Queue.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
@@ -221,6 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9BD4A4919F3E43100BBD966 /* Result.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
