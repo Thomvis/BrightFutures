@@ -1,3 +1,4 @@
 language: objective-c
 xcode_project: BrightFutures.xcodeproj
 xcode_scheme: BrightFutures
+xcode_sdk: iphonesimulator
