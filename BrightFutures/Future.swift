@@ -108,6 +108,10 @@ public class Future<T> {
         return res
     }
     
+    internal init() {
+        
+    }
+    
     /**
      * Returns a Future that will never succeed
      */
