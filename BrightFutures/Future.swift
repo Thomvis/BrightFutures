@@ -235,6 +235,14 @@ public class Future<T> {
         }
         return p.future
     }
+    
+    public func map<U>(f: T -> U) -> Future<U> {
+        return self.map(context: self.defaultCallbackExecutionContext, f: f)
+    }
+    
+    public func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
+        return self.flatMap(context: c) { Future<U>.succeeded(f($0)) }
+    }
 
     public func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
         return self.map(context: self.defaultCallbackExecutionContext, f)
