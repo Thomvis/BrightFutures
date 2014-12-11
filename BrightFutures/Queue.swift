@@ -77,10 +77,10 @@ public struct Queue : ExecutionContext {
      * @return the return value from the block
      */
     public func sync<T>(block: () -> T) -> T {
-        var res: T? = nil;
+        var res: T? = nil
         dispatch_sync(queue, {
-            res = block();
-        });
+            res = block()
+        })
         
         return res!;
     }
