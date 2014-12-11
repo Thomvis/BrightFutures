@@ -93,6 +93,16 @@ public struct Queue : ExecutionContext {
         dispatch_async(queue, block);
     }
     
+    public func async<T>(block: () -> T) -> Future<T> {
+        let p = Promise<T>()
+        
+        dispatch_async(queue, {
+            p.success(block())
+        })
+        
+        return p.future
+    }
+    
     /**
      * Part of the ExecutionContext protocol.
      * Executes the given task asynchronously on the queue.
