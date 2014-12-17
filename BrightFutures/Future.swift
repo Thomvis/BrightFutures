@@ -54,13 +54,22 @@ public class Future<T> {
     typealias SuccessCallback = (T) -> ()
     public typealias FailureCallback = (NSError) -> ()
     
-    let q = Queue()
-    
     var result: Result<T>? = nil
     
-    var callbacks: [CallbackInternal] = Array<CallbackInternal>()
+    /**
+     * This queue is used for all callback related administrative tasks
+     * to prevent that a callback is added to a completed future and never
+     * executed or perhaps excecuted twice.
+     */
+    let callbackAdministrationQueue = Queue()
     
-    let defaultCallbackExecutionContext = Queue()
+    /**
+     * All callbacks are executed serially on this queue. This is on
+     * top of the execution context, which is either given by the client
+     * or returned from executionContextForCurrentContext
+     */
+    let callbackExecutionQueue = Queue();
+    var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     public func succeeded(fn: (T -> ())? = nil) -> Bool {
         if let res = self.result {
@@ -139,7 +148,7 @@ public class Future<T> {
     }
     
     func trySuccess(value: T) -> Bool {
-        return q.sync {
+        return self.callbackAdministrationQueue.sync {
             if self.result != nil {
                 return false;
             }
@@ -156,7 +165,7 @@ public class Future<T> {
     }
     
     func tryError(error: NSError) -> Bool {
-        return q.sync {
+        return self.callbackAdministrationQueue.sync {
             if self.result != nil {
                 return false;
             }
@@ -196,15 +205,19 @@ public class Future<T> {
     }
     
     public func onComplete(callback: CompletionCallback) -> Future<T> {
-        return self.onComplete(context: self.defaultCallbackExecutionContext, callback: callback)
+        return self.onComplete(context: executionContextForCurrentContext(), callback: callback)
     }
     
     public func onComplete(context c: ExecutionContext, callback: CompletionCallback) -> Future<T> {
-        q.sync {
+        self.callbackAdministrationQueue.sync {
             let wrappedCallback : Future<T> -> () = { future in
                 if let realRes = self.result {
                     c.execute {
-                        callback(result: realRes)
+                        self.callbackExecutionQueue.sync {
+                            callback(result: realRes)
+                            return
+                        }
+                        return
                     }
                 }
             }
@@ -220,7 +233,7 @@ public class Future<T> {
     }
 
     public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
-        return self.flatMap(context: self.defaultCallbackExecutionContext, f)
+        return self.flatMap(context: executionContextForCurrentContext(), f)
     }
 
     public func flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U> {
@@ -237,7 +250,7 @@ public class Future<T> {
     }
 
     public func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
-        return self.map(context: self.defaultCallbackExecutionContext, f)
+        return self.map(context: executionContextForCurrentContext(), f)
     }
 
     public func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U?) -> Future<U> {
@@ -264,7 +277,7 @@ public class Future<T> {
     }
 
     public func andThen(callback: Result<T> -> ()) -> Future<T> {
-        return self.andThen(context: self.defaultCallbackExecutionContext, callback: callback)
+        return self.andThen(context: executionContextForCurrentContext(), callback: callback)
     }
 
     public func andThen(context c: ExecutionContext, callback: Result<T> -> ()) -> Future<T> {
@@ -279,7 +292,7 @@ public class Future<T> {
     }
 
     public func onSuccess(callback: SuccessCallback) -> Future<T> {
-        return self.onSuccess(context: self.defaultCallbackExecutionContext, callback)
+        return self.onSuccess(context: executionContextForCurrentContext(), callback)
     }
     
     public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
@@ -296,7 +309,7 @@ public class Future<T> {
     }
     
     public func onFailure(callback: FailureCallback) -> Future<T> {
-        return self.onFailure(context: self.defaultCallbackExecutionContext, callback)
+        return self.onFailure(context: executionContextForCurrentContext(), callback)
     }
     
     public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
@@ -312,7 +325,7 @@ public class Future<T> {
     }
     
     public func recover(task: (NSError) -> T) -> Future<T> {
-        return self.recover(context: self.defaultCallbackExecutionContext, task)
+        return self.recover(context: executionContextForCurrentContext(), task)
     }
     
     public func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
@@ -322,7 +335,7 @@ public class Future<T> {
     }
     
     public func recoverWith(task: (NSError) -> Future<T>) -> Future<T> {
-        return self.recoverWith(context: self.defaultCallbackExecutionContext, task: task)
+        return self.recoverWith(context: executionContextForCurrentContext(), task: task)
     }
     
     public func recoverWith(context c: ExecutionContext, task: (NSError) -> Future<T>) -> Future<T> {
@@ -369,12 +382,16 @@ public class Future<T> {
     }
     
     private func runCallbacks() {
-        q.async {
+        self.callbackAdministrationQueue.async {
             for callback in self.callbacks {
                 callback(future: self)
             }
             
             self.callbacks.removeAll()
         }
+    }
+    
+    private func executionContextForCurrentContext() -> ExecutionContext {
+        return NSThread.isMainThread() ? Queue.main : Queue.global
     }
 }
