@@ -326,7 +326,7 @@ public extension Future {
     }
     
     public func map<U>(f: T -> U) -> Future<U> {
-        return self.map(context: self.defaultCallbackExecutionContext, f: f)
+        return self.map(context: self.executionContextForCurrentContext(), f: f)
     }
     
     public func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
