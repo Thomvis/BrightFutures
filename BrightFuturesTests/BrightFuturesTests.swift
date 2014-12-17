@@ -263,6 +263,37 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testDefaultCallbackExecutionContextFromMain() {
+        let f = Future.succeeded(1)
+        let e = self.expectation()
+        f.onSuccess { _ in
+            XCTAssert(NSThread.isMainThread(), "the callback should run on main")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testDefaultCallbackExecutionContextFromBackground() {
+        let f = Future.succeeded(1)
+        let e = self.expectation()
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            f.onSuccess { _ in
+                XCTAssert(!NSThread.isMainThread(), "the callback should not be on the main thread")
+                e.fulfill()
+            }
+            return
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+}
+
+/**
+ * This extension contains all tests related to functional composition
+ */
+extension BrightFuturesTests {
+
     func testMapSuccess() {
         let e = self.expectationWithDescription("")
         
@@ -339,7 +370,7 @@ class BrightFuturesTests: XCTestCase {
         XCTAssertEqual(42, answer, "andThens should be executed in order")
     }
 
-    func testTransparentOnFailure() {
+    func testSkippedRecover() {
         let e = self.expectationWithDescription("")
         
         future { _ in
@@ -354,7 +385,7 @@ class BrightFuturesTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testDefaultOnFailure() {
+    func testRecoverWith() {
         let e = self.expectationWithDescription("")
         
         future { (inout error:NSError?) -> Int? in
@@ -858,6 +889,12 @@ class BrightFuturesTests: XCTestCase {
         }
     }
 
+}
+
+extension BrightFuturesTests {
+    func expectation() -> XCTestExpectation {
+        return self.expectationWithDescription("")
+    }
 }
 
 func fibonacci(n: Int) -> Int {
