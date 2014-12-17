@@ -71,63 +71,29 @@ public class Future<T> {
     let callbackExecutionQueue = Queue();
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
-    public func succeeded(fn: (T -> ())? = nil) -> Bool {
-        if let res = self.result {
-            return res.succeeded(fn)
-        }
-        return false
-    }
-    
-    public func failed(fn: (NSError -> ())? = nil) -> Bool {
-        if let res = self.result {
-            return res.failed(fn)
-        }
-        return false
-    }
-    
-    public func completed(success: (T->())? = nil, failure: (NSError->())? = nil) -> Bool{
-        if let res = self.result {
-            res.handle(success: success, failure: failure)
-            return true
-        }
-        return false
-    }
-    
-    public class func succeeded(value: T) -> Future<T> {
-        let res = Future<T>();
-        res.result = Result(value)
-        
-        return res
-    }
-    
-    public class func failed(error: NSError) -> Future<T> {
-        let res = Future<T>();
-        res.result = Result(error)
-        
-        return res
-    }
-    
-    public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
-        let res = Future<T>()
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.queue) {
-            res.success(value)
-        }
-        
-        return res
-    }
-    
     internal init() {
         
     }
     
-    /**
-     * Returns a Future that will never succeed
-     */
-    public class func never() -> Future<T> {
-        return Future<T>()
+    private func runCallbacks() {
+        self.callbackAdministrationQueue.async {
+            for callback in self.callbacks {
+                callback(future: self)
+            }
+            
+            self.callbacks.removeAll()
+        }
     }
     
+    private func executionContextForCurrentContext() -> ExecutionContext {
+        return NSThread.isMainThread() ? Queue.main : Queue.global
+    }
+}
+
+/**
+ * The internal API for completing a Future
+ */
+internal extension Future {
     func complete(result: Result<T>) {
         let succeeded = tryComplete(result)
         assert(succeeded)
@@ -175,6 +141,71 @@ public class Future<T> {
             return true;
         };
     }
+}
+
+/**
+ * This extension contains all (static) methods for Future creation
+ */
+public extension Future {
+    
+    public class func succeeded(value: T) -> Future<T> {
+        let res = Future<T>();
+        res.result = Result(value)
+        
+        return res
+    }
+    
+    public class func failed(error: NSError) -> Future<T> {
+        let res = Future<T>();
+        res.result = Result(error)
+        
+        return res
+    }
+    
+    public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
+        let res = Future<T>()
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.queue) {
+            res.success(value)
+        }
+        
+        return res
+    }
+    
+    /**
+     * Returns a Future that will never succeed
+     */
+    public class func never() -> Future<T> {
+        return Future<T>()
+    }
+}
+
+/**
+ * This extension contains methods to query the current status
+ * of the future and to access the result and/or error
+ */
+public extension Future {
+    public func succeeded(fn: (T -> ())? = nil) -> Bool {
+        if let res = self.result {
+            return res.succeeded(fn)
+        }
+        return false
+    }
+    
+    public func failed(fn: (NSError -> ())? = nil) -> Bool {
+        if let res = self.result {
+            return res.failed(fn)
+        }
+        return false
+    }
+    
+    public func completed(success: (T->())? = nil, failure: (NSError->())? = nil) -> Bool{
+        if let res = self.result {
+            res.handle(success: success, failure: failure)
+            return true
+        }
+        return false
+    }
 
     public func forced() -> Result<T> {
         return forced(Double.infinity)!
@@ -203,7 +234,13 @@ public class Future<T> {
             return res
         }
     }
-    
+}
+
+/**
+ * This extension contains all methods for registering callbacks
+ */
+public extension Future {
+
     public func onComplete(callback: CompletionCallback) -> Future<T> {
         return self.onComplete(context: executionContextForCurrentContext(), callback: callback)
     }
@@ -231,6 +268,45 @@ public class Future<T> {
         
         return self
     }
+    
+    public func onSuccess(callback: SuccessCallback) -> Future<T> {
+        return self.onSuccess(context: executionContextForCurrentContext(), callback)
+    }
+    
+    public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
+        self.onComplete(context: c) { result in
+            switch result {
+            case .Success(let val):
+                callback(val.value)
+            default:
+                break
+            }
+        }
+        
+        return self
+    }
+    
+    public func onFailure(callback: FailureCallback) -> Future<T> {
+        return self.onFailure(context: executionContextForCurrentContext(), callback)
+    }
+    
+    public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
+        self.onComplete(context: c) { result in
+            switch result {
+            case .Failure(let err):
+                callback(err)
+            default:
+                break
+            }
+        }
+        return self
+    }
+}
+
+/**
+ * This extension contains all methods related to functional composition
+ */
+public extension Future {
 
     public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
         return self.flatMap(context: executionContextForCurrentContext(), f)
@@ -290,39 +366,6 @@ public class Future<T> {
 
         return p.future
     }
-
-    public func onSuccess(callback: SuccessCallback) -> Future<T> {
-        return self.onSuccess(context: executionContextForCurrentContext(), callback)
-    }
-    
-    public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
-        self.onComplete(context: c) { result in
-            switch result {
-            case .Success(let val):
-                callback(val.value)
-            default:
-                break
-            }
-        }
-        
-        return self
-    }
-    
-    public func onFailure(callback: FailureCallback) -> Future<T> {
-        return self.onFailure(context: executionContextForCurrentContext(), callback)
-    }
-    
-    public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
-        self.onComplete(context: c) { result in
-            switch result {
-            case .Failure(let err):
-                callback(err)
-            default:
-                break
-            }
-        }
-        return self
-    }
     
     public func recover(task: (NSError) -> T) -> Future<T> {
         return self.recover(context: executionContextForCurrentContext(), task)
@@ -379,19 +422,5 @@ public class Future<T> {
         }
         
         return promise.future
-    }
-    
-    private func runCallbacks() {
-        self.callbackAdministrationQueue.async {
-            for callback in self.callbacks {
-                callback(future: self)
-            }
-            
-            self.callbacks.removeAll()
-        }
-    }
-    
-    private func executionContextForCurrentContext() -> ExecutionContext {
-        return NSThread.isMainThread() ? Queue.main : Queue.global
     }
 }
