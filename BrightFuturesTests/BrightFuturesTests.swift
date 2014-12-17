@@ -294,6 +294,43 @@ class BrightFuturesTests: XCTestCase {
  */
 extension BrightFuturesTests {
 
+    func testAndThen() {
+        
+        var answer = 10
+        
+        let e = self.expectationWithDescription("")
+        
+        let f = future(4)
+        let f1 = f.andThen { result in
+            result.succeeded { val in
+                answer *= val
+            }
+            return
+        }
+        
+        let f2 = f1.andThen { result in
+            answer += 2
+        }
+        
+        f.onSuccess { fval in
+            f1.onSuccess { f1val in
+                f2.onSuccess { f2val in
+                    
+                    XCTAssertEqual(fval, f1val, "future value should be passed transparantly")
+                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
+                    
+                    e.fulfill()
+                }
+                return
+            }
+            return
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        XCTAssertEqual(42, answer, "andThens should be executed in order")
+    }
+    
     func testMapSuccess() {
         let e = self.expectationWithDescription("")
         
@@ -331,43 +368,6 @@ extension BrightFuturesTests {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
-    }
-    
-    func testAndThen() {
-        
-        var answer = 10
-        
-        let e = self.expectationWithDescription("")
-        
-        let f = future(4)
-        let f1 = f.andThen { result in
-            result.succeeded { val in
-                answer *= val
-            }
-            return
-        }
-        
-        let f2 = f1.andThen { result in
-            answer += 2
-        }
-        
-        f.onSuccess { fval in
-            f1.onSuccess { f1val in
-                f2.onSuccess { f2val in
-                    
-                    XCTAssertEqual(fval, f1val, "future value should be passed transparantly")
-                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
-                    
-                    e.fulfill()
-                }
-                return
-            }
-            return
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
-        
-        XCTAssertEqual(42, answer, "andThens should be executed in order")
     }
 
     func testSkippedRecover() {
@@ -564,7 +564,12 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+}
 
+/**
+ * This extension contains all tests related to FutureUtils
+ */
+extension BrightFuturesTests {
     func testUtilsTraverseSuccess() {
         let n = 10
         
@@ -816,6 +821,12 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
  
+}
+
+/**
+ * This extension contains miscellaneous tests
+ */
+extension BrightFuturesTests {
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
         let instances = 100;
@@ -873,6 +884,15 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(10, handler: nil)
     }
+}
+
+/**
+ * This extension contains utility methods used in the tests above
+ */
+extension BrightFuturesTests {
+    func expectation() -> XCTestExpectation {
+        return self.expectationWithDescription("")
+    }
     
     func failingFuture<U>() -> Future<U> {
         return future { error in
@@ -887,13 +907,6 @@ extension BrightFuturesTests {
             usleep(arc4random_uniform(100))
             return val
         }
-    }
-
-}
-
-extension BrightFuturesTests {
-    func expectation() -> XCTestExpectation {
-        return self.expectationWithDescription("")
     }
 }
 
