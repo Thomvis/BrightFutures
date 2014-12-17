@@ -330,7 +330,7 @@ public extension Future {
     }
     
     public func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
-        return self.flatMap(context: c) { Future<U>.succeeded(f($0)) }
+        return self.map(context: c) { val, _ in f(val) }
     }
 
     public func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
