@@ -331,6 +331,22 @@ extension BrightFuturesTests {
         XCTAssertEqual(42, answer, "andThens should be executed in order")
     }
     
+    func testSimpleMap() {
+        let e = self.expectation()
+        
+        func divideByFive(i: Int) -> Int {
+            return i / 5
+        }
+        
+        future(fibonacci(10)).map(divideByFive).onSuccess { val in
+            XCTAssertEqual(val, 11, "The 10th fibonacci number (55) divided by 5 is 11")
+            e.fulfill()
+            return
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testMapSuccess() {
         let e = self.expectationWithDescription("")
         
