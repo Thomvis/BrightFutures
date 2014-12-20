@@ -531,9 +531,9 @@ extension BrightFuturesTests {
             NSThread.sleepForTimeInterval(0.5)
         }
         
-        XCTAssert(f.forced(0.2) == nil)
+        XCTAssert(f.forced(0.1) == nil)
         
-        XCTAssert(f.forced(0.3) != nil)
+        XCTAssert(f.forced(0.5) != nil)
     }
 
     func testComposedMapError() {
