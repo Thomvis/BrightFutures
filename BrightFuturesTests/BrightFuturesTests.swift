@@ -312,14 +312,14 @@ extension BrightFuturesTests {
     func testMapSuccess() {
         let e = self.expectation()
         
-        future { _ in
+        future {
             fibonacci(10)
-        }.map { value, _ -> String? in
+        }.map { value -> String in
             if value > 5 {
                 return "large"
             }
             return "small"
-        }.map { sizeString, _ -> Bool? in
+        }.map { sizeString -> Bool in
             return sizeString == "large"
         }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
@@ -335,9 +335,9 @@ extension BrightFuturesTests {
         
         future { () -> Result <Int> in
             .Failure(NSError(domain: "Tests", code: 123, userInfo: nil))
-        }.map { number, _ in
+        }.map { number in
             XCTAssert(false, "map should not be evaluated because of failure above")
-        }.map { number, _ in
+        }.map { number in
             XCTAssert(false, "this map should also not be evaluated because of failure above")
         }.onFailure { error in
             XCTAssert(error.domain == "Tests")
@@ -498,32 +498,12 @@ extension BrightFuturesTests {
         
         XCTAssert(f.forced(0.5) != nil)
     }
-
-    func testComposedMapError() {
-        let e = self.expectation()
-
-        let error = NSError(domain: "map-error", code: 5, userInfo: nil)
-        future("Thomas").map{ (s: String, inout err: NSError?) -> Int? in
-            err = error
-            return 3
-        }.onComplete { result in
-            switch(result) {
-            case .Failure(let e):
-                XCTAssert(error == e, "functional map composition should fail")
-            case .Success(_):
-                XCTFail("functional map composition should fail")
-            }
-            e.fulfill()
-        }
-
-        self.waitForExpectationsWithTimeout(2, handler: nil)
-    }
     
     func testFlatMap() {
         let e = self.expectation()
         
         let finalString = "Greg"
-        let flatMapped: Future<String> = future("Thomas").flatMap { _ in
+        let flatMapped: Future<String> = future("Thomas").flatMap { _ -> Future<String> in
             return future(finalString)
         }
         

@@ -48,21 +48,20 @@ public class FutureUtils {
     }
     
     public class func find<T>(seq: [Future<T>], context c: ExecutionContext, p: T -> Bool) -> Future<T> {
-        return self.sequence(seq).map(context: c) { val, error in
+        return self.sequence(seq).flatMap(context: c) { val -> Result<T> in
             for elem in val {
                 if (p(elem)) {
-                    return elem
+                    return .Success(Box(elem))
                 }
             }
-            error = NSError(domain: NoSuchElementError, code: 0, userInfo: nil)
-            return nil
+            return .Failure(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
         }
     }
     
     public class func fold<T,R>(seq: [Future<T>], context c: ExecutionContext = Queue.global, zero: R, op: (R, T) -> R) -> Future<R> {
         return seq.reduce(Future.succeeded(zero), combine: { zero, elem in
             return zero.flatMap { zeroVal in
-                elem.map(context: c) { elemVal, _ in
+                elem.map(context: c) { elemVal in
                     return op(zeroVal, elemVal)
                 }
             }

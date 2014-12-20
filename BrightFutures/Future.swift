@@ -347,37 +347,27 @@ public extension Future {
         return p.future
     }
     
+    public func flatMap<U>(f: T -> Result<U>) -> Future<U> {
+        return self.flatMap(context: executionContextForCurrentContext(), f)
+    }
+    
     public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U>) -> Future<U> {
         return self.flatMap(context: c) { value in
             Future.completed(f(value))
         }
     }
-    
-    public func map<U>(f: T -> U) -> Future<U> {
-        return self.map(context: self.executionContextForCurrentContext(), f: f)
-    }
-    
-    public func map<U>(context c: ExecutionContext, f: T -> U) -> Future<U> {
-        return self.map(context: c) { val, _ in f(val) }
-    }
 
-    public func map<U>(f: (T, inout NSError?) -> U?) -> Future<U> {
+    public func map<U>(f: (T) -> U) -> Future<U> {
         return self.map(context: executionContextForCurrentContext(), f)
     }
 
-    public func map<U>(context c: ExecutionContext, f: (T, inout NSError?) -> U?) -> Future<U> {
+    public func map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U> {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
             switch result {
             case .Success(let v):
-                var err: NSError? = nil
-                let res = f(v.value, &err)
-                if let e = err {
-                    p.error(e)
-                } else {
-                    p.success(res!)
-                }
+                p.success(f(v.value))
                 break;
             case .Failure(let e):
                 p.error(e)
@@ -433,8 +423,8 @@ public extension Future {
     }
     
     public func zip<U>(that: Future<U>) -> Future<(T,U)> {
-        return self.flatMap { thisVal in
-            return that.map { thatVal, _ in
+        return self.flatMap { thisVal -> Future<(T,U)> in
+            return that.map { thatVal in
                 return (thisVal, thatVal)
             }
         }
