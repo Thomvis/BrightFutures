@@ -34,14 +34,16 @@ class BrightFuturesTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    
+}
+
+extension BrightFuturesTests {
     func testCompletedFuture() {
         let f = Future<Int>.succeeded(2)
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { result in
-            XCTAssert(result.succeeded())
+        f.onComplete { (result: Result<Int>) in
+            XCTAssert(result.isSuccess)
             completeExpectation.fulfill()
         }
         
@@ -57,26 +59,6 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
-        
-        XCTAssert(f.succeeded())
-        
-        var didCallSucceeded = false
-        f.succeeded { val in
-            XCTAssertEqual(val, 2)
-            didCallSucceeded = true
-        }
-        
-        XCTAssert(didCallSucceeded)
-        
-        f.failed { _ in
-            XCTAssert(false)
-        }
-        
-        f.completed(success: { val in
-            XCTAssert(true)
-        }, failure: { err in
-            XCTAssert(false)
-        })
     }
     
     func testFailedFuture() {
@@ -107,42 +89,22 @@ class BrightFuturesTests: XCTestCase {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
-        
-        XCTAssert(f.failed())
-        
-        var didCallFailed = false
-        f.failed { err in
-            XCTAssertEqual(error, err)
-            didCallFailed = true
-        }
-        
-        XCTAssert(didCallFailed)
-        
-        f.succeeded { _ in
-            XCTAssert(false)
-        }
-        
-        f.completed(success: { val in
-            XCTAssert(false)
-        }, failure: { err in
-            XCTAssert(true)
-        })
     }
     
     func testCompleteAfterFuture() {
         let f = Future.completeAfter(1, withValue: 3)
         
-        XCTAssertFalse(f.completed())
+        XCTAssertFalse(f.isCompleted)
         
         NSThread.sleepForTimeInterval(0.2)
 
-        XCTAssertFalse(f.completed())
+        XCTAssertFalse(f.isCompleted)
         
         NSThread.sleepForTimeInterval(1.0)
 
-        XCTAssert(f.completed())
+        XCTAssert(f.isCompleted)
         
-        f.succeeded { val in
+        if let val = f.value {
             XCTAssertEqual(val, 3);
         }
     }
@@ -150,11 +112,11 @@ class BrightFuturesTests: XCTestCase {
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
         let f = Future<Int>.never()
-        XCTAssert(!f.completed())
+        XCTAssert(!f.isCompleted)
         
         sleep(UInt32(Double(arc4random_uniform(100))/100.0))
         
-        XCTAssert(!f.completed())
+        XCTAssert(!f.isCompleted)
     }
     
     func testControlFlowSyntax() {
@@ -288,9 +250,10 @@ class BrightFuturesTests: XCTestCase {
     }
 }
 
+// MARK: Functional Composition
 /**
- * This extension contains all tests related to functional composition
- */
+* This extension contains all tests related to functional composition
+*/
 extension BrightFuturesTests {
 
     func testAndThen() {
@@ -301,7 +264,7 @@ extension BrightFuturesTests {
         
         let f = future(4)
         let f1 = f.andThen { result in
-            result.succeeded { val in
+            if let val = result.value {
                 answer *= val
             }
             return
@@ -494,10 +457,10 @@ extension BrightFuturesTests {
     func testFilterNoSuchElement() {
         let e = self.expectationWithDescription("")
         future(3).filter { $0 > 5}.onComplete { result in
-            result.failed { err in
+            if let err = result.error {
                 XCTAssert(err.domain == NoSuchElementError, "filter should yield no result")
             }
-
+            
             e.fulfill()
         }
         self.waitForExpectationsWithTimeout(2, handler: nil)
@@ -506,10 +469,10 @@ extension BrightFuturesTests {
     func testFilterPasses() {
         let e = self.expectationWithDescription("")
         future("Thomas").filter { $0.hasPrefix("Th") }.onComplete { result in
-            result.succeeded { val in
+            if let val = result.value {
                 XCTAssert(val == "Thomas", "Filter should pass")
             }
-
+            
             e.fulfill()
         }
         
@@ -573,6 +536,7 @@ extension BrightFuturesTests {
     }
 }
 
+// MARK: FutureUtils
 /**
  * This extension contains all tests related to FutureUtils
  */
@@ -581,10 +545,7 @@ extension BrightFuturesTests {
         let n = 10
         
         let f = FutureUtils.traverse(Array(1...n)) { i in
-            future(fibonacci(i)).andThen { res in
-                res.succeeded(println)
-                return
-            }
+            future(fibonacci(i))
         }
         
         let e = self.expectationWithDescription("")

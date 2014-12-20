@@ -41,40 +41,41 @@ public enum Result<T> {
         self = .Success(Box(value))
     }
     
-    public func failed(fn: (NSError -> ())? = nil) -> Bool {
-        switch self {
-        case .Success(_):
-            return false
-            
-        case .Failure(let err):
-            if let fnn = fn {
-                fnn(err)
+    public var isSuccess: Bool {
+        get {
+            switch self {
+            case .Success(_):
+                return true
+            case .Failure(_):
+                return false
             }
-            return true
         }
     }
     
-    public func succeeded(fn: (T -> ())? = nil) -> Bool {
-        switch self {
-        case .Success(let val):
-            if let fnn = fn {
-                fnn(val.value)
-            }
-            return true
-        case .Failure(let err):
-            return false
+    public var isFailure: Bool {
+        get {
+            return !self.isSuccess
         }
     }
     
-    public func handle(success: (T->())? = nil, failure: (NSError->())? = nil) {
-        switch self {
-        case .Success(let val):
-            if let successCb = success {
-                successCb(val.value)
+    public var value: T? {
+        get {
+            switch self {
+            case .Success(let boxedValue):
+                return boxedValue.value
+            default:
+                return nil
             }
-        case .Failure(let err):
-            if let failureCb = failure {
-                failureCb(err)
+        }
+    }
+    
+    public var error: NSError? {
+        get {
+            switch self {
+            case .Failure(let error):
+                return error
+            default:
+                return nil
             }
         }
     }

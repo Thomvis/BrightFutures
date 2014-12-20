@@ -154,6 +154,36 @@ internal extension Future {
  */
 public extension Future {
     
+    public var value: T? {
+        get {
+            return self.result?.value
+        }
+    }
+    
+    public var error: NSError? {
+        get {
+            return self.result?.error
+        }
+    }
+    
+    public var isSuccess: Bool {
+        get {
+            return self.result?.isSuccess ?? false
+        }
+    }
+    
+    public var isFailure: Bool {
+        get {
+            return self.result?.isFailure ?? false
+        }
+    }
+    
+    public var isCompleted: Bool {
+        get {
+            return self.result != nil
+        }
+    }
+    
     public class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
         res.result = Result(value)
@@ -191,27 +221,6 @@ public extension Future {
  * of the future and to access the result and/or error
  */
 public extension Future {
-    public func succeeded(fn: (T -> ())? = nil) -> Bool {
-        if let res = self.result {
-            return res.succeeded(fn)
-        }
-        return false
-    }
-    
-    public func failed(fn: (NSError -> ())? = nil) -> Bool {
-        if let res = self.result {
-            return res.failed(fn)
-        }
-        return false
-    }
-    
-    public func completed(success: (T->())? = nil, failure: (NSError->())? = nil) -> Bool{
-        if let res = self.result {
-            res.handle(success: success, failure: failure)
-            return true
-        }
-        return false
-    }
 
     public func forced() -> Result<T> {
         return forced(Double.infinity)!
