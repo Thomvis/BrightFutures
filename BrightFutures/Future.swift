@@ -80,14 +80,15 @@ public class Future<T> {
         
     }
     
+    /**
+     * Should be run on the callbackAdministrationQueue
+     */
     private func runCallbacks() {
-        self.callbackAdministrationQueue.async {
-            for callback in self.callbacks {
-                callback(future: self)
-            }
-            
-            self.callbacks.removeAll()
+        for callback in self.callbacks {
+            callback(future: self)
         }
+        
+        self.callbacks.removeAll()
     }
     
     private func executionContextForCurrentContext() -> ExecutionContext {
