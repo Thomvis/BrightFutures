@@ -126,8 +126,7 @@ let f = future(4).andThen { result in
         break
     }
 }.andThen { result in
-    // short-hand for the switch statement. Closure is executed immediately iff result is .Succeeded
-    result.succeeded { val in
+    if let val = result.value {
       answer += 2
     }
     return
