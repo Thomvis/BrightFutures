@@ -252,19 +252,19 @@ public extension Future {
     }
     
     public func onComplete(context c: ExecutionContext, callback: CompletionCallback) -> Future<T> {
-        self.callbackAdministrationQueue.sync {
-            let wrappedCallback : Future<T> -> () = { future in
-                if let realRes = self.result {
-                    c.execute {
-                        self.callbackExecutionQueue.sync {
-                            callback(result: realRes)
-                            return
-                        }
+        let wrappedCallback : Future<T> -> () = { future in
+            if let realRes = self.result {
+                c.execute {
+                    self.callbackExecutionQueue.sync {
+                        callback(result: realRes)
                         return
                     }
+                    return
                 }
             }
-            
+        }
+        
+        self.callbackAdministrationQueue.sync {
             if self.result == nil {
                 self.callbacks.append(wrappedCallback)
             } else {
