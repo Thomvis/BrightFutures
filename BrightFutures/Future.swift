@@ -22,27 +22,32 @@
 
 import Foundation
 
-public func future<T>(context c: ExecutionContext = Queue.global, task: (inout NSError?) -> T?) -> Future<T> {
+public func future<T>(context c: ExecutionContext = Queue.global, task: () -> T) -> Future<T> {
+    return future(context: c, { () -> Result<T> in
+        return Result<T>(task())
+    })
+}
+
+public func future<T>(context c: ExecutionContext = Queue.global, task: @autoclosure () -> T) -> Future<T> {
+    return future(context: c, { () -> Result<T> in
+        return Result<T>(task())
+    })
+}
+
+public func future<T>(context c: ExecutionContext = Queue.global, task: () -> Result<T>) -> Future<T> {
     let promise = Promise<T>();
     
     c.execute {
-        var error: NSError?
-        let result = task(&error)
-        
-        if let certainError = error {
-            promise.error(certainError)
-        } else if let certainResult = result {
-            promise.success(certainResult)
+        let result = task()
+        switch result {
+        case .Success(let boxedValue):
+            promise.success(boxedValue.value)
+        case .Failure(let error):
+            promise.error(error)
         }
     }
     
     return promise.future
-}
-
-public func future<T>(context c: ExecutionContext = Queue.global, task: @autoclosure () -> T?) -> Future<T> {
-    return future(context: c) { error in
-        return task()
-    }
 }
 
 public let NoSuchElementError = "NoSuchElementError"
@@ -136,7 +141,7 @@ internal extension Future {
                 return false;
             }
             
-            self.result = Result(error)
+            self.result = .Failure(error)
             self.runCallbacks()
             return true;
         };
@@ -157,7 +162,7 @@ public extension Future {
     
     public class func failed(error: NSError) -> Future<T> {
         let res = Future<T>();
-        res.result = Result(error)
+        res.result = .Failure(error)
         
         return res
     }
