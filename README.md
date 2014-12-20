@@ -142,17 +142,17 @@ let f = future(4).andThen { result in
 `map` returns a new Future that contains the error from this Future if this Future failed, or the return value from the given closure that was applied to the value of this Future. There's also a `flatMap` function that can be used to map the result of a future to the value of a new Future.
 
 ```swift
-future { _ in
+future {
     fibonacci(10)
-}.map { number, error in
+}.map { number -> String in
     if number > 5 {
         return "large"
     }
     return "small"
-}.map { sizeString, _ in
-    return sizeString == "large"
+}.map { sizeString in
+    sizeString == "large"
 }.onSuccess { numberIsLarge in
-  // numberIsLarge is true
+    // numberIsLarge is true
 }
 ```
 
@@ -182,16 +182,18 @@ future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
 ```swift
-future { _ in
-    // fetch something from the web
+let f = future { () -> Result<Int> in
+    // request something from the web
+    
     if (request.error) { // it could fail
-        error = request.error
-        return nil    
+        return .Failure(request.error)
     }
+    
+    return .Success(Box(10))
 }.recover { _ in // provide an offline default
     return 5
 }.onSuccess { value in // either the request or the recovery succeeded
-  //value is 5
+    // value is 5 if the request failed or 10 if the request succeeded
 }
 ```
 
