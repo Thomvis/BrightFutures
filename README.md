@@ -108,6 +108,9 @@ func asyncCalculation() -> Future<String> {
 
 `Queue` is a simple wrapper around a dispatch queue.
 
+## Callbacks
+You can be informed of the result of a `Future` by registering callbacks: `onComplete`, `onSuccess` and `onFailure`. The order in which the callbacks are executed upon completion of the future is not guaranteed, but it is guaranteed that the callbacks are executed serially. It is not safe to add a new callback from within a callback of the same future.
+
 ## Chaining callbacks
 
 Using the `andThen` function on a `Future`, the order of callbacks can be explicitly defined. The closure passed to `andThen` is meant to perform side-effects and does not influence the result. `andThen` returns a new Future with the same result as this future.
@@ -181,7 +184,7 @@ future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
 ## Recovering from errors
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
-```swift
+```swifte
 let f = future { () -> Result<Int> in
     // request something from the web
     
@@ -198,21 +201,6 @@ let f = future { () -> Result<Int> in
 ```
 
 In addition to `recover`, `recoverWith` can be used to provide a Future that will provide the value to recover with.
-
-## Custom execution contexts
-By default, all tasks and callbacks are performed on the global GCD queue. All future-wrapped tasks are performed concurrently, but all callbacks of a single future will be executed serially. You can however change this behavior by providing an execution context when creating a future or adding a callback:
-
-```swift
-let f = future(context: ImmediateExecutionContext()) { _ in
-  fibonacci(10)
-}
-
-f.onComplete(context: Queue.main) { value in
-  // update the UI, we're on the main thread
-}
-```
-
-The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
 
 ## Utility Functions
 BrightFutures also comes with a number of utility functions that simplify working with multiple futures. These functions are part of the `FutureUtils` class, which is the counterpart of Scala's `Future` object.
@@ -253,6 +241,33 @@ FutureUtils.traverse(Array(1...10)) {
   // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
 ```
+
+## Default Threading Model
+BrightFutures tries its best to provide a simple and sensible default threading model. In theory, all threads are created equally and BrightFutures shouldn't care about which thread it is on. In practice however, the main thread is _more equal than others_, because it has a special place in our hearts and because you'll often want to be on it to do UI updates.
+
+A lot of the methods on `Future` accept an optional _execution context_ and a block, e.g. `onSuccess`, `map`, `recover` and many more. The block is executed (when the future is completed) in the given execution context, which in practice is a GCD queue. When the context is not explicitly provided, the following rules will be followed to determine the execution that is used:
+
+- if the method is called from the main thread, the block is executed on the main queue (`Queue.main`)
+- if the method is not called from the main thread, the block is executed on a global queue (`Queue.global`)
+
+The `future` keyword (and its `@autoclosure` companion) use a slightly different threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
+
+If you want to have custom threading behavior, skip do do not the section. next
+
+## Custom execution contexts
+The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
+
+```swift
+let f = future(context: ImmediateExecutionContext()) { _ in
+  fibonacci(10)
+}
+
+f.onComplete(context: Queue.main) { value in
+  // update the UI, we're on the main thread
+}
+```
+
+The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
 
 You can find more examples in the tests.
 
