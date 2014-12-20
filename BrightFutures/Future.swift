@@ -198,6 +198,13 @@ public extension Future {
         return res
     }
     
+    public class func completed<T>(result: Result<T>) -> Future<T> {
+        let res = Future<T>()
+        res.result = result
+        
+        return res
+    }
+    
     public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
         let res = Future<T>()
         
@@ -338,6 +345,12 @@ public extension Future {
             }
         }
         return p.future
+    }
+    
+    public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U>) -> Future<U> {
+        return self.flatMap(context: c) { value in
+            Future.completed(f(value))
+        }
     }
     
     public func map<U>(f: T -> U) -> Future<U> {
