@@ -250,7 +250,7 @@ A lot of the methods on `Future` accept an optional _execution context_ and a bl
 - if the method is called from the main thread, the block is executed on the main queue (`Queue.main`)
 - if the method is not called from the main thread, the block is executed on a global queue (`Queue.global`)
 
-The `future` keyword (and its `@autoclosure` companion) use a slightly different threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
+The `future` keyword (and its `@autoclosure` companion) use a much simpler threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
 
 If you want to have custom threading behavior, skip do do not the section. next
 
