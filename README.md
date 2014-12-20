@@ -33,7 +33,7 @@ User.logIn(username, password) { user, error in
 Now let's see what BrightFutures can do for you:
 
 ```swift
-User.logIn(username,password).flatMap { user, _ in
+User.logIn(username,password).flatMap { user in
   Posts.fetchPosts(user)
 }.onSuccess { posts in
   // do something with the user's posts
@@ -61,11 +61,16 @@ While this is really short and simple, it is equally limited. In many cases, you
 
 ## Control-flow syntax
 
-Because Swift allows to omit parenthesis for a function call if the only parameter is closure, we can pretend to add a `future` construct to the language:
+Because Swift allows to omit parenthesis for a function call if the only parameter is closure, we can pretend to add a `future` keyword to the language:
 
 ```swift
-let f = future { error in
-  fibonacci(10)
+let f = future { () -> Result<NSDate> in
+  let now: NSDate? = functionReturningTimeFromServer()
+  if let someNow = now {
+    return .Success(Box(someNow))
+  }
+  
+  return .Failure(NSError(domain: "TimeServiceErrorDomain", code: 404, userInfo: nil))
 }
 
 f.onSuccess { value in
@@ -73,16 +78,24 @@ f.onSuccess { value in
 }
 ```
 
-`error` is an inout parameter that can be set in the closure if the calculation failed. If `error` is non-nil after the execution of the closure, the future is considered to have failed.
+The future block needs an explict type because the Swift compiler is not able to deduce the type of multi-statement blocks. The returned date needs to be _boxed_ because the Swift compiler does not yet support variable layout enums.
+
+A shorthand version of the `future` keyword can be used if the operation cannot fail:
+
+```swift
+future {
+  fibonacci(10)
+}
+```
 
 ## Providing Futures
 Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.error(error)` when the operation ended. Futures can only be completed through a Promise.
 
 ```swift
-func complicatedQuestion() -> Future<String> {
+func asyncCalculation() -> Future<String> {
   let promise = Promise<String>()
 
-  Queue.async {
+  Queue.global.async {
   
     // do a complicated task
     
@@ -102,24 +115,25 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 var answer = 10
 
-future(4).andThen { result in
+let f = future(4).andThen { result in
     switch result {
-      case .Succeeded(let val):
+      case .Success(let val):
         answer *= val.value
       case .Failure(_):
         break
-    }    
+    }
 }.andThen { result in
     // short-hand for the switch statement. Closure is executed immediately iff result is .Succeeded
     result.succeeded { val in
       answer += 2
     }
+    return
 }
 
 // answer will be 42 (not 48)
 ```
 
-`result` is an instance of `TaskResult`, which mimics a typical `Try` construct as much as the Swift compiler currently allows. Due to limitations of generic enum types, the actual value needs to be wrapped in the `.value` property. (See [#8](https://github.com/Thomvis/BrightFutures/issues/8).)
+`result` is an instance of `Result`, which mimics a typical `Try` construct as much as the Swift compiler currently allows. Due to limitations of generic enum types, the actual value needs to be boxed. (See [#8](https://github.com/Thomvis/BrightFutures/issues/8).)
 
 ## Functional Composition
 
