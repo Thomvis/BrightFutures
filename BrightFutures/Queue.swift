@@ -89,7 +89,7 @@ public struct Queue : ExecutionContext {
      * Asynchronously executes the given block on the queue.
      * Identical to dispatch_async(self.queue, block)
      */
-    public func async(block: dispatch_block_t) {
+    public func async(block: () -> ()) {
         dispatch_async(queue, block);
     }
     
