@@ -28,38 +28,6 @@ public protocol ExecutionContext {
 
 }
 
-public class QueueExecutionContext : ExecutionContext {
-    
-    // This is Approach B from https://github.com/hpique/SwiftSingleton
-    public class var main : QueueExecutionContext {
-        struct Static {
-            static let instance : QueueExecutionContext = QueueExecutionContext(targetQueue: Queue.main)
-        }
-        return Static.instance
-    }
-    
-    public class var global: QueueExecutionContext {
-        struct Static {
-            static let instance : QueueExecutionContext = QueueExecutionContext(queue: Queue.global)
-        }
-        return Static.instance
-    }
-    
-    let queue: Queue
-    
-    public init(queue q: Queue = Queue(), targetQueue: Queue? = nil) {
-        self.queue = q
-        
-        if let unwrappedTargetQueue = targetQueue {
-            dispatch_set_target_queue(self.queue.queue, unwrappedTargetQueue.queue)
-        }
-    }
-    
-    public func execute(task: () -> ()) {
-        self.queue.execute(task)
-    }
-}
-
 public class ImmediateExecutionContext : ExecutionContext {
     
     public init() { }
