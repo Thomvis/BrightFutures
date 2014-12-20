@@ -10,7 +10,9 @@ The goal of this project is to port Scala's Futures & Promises ([guide](http://d
 ## Current State
 [![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures)
 
-BrightFutures is compatible with Swift 1.0. The project is currently moving towards a 1.0 release. Issue [#12](https://github.com/Thomvis/BrightFutures/issues/12) has been created to track the progress towards that goal. Please feel free to chime in with your feedback or requests! Until 1.0, the API could change significantly.
+BrightFutures is compatible with Swift 1.0. The project is currently moving towards a 1.0 release. Issue [#12](https://github.com/Thomvis/BrightFutures/issues/12) has been created to track the progress towards that goal. Please feel free to provide feedback or file your requests! Until 1.0, the API could change significantly.
+
+If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.1](https://github.com/Thomvis/BrightFutures/releases/tag/v1.0.0-beta.1)' for the time being.
 
 ## Examples
 ### Motivating Use Case
