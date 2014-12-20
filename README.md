@@ -184,7 +184,7 @@ future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
 ## Recovering from errors
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
-```swifte
+```swift
 let f = future { () -> Result<Int> in
     // request something from the web
     
