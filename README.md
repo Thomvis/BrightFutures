@@ -244,7 +244,7 @@ FutureUtils.traverse(Array(1...10)) {
 ## Default Threading Model
 BrightFutures tries its best to provide a simple and sensible default threading model. In theory, all threads are created equally and BrightFutures shouldn't care about which thread it is on. In practice however, the main thread is _more equal than others_, because it has a special place in our hearts and because you'll often want to be on it to do UI updates.
 
-A lot of the methods on `Future` accept an optional _execution context_ and a block, e.g. `onSuccess`, `map`, `recover` and many more. The block is executed (when the future is completed) in the given execution context, which in practice is a GCD queue. When the context is not explicitly provided, the following rules will be followed to determine the execution that is used:
+A lot of the methods on `Future` accept an optional _execution context_ and a block, e.g. `onSuccess`, `map`, `recover` and many more. The block is executed (when the future is completed) in the given execution context, which in practice is a GCD queue. When the context is not explicitly provided, the following rules will be followed to determine the execution context that is used:
 
 - if the method is called from the main thread, the block is executed on the main queue (`Queue.main`)
 - if the method is not called from the main thread, the block is executed on a global queue (`Queue.global`)
