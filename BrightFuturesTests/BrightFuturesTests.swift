@@ -830,6 +830,45 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(10, handler: nil)
     }
+    
+    func testSerialCallbacks() {
+        let p = Promise<Void>()
+        
+        var executingCallbacks = 0
+        for _ in 0..<10 {
+            let e = self.expectation()
+            p.future.onComplete(context: Queue.global) { _ in
+                XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
+                
+                executingCallbacks++
+                
+                // sleep a bit to increase the chances of other callback blocks executing
+                NSThread.sleepForTimeInterval(0.06)
+                
+                executingCallbacks--
+                
+                e.fulfill()
+            }
+            
+            let e1 = self.expectation()
+            p.future.onComplete(context: Queue.main) { _ in
+                XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
+                
+                executingCallbacks++
+                
+                // sleep a bit to increase the chances of other callback blocks executing
+                NSThread.sleepForTimeInterval(0.06)
+                
+                executingCallbacks--
+                
+                e1.fulfill()
+            }
+        }
+        
+        p.success()
+        
+        self.waitForExpectationsWithTimeout(5, handler: nil)
+    }
 }
 
 /**
