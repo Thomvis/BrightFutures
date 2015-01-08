@@ -47,7 +47,7 @@ public enum Result<T> {
         self = .Success(Box(value))
     }
 	
-	/// Return true if this result is a success, false otherwise.
+	/// True if this result is a success, false otherwise.
     public var isSuccess: Bool {
         get {
             switch self {
@@ -59,14 +59,14 @@ public enum Result<T> {
         }
     }
 	
-	/// Return true if this result is a failure, false otherwise.
+	/// True if this result is a failure, false otherwise.
     public var isFailure: Bool {
         get {
             return !self.isSuccess
         }
     }
 	
-    /// Returns the success value or nil in case of failure.
+    /// The success value or nil in case of failure.
     public var value: T? {
         get {
             switch self {
@@ -78,7 +78,7 @@ public enum Result<T> {
         }
     }
 	
-	/// Returns the failure error or nil in case of success.
+	/// The failure error or nil in case of success.
     public var error: NSError? {
         get {
             switch self {
