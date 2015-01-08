@@ -74,7 +74,8 @@ public struct Queue : ExecutionContext {
     /**
      * Synchronously executes the given block on the queue and returns
      * the return value of the given block.
-     * @return the return value from the block
+	 *
+     * :returns: the return value from the block
      */
     public func sync<T>(block: () -> T) -> T {
         var res: T? = nil
