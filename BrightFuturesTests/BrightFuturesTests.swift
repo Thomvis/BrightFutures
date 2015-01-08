@@ -458,7 +458,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         future(3).filter { $0 > 5}.onComplete { result in
             if let err = result.error {
-				XCTAssert(err.code == NoSuchElementError, "filter should yield no result")
+                XCTAssert(err.code == NoSuchElementError, "filter should yield no result")
             }
             
             e.fulfill()
