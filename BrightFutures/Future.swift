@@ -100,11 +100,25 @@ public class Future<T> {
  * The internal API for completing a Future
  */
 internal extension Future {
+	
+	/**
+	Completes the future with the given result.
+	If the future was already completed, an assertion will be raised.
+	
+	:param: result The result to complete the future with.
+	*/
     func complete(result: Result<T>) {
         let succeeded = tryComplete(result)
         assert(succeeded)
     }
-    
+	
+	/**
+	Completes the future with the given result.
+	
+	:param: result The result to complete the future with.
+	
+	:returns: False if the future was already completed, true otherwise.
+	*/
     func tryComplete(result: Result<T>) -> Bool {
         switch result {
         case .Success(let val):
@@ -113,12 +127,25 @@ internal extension Future {
             return self.tryError(err)
         }
     }
-    
+	
+	/**
+	Completes the future as success with the given value.
+	If the future was already completed, an assertion will be raised.
+	
+	:param: value The value to complete the future with.
+	*/
     func success(value: T) {
         let succeeded = self.trySuccess(value)
         assert(succeeded)
     }
-    
+	
+	/**
+	Completes the future as success with the given error.
+	
+	:param: value The value to complete the future with.
+	
+	:returns: False if the future was already completed, true otherwise.
+	*/
     func trySuccess(value: T) -> Bool {
         return self.callbackAdministrationQueue.sync {
             if self.result != nil {
@@ -130,12 +157,25 @@ internal extension Future {
             return true;
         };
     }
-    
+	
+	/**
+	Completes the future as failed with the given error.
+	If the future was already completed, an assertion will be raised.
+	
+	:param: value The error to complete the future with.
+	*/
     func error(error: NSError) {
         let succeeded = self.tryError(error)
         assert(succeeded)
     }
-    
+	
+	/**
+	Completes the future as failed with the given error.
+	
+	:param: error The error to complete the future with.
+	
+	:returns: False if the future was already completed, true otherwise.
+	*/
     func tryError(error: NSError) -> Bool {
         return self.callbackAdministrationQueue.sync {
             if self.result != nil {
@@ -153,58 +193,92 @@ internal extension Future {
  * This extension contains all (static) methods for Future creation
  */
 public extension Future {
-    
+	
+	/// The success value of this future, or nil if the future failed or isn't completed yet.
     public var value: T? {
         get {
             return self.result?.value
         }
     }
-    
+	
+	/// The failure error of this future, or nil if the future succeeded or isn't completed yet.
     public var error: NSError? {
         get {
             return self.result?.error
         }
     }
-    
+	
+	/// True if this future completed with success, false if the future failed or isn't completed yet.
     public var isSuccess: Bool {
         get {
             return self.result?.isSuccess ?? false
         }
     }
-    
+	
+	/// True if this future completed with failure, false if the future succeeded or isn't completed yet.
     public var isFailure: Bool {
         get {
             return self.result?.isFailure ?? false
         }
     }
-    
+	
+	/// True if the future is completed, false otherwise.
     public var isCompleted: Bool {
         get {
             return self.result != nil
         }
     }
-    
+
+	/**
+	Returns a new Future which has a successful result with the given value.
+	
+	:param: value The success value.
+	
+	:returns: Future with success result.
+	*/
     public class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
         res.result = Result(value)
         
         return res
-    }
-    
+	}
+	
+	/**
+	Returns a new Future which has a failed result with the given error.
+	
+	:param: error The error.
+	
+	:returns: Future with failed result.
+	*/
     public class func failed(error: NSError) -> Future<T> {
         let res = Future<T>();
         res.result = .Failure(error)
         
         return res
     }
-    
+	
+	/**
+	Returns a new Future with the given result.
+	
+	:param: result The result to set on the future.
+	
+	:returns: Future with given result.
+	*/
     public class func completed<T>(result: Result<T>) -> Future<T> {
         let res = Future<T>()
         res.result = result
         
         return res
     }
-    
+	
+	/**
+	Returns a new Future which will be completed with success after a given delay.
+	
+	:param: delay The delay after which to complete the future.
+	:param: value The value to complete the future as success with.
+	
+	:returns: Future.
+	*/
     public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
         let res = Future<T>()
         
@@ -214,10 +288,10 @@ public extension Future {
         
         return res
     }
-    
-    /**
-     * Returns a Future that will never succeed
-     */
+	
+	/**
+	Returns a Future that will never succeed.
+	*/
     public class func never() -> Future<T> {
         return Future<T>()
     }
@@ -263,10 +337,25 @@ public extension Future {
  */
 public extension Future {
 
+	/**
+	Registers the given callback to be executed when this future completes.
+	
+	:param: context The execution context on which to call the function.
+	
+	:returns: This future.
+	*/
     public func onComplete(callback: CompletionCallback) -> Future<T> {
         return self.onComplete(context: executionContextForCurrentContext(), callback: callback)
     }
-    
+	
+	/**
+	Registers the given callback to be executed on the specified ExecutionContect when this future completes.
+	
+	:param: context  The execution context on which to call the function.
+	:param: callback The function to be called.
+	
+	:returns: This future.
+	*/
     public func onComplete(context c: ExecutionContext, callback: CompletionCallback) -> Future<T> {
         let wrappedCallback : Future<T> -> () = { future in
             if let realRes = self.result {
@@ -279,7 +368,9 @@ public extension Future {
                 }
             }
         }
-        
+		
+		// Add the callback to the queue, waiting the get executed when the future completes,
+		// or call it immediately if the future result is already known.
         self.callbackAdministrationQueue.sync {
             if self.result == nil {
                 self.callbacks.append(wrappedCallback)
@@ -290,11 +381,26 @@ public extension Future {
         
         return self
     }
-    
+
+	/**
+	Registers the given callback to be executed when this future completes with success.
+	
+	:param: callback The function to be called.
+	
+	:returns: This future.
+	*/
     public func onSuccess(callback: SuccessCallback) -> Future<T> {
         return self.onSuccess(context: executionContextForCurrentContext(), callback)
     }
-    
+
+	/**
+	Registers the given callback to be executed on the specified ExecutionContect when this future completes with success.
+	
+	:param: context  The execution context on which to call the function.
+	:param: callback The function to be called.
+	
+	:returns: This future.
+	*/
     public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
         self.onComplete(context: c) { result in
             switch result {
@@ -307,11 +413,26 @@ public extension Future {
         
         return self
     }
-    
+	
+	/**
+	Registers the given callback to be executed when this future completes with failure.
+	
+	:param: callback The function to be called.
+	
+	:returns: This future.
+	*/
     public func onFailure(callback: FailureCallback) -> Future<T> {
         return self.onFailure(context: executionContextForCurrentContext(), callback)
     }
-    
+	
+	/**
+	Registers the given callback to be executed on the specified execution context when this future completes with failure.
+	
+	:param: context  The execution context on which to call the function.
+	:param: callback The function to be called.
+	
+	:returns: This future.
+	*/
     public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
         self.onComplete(context: c) { result in
             switch result {
@@ -357,10 +478,27 @@ public extension Future {
         }
     }
 
+	/**
+	Returns a new Future that contains the error from this Future if this Future failed,
+	or the return value from the given closure that was applied to the value of this Future.
+	
+	:param: f The closure to apply to the value of this Future.
+	
+	:returns: New Future
+	*/
     public func map<U>(f: (T) -> U) -> Future<U> {
         return self.map(context: executionContextForCurrentContext(), f)
     }
 
+	/**
+	Returns a new Future that contains the error from this Future if this Future failed,
+	or the return value from the given closure that was applied to the value of this Future.
+	
+	:param: f       The closure to apply to the value of this Future.
+	:param: context The execution context to call the closure in.
+	
+	:returns: New Future
+	*/
     public func map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U> {
         let p = Promise<U>()
         
@@ -378,10 +516,25 @@ public extension Future {
         return p.future
     }
 
+	/**
+	Registers a given callback to be called when this future completes.
+	
+	:param: callback The callback to call when this future completes.
+	
+	:returns: A new future that will have the same result as this future.
+	*/
     public func andThen(callback: Result<T> -> ()) -> Future<T> {
         return self.andThen(context: executionContextForCurrentContext(), callback: callback)
     }
 
+	/**
+	Registers a given callback to be called when this future completes.
+	
+	:param: context  The execution context in which to call the callback.
+	:param: callback The callback to call when this future completes.
+	
+	:returns: A new future that will have the same result as this future.
+	*/
     public func andThen(context c: ExecutionContext, callback: Result<T> -> ()) -> Future<T> {
         let p = Promise<T>()
         
@@ -392,21 +545,63 @@ public extension Future {
 
         return p.future
     }
-    
+	
+	/**
+	Registers the given closure that provides a recovery value when this future fails.
+	
+	When this future fails, the given closure will be called, the result from that closure will
+	be used to complete this future with as success.
+	
+	:param: task The closure that provides a recovery value.
+	
+	:returns: A new future that will have the same result as this future.
+	*/
     public func recover(task: (NSError) -> T) -> Future<T> {
         return self.recover(context: executionContextForCurrentContext(), task)
     }
-    
+	
+	/**
+	Registers the given closure that provides a recovery value when this future fails.
+
+	When this future fails, the given closure will be called, the result from that closure will
+	be used to complete this future with as success.
+	
+	:param: context The execution context in which to call the closure.
+	:param: task   The closure that provides a recovery value.
+	
+	:returns: A new future that will have the same result as this future.
+	*/
     public func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
         return self.recoverWith(context: c) { error -> Future<T> in
             return Future.succeeded(task(error))
         }
     }
-    
+	
+	/**
+	Registers the given closure that provides a recovery future.
+	
+	When this future fails, the given closure will be called, the future's result from that closure will
+	be used to complete this future with as success.
+	
+	:param: task The closure that provides a recovery future.
+	
+	:returns: A new future that will have the same result as this future.
+	*/
     public func recoverWith(task: (NSError) -> Future<T>) -> Future<T> {
         return self.recoverWith(context: executionContextForCurrentContext(), task: task)
     }
-    
+	
+	/**
+	Registers the given closure that provides a recovery future.
+	
+	When this future fails, the given closure will be called, the future's result from that closure will
+	be used to complete this future with as success.
+	
+	:param: context The execution context in which to call the closure.
+	:param: task    The closure that provides a recovery future.
+	
+	:returns: A new future that will have the same result as this future.
+	*/
     public func recoverWith(context c: ExecutionContext, task: (NSError) -> Future<T>) -> Future<T> {
         let p = Promise<T>()
         

@@ -33,14 +33,21 @@ public final class Box<T> {
     }
 }
 
+/**
+A result represents a result from a future.
+
+- Success: Indicates that the future completed with success.
+- Failure: Indicates that the future completed with failure.
+*/
 public enum Result<T> {
     case Success(Box<T>)
     case Failure(NSError)
-    
+	
     public init(_ value: T) {
         self = .Success(Box(value))
     }
-    
+	
+	/// True if this result is a success, false otherwise.
     public var isSuccess: Bool {
         get {
             switch self {
@@ -51,13 +58,15 @@ public enum Result<T> {
             }
         }
     }
-    
+	
+	/// True if this result is a failure, false otherwise.
     public var isFailure: Bool {
         get {
             return !self.isSuccess
         }
     }
-    
+	
+    /// The success value or nil in case of failure.
     public var value: T? {
         get {
             switch self {
@@ -68,7 +77,8 @@ public enum Result<T> {
             }
         }
     }
-    
+	
+	/// The failure error or nil in case of success.
     public var error: NSError? {
         get {
             switch self {

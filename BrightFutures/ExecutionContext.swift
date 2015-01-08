@@ -22,12 +22,18 @@
 
 import Foundation
 
+/**
+ *  ExecutionContext is a protocol that defines a context in which tasks can be executed.
+ */
 public protocol ExecutionContext {
     
     func execute(task: () -> ());
 
 }
 
+/**
+ *  An execution context that immediately executes tasks that it is given.
+ */
 public class ImmediateExecutionContext : ExecutionContext {
     
     public init() { }
