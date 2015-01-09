@@ -50,7 +50,8 @@ public func future<T>(context c: ExecutionContext = Queue.global, task: () -> Re
     return promise.future
 }
 
-public let NoSuchElementError = "NoSuchElementError"
+public let NoSuchElementError = 0
+public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
 public class Future<T> {
     
@@ -439,7 +440,7 @@ public extension Future {
                 if p(val.value) {
                     promise.completeWith(self)
                 } else {
-                    promise.failure(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
+                    promise.failure(NSError(domain: BrightFuturesErrorDomain, code: NoSuchElementError, userInfo: nil))
                 }
                 break
             case .Failure(let err):
