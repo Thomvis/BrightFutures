@@ -89,7 +89,7 @@ future {
 ```
 
 ## Providing Futures
-Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.error(error)` when the operation ended. Futures can only be completed through a Promise.
+Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.failure(error)` when the operation ended. Futures can only be completed through a Promise.
 
 ```swift
 func asyncCalculation() -> Future<String> {
