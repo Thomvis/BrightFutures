@@ -54,7 +54,7 @@ public class FutureUtils {
                     return .Success(Box(elem))
                 }
             }
-            return .Failure(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
+            return .Failure(NSError(domain: BrightFuturesErrorDomain, code: NoSuchElementError, userInfo: nil))
         }
     }
     
