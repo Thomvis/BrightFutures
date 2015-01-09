@@ -43,7 +43,7 @@ public func future<T>(context c: ExecutionContext = Queue.global, task: () -> Re
         case .Success(let boxedValue):
             promise.success(boxedValue.value)
         case .Failure(let error):
-            promise.error(error)
+            promise.failure(error)
         }
     }
     
@@ -110,7 +110,7 @@ internal extension Future {
         case .Success(let val):
             return self.trySuccess(val.value)
         case .Failure(let err):
-            return self.tryError(err)
+            return self.tryFailure(err)
         }
     }
     
@@ -131,12 +131,12 @@ internal extension Future {
         };
     }
     
-    func error(error: NSError) {
-        let succeeded = self.tryError(error)
+    func failure(error: NSError) {
+        let succeeded = self.tryFailure(error)
         assert(succeeded)
     }
     
-    func tryError(error: NSError) -> Bool {
+    func tryFailure(error: NSError) -> Bool {
         return self.callbackAdministrationQueue.sync {
             if self.result != nil {
                 return false;
@@ -339,7 +339,7 @@ public extension Future {
         self.onComplete(context: c) { res in
             switch (res) {
             case .Failure(let e):
-                p.error(e)
+                p.failure(e)
             case .Success(let v):
                 p.completeWith(f(v.value))
             }
@@ -370,7 +370,7 @@ public extension Future {
                 p.success(f(v.value))
                 break;
             case .Failure(let e):
-                p.error(e)
+                p.failure(e)
                 break;
             }
         })
@@ -439,11 +439,11 @@ public extension Future {
                 if p(val.value) {
                     promise.completeWith(self)
                 } else {
-                    promise.error(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
+                    promise.failure(NSError(domain: NoSuchElementError, code: 0, userInfo: nil))
                 }
                 break
             case .Failure(let err):
-                promise.error(err)
+                promise.failure(err)
             }
         }
         
