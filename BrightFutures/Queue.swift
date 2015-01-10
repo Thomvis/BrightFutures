@@ -23,60 +23,61 @@
 import Dispatch
 
 /**
- * Queue is a tiny wrapper around a Grand Central Dispatch queue.
- * Queue provides a nice syntax for scheduling (async) execution of blocks. 
- * 
- * ```
- * q.async {
- *  // executes asynchronously
- * }
- * ```
- *
- * It also simplifies executing a block synchronously and getting the 
- * return value from the block:
- *
- * let n = q.sync {
- *  return 42
- * }
- * ```
- *
- */
+Queue is a tiny wrapper around a Grand Central Dispatch queue.
+It provides a nice syntax for scheduling (async) execution of blocks.
+
+```
+q.async {
+ // executes asynchronously
+}
+```
+
+It also simplifies executing a block synchronously and getting the 
+return value from the block:
+
+```
+let n = q.sync {
+ return 42
+}
+```
+*/
 public struct Queue : ExecutionContext {
-    
-    /**
-     * The queue that is bound to the main thread (`dispatch_get_main_queue()`)
-     */
+
+    /// The queue that is bound to the main thread (`dispatch_get_main_queue()`)
     public static let main = Queue(queue: dispatch_get_main_queue());
-    
-    /**
-     * The global queue with default priority
-     */
+
+    /// The global queue with default priority
     public static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
     
     var queue: dispatch_queue_t
-    
+
     /**
-     * Instantiates a new `Queue` with the given queue.
-     * If `param` is omitted, a serial queue with identifier "queue" is used.
-     */
+    Instantiates a new `Queue` with the given dispatch queue.
+    If `param` is omitted, a serial queue with identifier "queue" is used.
+    
+    :param: queue The dispatch queue to use.
+    
+    :returns: New Queue.
+    */
     public init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
         self.queue = queue
     }
-    
+
     /**
-     * Synchronously executes the given block on the queue. 
-     * Identical to dispatch_sync(self.queue, block)
-     */
+    Synchronously executes the given block on the queue.
+    Identical to dispatch_sync(self.queue, block)
+    
+    :param: block The closure to execute.
+    */
     public func sync(block: () -> ()) {
         dispatch_sync(queue, block)
     }
     
     /**
-     * Synchronously executes the given block on the queue and returns
-     * the return value of the given block.
-	 *
-     * :returns: the return value from the block
-     */
+    Synchronously executes the given block on the queue and returns the return value of the given block.
+    
+    :returns: the return value from the block
+    */
     public func sync<T>(block: () -> T) -> T {
         var res: T? = nil
         dispatch_sync(queue, {
@@ -85,15 +86,25 @@ public struct Queue : ExecutionContext {
         
         return res!;
     }
-    
+
     /**
-     * Asynchronously executes the given block on the queue.
-     * Identical to dispatch_async(self.queue, block)
-     */
+    Asynchronously executes the given block on the queue.
+    Identical to dispatch_async(self.queue, block)
+    
+    :param: task The closure to execute.
+    */
     public func async(block: () -> ()) {
         dispatch_async(queue, block);
     }
     
+    /**
+    Asynchronously executes the given block on the queue and return a future.
+    The future will be completed with success using the value returned from the block.
+    
+    :param: block The closure to execute.
+    
+    :returns: Future.
+    */
     public func async<T>(block: () -> T) -> Future<T> {
         let p = Promise<T>()
         
@@ -103,11 +114,12 @@ public struct Queue : ExecutionContext {
         
         return p.future
     }
-    
+
     /**
-     * Part of the ExecutionContext protocol.
-     * Executes the given task asynchronously on the queue.
-     */
+    Asynchronously executes the given task on the queue.
+    
+    :param: task The closure to execute.
+    */
     public func execute(task: () -> ()) {
         self.async(task)
     }

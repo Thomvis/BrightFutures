@@ -42,12 +42,12 @@ A result represents a result from a future.
 public enum Result<T> {
     case Success(Box<T>)
     case Failure(NSError)
-	
+    
     public init(_ value: T) {
         self = .Success(Box(value))
     }
-	
-	/// True if this result is a success, false otherwise.
+    
+    /// True if this result is a success, false otherwise.
     public var isSuccess: Bool {
         get {
             switch self {
@@ -58,14 +58,14 @@ public enum Result<T> {
             }
         }
     }
-	
-	/// True if this result is a failure, false otherwise.
+    
+    /// True if this result is a failure, false otherwise.
     public var isFailure: Bool {
         get {
             return !self.isSuccess
         }
     }
-	
+    
     /// The success value or nil in case of failure.
     public var value: T? {
         get {
@@ -77,8 +77,8 @@ public enum Result<T> {
             }
         }
     }
-	
-	/// The failure error or nil in case of success.
+    
+    /// The failure error or nil in case of success.
     public var error: NSError? {
         get {
             switch self {
