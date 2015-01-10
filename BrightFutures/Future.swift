@@ -340,7 +340,7 @@ public extension Future {
 	/**
 	Registers the given callback to be executed when this future completes.
 	
-	:param: context The execution context on which to call the function.
+	:param: callback The function to be called.
 	
 	:returns: This future.
 	*/
@@ -547,10 +547,11 @@ public extension Future {
     }
 	
 	/**
-	Registers the given closure that provides a recovery value when this future fails.
+	Returns a future that, if this future succeeds, contains the value that this future succeeded with,
+	or if this future fails, the value that is returned from the given closure.
 	
-	When this future fails, the given closure will be called, the result from that closure will
-	be used to complete this future with as success.
+	In practice, this means that when this future fails, the given closure will be called.
+	the value returned from that closure will be used to complete this future with as success.
 	
 	:param: task The closure that provides a recovery value.
 	
@@ -561,10 +562,11 @@ public extension Future {
     }
 	
 	/**
-	Registers the given closure that provides a recovery value when this future fails.
-
-	When this future fails, the given closure will be called, the result from that closure will
-	be used to complete this future with as success.
+	Returns a future that, if this future succeeds, contains the value that this future succeeded with,
+	or if this future fails, the value that is returned from the given closure.
+	
+	In practice, this means that when this future fails, the given closure will be called,
+	the value returned from that closure will be used to complete this future with as success.
 	
 	:param: context The execution context in which to call the closure.
 	:param: task   The closure that provides a recovery value.
@@ -578,10 +580,11 @@ public extension Future {
     }
 	
 	/**
-	Registers the given closure that provides a recovery future.
+	Returns a future that, if this future succeeds, contains the value that this future succeeded with,
+	or if this future fails, contains the result from the future that is returned from the given closure.
 	
-	When this future fails, the given closure will be called, the future's result from that closure will
-	be used to complete this future with as success.
+	In practice, this means that when this future fails, the given closure will be called,
+	The future returned from that closure will be used to complete this future with.
 	
 	:param: task The closure that provides a recovery future.
 	
@@ -592,10 +595,11 @@ public extension Future {
     }
 	
 	/**
-	Registers the given closure that provides a recovery future.
+	Returns a future that, if this future succeeds, contains the value that this future succeeded with,
+	or if this future fails, contains the result from the future that is returned from the given closure.
 	
-	When this future fails, the given closure will be called, the future's result from that closure will
-	be used to complete this future with as success.
+	In practice, this means that when this future fails, the given closure will be called,
+	The future returned from that closure will be used to complete this future with.
 	
 	:param: context The execution context in which to call the closure.
 	:param: task    The closure that provides a recovery future.
