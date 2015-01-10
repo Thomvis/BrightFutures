@@ -27,6 +27,11 @@ ExecutionContext is a protocol that defines a context in which tasks can be exec
 */
 public protocol ExecutionContext {
     
+    /**
+    Execute the given task in the context.
+    
+    :param: task The closure to call, representing the task.
+    */
     func execute(task: () -> ());
 
 }
