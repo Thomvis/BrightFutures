@@ -14,6 +14,16 @@ BrightFutures is compatible with Swift 1.0. The project is currently moving towa
 
 If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.1](https://github.com/Thomvis/BrightFutures/releases/tag/v1.0.0-beta.1)' for the time being.
 
+## Installation
+CocoaPods 0.36.0.beta.1 (a pre-release version) now supports Swift frameworks, thus allows you to add BrightFutures to your project:
+
+```rb
+pod 'BrightFutures', :git => "https://github.com/Thomvis/BrightFutures.git"
+```
+
+(It doesn't seem to work for me without `:git`, but it should.) You can also use BrightFutures through (Carthage)[https://github.com/Carthage/Carthage] or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
+
+
 ## Examples
 ### Motivating Use Case
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
