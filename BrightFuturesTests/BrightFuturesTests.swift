@@ -92,17 +92,20 @@ extension BrightFuturesTests {
     }
     
     func testCompleteAfterFuture() {
-        let f = Future.completeAfter(1, withValue: 3)
+        let f: Future<Int> = Future.succeedAfter(1, withValue: 3)
         
         XCTAssertFalse(f.isCompleted)
+        XCTAssertFalse(f.isSuccess)
         
         NSThread.sleepForTimeInterval(0.2)
 
         XCTAssertFalse(f.isCompleted)
+        XCTAssertFalse(f.isSuccess)
         
         NSThread.sleepForTimeInterval(1.0)
 
         XCTAssert(f.isCompleted)
+        XCTAssert(f.isSuccess)
         
         if let val = f.value {
             XCTAssertEqual(val, 3);
@@ -674,12 +677,12 @@ extension BrightFuturesTests {
     
     func testUtilsFirstCompleted() {
         let futures = [
-            Future.completeAfter(0.2, withValue: 3),
-            Future.completeAfter(0.3, withValue: 13),
-            Future.completeAfter(0.4, withValue: 23),
-            Future.completeAfter(0.3, withValue: 4),
-            Future.completeAfter(0.1, withValue: 9),
-            Future.completeAfter(0.4, withValue: 83),
+            Future.succeedAfter(0.2, withValue: 3),
+            Future.succeedAfter(0.3, withValue: 13),
+            Future.succeedAfter(0.4, withValue: 23),
+            Future.succeedAfter(0.3, withValue: 4),
+            Future.succeedAfter(0.1, withValue: 9),
+            Future.succeedAfter(0.4, withValue: 83),
         ]
         
         let e = self.expectation()
@@ -723,10 +726,10 @@ extension BrightFuturesTests {
     func testUtilsFindSuccess() {
         let futures: [Future<Int>] = [
             Future.succeeded(1),
-            Future.completeAfter(0.2, withValue: 3),
+            Future.succeedAfter(0.2, withValue: 3),
             Future.succeeded(5),
             Future.succeeded(7),
-            Future.completeAfter(0.3, withValue: 8),
+            Future.succeedAfter(0.3, withValue: 8),
             Future.succeeded(9)
         ];
         
@@ -747,10 +750,10 @@ extension BrightFuturesTests {
     func testUtilsFindNoSuchElement() {
         let futures: [Future<Int>] = [
             Future.succeeded(1),
-            Future.completeAfter(0.2, withValue: 3),
+            Future.succeedAfter(0.2, withValue: 3),
             Future.succeeded(5),
             Future.succeeded(7),
-            Future.completeAfter(0.4, withValue: 9),
+            Future.succeedAfter(0.4, withValue: 9),
         ];
         
         let f = FutureUtils.find(futures) { val in
