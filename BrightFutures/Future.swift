@@ -432,22 +432,12 @@ public extension Future {
     }
     
     public func filter(p: T -> Bool) -> Future<T> {
-        let promise = Promise<T>()
-        
-        self.onComplete { result in
-            switch result {
-            case .Success(let val):
-                if p(val.value) {
-                    promise.completeWith(self)
-                } else {
-                    promise.failure(NSError(domain: BrightFuturesErrorDomain, code: NoSuchElementError, userInfo: nil))
-                }
-                break
-            case .Failure(let err):
-                promise.failure(err)
+        return self.flatMap { value -> Result<T> in
+            if p(value) {
+                return .Success(Box(value))
+            } else {
+                return .Failure(NSError(domain: BrightFuturesErrorDomain, code: NoSuchElementError, userInfo: nil))
             }
         }
-        
-        return promise.future
     }
 }
