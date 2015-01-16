@@ -50,8 +50,30 @@ public func future<T>(context c: ExecutionContext = Queue.global, task: () -> Re
     return promise.future
 }
 
-public let NoSuchElementError = 0
 public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
+
+public enum ErrorCode: Int {
+    case NoSuchElement
+    
+    var errorDescription: String {
+        switch self {
+        case .NoSuchElement:
+            return "No such element"
+        }
+    }
+}
+
+internal func errorFromCode(code: ErrorCode, failureReason: String? = nil) -> NSError {
+    var userInfo = [
+        NSLocalizedDescriptionKey : code.errorDescription
+    ]
+    
+    if let reason = failureReason {
+        userInfo[NSLocalizedFailureReasonErrorKey] = reason
+    }
+    
+    return NSError(domain: BrightFuturesErrorDomain, code: code.rawValue, userInfo: userInfo)
+}
 
 public class Future<T> {
     
@@ -436,7 +458,7 @@ public extension Future {
             if p(value) {
                 return .Success(Box(value))
             } else {
-                return .Failure(NSError(domain: BrightFuturesErrorDomain, code: NoSuchElementError, userInfo: nil))
+                return .Failure(errorFromCode(.NoSuchElement))
             }
         }
     }
