@@ -70,11 +70,12 @@ public class Future<T> {
     let callbackAdministrationQueue = Queue()
     
     /**
-     * All callbacks are executed serially on this queue. This is on
-     * top of the execution context, which is either given by the client
-     * or returned from executionContextForCurrentContext
+     * Upon completion of the future, all callbacks are asynchronously scheduled to their
+     * respective execution contexts (which is either given by the client or returned from
+     * executionContextForCurrentContext). Inside the context, this semaphore will be used
+     * to make sure that all callbacks are executed serially.
      */
-    let callbackExecutionQueue = Queue();
+    let callbackExecutionSemaphore = Semaphore(value: 1);
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     internal init() {
@@ -269,7 +270,7 @@ public extension Future {
         let wrappedCallback : Future<T> -> () = { future in
             if let realRes = self.result {
                 c.execute {
-                    self.callbackExecutionQueue.sync {
+                    self.callbackExecutionSemaphore.execute {
                         callback(result: realRes)
                         return
                     }
