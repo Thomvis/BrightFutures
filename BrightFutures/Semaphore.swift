@@ -16,23 +16,23 @@ public enum TimeInterval {
 /**
  * A tiny wrapper around dispatch_semaphore
  */
-public class Semaphore {
+class Semaphore {
     
     private var semaphore: dispatch_semaphore_t
     
-    public init(value: Int) {
+    init(value: Int) {
         self.semaphore = dispatch_semaphore_create(value)
     }
     
-    public convenience init() {
+    convenience init() {
         self.init(value: 1)
     }
     
-    public func wait() {
+    func wait() {
         self.wait(.Forever)
     }
     
-    public func wait(timeout: TimeInterval) {
+    func wait(timeout: TimeInterval) {
         let dispatchTimeout: dispatch_time_t = {
             switch timeout {
             case .Forever:
@@ -45,7 +45,7 @@ public class Semaphore {
         dispatch_semaphore_wait(self.semaphore, dispatchTimeout)
     }
     
-    public func signal() {
+    func signal() {
         dispatch_semaphore_signal(self.semaphore)
     }
 }
