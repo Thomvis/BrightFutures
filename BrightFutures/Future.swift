@@ -229,30 +229,27 @@ public extension Future {
  * of the future and to access the result and/or error
  */
 public extension Future {
-
-    public func forced() -> Result<T> {
-        return forced(Double.infinity)!
+    
+    public func forced() -> Result<T>? {
+        return self.forced(nil)
     }
-
-    public func forced(time: NSTimeInterval) -> Result<T>? {
+    
+    public func forced(timeout: NSTimeInterval?) -> Result<T>? {
+        return self.forced( timeout.map { .In($0) } ?? .Forever )
+    }
+    
+    public func forced(timeout: TimeInterval) -> Result<T>? {
         if let certainResult = self.result {
             return certainResult
         } else {
-            let sema = dispatch_semaphore_create(0)
+            let sema = Semaphore(value: 0)
             var res: Result<T>? = nil
             self.onComplete(context: Queue.global) {
                 res = $0
-                dispatch_semaphore_signal(sema)
-            }
-
-            var timeout: dispatch_time_t
-            if time.isFinite {
-                timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(time * NSTimeInterval(NSEC_PER_SEC)))
-            } else {
-                timeout = DISPATCH_TIME_FOREVER
+                sema.signal()
             }
             
-            dispatch_semaphore_wait(sema, timeout)
+            sema.wait(timeout)
             
             return res
         }
