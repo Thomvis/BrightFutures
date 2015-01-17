@@ -869,6 +869,21 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(5, handler: nil)
     }
+    
+    // Test for https://github.com/Thomvis/BrightFutures/issues/18
+    func testCompletionBlockOnMainQueue() {
+        var key = "mainqueuespecifickey"
+        let value = "value"
+        let valuePointer = getMutablePointer(value)
+    
+        
+        dispatch_queue_set_specific(dispatch_get_main_queue(), &key, valuePointer, nil)
+        XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "value should have been set on the main (i.e. current) queue")
+        
+        future(1).onSuccess(context: Queue.main) { val in
+            XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "we should now too be on the main queue")
+        }
+    }
 }
 
 /**
@@ -905,4 +920,8 @@ func fibonacci(n: Int) -> Int {
 
 func fibonacciFuture(n: Int) -> Future<Int> {
     return future(fibonacci(n))
+}
+
+func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
+    return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
 }
