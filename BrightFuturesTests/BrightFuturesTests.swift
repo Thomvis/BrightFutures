@@ -880,9 +880,13 @@ extension BrightFuturesTests {
         dispatch_queue_set_specific(dispatch_get_main_queue(), &key, valuePointer, nil)
         XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "value should have been set on the main (i.e. current) queue")
         
+        let e = self.expectation()
         future(1).onSuccess(context: Queue.main) { val in
             XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "we should now too be on the main queue")
+            e.fulfill()
         }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 }
 
