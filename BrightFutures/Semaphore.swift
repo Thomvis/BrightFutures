@@ -11,6 +11,17 @@ import Foundation
 public enum TimeInterval {
     case Forever
     case In(NSTimeInterval)
+    
+    var dispatchTime: dispatch_time_t {
+        get {
+            switch self {
+            case .Forever:
+                return DISPATCH_TIME_FOREVER
+            case .In(let interval):
+                return dispatch_time(DISPATCH_TIME_NOW, Int64(interval * NSTimeInterval(NSEC_PER_SEC)))
+            }
+        }
+    }
 }
 
 /**
@@ -33,16 +44,7 @@ class Semaphore {
     }
     
     func wait(timeout: TimeInterval) {
-        let dispatchTimeout: dispatch_time_t = {
-            switch timeout {
-            case .Forever:
-                return DISPATCH_TIME_FOREVER
-            case .In(let interval):
-                return dispatch_time(DISPATCH_TIME_NOW, Int64(interval * NSTimeInterval(NSEC_PER_SEC)))
-            }
-        }()
-        
-        dispatch_semaphore_wait(self.semaphore, dispatchTimeout)
+        dispatch_semaphore_wait(self.semaphore, timeout.dispatchTime)
     }
     
     func signal() {
