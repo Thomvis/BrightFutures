@@ -56,7 +56,7 @@ Both `User.logIn` and `Posts.fetchPosts` now immediately return a `Future`. A fu
 
 When the future returned from `User.logIn` fails, e.g. the username and password did not match, `flatMap` and `onSuccess` are skipped and `onFailure` is called with the error that occurred while logging in. If the login attempt succeeded, the resulting user object is passed to `flatMap`, which 'turns' the user into an array of his or her posts. If the posts could not be fetched, `onSuccess` is skipped and `onFailure` is called with the error that occurred when fetching the posts. If the posts could be fetched successfully, `onSuccess` is called with the user's posts.
 
-This is just the tip of the proverbial iceberg. A lot more examples and techniques can be found in this readme or by looking at the tests.
+This is just the tip of the proverbial iceberg. A lot more examples and techniques can be found in this readme, by browsing through the tests or by checking out the official companion framework [FutureProofing](https://github.com/Thomvis/FutureProofing).
 
 ## The base case
 If you already have a function (or really any expression) defined that you just want to execute asynchronously, you can just wrap it in a `future()` call and turn it into a Future:
