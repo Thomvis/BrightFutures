@@ -15,12 +15,16 @@
 
 @implementation OBJCTests
 
-- (void) testSucceededFuture {
+- (void) testSucceededFuture
+{
     BFFuture *f = [BFFuture succeeded:@(1)];
     XCTAssertEqualObjects(f.result.value, @(1));
+    XCTAssertEqualObjects(f.value, @(1));
+    XCTAssert(f.result.isSuccess);
 }
 
-- (void) testOnComplete {
+- (void) testOnComplete
+{
     BFFuture *f = [BFFuture succeeded:@(2)];
     
     XCTestExpectation *e = [self expectationWithDescription:nil];
@@ -30,6 +34,12 @@
     }];
     
     [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (void) testOnCompleteWithContext
+{
+    BFFuture *f = [BFFuture succeeded:@(1)];
+    [f onCompleteWithContext: ]
 }
 
 @end
