@@ -267,11 +267,11 @@ If you want to have custom threading behavior, skip do do not the section. next
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
 
 ```swift
-let f = future(context: ImmediateExecutionContext()) { _ in
+let f = future(context: ImmediateExecutionContext { _ in
   fibonacci(10)
 }
 
-f.onComplete(context: Queue.main) { value in
+f.onComplete(context: Queue.main.context) { value in
   // update the UI, we're on the main thread
 }
 ```
