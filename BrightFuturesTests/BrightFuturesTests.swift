@@ -197,13 +197,13 @@ extension BrightFuturesTests {
     }
     
     func testCustomExecutionContext() {
-        let f = future(context: ImmediateExecutionContext()) {
+        let f = future(context: ImmediateExecutionContext) {
             fibonacci(10)
         }
         
         let e = self.expectationWithDescription("immediate success expectation")
         
-        f.onSuccess(context: ImmediateExecutionContext()) { value in
+        f.onSuccess(context: ImmediateExecutionContext) { value in
             e.fulfill()
         }
         
@@ -216,7 +216,7 @@ extension BrightFuturesTests {
         future { _ -> Int in
             XCTAssert(!NSThread.isMainThread())
             return 1
-        }.onSuccess(context: Queue.main) { value in
+        }.onSuccess(context: Queue.main.context) { value in
             XCTAssert(NSThread.isMainThread())
             e.fulfill()
         }
@@ -597,7 +597,7 @@ extension BrightFuturesTests {
     func testUtilsTraverseWithExecutionContext() {
         let e = self.expectation()
         
-        FutureUtils.traverse(Array(1...10), context: Queue.main) { _ -> Future<Int> in
+        FutureUtils.traverse(Array(1...10), context: Queue.main.context) { _ -> Future<Int> in
             XCTAssert(NSThread.isMainThread())
             return future(1)
         }.onComplete { _ in
@@ -648,7 +648,7 @@ extension BrightFuturesTests {
     func testUtilsFoldWithExecutionContext() {
         let e = self.expectation()
         
-        FutureUtils.fold([Future.succeeded(1)], context: Queue.main, zero: 10) { remainder, elem -> Int in
+        FutureUtils.fold([Future.succeeded(1)], context: Queue.main.context, zero: 10) { remainder, elem -> Int in
             XCTAssert(NSThread.isMainThread())
             return remainder + elem
         }.onSuccess { val in
@@ -730,7 +730,7 @@ extension BrightFuturesTests {
             Future.succeeded(9)
         ];
         
-        let f = FutureUtils.find(futures, context: Queue.global) { val in
+        let f = FutureUtils.find(futures, context: Queue.global.context) { val in
             return val % 2 == 0
         }
         
@@ -778,7 +778,7 @@ extension BrightFuturesTests {
         let instances = 100;
         var successfulFutures = [Future<Int>]()
         var failingFutures = [Future<Int>]()
-        let contexts: [ExecutionContext] = [ImmediateExecutionContext(), Queue.main, Queue.global]
+        let contexts: [ExecutionContext] = [ImmediateExecutionContext, Queue.main.context, Queue.global.context]
         
         let randomContext: () -> ExecutionContext = { contexts[Int(arc4random_uniform(UInt32(contexts.count)))] }
         let randomFuture: () -> Future<Int> = {
@@ -837,7 +837,7 @@ extension BrightFuturesTests {
         var executingCallbacks = 0
         for _ in 0..<10 {
             let e = self.expectation()
-            p.future.onComplete(context: Queue.global) { _ in
+            p.future.onComplete(context: Queue.global.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
                 executingCallbacks++
@@ -851,7 +851,7 @@ extension BrightFuturesTests {
             }
             
             let e1 = self.expectation()
-            p.future.onComplete(context: Queue.main) { _ in
+            p.future.onComplete(context: Queue.main.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
                 executingCallbacks++
@@ -881,7 +881,7 @@ extension BrightFuturesTests {
         XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "value should have been set on the main (i.e. current) queue")
         
         let e = self.expectation()
-        future(1).onSuccess(context: Queue.main) { val in
+        future(1).onSuccess(context: Queue.main.context) { val in
             XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "we should now too be on the main queue")
             e.fulfill()
         }

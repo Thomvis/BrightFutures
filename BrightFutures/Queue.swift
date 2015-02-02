@@ -41,7 +41,7 @@ import Dispatch
  * ```
  *
  */
-public struct Queue : ExecutionContext {
+public struct Queue {
     
     /**
      * The queue that is bound to the main thread (`dispatch_get_main_queue()`)
@@ -54,6 +54,12 @@ public struct Queue : ExecutionContext {
     public static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
     
     var queue: dispatch_queue_t
+    
+    public var context: ExecutionContext {
+        return { task in
+            self.async(task)
+        }
+    }
     
     /**
      * Instantiates a new `Queue` with the given queue.
@@ -101,14 +107,6 @@ public struct Queue : ExecutionContext {
         })
         
         return p.future
-    }
-    
-    /**
-     * Part of the ExecutionContext protocol.
-     * Executes the given task asynchronously on the queue.
-     */
-    public func execute(task: () -> ()) {
-        self.async(task)
     }
     
 }

@@ -22,22 +22,34 @@
 
 import Foundation
 
-public func future<T>(context c: ExecutionContext = Queue.global, task: () -> T) -> Future<T> {
+public func future<T>(task: () -> T) -> Future<T> {
+    return future(context: Queue.global.context, task)
+}
+
+public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T> {
     return future(context: c, { () -> Result<T> in
         return Result<T>(task())
     })
 }
 
-public func future<T>(context c: ExecutionContext = Queue.global, task: @autoclosure () -> T) -> Future<T> {
+public func future<T>(task: @autoclosure () -> T) -> Future<T> {
+    return future(context: Queue.global.context, task)
+}
+
+public func future<T>(context c: ExecutionContext, task: @autoclosure () -> T) -> Future<T> {
     return future(context: c, { () -> Result<T> in
         return Result<T>(task())
     })
 }
 
-public func future<T>(context c: ExecutionContext = Queue.global, task: () -> Result<T>) -> Future<T> {
+public func future<T>(task: () -> Result<T>) -> Future<T> {
+    return future(context: Queue.global.context, task)
+}
+
+public func future<T>(context c: ExecutionContext, task: () -> Result<T>) -> Future<T> {
     let promise = Promise<T>();
     
-    c.execute {
+    c {
         let result = task()
         switch result {
         case .Success(let boxedValue):
@@ -94,7 +106,7 @@ public class Future<T> {
     }
     
     private func executionContextForCurrentContext() -> ExecutionContext {
-        return NSThread.isMainThread() ? Queue.main : Queue.global
+        return toContext(NSThread.isMainThread() ? Queue.main : Queue.global)
     }
 }
 
@@ -245,7 +257,7 @@ public extension Future {
         } else {
             let sema = Semaphore(value: 0)
             var res: Result<T>? = nil
-            self.onComplete(context: Queue.global) {
+            self.onComplete(context: Queue.global.context) {
                 res = $0
                 sema.signal()
             }
@@ -269,7 +281,7 @@ public extension Future {
     public func onComplete(context c: ExecutionContext, callback: CompletionCallback) -> Future<T> {
         let wrappedCallback : Future<T> -> () = { future in
             if let realRes = self.result {
-                c.execute {
+                c {
                     self.callbackExecutionSemaphore.execute {
                         callback(result: realRes)
                         return

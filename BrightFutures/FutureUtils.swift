@@ -44,7 +44,7 @@ public class FutureUtils {
     }
     
     public class func find<T>(seq: [Future<T>], p: T -> Bool) -> Future<T> {
-        return self.find(seq, context: Queue.global, p: p)
+        return self.find(seq, context: Queue.global.context, p: p)
     }
     
     public class func find<T>(seq: [Future<T>], context c: ExecutionContext, p: T -> Bool) -> Future<T> {
@@ -58,7 +58,7 @@ public class FutureUtils {
         }
     }
     
-    public class func fold<T,R>(seq: [Future<T>], context c: ExecutionContext = Queue.global, zero: R, op: (R, T) -> R) -> Future<R> {
+    public class func fold<T,R>(seq: [Future<T>], context c: ExecutionContext = Queue.global.context, zero: R, op: (R, T) -> R) -> Future<R> {
         return seq.reduce(Future.succeeded(zero), combine: { zero, elem in
             return zero.flatMap { zeroVal in
                 elem.map(context: c) { elemVal in
@@ -75,7 +75,7 @@ public class FutureUtils {
     }
     
     public class func traverse<T, U>(seq: [T], fn: T -> Future<U>) -> Future<[U]> {
-        return self.traverse(seq, context: Queue.global, fn: fn)
+        return self.traverse(seq, context: Queue.global.context, fn: fn)
     }
     
     public class func traverse<T, U>(seq: [T], context c: ExecutionContext, fn: T -> Future<U>) -> Future<[U]> {

@@ -64,14 +64,10 @@ class Semaphore {
     func signal() {
         dispatch_semaphore_signal(self.semaphore)
     }
-}
-
-extension Semaphore : ExecutionContext {
 
     func execute(task: () -> ()) {
         self.wait()
         task()
         self.signal()
     }
-    
 }

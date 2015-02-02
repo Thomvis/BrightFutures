@@ -22,17 +22,20 @@
 
 import Foundation
 
-public protocol ExecutionContext {
-    
-    func execute(task: () -> ());
+public typealias ExecutionContext = (() -> ()) -> ()
 
+public func ImmediateExecutionContext(task: () -> ())  {
+    task()
 }
 
-public class ImmediateExecutionContext : ExecutionContext {
-    
-    public init() { }
-    
-    public func execute(task: () -> ())  {
-        task()
+public func toContext(queue: Queue) -> ExecutionContext {
+    return { task in
+        queue.async(task)
+    }
+}
+
+public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
+    return { task in
+        dispatch_async(queue, task)
     }
 }
