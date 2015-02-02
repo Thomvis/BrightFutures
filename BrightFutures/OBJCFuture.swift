@@ -105,8 +105,8 @@ public extension BFFuture {
         return self
     }
 
-    public func onCompleteWithContext(context c: ExecutionContext, callback: (BFResult) -> ()) -> BFFuture {
-        self.future.onComplete(context: c) { result in
+    public func onComplete(context c: BFExecutionContext, callback: (BFResult) -> ()) -> BFFuture {
+        self.future.onComplete(context: toContext(c)) { result in
             callback(BFResult.fromSwift(result))
         }
 
@@ -120,8 +120,39 @@ public extension BFFuture {
 
 }
 
-@objc public protocol BFExecutionContext {
-    func execute(task: () -> ());
+@objc public class BFExecutionContext {
+    
+    public class var mainQueue: BFExecutionContext {
+        struct Static {
+            static let instance : BFExecutionContext = BFExecutionContext(context: Queue.main.context)
+        }
+        return Static.instance
+    }
+    
+    public class var globalQueue: BFExecutionContext {
+        struct Static {
+            static let instance : BFExecutionContext = BFExecutionContext(context: Queue.global.context)
+        }
+        return Static.instance
+    }
+    
+    public class var immediate: BFExecutionContext {
+        struct Static {
+            static let instance : BFExecutionContext = BFExecutionContext(context: { task in task() })
+        }
+        return Static.instance
+    }
+    
+    internal let context: ExecutionContext
+    
+    public init(context: ExecutionContext) {
+        self.context = context
+    }
+
+}
+
+func toContext(context: BFExecutionContext) -> ExecutionContext {
+    return context.context
 }
 
 

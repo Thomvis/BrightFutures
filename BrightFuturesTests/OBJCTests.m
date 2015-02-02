@@ -27,7 +27,7 @@
 {
     BFFuture *f = [BFFuture succeeded:@(2)];
     
-    XCTestExpectation *e = [self expectationWithDescription:nil];
+    XCTestExpectation *e = [self expectation];
     [f onComplete:^(BFResult *res) {
         XCTAssertEqualObjects(res.value, @(2));
         [e fulfill];
@@ -39,7 +39,19 @@
 - (void) testOnCompleteWithContext
 {
     BFFuture *f = [BFFuture succeeded:@(1)];
-    [f onCompleteWithContext: ]
+    
+    XCTestExpectation *e = [self expectation];
+    [f onCompleteWithContext:[BFExecutionContext mainQueue] callback:^(BFResult *res) {
+        XCTAssertEqualObjects(res.value, @(1));
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
+- (XCTestExpectation *) expectation
+{
+    return [self expectationWithDescription:@""];
 }
 
 @end
