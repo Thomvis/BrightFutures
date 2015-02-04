@@ -1,84 +1,32 @@
+// The MIT License (MIT)
 //
-//  OBJCFuture.swift
-//  BrightFutures
+// Copyright (c) 2014 Thomas Visser
 //
-//  Created by Thomas Visser on 29/01/15.
-//  Copyright (c) 2015 Thomas Visser. All rights reserved.
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
 //
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 import Foundation
 
-func bridge(future: Future<AnyObject>) -> BFFuture {
-    return BFFuture(future: future)
-}
-
-func bridge(future: BFFuture) -> Future<AnyObject> {
-    return future.future
-}
-
-func bridge(result: Result<AnyObject>) -> BFResult {
-    return bridge(result)!
-}
-
-func bridge(optionalResult: Result<AnyObject>?) -> BFResult? {
-    if let res = optionalResult {
-        switch res {
-        case .Success(let boxedValue):
-            return BFResult(value: boxedValue.value)
-        case .Failure(let error):
-            return BFResult(error: error)
-        }
-    }
-    
-    return nil
-}
-
-func bridge(result: BFResult) -> Result<AnyObject> {
-    if result.isSuccess {
-        return Result.Success(Box(result.value!))
-    }
-    return Result.Failure(result.error!)
-}
-
-func bridge(result: BFExecutionContext) -> ExecutionContext {
-    return toContext(result)
-}
-
-func bridge<T>(f: T -> Future<AnyObject>) -> (T -> BFFuture) {
-    return { param in
-        bridge(f(param))
-    }
-}
-
-func bridge<T>(f: T -> BFFuture) -> (T -> Future<AnyObject>) {
-    return { param in
-        bridge(f(param))
-    }
-}
-
-func bridge<T>(f: T -> BFResult) -> (T -> Result<AnyObject>) {
-    return { param in
-        bridge(f(param))
-    }
-}
-
-func bridge(f: BFResult -> ()) -> (Result<AnyObject> -> ()) {
-    return { res in
-        f(bridge(res))
-    }
-}
-
-func bridge<L: AnyObject,R: AnyObject>(future: Future<(L,R)>) -> Future<AnyObject> {
-    return future.map { l,r -> AnyObject in
-        [l, r]
-    }
-}
-
-@objc public class BFFuture: NSObject {
+@objc public class BFFuture {
     
     let future: Future<AnyObject>
     
-    internal convenience override init() {
+    internal convenience init() {
         self.init(future: Future<AnyObject>())
     }
     
@@ -88,7 +36,7 @@ func bridge<L: AnyObject,R: AnyObject>(future: Future<(L,R)>) -> Future<AnyObjec
 }
 
 public extension BFFuture {
-
+    
     public var result: BFResult? {
         return bridge(self.future.result)
     }
@@ -120,8 +68,8 @@ public extension BFFuture {
     public class func failed(error: NSError) -> BFFuture {
         return bridge(Future.failed(error))
     }
-
-    public class func completed(result: BFResult) -> BFFuture {        
+    
+    public class func completed(result: BFResult) -> BFFuture {
         return bridge(Future<AnyObject>.completed(bridge(result)))
     }
     
@@ -145,14 +93,14 @@ public extension BFFuture {
         return bridge(self.future.forced(timeout))
     }
 }
-    
-public extension BFFuture {
 
+public extension BFFuture {
+    
     public func onComplete(callback: (BFResult) -> ()) -> BFFuture {
         self.future.onComplete(bridge(callback))
         return self
     }
-
+    
     public func onComplete(context c: BFExecutionContext, callback: (BFResult) -> ()) -> BFFuture {
         self.future.onComplete(bridge(c), bridge(callback))
         return self
@@ -239,106 +187,28 @@ public extension BFFuture {
     }
 }
 
-@objc public class BFExecutionContext {
-    
-    public class var mainQueue: BFExecutionContext {
-        struct Static {
-            static let instance : BFExecutionContext = BFExecutionContext(context: Queue.main.context)
-        }
-        return Static.instance
-    }
-    
-    public class var globalQueue: BFExecutionContext {
-        struct Static {
-            static let instance : BFExecutionContext = BFExecutionContext(context: Queue.global.context)
-        }
-        return Static.instance
-    }
-    
-    public class var immediate: BFExecutionContext {
-        struct Static {
-            static let instance : BFExecutionContext = BFExecutionContext(context: { task in task() })
-        }
-        return Static.instance
-    }
-    
-    internal let context: ExecutionContext
-    
-    public init(context: ExecutionContext) {
-        self.context = context
-    }
-
+func bridge(future: Future<AnyObject>) -> BFFuture {
+    return BFFuture(future: future)
 }
 
-func toContext(context: BFExecutionContext) -> ExecutionContext {
-    return context.context
+func bridge(future: BFFuture) -> Future<AnyObject> {
+    return future.future
 }
 
-@objc public class BFPromise : NSObject {
-    
-    private let promise: Promise<AnyObject>
-    
-    public var future: BFFuture {
-        return bridge(self.promise.future)
-    }
-    
-    public override init() {
-        self.promise = Promise<AnyObject>()
-    }
-    
-    public func completeWith(future: BFFuture) {
-        self.promise.completeWith(bridge(future))
-    }
-    
-    public func success(value: AnyObject) {
-        self.promise.success(value)
-    }
-    
-    public func trySuccess(value: AnyObject) -> Bool {
-        return self.promise.trySuccess(value)
-    }
-    
-    public func failure(error: NSError) {
-        self.promise.failure(error)
-    }
-    
-    public func tryFailure(error: NSError) -> Bool {
-        return self.promise.tryFailure(error)
-    }
-    
-    public func complete(result: BFResult) {
-        return self.promise.complete(bridge(result))
-    }
-    
-    public func tryComplete(result: BFResult) -> Bool {
-        return self.promise.tryComplete(bridge(result))
-    }
-    
-}
-
-
-@objc public class BFResult {
-    
-    internal var success: Bool
-    public var value: AnyObject?
-    public var error: NSError?
-    
-    public var isSuccess: Bool {
-        return success
-    }
-    
-    public var isFailure: Bool {
-        return !self.isSuccess
-    }
-    
-    public init(value: AnyObject?) {
-        self.value = value
-        self.success = true
-    }
-    
-    public init(error: NSError) {
-        self.error = error
-        self.success = false
+func bridge<T>(f: T -> Future<AnyObject>) -> (T -> BFFuture) {
+    return { param in
+        bridge(f(param))
     }
 }
 
+func bridge<T>(f: T -> BFFuture) -> (T -> Future<AnyObject>) {
+    return { param in
+        bridge(f(param))
+    }
+}
+
+func bridge<L: AnyObject,R: AnyObject>(future: Future<(L,R)>) -> Future<AnyObject> {
+    return future.map { l,r -> AnyObject in
+        [l, r]
+    }
+}
