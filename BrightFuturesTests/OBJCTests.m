@@ -181,6 +181,68 @@
     XCTAssertEqual(answer, 42);
 }
 
+- (void) testSimpleMap
+{
+    // TODO
+}
+
+- (void) testMapSuccess
+{
+    // TODO
+}
+
+- (void) testMapFailure
+{
+    // TODO
+}
+
+- (void) testSkippedRecover
+{
+    // TODO
+}
+
+- (void) testRecoverWith
+{
+    // TODO
+}
+
+- (void)testZip
+{
+    // TODO
+}
+
+- (void)testZipThisFails
+{
+    // TODO
+}
+
+- (void)testZipThatFails
+{
+    // TODO
+}
+
+- (void)testZipBothFail
+{
+    // TODO
+}
+
+- (void)testFilterNoSuchElement
+{
+    // TODO
+}
+
+- (void)testFilterPasses
+{
+    // TODO
+}
+
+- (void)testForcedFuture
+{
+    // TODO
+}
+
+#pragma mark - Helpers -
+
 - (XCTestExpectation *) expectation
 {
     return [self expectationWithDescription:@""];

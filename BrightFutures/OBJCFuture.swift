@@ -17,18 +17,27 @@ func bridge(future: BFFuture) -> Future<AnyObject> {
 }
 
 func bridge(result: Result<AnyObject>) -> BFResult {
-    return BFResult.fromSwift(result)
+    return bridge(result)!
 }
 
 func bridge(optionalResult: Result<AnyObject>?) -> BFResult? {
-    if let res: Result<AnyObject> = optionalResult {
-        return BFResult.fromSwift(res)
+    if let res = optionalResult {
+        switch res {
+        case .Success(let boxedValue):
+            return BFResult(value: boxedValue.value)
+        case .Failure(let error):
+            return BFResult(error: error)
+        }
     }
+    
     return nil
 }
 
 func bridge(result: BFResult) -> Result<AnyObject> {
-    return result.swiftResult
+    if result.isSuccess {
+        return Result.Success(Box(result.value!))
+    }
+    return Result.Failure(result.error!)
 }
 
 func bridge(result: BFExecutionContext) -> ExecutionContext {
@@ -330,32 +339,6 @@ func toContext(context: BFExecutionContext) -> ExecutionContext {
     public init(error: NSError) {
         self.error = error
         self.success = false
-    }
-    
-    internal class func fromSwift(result: Result<AnyObject>!) -> BFResult {
-        return bridge(result)!
-    }
-
-    internal class func fromSwift(result: Result<AnyObject>?) -> BFResult? {
-        if let result = result {
-            switch result {
-            case .Success(let boxedValue):
-                return BFResult(value: boxedValue.value)
-            case .Failure(let error):
-                return BFResult(error: error)
-            }
-        }
-        
-        return nil
-    }
-    
-    internal var swiftResult : Result<AnyObject> {
-        get {
-            if self.isSuccess {
-                return Result.Success(Box(self.value!))
-            }
-            return Result.Failure(self.error!)
-        }
     }
 }
 
