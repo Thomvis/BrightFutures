@@ -322,7 +322,7 @@ func toContext(context: BFExecutionContext) -> ExecutionContext {
         return !self.isSuccess
     }
     
-    public init(value: AnyObject) {
+    public init(value: AnyObject?) {
         self.value = value
         self.success = true
     }
