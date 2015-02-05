@@ -948,6 +948,26 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testPerformance1() {
+        self.measureBlock {
+            let f = Future.succeeded(3)
+            let e = self.expectation()
+            
+            f.filter { _ in
+                true
+            }.map { val in
+                val * 2
+            }.map(context: Queue.global.context) { val in
+                val * 3 + 1
+            }.onSuccess { val in
+                XCTAssertEqual(val, 19)
+                e.fulfill()
+            }
+            
+            self.waitForExpectationsWithTimeout(2, handler: nil)
+        }
+    }
 }
 
 /**

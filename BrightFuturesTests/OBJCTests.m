@@ -288,6 +288,27 @@
     // TODO
 }
 
+- (void)testPerformance1
+{
+    [self measureBlock:^{
+        BFFuture *f = [BFFuture succeeded:@3];
+        XCTestExpectation *e = [self expectation];
+        
+        [[[[f filter:^BOOL(NSNumber *num) {
+            return true;
+        }] map:^id(NSNumber *num) {
+            return @(2 * [num integerValue]);
+        }] mapWithContext:[BFExecutionContext globalQueue] f:^id(NSNumber*num) {
+            return @(3 * [num integerValue] + 1);
+        }] onSuccess:^(NSNumber *res) {
+            XCTAssertEqualObjects(res, @(19));
+            [e fulfill];
+        }];
+        
+        [self waitForExpectationsWithTimeout:2 handler:nil];
+    }];
+}
+
 #pragma mark - Helpers -
 
 - (XCTestExpectation *) expectation
