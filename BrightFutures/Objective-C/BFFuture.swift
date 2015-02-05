@@ -37,6 +37,37 @@ import Foundation
 
 public extension BFFuture {
     
+    public class func wrap(f: () -> AnyObject) -> BFFuture {
+        return self.wrapResult {
+            BFResult(value: f())
+        }
+    }
+    
+    public class func wrapResult(f: () -> BFResult) -> BFFuture {
+        return self.wrapResult(context: BFExecutionContext.globalQueue, block: f)
+    }
+    
+    public class func wrap(context c: BFExecutionContext, block: () -> AnyObject) -> BFFuture {
+        return self.wrapResult(context: c) {
+            BFResult(value: block())
+        }
+    }
+    
+    public class func wrapResult(context c: BFExecutionContext, block: () -> BFResult) -> BFFuture {
+        
+        let p = Promise<AnyObject>()
+        
+        c.context {
+            p.complete(bridge(block()))
+        }
+        
+        return bridge(p.future)
+    }
+    
+}
+
+public extension BFFuture {
+    
     public var result: BFResult? {
         return bridge(self.future.result)
     }

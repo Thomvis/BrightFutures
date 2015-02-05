@@ -85,11 +85,35 @@
 - (void) testControlFlowSyntax
 {
     // not in Objective-C
+    BFFuture *f = [BFFuture wrap:^id{
+        XCTAssertFalse([NSThread isMainThread]);
+        return @([self fibonacci:10]);
+    }];
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [f onSuccess:^(NSNumber *num) {
+        XCTAssertEqualObjects(num, @(55));
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testControlFlowSyntaxWithError
 {
-    // not in Objective-C
+    BFFuture *f = [BFFuture wrapResult:^BFResult *{
+        return [BFResult failure:[NSError errorWithDomain:@"NaN" code:0 userInfo:nil]];
+    }];
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [f onFailure:^(NSError *error) {
+        XCTAssertEqualObjects(error.domain, @"NaN");
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testAutoClosure
@@ -117,12 +141,35 @@
 
 - (void) testCustomExecutionContext
 {
-    // TODO
+    BFFuture *f = [BFFuture wrapWithContext:[BFExecutionContext immediate] block:^id{
+        XCTAssert([NSThread isMainThread]);
+        return @([self fibonacci:10]);
+    }];
+    
+    XCTAssertEqualObjects(f.result.value, @(55));
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [f onSuccess:^(id n) {
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:0 handler:nil];
 }
 
 - (void) testMainExecutionContext
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[BFFuture wrap:^id{
+        XCTAssertFalse([NSThread isMainThread]);
+        return @(1);
+    }] onSuccessWithContext:[BFExecutionContext mainQueue] callback:^(id res) {
+        XCTAssert([NSThread isMainThread]);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testDefaultCallbackExecutionContextFromMain

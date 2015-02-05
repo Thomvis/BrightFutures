@@ -24,9 +24,9 @@ import Foundation
 
 @objc public class BFResult {
     
-    internal var success: Bool
-    public var value: AnyObject?
-    public var error: NSError?
+    internal let success: Bool
+    public let value: AnyObject?
+    public let error: NSError?
     
     public var isSuccess: Bool {
         return success
@@ -36,11 +36,19 @@ import Foundation
         return !self.isSuccess
     }
     
+    public class func success(value: AnyObject?) -> BFResult {
+        return BFResult(value: value)
+    }
+    
+    public class func failure(error: NSError) -> BFResult {
+        return BFResult(error: error)
+    }
+    
     public init(value: AnyObject?) {
         self.value = value
         self.success = true
     }
-    
+
     public init(error: NSError) {
         self.error = error
         self.success = false
