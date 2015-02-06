@@ -55,11 +55,11 @@ import Foundation
     }
 }
 
-func bridge(result: Result<AnyObject>) -> BFResult {
+func bridge(result: Result<AnyObject?>) -> BFResult {
     return bridge(result)!
 }
 
-func bridge(optionalResult: Result<AnyObject>?) -> BFResult? {
+func bridge(optionalResult: Result<AnyObject?>?) -> BFResult? {
     if let res = optionalResult {
         switch res {
         case .Success(let boxedValue):
@@ -72,20 +72,20 @@ func bridge(optionalResult: Result<AnyObject>?) -> BFResult? {
     return nil
 }
 
-func bridge(result: BFResult) -> Result<AnyObject> {
+func bridge(result: BFResult) -> Result<AnyObject?> {
     if result.isSuccess {
-        return Result.Success(Box(result.value!))
+        return Result.Success(Box(result.value))
     }
     return Result.Failure(result.error!)
 }
 
-func bridge<T>(f: T -> BFResult) -> (T -> Result<AnyObject>) {
+func bridge<T>(f: T -> BFResult) -> (T -> Result<AnyObject?>) {
     return { param in
         bridge(f(param))
     }
 }
 
-func bridge(f: BFResult -> ()) -> (Result<AnyObject> -> ()) {
+func bridge(f: BFResult -> ()) -> (Result<AnyObject?> -> ()) {
     return { res in
         f(bridge(res))
     }

@@ -402,6 +402,21 @@
     [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
+// Objective-C exclusive
+- (void)testZipWithNil
+{
+    XCTestExpectation *e = [self expectation];
+    
+    [[[BFFuture succeeded:nil] zip:[BFFuture succeeded:@1]] onSuccess:^(NSArray *arr) {
+        XCTAssert([arr count] == 2);
+        XCTAssertEqualObjects([arr firstObject], [NSNull null]);
+        XCTAssertEqualObjects([arr lastObject], @1);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
+}
+
 - (void)testFilterNoSuchElement
 {
     XCTestExpectation *e = [self expectation];

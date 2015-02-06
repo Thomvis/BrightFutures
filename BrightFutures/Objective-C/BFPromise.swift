@@ -24,14 +24,14 @@ import Foundation
 
 @objc public class BFPromise : NSObject {
     
-    private let promise: Promise<AnyObject>
+    private let promise: Promise<AnyObject?>
     
     public var future: BFFuture {
         return bridge(self.promise.future)
     }
     
     public override init() {
-        self.promise = Promise<AnyObject>()
+        self.promise = Promise<AnyObject?>()
     }
     
     public func completeWith(future: BFFuture) {

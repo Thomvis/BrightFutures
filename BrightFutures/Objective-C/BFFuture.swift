@@ -24,13 +24,13 @@ import Foundation
 
 @objc public class BFFuture {
     
-    let future: Future<AnyObject>
+    let future: Future<AnyObject?>
     
     internal convenience init() {
-        self.init(future: Future<AnyObject>())
+        self.init(future: Future<AnyObject?>())
     }
     
-    internal init(future: Future<AnyObject>) {
+    internal init(future: Future<AnyObject?>) {
         self.future = future
     }
 }
@@ -55,7 +55,7 @@ public extension BFFuture {
     
     public class func wrapResult(context c: BFExecutionContext, block: () -> BFResult) -> BFFuture {
         
-        let p = Promise<AnyObject>()
+        let p = Promise<AnyObject?>()
         
         c.context {
             p.complete(bridge(block()))
@@ -73,7 +73,7 @@ public extension BFFuture {
     }
     
     public var value: AnyObject? {
-        return self.future.value
+        return self.future.value!
     }
     
     public var error: NSError? {
@@ -101,7 +101,7 @@ public extension BFFuture {
     }
     
     public class func completed(result: BFResult) -> BFFuture {
-        return bridge(Future<AnyObject>.completed(bridge(result)))
+        return bridge(Future<AnyObject?>.completed(bridge(result)))
     }
     
     public class func completeAfter(delay: NSTimeInterval, withValue value: AnyObject) -> BFFuture {
@@ -137,12 +137,12 @@ public extension BFFuture {
         return self
     }
     
-    public func onSuccess(callback: (AnyObject) -> ()) -> BFFuture {
+    public func onSuccess(callback: (AnyObject?) -> ()) -> BFFuture {
         self.future.onSuccess(callback)
         return self
     }
     
-    public func onSuccess(context c: BFExecutionContext, callback: (AnyObject) -> ()) -> BFFuture {
+    public func onSuccess(context c: BFExecutionContext, callback: (AnyObject?) -> ()) -> BFFuture {
         self.future.onSuccess(toContext(c), callback)
         return self
     }
@@ -160,27 +160,27 @@ public extension BFFuture {
 
 public extension BFFuture {
     
-    public func flatMap(f: AnyObject -> BFFuture) -> BFFuture {
+    public func flatMap(f: AnyObject? -> BFFuture) -> BFFuture {
         return bridge(self.future.flatMap(bridge(f)))
     }
     
-    public func flatMap(context c: BFExecutionContext, f: AnyObject -> BFFuture) -> BFFuture {
+    public func flatMap(context c: BFExecutionContext, f: AnyObject? -> BFFuture) -> BFFuture {
         return bridge(self.future.flatMap(toContext(c), bridge(f)))
     }
     
-    public func flatMapResult(f: AnyObject -> BFResult) -> BFFuture {
+    public func flatMapResult(f: AnyObject? -> BFResult) -> BFFuture {
         return bridge(self.future.flatMap(bridge(f)))
     }
     
-    public func flatMapResult(context c: BFExecutionContext, f: AnyObject -> BFResult) -> BFFuture {
+    public func flatMapResult(context c: BFExecutionContext, f: AnyObject? -> BFResult) -> BFFuture {
         return bridge(self.future.flatMap(toContext(c), bridge(f)))
     }
     
-    public func map(f: AnyObject -> AnyObject) -> BFFuture {
+    public func map(f: AnyObject? -> AnyObject?) -> BFFuture {
         return bridge(self.future.map(f))
     }
     
-    public func map(context c: BFExecutionContext, f: AnyObject -> AnyObject) -> BFFuture {
+    public func map(context c: BFExecutionContext, f: AnyObject? -> AnyObject?) -> BFFuture {
         return bridge(self.future.map(context: toContext(c), f: f))
     }
     
@@ -192,11 +192,11 @@ public extension BFFuture {
         return bridge(self.future.andThen(toContext(c), bridge(callback)))
     }
     
-    public func recover(task: (NSError) -> AnyObject) -> BFFuture {
+    public func recover(task: (NSError) -> AnyObject?) -> BFFuture {
         return bridge(self.future.recover(task))
     }
     
-    public func recover(context c: BFExecutionContext, task: (NSError) -> AnyObject) -> BFFuture {
+    public func recover(context c: BFExecutionContext, task: (NSError) -> AnyObject?) -> BFFuture {
         return bridge(self.future.recover(toContext(c), task))
     }
     
@@ -213,33 +213,33 @@ public extension BFFuture {
         return bridge(bridge(self.future.zip(bridge(that))))
     }
     
-    public func filter(p: AnyObject -> Bool) -> BFFuture {
+    public func filter(p: AnyObject? -> Bool) -> BFFuture {
         return bridge(self.future.filter(p))
     }
 }
 
-func bridge(future: Future<AnyObject>) -> BFFuture {
+func bridge(future: Future<AnyObject?>) -> BFFuture {
     return BFFuture(future: future)
 }
 
-func bridge(future: BFFuture) -> Future<AnyObject> {
+func bridge(future: BFFuture) -> Future<AnyObject?> {
     return future.future
 }
 
-func bridge<T>(f: T -> Future<AnyObject>) -> (T -> BFFuture) {
+func bridge<T>(f: T -> Future<AnyObject?>) -> (T -> BFFuture) {
     return { param in
         bridge(f(param))
     }
 }
 
-func bridge<T>(f: T -> BFFuture) -> (T -> Future<AnyObject>) {
+func bridge<T>(f: T -> BFFuture) -> (T -> Future<AnyObject?>) {
     return { param in
         bridge(f(param))
     }
 }
 
-func bridge<L: AnyObject,R: AnyObject>(future: Future<(L,R)>) -> Future<AnyObject> {
-    return future.map { l,r -> AnyObject in
-        [l, r]
+func bridge(future: Future<(AnyObject?,AnyObject?)>) -> Future<AnyObject?> {
+    return future.map { tuple in
+        return [tuple.0 ?? NSNull(), tuple.1 ?? NSNull()]
     }
 }
