@@ -230,62 +230,229 @@
 
 - (void) testSimpleMap
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[[BFFuture wrap:^id{
+        return @([self fibonacci:10]);
+    }] map:^id(NSNumber *num) {
+        return @([num integerValue] / 5);
+    }] onSuccess:^(NSNumber *num) {
+        XCTAssertEqualObjects(num, @(11));
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testMapSuccess
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[[[BFFuture wrap:^id{
+        return @([self fibonacci:10]);
+    }] map:^id(NSNumber *num) {
+        if ([num integerValue] > 5) {
+            return @"large";
+        }
+        return @"small";
+    }] map:^id(NSString *string) {
+        return @([string isEqualToString:@"large"]);
+    }] onSuccess:^(NSNumber *num) {
+        XCTAssert([num boolValue]);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testMapFailure
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[[[BFFuture wrapResult:^BFResult *{
+        return [BFResult failure:[NSError errorWithDomain:@"Tests" code:123 userInfo:nil]];
+    }] map:^id(id val) {
+        XCTFail(@"shouldn't get called with failed result");
+        return nil;
+    }] map:^id(id val) {
+        XCTFail(@"shouldn't get called with failed result");
+        return nil;
+    }] onFailure:^(NSError *error) {
+        XCTAssertEqualObjects(error.domain, @"Tests");
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testSkippedRecover
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[[BFFuture wrap:^id{
+        return @(3);
+    }] recover:^id(NSError *err) {
+        return @(5);
+    }] onSuccess:^(id val) {
+        XCTAssertEqualObjects(val, @3);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void) testRecoverWith
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[[BFFuture wrapResult:^BFResult *{
+        return [BFResult failure:[NSError errorWithDomain:@"NaN" code:0 userInfo:nil]];
+    }] recoverAsync:^BFFuture *(NSError *err) {
+        XCTAssertEqualObjects(err.domain, @"NaN");
+        return [BFFuture wrap:^id {
+            return @([self fibonacci:5]);
+        }];
+    }] onSuccess:^(id val) {
+        XCTAssertEqualObjects(val, @(5));
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testZip
 {
-    // TODO
+    BFFuture *f1 = [BFFuture succeeded:@1];
+    BFFuture *f2 = [BFFuture succeeded:@2];
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [[f1 zip:f2] onSuccess:^(NSArray *tuple) {
+        XCTAssert([tuple isKindOfClass:[NSArray class]]);
+        XCTAssert([tuple count] == 2);
+        XCTAssertEqualObjects([tuple firstObject], @1);
+        XCTAssertEqualObjects([tuple lastObject], @2);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testZipThisFails
 {
-    // TODO
+    BFFuture *f1 = [BFFuture wrapResult:^BFResult *{
+        sleep(1);
+        return [BFResult failure:[NSError errorWithDomain:@"test" code:2 userInfo:nil]];
+    }];
+    
+    BFFuture *f2 = [BFFuture succeeded:@2];
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [[f1 zip:f2] onFailure:^(NSError *err) {
+        XCTAssertEqualObjects(err.domain, @"test");
+        XCTAssertEqual(err.code, 2);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testZipThatFails
 {
-    // TODO
+    BFFuture *f1 = [BFFuture wrapResult:^BFResult *{
+        sleep(1);
+        return [BFResult failure:[NSError errorWithDomain:@"test" code:2 userInfo:nil]];
+    }];
+    
+    BFFuture *f2 = [BFFuture succeeded:@2];
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [[f2 zip:f1] onFailure:^(NSError *err) {
+        XCTAssertEqualObjects(err.domain, @"test");
+        XCTAssertEqual(err.code, 2);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testZipBothFail
 {
-    // TODO
+    BFFuture *f1 = [BFFuture wrapResult:^BFResult *{
+        sleep(1);
+        return [BFResult failure:[NSError errorWithDomain:@"f1-error" code:3 userInfo:nil]];
+    }];
+    
+    BFFuture *f2 = [BFFuture wrapResult:^BFResult *{
+        sleep(1);
+        return [BFResult failure:[NSError errorWithDomain:@"f2-error" code:4 userInfo:nil]];
+    }];
+
+    
+    XCTestExpectation *e = [self expectation];
+    
+    [[f1 zip:f2] onFailure:^(NSError *err) {
+        XCTAssertEqualObjects(err.domain, @"f1-error");
+        XCTAssertEqual(err.code, 3);
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testFilterNoSuchElement
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    [[[BFFuture succeeded:@3] filter:^BOOL(NSNumber *num) {
+        return [num integerValue] > 5;
+    }] onComplete:^(BFResult *res) {
+        XCTAssert(res.isFailure);
+        XCTAssertEqual(res.error.code, 0);
+        XCTAssertEqualObjects(res.error.domain, @"nl.thomvis.BrightFutures");
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testFilterPasses
 {
-    // TODO
+    XCTestExpectation *e = [self expectation];
+    
+    [[[BFFuture succeeded:@"BrightFutures"] filter:^BOOL(NSString *str) {
+        return [str hasPrefix:@"Br"];
+    }] onComplete:^(BFResult *res) {
+        XCTAssert(res.isSuccess);
+        XCTAssertEqualObjects(res.value, @"BrightFutures");
+        
+        [e fulfill];
+    }];
+    
+    [self waitForExpectationsWithTimeout:2 handler:nil];
 }
 
 - (void)testForcedFuture
 {
-    // TODO
+    BFResult *res = [[BFFuture wrap:^id{
+        [NSThread sleepForTimeInterval:0.5];
+        return @3;
+    }] forced];
+    
+    XCTAssert(res.isSuccess);
+    XCTAssertEqualObjects(res.value, @3);
+}
+
+- (void)testForcedFutureWithTimeout
+{
+    BFFuture *f = [BFFuture wrap:^id{
+        [NSThread sleepForTimeInterval:0.5];
+        return nil;
+    }];
+    
+    XCTAssertNil([f forced: 0.1]);
+    XCTAssert([[f forced:0.5] isSuccess]);
 }
 
 - (void)testPerformance1
