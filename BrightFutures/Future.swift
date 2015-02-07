@@ -60,11 +60,14 @@ public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
 public enum ErrorCode: Int {
     case NoSuchElement
+    case InvalidationTokenInvalidated
     
     var errorDescription: String {
         switch self {
         case .NoSuchElement:
             return "No such element"
+        case .InvalidationTokenInvalidated:
+            return "Invalidation token invalidated"
         }
     }
 }

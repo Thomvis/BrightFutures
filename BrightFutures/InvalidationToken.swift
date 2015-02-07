@@ -39,7 +39,7 @@ public class InvalidationToken : ManualInvalidationTokenType {
     }
     
     public func invalidate() {
-        self.promise.failure(NSError(domain: BrightFuturesErrorDomain, code: InvalidationTokenInvalid, userInfo: nil))
+        self.promise.failure(errorFromCode(.InvalidationTokenInvalidated))
     }
 }
 
@@ -56,7 +56,7 @@ public extension Future {
         
         self.onComplete(context: c) { result in
             if token.isInvalid {
-                p.tryFailure(NSError(domain: BrightFuturesErrorDomain, code: InvalidationTokenInvalid, userInfo: nil))
+                p.tryFailure(errorFromCode(.InvalidationTokenInvalidated))
             } else {
                 p.tryComplete(result)
             }
