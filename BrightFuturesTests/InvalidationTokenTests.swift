@@ -92,4 +92,40 @@ class InvalidationTokenTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testStress() {
+        class Counter {
+            var i = 0
+        }
+        
+        var token: InvalidationToken!
+        let counter = Counter()
+        let queue = Queue()
+        for _ in 1...10 {
+            queue.sync {
+                counter.i++
+                token?.invalidate()
+                token = InvalidationToken()
+            }
+            
+            let currentI = counter.i
+            let e = self.expectation()
+            future { () -> Bool in
+                NSThread.sleepForTimeInterval(0.01)
+                return true
+            }.validate(token).onSuccess(context: queue.context) { _ in
+                XCTAssert(!token.isInvalid)
+                XCTAssertEqual(currentI, counter.i, "onSuccess should only get called if the counter did not increment")
+                e.fulfill()
+            }.onFailure(context: queue.context) { _ in
+                XCTAssertFalse(token.isInvalid)
+                XCTAssertNotEqual(currentI, counter.i, "onFailure should only get called if the counter did not increment")
+                e.fulfill()
+            }
+            
+            NSThread.sleepForTimeInterval(0.005)
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
 }
