@@ -8,35 +8,19 @@
 
 import Foundation
 
-public let FutureInvalidatedError = 1
+public let InvalidationTokenInvalid = 1
 
-public protocol InvalidationToken {
+public protocol InvalidationTokenType {
     var isInvalid : Bool { get }
     
-    var future: Future<Void>? { get }
+    var future: Future<Void> { get }
 }
 
-public protocol ManualInvalidationTokenType : InvalidationToken {
+public protocol ManualInvalidationTokenType : InvalidationTokenType {
     func invalidate()
 }
 
-public class ObjectExistenceInvalidationToken : InvalidationToken {
-    weak var object: AnyObject?
-    
-    public var isInvalid: Bool {
-        get {
-            return object == nil
-        }
-    }
-    
-    public var future: Future<Void>? = nil
-    
-    public init(object: AnyObject) {
-        self.object = object
-    }
-}
-
-public class DefaultInvalidationToken : ManualInvalidationTokenType {
+public class InvalidationToken : ManualInvalidationTokenType {
     
     let promise = Promise<Void>()
     
@@ -48,31 +32,31 @@ public class DefaultInvalidationToken : ManualInvalidationTokenType {
         }
     }
     
-    public var future: Future<Void>? {
+    public var future: Future<Void> {
         get {
             return self.promise.future
         }
     }
     
     public func invalidate() {
-        self.promise.failure(NSError(domain: BrightFuturesErrorDomain, code: FutureInvalidatedError, userInfo: nil))
+        self.promise.failure(NSError(domain: BrightFuturesErrorDomain, code: InvalidationTokenInvalid, userInfo: nil))
     }
 }
 
 public extension Future {
     
-    public func validate(token: InvalidationToken) -> Future<T> {
+    public func validate(token: InvalidationTokenType) -> Future<T> {
         let p = Promise<T>()
         let q = Queue()
         
-        token.future?.onFailure(context: q) { error in
+        token.future.onFailure(context: q) { error in
             p.tryFailure(error)
             return
         }
         
         self.onComplete(context: q) { result in
             if token.isInvalid {
-                p.tryFailure(NSError(domain: BrightFuturesErrorDomain, code: FutureInvalidatedError, userInfo: nil))
+                p.tryFailure(NSError(domain: BrightFuturesErrorDomain, code: InvalidationTokenInvalid, userInfo: nil))
             } else {
                 p.tryComplete(result)
             }
