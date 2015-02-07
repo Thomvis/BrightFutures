@@ -269,7 +269,7 @@ f.onComplete(context: Queue.main.context) { value in
 The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
 
 ## Invalidation tokens
-Invalidation tokens can be used to invalidate a callback or chain of callbacks, preventing the callbacks from being executed upon completion of the future. Instead, the callbacks are executed as if the original future failed with a special error. In the following example, we're playing a game of roulette:
+An invalidation token can be used to invalidate a callback or chain of callbacks, preventing the callbacks from being executed upon completion of the future. Instead, the callbacks are executed as if the original future failed with a special error. In the following example, we're playing a game of roulette:
 
 ```swift
 let token = InvalidationToken()
@@ -285,9 +285,9 @@ croupier.onNoMoreBets {
 }
 ```
 
-As soon as the oracle has calculated the next winning number we will bet all our money on it. However, after the croupier announces _no more bets_ we should not place our bets, because that is not allowed and could (if the oracle takes a really long time) mean we bet all our money after the wheel has been spun again, thus betting on an old winning number. A more elaborate and relevant example (about reusable views) can be found [here](https://gist.github.com/Thomvis/90bf499a2d7f65d37f3c#file-gistfile1-swift-L24).
+As soon as the oracle has calculated the next winning number we will bet all our money on it. However, after the croupier announces _no more bets_ we should not place our bets, because that is not allowed and could (if the oracle takes a really long time) result in betting after the wheel has been spun again, thus betting on an old winning number. A more elaborate and relevant example (about reusable views) can be found [here](https://gist.github.com/Thomvis/90bf499a2d7f65d37f3c#file-gistfile1-swift-L24).
 
-Invalidation tokens _do not_ cancel the task that the future represents, e.g. a network request or asynchronous calculation of the nth fibonacci number. That is a different problem. With invalidation tokens, the result is merely ignored. 
+Invalidation tokens _do not_ cancel the task that the future represents, e.g. a network request or asynchronous calculation of the nth fibonacci number. That is a different problem. With invalidation tokens, the result is merely ignored. The callbacks are invoked as soon as the token is invalidated, which is typically before the original future is completed, or if the original future is completed. Invalidating a token after the original future completed does nothing.
 
 If you are looking for a way to cancel a running task, you should look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html) (or [https://github.com/Thomvis/GoodProgress](https://github.com/Thomvis/GoodProgress) if you're looking for a nice Swift wrapper).
 
