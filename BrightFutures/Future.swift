@@ -32,16 +32,6 @@ public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T> {
     })
 }
 
-public func future<T>(task: @autoclosure () -> T) -> Future<T> {
-    return future(context: Queue.global.context, task)
-}
-
-public func future<T>(context c: ExecutionContext, task: @autoclosure () -> T) -> Future<T> {
-    return future(context: c, { () -> Result<T> in
-        return Result<T>(task())
-    })
-}
-
 public func future<T>(task: () -> Result<T>) -> Future<T> {
     return future(context: Queue.global.context, task)
 }
@@ -325,7 +315,7 @@ public extension Future {
     }
     
     public func onSuccess(callback: SuccessCallback) -> Future<T> {
-        return self.onSuccess(context: executionContextForCurrentContext(), callback)
+        return self.onSuccess(context: executionContextForCurrentContext(), callback: callback)
     }
     
     public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
@@ -342,7 +332,7 @@ public extension Future {
     }
     
     public func onFailure(callback: FailureCallback) -> Future<T> {
-        return self.onFailure(context: executionContextForCurrentContext(), callback)
+        return self.onFailure(context: executionContextForCurrentContext(), callback: callback)
     }
     
     public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
@@ -364,7 +354,7 @@ public extension Future {
 public extension Future {
 
     public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
-        return self.flatMap(context: executionContextForCurrentContext(), f)
+        return self.flatMap(context: executionContextForCurrentContext(), f: f)
     }
 
     public func flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U> {
@@ -381,7 +371,7 @@ public extension Future {
     }
     
     public func flatMap<U>(f: T -> Result<U>) -> Future<U> {
-        return self.flatMap(context: executionContextForCurrentContext(), f)
+        return self.flatMap(context: executionContextForCurrentContext(), f: f)
     }
     
     public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U>) -> Future<U> {
@@ -391,7 +381,7 @@ public extension Future {
     }
 
     public func map<U>(f: (T) -> U) -> Future<U> {
-        return self.map(context: executionContextForCurrentContext(), f)
+        return self.map(context: executionContextForCurrentContext(), f: f)
     }
 
     public func map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U> {
@@ -427,7 +417,7 @@ public extension Future {
     }
     
     public func recover(task: (NSError) -> T) -> Future<T> {
-        return self.recover(context: executionContextForCurrentContext(), task)
+        return self.recover(context: executionContextForCurrentContext(), task: task)
     }
     
     public func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
