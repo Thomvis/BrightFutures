@@ -47,7 +47,7 @@ class QueueTests: XCTestCase {
     
     func testSyncWithResult() {
         let input = "42"
-        let output = Queue.global.sync {
+        let output: String = Queue.global.sync {
             input
         }
         
