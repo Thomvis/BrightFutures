@@ -52,6 +52,10 @@ public func future<T>(context c: ExecutionContext, task: () -> Result<T>) -> Fut
     return promise.future
 }
 
+func executionContextForCurrentContext() -> ExecutionContext {
+    return toContext(NSThread.isMainThread() ? Queue.main : Queue.global)
+}
+
 public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
 public enum ErrorCode: Int {
@@ -115,10 +119,6 @@ public class Future<T> {
         }
         
         self.callbacks.removeAll()
-    }
-    
-    private func executionContextForCurrentContext() -> ExecutionContext {
-        return toContext(NSThread.isMainThread() ? Queue.main : Queue.global)
     }
 }
 
@@ -285,12 +285,8 @@ public extension Future {
  * This extension contains all methods for registering callbacks
  */
 public extension Future {
-
-    public func onComplete(callback: CompletionCallback) -> Future<T> {
-        return self.onComplete(context: executionContextForCurrentContext(), callback: callback)
-    }
     
-    public func onComplete(context c: ExecutionContext, callback: CompletionCallback) -> Future<T> {
+    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T> {
         let wrappedCallback : Future<T> -> () = { future in
             if let realRes = self.result {
                 c {
@@ -314,11 +310,7 @@ public extension Future {
         return self
     }
     
-    public func onSuccess(callback: SuccessCallback) -> Future<T> {
-        return self.onSuccess(context: executionContextForCurrentContext(), callback: callback)
-    }
-    
-    public func onSuccess(context c: ExecutionContext, callback: SuccessCallback) -> Future<T> {
+    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), callback: SuccessCallback) -> Future<T> {
         self.onComplete(context: c) { result in
             switch result {
             case .Success(let val):
@@ -331,11 +323,7 @@ public extension Future {
         return self
     }
     
-    public func onFailure(callback: FailureCallback) -> Future<T> {
-        return self.onFailure(context: executionContextForCurrentContext(), callback: callback)
-    }
-    
-    public func onFailure(context c: ExecutionContext, callback: FailureCallback) -> Future<T> {
+    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), callback: FailureCallback) -> Future<T> {
         self.onComplete(context: c) { result in
             switch result {
             case .Failure(let err):
@@ -353,11 +341,7 @@ public extension Future {
  */
 public extension Future {
 
-    public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
-        return self.flatMap(context: executionContextForCurrentContext(), f: f)
-    }
-
-    public func flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U> {
+    public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Future<U>) -> Future<U> {
         let p: Promise<U> = Promise()
         self.onComplete(context: c) { res in
             switch (res) {
@@ -370,11 +354,7 @@ public extension Future {
         return p.future
     }
     
-    public func flatMap<U>(f: T -> Result<U>) -> Future<U> {
-        return self.flatMap(context: executionContextForCurrentContext(), f: f)
-    }
-    
-    public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U>) -> Future<U> {
+    public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Result<U>) -> Future<U> {
         return self.flatMap(context: c) { value in
             Future.completed(f(value))
         }
@@ -401,11 +381,7 @@ public extension Future {
         return p.future
     }
 
-    public func andThen(callback: Result<T> -> ()) -> Future<T> {
-        return self.andThen(context: executionContextForCurrentContext(), callback: callback)
-    }
-
-    public func andThen(context c: ExecutionContext, callback: Result<T> -> ()) -> Future<T> {
+    public func andThen(context c: ExecutionContext = executionContextForCurrentContext(), callback: Result<T> -> ()) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result in
@@ -416,21 +392,13 @@ public extension Future {
         return p.future
     }
     
-    public func recover(task: (NSError) -> T) -> Future<T> {
-        return self.recover(context: executionContextForCurrentContext(), task: task)
-    }
-    
-    public func recover(context c: ExecutionContext, task: (NSError) -> T) -> Future<T> {
+    public func recover(context c: ExecutionContext = executionContextForCurrentContext(), task: (NSError) -> T) -> Future<T> {
         return self.recoverWith(context: c) { error -> Future<T> in
             return Future.succeeded(task(error))
         }
     }
     
-    public func recoverWith(task: (NSError) -> Future<T>) -> Future<T> {
-        return self.recoverWith(context: executionContextForCurrentContext(), task: task)
-    }
-    
-    public func recoverWith(context c: ExecutionContext, task: (NSError) -> Future<T>) -> Future<T> {
+    public func recoverWith(context c: ExecutionContext = executionContextForCurrentContext(), task: (NSError) -> Future<T>) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result -> () in
