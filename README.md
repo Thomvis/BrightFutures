@@ -58,24 +58,22 @@ When the future returned from `User.logIn` fails, e.g. the username and password
 
 This is just the tip of the proverbial iceberg. A lot more examples and techniques can be found in this readme, by browsing through the tests or by checking out the official companion framework [FutureProofing](https://github.com/Thomvis/FutureProofing).
 
-## The base case
-If you already have a function (or really any expression) defined that you just want to execute asynchronously, you can just wrap it in a `future()` call and turn it into a Future:
+## Wrapping expressions
+If you already have a function (or really any expression) defined that you just want to execute asynchronously, you can easily wrap it in a `future` block:
 
 ```swift
-future(fibonacci(10)).onSuccess { value in
-  // value is 55
+future {
+  fibonacci(50)
+}.onSuccess { num in
+  // value is 12586269025
 }
 ```
 
-While this is really short and simple, it is equally limited. In many cases, you will need a way to indicate that the task failed. That is where the control-flow syntax comes in.
-
-## Control-flow syntax
-
-Because Swift allows to omit parenthesis for a function call if the only parameter is closure, we can pretend to add a `future` keyword to the language:
+While this is really short and simple, it is equally limited. In many cases, you will need a way to indicate that the task failed. To do this, instead of returning the value, you can return a Result. Results can indicate either a success or a failure:
 
 ```swift
 let f = future { () -> Result<NSDate> in
-  let now: NSDate? = functionReturningTimeFromServer()
+  let now: NSDate? = serverTime()
   if let someNow = now {
     return .Success(Box(someNow))
   }
@@ -84,19 +82,11 @@ let f = future { () -> Result<NSDate> in
 }
 
 f.onSuccess { value in
-  // value will be 55
+  // value will the NSDate from the server
 }
 ```
 
-The future block needs an explict type because the Swift compiler is not able to deduce the type of multi-statement blocks. The returned date needs to be _boxed_ because the Swift compiler does not yet support variable layout enums.
-
-A shorthand version of the `future` keyword can be used if the operation cannot fail:
-
-```swift
-future {
-  fibonacci(10)
-}
-```
+(The future block needs an explict type because the Swift compiler is not able to deduce the type of multi-statement blocks. The returned date needs to be _boxed_ because the Swift compiler does not yet support variable layout enums.)
 
 ## Providing Futures
 Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.failure(error)` when the operation ended. Futures can only be completed through a Promise.
@@ -128,7 +118,7 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 var answer = 10
 
-let f = future(4).andThen { result in
+let f = Future.succeeded(4).andThen { result in
     switch result {
       case .Success(let val):
         answer *= val.value
@@ -181,11 +171,11 @@ f.zip(f1).onSuccess { (let a, let b) in
 
 ### filter
 ```swift
-future(3).filter { $0 > 5 }.onComplete { result in
+Future.succeeded(3).filter { $0 > 5 }.onComplete { result in
   // failed with error NoSuchElementError
 }
 
-future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
+Future.succeeded("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
   // succeeded with value "Swift"
 }
 ```
@@ -221,7 +211,7 @@ Folding a list of Futures is not possible with the built-in fold function, which
 
 ```swift
 // 1+1+2+3+5+8+13+21+34+55
-let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ... future(fibonacci(10))]
+let fibonacciSequence = [Future.succeeded(fibonacci(1)), Future.succeeded(fibonacci(2)), ... Future.succeeded(fibonacci(10))]
 
 FutureUtils.fold(fibonacciSequence, zero: 0, op: { $0 + $1 }).onSuccess { val in
   // value is 143
@@ -233,7 +223,7 @@ With `FutureUtils.sequence`, you can turn a list of Futures into a single Future
 
 ```swift
 // 1+1+2+3+5+8+13+21+34+55
-let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ... future(fibonacci(10))]
+let fibonacciSequence = [Future.succeeded(fibonacci(1)), Future.succeeded(fibonacci(2)), ... Future.succeeded(fibonacci(10))]
 
 FutureUtils.sequence(fibonacciSequence).onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
@@ -245,7 +235,7 @@ FutureUtils.sequence(fibonacciSequence).onSuccess { fibNumbers in
 
 ```swift
 FutureUtils.traverse(Array(1...10)) {
-    future(fibonacci($0))
+    Future.succeeded(fibonacci($0))
 }.onSuccess { fibNumbers in
   // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
@@ -259,7 +249,7 @@ A lot of the methods on `Future` accept an optional _execution context_ and a bl
 - if the method is called from the main thread, the block is executed on the main queue (`Queue.main`)
 - if the method is not called from the main thread, the block is executed on a global queue (`Queue.global`)
 
-The `future` keyword (and its `@autoclosure` companion) use a much simpler threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
+The `future` keyword uses a much simpler threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
 
 If you want to have custom threading behavior, skip do do not the section. next
 
