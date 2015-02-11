@@ -448,3 +448,45 @@ public extension Future {
         }
     }
 }
+
+public extension Future {
+    
+    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T> {
+        return FutureUtils.firstCompletedOf([self, token.future.asType()])
+    }
+    
+    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T> -> ()) -> Future<T> {
+        firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
+            token.context {
+                if !token.isInvalid {
+                    callback(res)
+                }
+            }
+        }
+        return self;
+    }
+    
+    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T> {
+        firstCompletedOfSelfAndToken(token).onSuccess(context: c) { value in
+            token.context {
+                if !token.isInvalid {
+                    callback(value)
+                }
+            }
+        }
+        
+        return self
+    }
+    
+    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T> {
+        firstCompletedOfSelfAndToken(token).onFailure(context: c) { error in
+            token.context {
+                println("Failure")
+                if !token.isInvalid {
+                    callback(error)
+                }
+            }
+        }
+        return self
+    }
+}

@@ -14,6 +14,9 @@ public protocol InvalidationTokenType {
     var isInvalid : Bool { get }
     
     var future: Future<Void> { get }
+    
+    // The synchronous context on which the invalidation and callbacks are executed
+    var context: ExecutionContext { get }
 }
 
 public protocol ManualInvalidationTokenType : InvalidationTokenType {
@@ -24,45 +27,19 @@ public class InvalidationToken : ManualInvalidationTokenType {
     
     let promise = Promise<Void>()
     
+    public let context = toContext(Semaphore(value: 1))
+    
     public init() { }
     
     public var isInvalid: Bool {
-        get {
-            return promise.future.isCompleted
-        }
+        return promise.future.isCompleted
     }
     
     public var future: Future<Void> {
-        get {
-            return self.promise.future
-        }
+        return self.promise.future
     }
     
     public func invalidate() {
         self.promise.failure(errorFromCode(.InvalidationTokenInvalidated))
     }
-}
-
-public extension Future {
-    
-    public func validate(token: InvalidationTokenType) -> Future<T> {
-        let p = Promise<T>()
-        let c = Queue().context
-        
-        token.future.onFailure(context: c) { error in
-            p.tryFailure(error)
-            return
-        }
-        
-        self.onComplete(context: c) { result in
-            if token.isInvalid {
-                p.tryFailure(errorFromCode(.InvalidationTokenInvalidated))
-            } else {
-                p.tryComplete(result)
-            }
-        }
-        
-        return p.future
-    }
-    
 }

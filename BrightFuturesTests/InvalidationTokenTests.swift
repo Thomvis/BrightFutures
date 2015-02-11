@@ -34,59 +34,23 @@ class InvalidationTokenTests: XCTestCase {
         }
     }
     
-    func testProactiveInvalidation() {
-        let token = InvalidationToken()
-        let e = self.expectation()
-        Future<Void>.never().validate(token).onComplete { result in
-            XCTAssert(result.error?.code == InvalidationTokenInvalid, "validate should fail with error even if the future never completes")
-            e.fulfill()
-        }
-        token.invalidate()
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
-    }
-    
-    func testInvalidationAfterCompletion() {
-        let token = InvalidationToken()
-        let e = self.expectation()
-        
-        let p = Promise<Void>()
-        p.future.validate(token).onSuccess { val in
-            XCTAssert(true, "onSuccess should get called")
-            e.fulfill()
-        }.onFailure { error in
-            XCTAssert(false, "onFailure should not get called")
-        }
-        
-        let e2 = self.expectation()
-        Queue.global.async {
-            p.success()
-            token.invalidate()
-            NSThread.sleepForTimeInterval(0.2); // make sure onFailure is not called
-            e2.fulfill();
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
-    }
-    
     func testCompletionAfterInvalidation() {
         let token = InvalidationToken()
-        let e = self.expectation()
         
         let p = Promise<Int>()
-        p.future.validate(token).onSuccess { val in
+        
+        p.future.onSuccess(token: token) { val in
             XCTAssert(false, "onSuccess should not get called")
-        }.onFailure { error in
-            XCTAssertEqual(error.code, InvalidationTokenInvalid, "future invalid error")
-            e.fulfill()
+        }.onFailure(token: token) { error in
+            XCTAssert(false, "onSuccess should not get called")
         }
         
-        let e2 = self.expectation()
+        let e = self.expectation()
         Queue.global.async {
             token.invalidate()
             p.success(2)
             NSThread.sleepForTimeInterval(0.2); // make sure onSuccess is not called
-            e2.fulfill()
+            e.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
@@ -99,33 +63,31 @@ class InvalidationTokenTests: XCTestCase {
         
         var token: InvalidationToken!
         let counter = Counter()
-        let queue = Queue()
-        for _ in 1...10 {
-            queue.sync {
-                counter.i++
-                token?.invalidate()
-                token = InvalidationToken()
-            }
-            
+        for _ in 1...100 {
+            token = InvalidationToken()
             let currentI = counter.i
             let e = self.expectation()
             future { () -> Bool in
-                NSThread.sleepForTimeInterval(0.01)
+                let sleep: NSTimeInterval = NSTimeInterval(arc4random() % 100) / 100000.0
+                NSThread.sleepForTimeInterval(sleep)
                 return true
-            }.validate(token).onSuccess(context: queue.context) { _ in
+            }.onSuccess(context: Queue.global.context, token: token) { _ in
                 XCTAssert(!token.isInvalid)
                 XCTAssertEqual(currentI, counter.i, "onSuccess should only get called if the counter did not increment")
-                e.fulfill()
-            }.onFailure(context: queue.context) { _ in
-                XCTAssertFalse(token.isInvalid)
-                XCTAssertNotEqual(currentI, counter.i, "onFailure should only get called if the counter did not increment")
+            }.onComplete(context: Queue.global.context) { _ in
+                NSThread.sleepForTimeInterval(0.0001);
                 e.fulfill()
             }
             
-            NSThread.sleepForTimeInterval(0.005)
+            NSThread.sleepForTimeInterval(0.0005)
+            
+            token.context {
+                counter.i++
+                token.invalidate()
+            }
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectationsWithTimeout(5, handler: nil)
     }
     
 }
