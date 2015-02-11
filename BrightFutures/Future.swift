@@ -250,6 +250,20 @@ public extension Future {
     public class func never() -> Future<T> {
         return Future<T>()
     }
+    
+    /**
+     * Returns a future with the new (type-inferred) type.
+     * That future is only completed when this future fails with an error.
+     */
+    public func asType<U>() -> Future<U> {
+        let p = Promise<U>()
+        
+        self.onFailure { err in
+            p.failure(err)
+        }
+        
+        return p.future
+    }
 }
 
 /**
