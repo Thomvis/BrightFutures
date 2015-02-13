@@ -449,6 +449,9 @@ public extension Future {
     }
 }
 
+/**
+ I'd like this to be in InvalidationToken.swift, but the compiler does not like that.
+ */
 public extension Future {
     
     func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T> {

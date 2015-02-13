@@ -288,7 +288,7 @@ class MyCell : UICollectionViewCell {
 }
 ```
 
-Invalidation tokens _do not_ cancel the task that the future represents, e.g. a network request or asynchronous calculation of the _n_th fibonacci number. That is a different problem. With invalidation tokens, the result is merely ignored. The callbacks are invoked as soon as the token is invalidated, which is typically before the original future is completed, or if the original future is completed. Invalidating a token after the original future completed does nothing.
+Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. The callbacks are invoked as soon as the token is invalidated, which is typically before the original future is completed, or if the original future is completed. Invalidating a token after the original future completed does nothing.
 
 If you are looking for a way to cancel a running task, you should look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html) (or [https://github.com/Thomvis/GoodProgress](https://github.com/Thomvis/GoodProgress) if you're looking for a nice Swift wrapper).
 
