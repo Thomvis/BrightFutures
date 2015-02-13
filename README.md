@@ -268,7 +268,29 @@ f.onComplete(context: Queue.main.context) { value in
 
 The calculation of the 10nth Fibonacci number is now performed on the same thread as where the future is created.
 
-You can find more examples in the tests.
+## Invalidation tokens
+An invalidation token can be used to invalidate a callback, preventing it from being executed upon completion of the future. This is particularly useful in cases where the context in which a callback is executed changes often and quickly, e.g. in reusable views such as table views and collection view cells. An example of the latter:
+
+```swift
+class MyCell : UICollectionViewCell {
+  var token = InvalidationToken()
+
+  public override func prepareForReuse() {
+    token.invalidate()
+    token = InvalidationToken()
+  }
+
+  public func setModel(model: Model) {
+    ImageLoader.loadImage(model.image).onSuccess(token: token) { [weak self] UIImage in
+      self.imageView.image = UIImage
+    }
+  }
+}
+```
+
+Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. The callbacks are invoked as soon as the token is invalidated, which is typically before the original future is completed, or if the original future is completed. Invalidating a token after the original future completed does nothing.
+
+If you are looking for a way to cancel a running task, you should look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html) (or [https://github.com/Thomvis/GoodProgress](https://github.com/Thomvis/GoodProgress) if you're looking for a nice Swift wrapper).
 
 ## Credits
 

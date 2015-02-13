@@ -61,6 +61,12 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testCompletedVoidFuture() {
+        let f = Future<Void>.succeeded()
+        XCTAssert(f.isCompleted, "void future should be completed")
+        XCTAssert(f.isSuccess, "void future should be success")
+    }
+    
     func testFailedFuture() {
         let error = NSError(domain: "test", code: 0, userInfo: nil)
         let f = Future<Bool>.failed(error)
@@ -893,7 +899,7 @@ extension BrightFuturesTests {
 /**
  * This extension contains utility methods used in the tests above
  */
-extension BrightFuturesTests {
+extension XCTestCase {
     func expectation() -> XCTestExpectation {
         return self.expectationWithDescription("no description")
     }

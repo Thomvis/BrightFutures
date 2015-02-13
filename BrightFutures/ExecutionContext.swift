@@ -39,3 +39,7 @@ public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
         dispatch_async(queue, task)
     }
 }
+
+func toContext(sema: Semaphore) -> ExecutionContext {
+    return sema.execute
+}

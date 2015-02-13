@@ -34,7 +34,7 @@ public class FutureUtils {
         let p = Promise<T>()
         
         for fut in seq {
-            fut.onComplete { res in
+            fut.onComplete(context: Queue.global.context) { res in
                 p.tryComplete(res)
                 return
             }

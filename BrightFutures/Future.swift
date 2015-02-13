@@ -60,11 +60,14 @@ public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
 public enum ErrorCode: Int {
     case NoSuchElement
+    case InvalidationTokenInvalidated
     
     var errorDescription: String {
         switch self {
         case .NoSuchElement:
             return "No such element"
+        case .InvalidationTokenInvalidated:
+            return "Invalidation token invalidated"
         }
     }
 }
@@ -246,6 +249,20 @@ public extension Future {
      */
     public class func never() -> Future<T> {
         return Future<T>()
+    }
+    
+    /**
+     * Returns a future with the new (type-inferred) type.
+     * That future is only completed when this future fails with an error.
+     */
+    public func asType<U>() -> Future<U> {
+        let p = Promise<U>()
+        
+        self.onFailure { err in
+            p.failure(err)
+        }
+        
+        return p.future
     }
 }
 
@@ -429,5 +446,50 @@ public extension Future {
                 return .Failure(errorFromCode(.NoSuchElement))
             }
         }
+    }
+}
+
+/**
+ I'd like this to be in InvalidationToken.swift, but the compiler does not like that.
+ */
+public extension Future {
+    
+    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T> {
+        return FutureUtils.firstCompletedOf([self, token.future.asType()])
+    }
+    
+    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T> -> ()) -> Future<T> {
+        firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
+            token.context {
+                if !token.isInvalid {
+                    callback(res)
+                }
+            }
+        }
+        return self;
+    }
+    
+    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T> {
+        firstCompletedOfSelfAndToken(token).onSuccess(context: c) { value in
+            token.context {
+                if !token.isInvalid {
+                    callback(value)
+                }
+            }
+        }
+        
+        return self
+    }
+    
+    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T> {
+        firstCompletedOfSelfAndToken(token).onFailure(context: c) { error in
+            token.context {
+                println("Failure")
+                if !token.isInvalid {
+                    callback(error)
+                }
+            }
+        }
+        return self
     }
 }
