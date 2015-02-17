@@ -47,11 +47,13 @@ import Foundation
     public init(value: AnyObject?) {
         self.value = value
         self.success = true
+        self.error = nil;
     }
 
     public init(error: NSError) {
         self.error = error
         self.success = false
+        self.value = nil;
     }
 }
 

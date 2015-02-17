@@ -128,32 +128,32 @@ public extension BFFuture {
 public extension BFFuture {
     
     public func onComplete(callback: (BFResult) -> ()) -> BFFuture {
-        self.future.onComplete(bridge(callback))
+        self.future.onComplete(callback: bridge(callback))
         return self
     }
     
     public func onComplete(context c: BFExecutionContext, callback: (BFResult) -> ()) -> BFFuture {
-        self.future.onComplete(bridge(c), bridge(callback))
+        self.future.onComplete(context: bridge(c), callback: bridge(callback))
         return self
     }
     
     public func onSuccess(callback: (AnyObject?) -> ()) -> BFFuture {
-        self.future.onSuccess(callback)
+        self.future.onSuccess(callback: callback)
         return self
     }
     
     public func onSuccess(context c: BFExecutionContext, callback: (AnyObject?) -> ()) -> BFFuture {
-        self.future.onSuccess(toContext(c), callback)
+        self.future.onSuccess(context: toContext(c), callback: callback)
         return self
     }
     
     public func onFailure(callback: (NSError) -> ()) -> BFFuture {
-        self.future.onFailure(callback)
+        self.future.onFailure(callback: callback)
         return self
     }
     
     public func onFailure(context c: BFExecutionContext, callback: (NSError) -> ()) -> BFFuture {
-        self.future.onFailure(toContext(c), callback)
+        self.future.onFailure(context: toContext(c), callback: callback)
         return self
     }
 }
@@ -161,19 +161,19 @@ public extension BFFuture {
 public extension BFFuture {
     
     public func flatMap(f: AnyObject? -> BFFuture) -> BFFuture {
-        return bridge(self.future.flatMap(bridge(f)))
+        return bridge(self.future.flatMap(f: bridge(f)))
     }
     
     public func flatMap(context c: BFExecutionContext, f: AnyObject? -> BFFuture) -> BFFuture {
-        return bridge(self.future.flatMap(toContext(c), bridge(f)))
+        return bridge(self.future.flatMap(context: toContext(c), f: bridge(f)))
     }
     
     public func flatMapResult(f: AnyObject? -> BFResult) -> BFFuture {
-        return bridge(self.future.flatMap(bridge(f)))
+        return bridge(self.future.flatMap(f: bridge(f)))
     }
     
     public func flatMapResult(context c: BFExecutionContext, f: AnyObject? -> BFResult) -> BFFuture {
-        return bridge(self.future.flatMap(toContext(c), bridge(f)))
+        return bridge(self.future.flatMap(context: toContext(c), f: bridge(f)))
     }
     
     public func map(f: AnyObject? -> AnyObject?) -> BFFuture {
@@ -185,27 +185,27 @@ public extension BFFuture {
     }
     
     public func andThen(callback: BFResult -> ()) -> BFFuture {
-        return bridge(self.future.andThen(bridge(callback)))
+        return bridge(self.future.andThen(callback: bridge(callback)))
     }
     
     public func andThen(context c: BFExecutionContext, callback: BFResult -> ()) -> BFFuture {
-        return bridge(self.future.andThen(toContext(c), bridge(callback)))
+        return bridge(self.future.andThen(context: toContext(c), callback: bridge(callback)))
     }
     
     public func recover(task: (NSError) -> AnyObject?) -> BFFuture {
-        return bridge(self.future.recover(task))
+        return bridge(self.future.recover(task: task))
     }
     
     public func recover(context c: BFExecutionContext, task: (NSError) -> AnyObject?) -> BFFuture {
-        return bridge(self.future.recover(toContext(c), task))
+        return bridge(self.future.recover(context: toContext(c), task: task))
     }
     
     public func recoverAsync(task: (NSError) -> BFFuture) -> BFFuture {
-        return bridge(self.future.recoverWith(bridge(task)))
+        return bridge(self.future.recoverWith(task: bridge(task)))
     }
     
     public func recoverAsync(context c: BFExecutionContext, task: (NSError) -> BFFuture) -> BFFuture {
-        return bridge(self.future.recoverWith(bridge(c), bridge(task)))
+        return bridge(self.future.recoverWith(context: bridge(c), task: bridge(task)))
     }
     
     // Returns an array with two elements instead of a tuple
