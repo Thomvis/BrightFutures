@@ -37,7 +37,7 @@ import Foundation
 
 public extension BFFuture {
     
-    public class func wrap(f: () -> AnyObject) -> BFFuture {
+    public class func wrap(f: () -> AnyObject?) -> BFFuture {
         return self.wrapResult {
             BFResult(value: f())
         }
@@ -47,7 +47,7 @@ public extension BFFuture {
         return self.wrapResult(context: BFExecutionContext.globalQueue, block: f)
     }
     
-    public class func wrap(context c: BFExecutionContext, block: () -> AnyObject) -> BFFuture {
+    public class func wrap(context c: BFExecutionContext, block: () -> AnyObject?) -> BFFuture {
         return self.wrapResult(context: c) {
             BFResult(value: block())
         }
@@ -92,7 +92,7 @@ public extension BFFuture {
         return self.result != nil
     }
     
-    public class func succeeded(value: AnyObject) -> BFFuture {
+    public class func succeeded(value: AnyObject?) -> BFFuture {
         return bridge(Future.succeeded(value))
     }
     
@@ -104,7 +104,7 @@ public extension BFFuture {
         return bridge(Future<AnyObject?>.completed(bridge(result)))
     }
     
-    public class func completeAfter(delay: NSTimeInterval, withValue value: AnyObject) -> BFFuture {
+    public class func completeAfter(delay: NSTimeInterval, withValue value: AnyObject?) -> BFFuture {
         return bridge(Future.completeAfter(delay, withValue: value))
     }
     
