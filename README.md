@@ -276,6 +276,7 @@ class MyCell : UICollectionViewCell {
   var token = InvalidationToken()
 
   public override func prepareForReuse() {
+    super.prepareForReuse()
     token.invalidate()
     token = InvalidationToken()
   }
