@@ -77,7 +77,7 @@ let f = future { () -> Result<NSDate> in
   if let someNow = now {
     return .Success(Box(someNow))
   }
-  
+
   return .Failure(NSError(domain: "TimeServiceErrorDomain", code: 404, userInfo: nil))
 }
 
@@ -96,9 +96,9 @@ func asyncCalculation() -> Future<String> {
   let promise = Promise<String>()
 
   Queue.global.async {
-  
+
     // do a complicated task
-    
+
     promise.success("forty-two")
   }
 
@@ -186,11 +186,11 @@ If a `Future` fails, use `recover` to offer a default or alternative value and c
 ```swift
 let f = future { () -> Result<Int> in
     // request something from the web
-    
+
     if (request.error) { // it could fail
         return .Failure(request.error)
     }
-    
+
     return .Success(Box(10))
 }.recover { _ in // provide an offline default
     return 5
@@ -275,7 +275,8 @@ An invalidation token can be used to invalidate a callback, preventing it from b
 class MyCell : UICollectionViewCell {
   var token = InvalidationToken()
 
-  public override func prepareForReuse() {
+public override func prepareForReuse() {
+    super.prepareForReuse()
     token.invalidate()
     token = InvalidationToken()
   }
