@@ -96,7 +96,7 @@ func asyncCalculation() -> Future<String> {
   let promise = Promise<String>()
 
   Queue.global.async {
-
+  
     // do a complicated task
     
     promise.success("forty-two")
