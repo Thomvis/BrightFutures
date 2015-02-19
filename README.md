@@ -275,7 +275,7 @@ An invalidation token can be used to invalidate a callback, preventing it from b
 class MyCell : UICollectionViewCell {
   var token = InvalidationToken()
 
-public override func prepareForReuse() {
+  public override func prepareForReuse() {
     super.prepareForReuse()
     token.invalidate()
     token = InvalidationToken()
