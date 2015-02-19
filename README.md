@@ -77,7 +77,7 @@ let f = future { () -> Result<NSDate> in
   if let someNow = now {
     return .Success(Box(someNow))
   }
-
+  
   return .Failure(NSError(domain: "TimeServiceErrorDomain", code: 404, userInfo: nil))
 }
 
@@ -98,7 +98,7 @@ func asyncCalculation() -> Future<String> {
   Queue.global.async {
 
     // do a complicated task
-
+    
     promise.success("forty-two")
   }
 
@@ -186,11 +186,11 @@ If a `Future` fails, use `recover` to offer a default or alternative value and c
 ```swift
 let f = future { () -> Result<Int> in
     // request something from the web
-
+    
     if (request.error) { // it could fail
         return .Failure(request.error)
     }
-
+    
     return .Success(Box(10))
 }.recover { _ in // provide an offline default
     return 5
