@@ -96,7 +96,7 @@ public struct Queue {
      * Identical to dispatch_async(self.queue, block)
      */
     public func async(block: () -> ()) {
-        dispatch_async(queue, block);
+        dispatch_async(queue, block)
     }
     
     public func async<T>(block: () -> T) -> Future<T> {
