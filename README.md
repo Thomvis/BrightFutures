@@ -12,7 +12,7 @@ The goal of this project is to port Scala's Futures & Promises ([guide](http://d
 
 The project is currently moving towards a 1.0 release. Issue [#12](https://github.com/Thomvis/BrightFutures/issues/12) has been created to track the progress towards that goal. Please feel free to provide feedback or file your requests! Until 1.0, the API could change significantly.
 
-If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.3](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.2)' for the time being.
+If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.3](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.3)' for the time being.
 
 ## Installation
 CocoaPods 0.36.0.beta.1 (a pre-release version) now supports Swift frameworks, thus allows you to add BrightFutures to your project:
