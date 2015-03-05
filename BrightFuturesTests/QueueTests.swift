@@ -84,5 +84,32 @@ class QueueTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testDelay() {
+        var res = 2
+        let e = self.expectationWithDescription("")
+        Queue.global.delay(1.0) {
+            res *= 2
+            e.fulfill()
+        }
+        res += 2
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTAssertEqual(res, 8, "delay should not execute immediately")
+    }
+
+    func testDelayFuture() {
+        // unfortunately, the compiler is not able to figure out that we want the
+        // future-returning async method
+        let f: Future<String> = Queue.global.delay(1) {
+            return "fibonacci"
+        }
+        
+        let e = self.expectationWithDescription("")
+        f.onSuccess { val in
+            XCTAssertEqual(val, "fibonacci", "the future should succeed with the value from the async block")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
 
 }
