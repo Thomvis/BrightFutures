@@ -87,7 +87,7 @@ class QueueTests: XCTestCase {
     func testAfter() {
         var res = 2
         let e = self.expectationWithDescription("")
-        Queue.global.after(TimeInterval.In(1.0)) {
+        Queue.global.after(.In(1.0)) {
             res *= 2
             e.fulfill()
         }
@@ -99,7 +99,7 @@ class QueueTests: XCTestCase {
     func testAfterFuture() {
         // unfortunately, the compiler is not able to figure out that we want the
         // future-returning async method
-        let f: Future<String> = Queue.global.after(TimeInterval.In(1.0)) {
+        let f: Future<String> = Queue.global.after(.In(1.0)) {
             return "fibonacci"
         }
         
