@@ -113,16 +113,16 @@ public struct Queue {
      * Asynchronously executes the given block on the queue after a delay
      * Identical to dispatch_after(dispatch_time, self.queue, block)
      */
-    public func delay(time: Double, block: () -> ()) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(time * Double(NSEC_PER_SEC))), queue, block)
+    public func after(delay: TimeInterval, block: () -> ()) {
+        dispatch_after(delay.dispatchTime, queue, block)
     }
     
-    public func delay<T>(time: Double, block: () -> T) -> Future<T> {
+    public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T> {
         let p = Promise<T>()
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(time * Double(NSEC_PER_SEC))), queue, {
+        after(delay) {
             p.success(block())
-        })
+        }
         
         return p.future
     }

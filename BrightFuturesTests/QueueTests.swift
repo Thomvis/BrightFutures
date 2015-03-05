@@ -84,10 +84,10 @@ class QueueTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testDelay() {
+    func testAfter() {
         var res = 2
         let e = self.expectationWithDescription("")
-        Queue.global.delay(1.0) {
+        Queue.global.after(TimeInterval.In(1.0)) {
             res *= 2
             e.fulfill()
         }
@@ -96,10 +96,10 @@ class QueueTests: XCTestCase {
         XCTAssertEqual(res, 8, "delay should not execute immediately")
     }
 
-    func testDelayFuture() {
+    func testAfterFuture() {
         // unfortunately, the compiler is not able to figure out that we want the
         // future-returning async method
-        let f: Future<String> = Queue.global.delay(1) {
+        let f: Future<String> = Queue.global.after(TimeInterval.In(1.0)) {
             return "fibonacci"
         }
         
