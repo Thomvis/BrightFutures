@@ -84,9 +84,10 @@ public struct Queue {
      */
     public func sync<T>(block: () -> T) -> T {
         var res: T? = nil
-        dispatch_sync(queue, {
+
+        sync {
             res = block()
-        })
+        }
         
         return res!;
     }
@@ -101,12 +102,29 @@ public struct Queue {
     
     public func async<T>(block: () -> T) -> Future<T> {
         let p = Promise<T>()
-        
-        dispatch_async(queue, {
+
+        async {
             p.success(block())
-        })
+        }
         
         return p.future
     }
     
+    /**
+     * Asynchronously executes the given block on the queue after a delay
+     * Identical to dispatch_after(dispatch_time, self.queue, block)
+     */
+    public func after(delay: TimeInterval, block: () -> ()) {
+        dispatch_after(delay.dispatchTime, queue, block)
+    }
+    
+    public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T> {
+        let p = Promise<T>()
+        
+        after(delay) {
+            p.success(block())
+        }
+        
+        return p.future
+    }
 }
