@@ -84,9 +84,10 @@ public struct Queue {
      */
     public func sync<T>(block: () -> T) -> T {
         var res: T? = nil
-        dispatch_sync(queue, {
+
+        sync {
             res = block()
-        })
+        }
         
         return res!;
     }
@@ -96,15 +97,15 @@ public struct Queue {
      * Identical to dispatch_async(self.queue, block)
      */
     public func async(block: () -> ()) {
-        dispatch_async(queue, block);
+        dispatch_async(queue, block)
     }
     
     public func async<T>(block: () -> T) -> Future<T> {
         let p = Promise<T>()
-        
-        dispatch_async(queue, {
+
+        async {
             p.success(block())
-        })
+        }
         
         return p.future
     }
