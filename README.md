@@ -15,13 +15,13 @@ The project is currently moving towards a 1.0 release. Issue [#12](https://githu
 If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.3](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.3)' for the time being.
 
 ## Installation
-CocoaPods 0.36.0.beta.1 (a pre-release version) now supports Swift frameworks, thus allows you to add BrightFutures to your project:
+CocoaPods 0.36.0 now supports Swift frameworks, thus allows you to add BrightFutures to your project:
 
 ```rb
-pod 'BrightFutures', :git => "https://github.com/Thomvis/BrightFutures.git"
+pod 'BrightFutures', '1.0.0-beta.3'
 ```
 
-(It doesn't seem to work for me without `:git`, but it should.) You can also use BrightFutures through [Carthage](https://github.com/Carthage/Carthage) or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
+You can also use BrightFutures through [Carthage](https://github.com/Carthage/Carthage) or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
 
 
 ## Examples
