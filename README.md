@@ -25,7 +25,6 @@ pod 'BrightFutures', :git => "https://github.com/Thomvis/BrightFutures.git"
 
 
 ## Examples
-### Motivating Use Case
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
 
 ```swift
