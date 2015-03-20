@@ -128,7 +128,7 @@ public extension BFFuture {
 public extension BFFuture {
     
     public func onComplete(callback: (BFResult) -> ()) -> BFFuture {
-        self.future.onComplete(callback: bridge(callback))
+        self.future.onComplete(bridge(callback))
         return self
     }
     
@@ -138,7 +138,7 @@ public extension BFFuture {
     }
     
     public func onSuccess(callback: (AnyObject?) -> ()) -> BFFuture {
-        self.future.onSuccess(callback: callback)
+        self.future.onSuccess(callback)
         return self
     }
     
@@ -161,7 +161,7 @@ public extension BFFuture {
 public extension BFFuture {
     
     public func flatMap(f: AnyObject? -> BFFuture) -> BFFuture {
-        return bridge(self.future.flatMap(f: bridge(f)))
+        return bridge(self.future.flatMap(bridge(f)))
     }
     
     public func flatMap(context c: BFExecutionContext, f: AnyObject? -> BFFuture) -> BFFuture {
@@ -169,7 +169,7 @@ public extension BFFuture {
     }
     
     public func flatMapResult(f: AnyObject? -> BFResult) -> BFFuture {
-        return bridge(self.future.flatMap(f: bridge(f)))
+        return bridge(self.future.flatMap(bridge(f)))
     }
     
     public func flatMapResult(context c: BFExecutionContext, f: AnyObject? -> BFResult) -> BFFuture {
@@ -185,7 +185,7 @@ public extension BFFuture {
     }
     
     public func andThen(callback: BFResult -> ()) -> BFFuture {
-        return bridge(self.future.andThen(callback: bridge(callback)))
+        return bridge(self.future.andThen(bridge(callback)))
     }
     
     public func andThen(context c: BFExecutionContext, callback: BFResult -> ()) -> BFFuture {
@@ -193,7 +193,7 @@ public extension BFFuture {
     }
     
     public func recover(task: (NSError) -> AnyObject?) -> BFFuture {
-        return bridge(self.future.recover(task: task))
+        return bridge(self.future.recover(task))
     }
     
     public func recover(context c: BFExecutionContext, task: (NSError) -> AnyObject?) -> BFFuture {
@@ -201,7 +201,7 @@ public extension BFFuture {
     }
     
     public func recoverAsync(task: (NSError) -> BFFuture) -> BFFuture {
-        return bridge(self.future.recoverWith(task: bridge(task)))
+        return bridge(self.future.recoverWith(bridge(task)))
     }
     
     public func recoverAsync(context c: BFExecutionContext, task: (NSError) -> BFFuture) -> BFFuture {
