@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "BrightFuturesTests-Swift.h"
 @import BrightFutures;
 
 @interface OBJCTests : XCTestCase
@@ -87,7 +88,7 @@
     // not in Objective-C
     BFFuture *f = [BFFuture wrap:^id{
         XCTAssertFalse([NSThread isMainThread]);
-        return @([self fibonacci:10]);
+        return @(fibonacci(10));
     }];
     
     XCTestExpectation *e = [self expectation];
@@ -126,7 +127,7 @@
     BFPromise *p = [BFPromise new];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [p success:@([self fibonacci:10])];
+        [p success:@(fibonacci(10))];
     });
     
     XCTestExpectation *e = [self expectation];
@@ -143,7 +144,7 @@
 {
     BFFuture *f = [BFFuture wrapWithContext:[BFExecutionContext immediate] block:^id{
         XCTAssert([NSThread isMainThread]);
-        return @([self fibonacci:10]);
+        return @(fibonacci(10));
     }];
     
     XCTAssertEqualObjects(f.result.value, @(55));
@@ -233,7 +234,7 @@
     XCTestExpectation *e = [self expectation];
     
     [[[BFFuture wrap:^id{
-        return @([self fibonacci:10]);
+        return @(fibonacci(10));
     }] map:^id(NSNumber *num) {
         return @([num integerValue] / 5);
     }] onSuccess:^(NSNumber *num) {
@@ -249,7 +250,7 @@
     XCTestExpectation *e = [self expectation];
     
     [[[[BFFuture wrap:^id{
-        return @([self fibonacci:10]);
+        return @(fibonacci(10));
     }] map:^id(NSNumber *num) {
         if ([num integerValue] > 5) {
             return @"large";
@@ -310,7 +311,7 @@
     }] recoverAsync:^BFFuture *(NSError *err) {
         XCTAssertEqualObjects(err.domain, @"NaN");
         return [BFFuture wrap:^id {
-            return @([self fibonacci:5]);
+            return @(fibonacci(5));
         }];
     }] onSuccess:^(id val) {
         XCTAssertEqualObjects(val, @(5));
@@ -491,19 +492,11 @@
     }];
 }
 
-#pragma mark - Helpers -
-
-- (XCTestExpectation *) expectation
-{
-    return [self expectationWithDescription:@""];
-}
-
-- (NSUInteger) fibonacci:(NSUInteger)n
-{
-    if (n <= 1) {
+NSUInteger fibonacci(NSUInteger n) {
+    if (n < 2) {
         return n;
     } else {
-        return [self fibonacci:n-1] + [self fibonacci:n-2];
+        return fibonacci(n-1) + fibonacci(n-2);
     }
 }
 
