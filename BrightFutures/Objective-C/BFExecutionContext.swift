@@ -50,10 +50,18 @@ import Foundation
     public init(context: ExecutionContext) {
         self.context = context
     }
+    
+    public func execute(block: () -> ()) {
+        self.context(block)
+    }
 }
 
-func bridge(result: BFExecutionContext) -> ExecutionContext {
-    return toContext(result)
+func bridge(context: BFExecutionContext) -> ExecutionContext {
+    return toContext(context)
+}
+
+func bridge(context: ExecutionContext) -> BFExecutionContext {
+    return BFExecutionContext(context: context)
 }
 
 func toContext(context: BFExecutionContext) -> ExecutionContext {

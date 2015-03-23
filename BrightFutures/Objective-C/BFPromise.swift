@@ -22,6 +22,10 @@
 
 import Foundation
 
+/**
+ * We use NSObject as a base class because it should be easy
+ * to instantiate it from Objective-C
+ */
 @objc public class BFPromise : NSObject {
     
     private let promise: Promise<AnyObject?>

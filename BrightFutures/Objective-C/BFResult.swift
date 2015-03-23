@@ -22,6 +22,13 @@
 
 import Foundation
 
+/**
+ * An Objective-C compatible Result
+ *
+ * This is a reimplementation, rather than a compatibility 
+ * layer because it would result in approximately the same 
+ * amount of code.
+ */
 @objc public class BFResult {
     
     internal let success: Bool

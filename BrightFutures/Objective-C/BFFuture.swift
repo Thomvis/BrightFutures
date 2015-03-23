@@ -33,6 +33,10 @@ import Foundation
     internal init(future: Future<AnyObject?>) {
         self.future = future
     }
+    
+    internal init(future: Future<Void>) {
+        self.future = future.map { nil }
+    }
 }
 
 public extension BFFuture {
@@ -97,7 +101,7 @@ public extension BFFuture {
     }
     
     public class func failed(error: NSError) -> BFFuture {
-        return bridge(Future.failed(error))
+        return bridge(Future<Void>.failed(error))
     }
     
     public class func completed(result: BFResult) -> BFFuture {
@@ -218,12 +222,56 @@ public extension BFFuture {
     }
 }
 
+public extension BFFuture {
+    
+    public func onComplete(#token: BFInvalidationTokenType, callback: BFResult -> ()) -> BFFuture {
+        self.future.onComplete(token: bridge(token), callback: bridge(callback))
+        return self
+    }
+    
+    public func onComplete(context c: BFExecutionContext, token: BFInvalidationTokenType, callback: BFResult -> ()) -> BFFuture {
+        
+        self.future.onComplete(context: bridge(c), token: bridge(token), callback: bridge(callback))
+        return self
+    }
+    
+    public func onSuccess(#token: BFInvalidationTokenType, callback: AnyObject? -> ()) -> BFFuture {
+        self.future.onSuccess(token: bridge(token), callback: callback)
+        return self
+    }
+    
+    public func onSuccess(context c: BFExecutionContext, token: BFInvalidationTokenType, callback: AnyObject? -> ()) -> BFFuture {
+        self.future.onSuccess(context: bridge(c), token: bridge(token), callback: callback)
+        return self
+    }
+    
+    public func onFailure(#token: BFInvalidationTokenType, callback: (NSError) -> ()) -> BFFuture {
+        
+        self.future.onFailure(token: bridge(token), callback: callback)
+        return self
+    }
+    
+    public func onFailure(context c: BFExecutionContext, token: BFInvalidationTokenType, callback: (NSError) -> ()) -> BFFuture {
+        
+        self.future.onFailure(context: bridge(c), token: bridge(token), callback: callback)
+        return self
+    }
+}
+
 func bridge(future: Future<AnyObject?>) -> BFFuture {
+    return BFFuture(future: future)
+}
+
+func bridge(future: Future<Void>) -> BFFuture {
     return BFFuture(future: future)
 }
 
 func bridge(future: BFFuture) -> Future<AnyObject?> {
     return future.future
+}
+
+func bridge(future: BFFuture) -> Future<Void> {
+    return future.future.map { _ -> Void in }
 }
 
 func bridge<T>(f: T -> Future<AnyObject?>) -> (T -> BFFuture) {

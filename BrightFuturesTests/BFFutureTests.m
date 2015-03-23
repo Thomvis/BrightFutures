@@ -1,5 +1,5 @@
 //
-//  OBJCTests.m
+//  BFFutureTests.m
 //  BrightFutures
 //
 //  Created by Thomas Visser on 29/01/15.
@@ -10,11 +10,11 @@
 #import "BrightFuturesTests-Swift.h"
 @import BrightFutures;
 
-@interface OBJCTests : XCTestCase
+@interface BFFutureTests : XCTestCase
 
 @end
 
-@implementation OBJCTests
+@implementation BFFutureTests
 
 - (void)testCompletedFuture
 {
@@ -425,7 +425,7 @@
         return [num integerValue] > 5;
     }] onComplete:^(BFResult *res) {
         XCTAssert(res.isFailure);
-        XCTAssertEqual(res.error.code, 0);
+        XCTAssertEqual(res.error.code, 1);
         XCTAssertEqualObjects(res.error.domain, @"nl.thomvis.BrightFutures");
         [e fulfill];
     }];
