@@ -7,8 +7,10 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "BrightFuturesTests-Swift.h"
 @import BrightFutures;
+
+#import "BrightFuturesTests-Swift.h"
+#import "Helpers.h"
 
 @interface BFFutureTests : XCTestCase
 
@@ -490,14 +492,6 @@
         
         [self waitForExpectationsWithTimeout:2 handler:nil];
     }];
-}
-
-NSUInteger fibonacci(NSUInteger n) {
-    if (n < 2) {
-        return n;
-    } else {
-        return fibonacci(n-1) + fibonacci(n-2);
-    }
 }
 
 @end
