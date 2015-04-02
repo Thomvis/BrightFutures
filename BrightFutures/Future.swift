@@ -237,7 +237,7 @@ public extension Future {
     public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
         let res = Future<T>()
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.queue) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.underlyingQueue) {
             res.success(value)
         }
         
