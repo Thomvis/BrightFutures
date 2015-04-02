@@ -53,7 +53,7 @@ public struct Queue {
      */
     public static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
     
-    var queue: dispatch_queue_t
+    private(set) public var underlyingQueue: dispatch_queue_t
     
     public var context: ExecutionContext {
         return { task in
@@ -66,7 +66,7 @@ public struct Queue {
      * If `param` is omitted, a serial queue with identifier "queue" is used.
      */
     public init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
-        self.queue = queue
+        self.underlyingQueue = queue
     }
     
     /**
@@ -74,7 +74,7 @@ public struct Queue {
      * Identical to dispatch_sync(self.queue, block)
      */
     public func sync(block: () -> ()) {
-        dispatch_sync(queue, block)
+        dispatch_sync(underlyingQueue, block)
     }
     
     /**
@@ -97,7 +97,7 @@ public struct Queue {
      * Identical to dispatch_async(self.queue, block)
      */
     public func async(block: () -> ()) {
-        dispatch_async(queue, block)
+        dispatch_async(underlyingQueue, block)
     }
     
     public func async<T>(block: () -> T) -> Future<T> {
@@ -115,7 +115,7 @@ public struct Queue {
      * Identical to dispatch_after(dispatch_time, self.queue, block)
      */
     public func after(delay: TimeInterval, block: () -> ()) {
-        dispatch_after(delay.dispatchTime, queue, block)
+        dispatch_after(delay.dispatchTime, underlyingQueue, block)
     }
     
     public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T> {
