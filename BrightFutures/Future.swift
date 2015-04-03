@@ -46,6 +46,8 @@ public func future<T>(context c: ExecutionContext, task: () -> Result<T>) -> Fut
             promise.success(boxedValue.value)
         case .Failure(let error):
             promise.failure(error)
+		case .Progress(let progress, let total):
+			promise.progress(progress, total: total)
         }
     }
     
@@ -89,9 +91,12 @@ public class Future<T> {
     typealias CallbackInternal = (future: Future<T>) -> ()
     typealias CompletionCallback = (result: Result<T>) -> ()
     typealias SuccessCallback = (T) -> ()
+	public typealias ProgressCallback = (progress: Float, total: Float) -> ()
     public typealias FailureCallback = (NSError) -> ()
     
     var result: Result<T>? = nil
+	var progress: Float = 0.0
+	var total: Float = 1.0
     
     /**
      * This queue is used for all callback related administrative tasks
@@ -108,6 +113,9 @@ public class Future<T> {
      */
     let callbackExecutionSemaphore = Semaphore(value: 1);
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
+	
+	let progressCallbackAdministrationQueue = Queue()
+	var progressCallbacks: [CallbackInternal] = Array<CallbackInternal>()
     
     internal init() {
         
@@ -122,7 +130,14 @@ public class Future<T> {
         }
         
         self.callbacks.removeAll()
+		self.progressCallbacks.removeAll()
     }
+	
+	private func runProgressCallbacks() {
+		for callback in self.progressCallbacks {
+			callback(future: self)
+		}
+	}
 }
 
 /**
@@ -140,6 +155,8 @@ internal extension Future {
             return self.trySuccess(val.value)
         case .Failure(let err):
             return self.tryFailure(err)
+		case .Progress(let progress, let total):
+			return self.tryProgress(progress, total: total)
         }
     }
     
@@ -176,6 +193,20 @@ internal extension Future {
             return true;
         };
     }
+	
+	func progress(progress: Float, total: Float) {
+		let succeeded = self.tryProgress(progress, total: total)
+		assert(succeeded)
+	}
+	
+	func tryProgress(progress: Float, total: Float) -> Bool {
+		return self.progressCallbackAdministrationQueue.sync {
+			self.progress = progress
+			self.total = total
+			self.runProgressCallbacks()
+			return true;
+		};
+	}
 }
 
 /**
@@ -237,7 +268,7 @@ public extension Future {
     public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T> {
         let res = Future<T>()
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.underlyingQueue) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.queue) {
             res.success(value)
         }
         
@@ -362,6 +393,25 @@ public extension Future {
         }
         return self
     }
+	
+	public func onProgress(callback: ProgressCallback) -> Future<T> {
+		return onProgress(callback: callback)
+	}
+	
+	public func onProgress(context c: ExecutionContext = executionContextForCurrentContext(), callback: ProgressCallback) -> Future<T> {
+		let wrappedCallback : Future<T> -> () = { future in
+			c {
+				callback(progress: future.progress, total: future.total)
+				return
+			}
+		}
+		
+		self.progressCallbackAdministrationQueue.sync {
+			self.progressCallbacks.append(wrappedCallback)
+		}
+		
+		return self
+	}
 }
 
 /**
@@ -381,6 +431,8 @@ public extension Future {
                 p.failure(e)
             case .Success(let v):
                 p.completeWith(f(v.value))
+			case .Progress(let progress, let total):
+				p.progress(progress, total: total)
             }
         }
         return p.future
@@ -411,6 +463,9 @@ public extension Future {
             case .Failure(let e):
                 p.failure(e)
                 break;
+			case .Progress(let progress, let total):
+				p.progress(progress, total: total)
+				break;
             }
         })
         
@@ -455,6 +510,8 @@ public extension Future {
                 p.completeWith(task(err))
             case .Success(let val):
                 p.completeWith(self)
+			case .Progress(let progress, let total):
+				break;
             }
         }
         

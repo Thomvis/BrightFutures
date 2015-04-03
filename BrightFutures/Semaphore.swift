@@ -26,7 +26,7 @@ public enum TimeInterval {
     case Forever
     case In(NSTimeInterval)
     
-    public var dispatchTime: dispatch_time_t {
+    var dispatchTime: dispatch_time_t {
         get {
             switch self {
             case .Forever:
@@ -41,31 +41,31 @@ public enum TimeInterval {
 /**
  * A tiny wrapper around dispatch_semaphore
  */
-public class Semaphore {
+class Semaphore {
     
-    private(set) public var underlyingSemaphore: dispatch_semaphore_t
+    private var semaphore: dispatch_semaphore_t
     
-    public init(value: Int) {
-        self.underlyingSemaphore = dispatch_semaphore_create(value)
+    init(value: Int) {
+        self.semaphore = dispatch_semaphore_create(value)
     }
     
-    public convenience init() {
+    convenience init() {
         self.init(value: 1)
     }
     
-    public func wait() {
+    func wait() {
         self.wait(.Forever)
     }
     
-    public func wait(timeout: TimeInterval) {
-        dispatch_semaphore_wait(self.underlyingSemaphore, timeout.dispatchTime)
+    func wait(timeout: TimeInterval) {
+        dispatch_semaphore_wait(self.semaphore, timeout.dispatchTime)
     }
     
-    public func signal() {
-        dispatch_semaphore_signal(self.underlyingSemaphore)
+    func signal() {
+        dispatch_semaphore_signal(self.semaphore)
     }
 
-    public func execute(task: () -> ()) {
+    func execute(task: () -> ()) {
         self.wait()
         task()
         self.signal()

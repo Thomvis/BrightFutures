@@ -36,6 +36,7 @@ public final class Box<T> {
 public enum Result<T> {
     case Success(Box<T>)
     case Failure(NSError)
+	case Progress(Float, Float)
     
     public init(_ value: T) {
         self = .Success(Box(value))
@@ -48,6 +49,8 @@ public enum Result<T> {
                 return true
             case .Failure(_):
                 return false
+			case .Progress(_, _):
+				return false
             }
         }
     }

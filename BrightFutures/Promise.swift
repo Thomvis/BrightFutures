@@ -37,6 +37,8 @@ public class Promise<T> {
                 self.success(val.value)
             case .Failure(let err):
                 self.failure(err)
+			case .Progress(let progress, let total):
+				self.progress(progress, total: total)
             }
         }
     }
@@ -56,7 +58,15 @@ public class Promise<T> {
     public func tryFailure(error: NSError) -> Bool {
         return self.future.tryFailure(error)
     }
-    
+	
+	public func progress(progress: Float, total: Float) {
+		self.future.progress(progress, total: total)
+	}
+	
+	public func tryProgress(progress: Float, total: Float) -> Bool {
+		return self.future.tryProgress(progress, total: total)
+	}
+	
     public func complete(result: Result<T>) {
         return self.future.complete(result)
     }

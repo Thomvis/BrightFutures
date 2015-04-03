@@ -79,6 +79,8 @@ extension BrightFuturesTests {
                 XCTAssert(false)
             case .Failure(let err):
                 XCTAssertEqual(err, error)
+			case .Progress(_, _):
+				XCTAssert(false)
             }
             completeExpectation.fulfill()
         }
@@ -194,6 +196,8 @@ extension BrightFuturesTests {
                 XCTAssert(Int(55) == val.value)
             case .Failure(_):
                 XCTAssert(false)
+			case .Progress(_, _):
+				XCTAssert(false)
             }
             
             e.fulfill()
