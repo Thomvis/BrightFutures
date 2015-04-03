@@ -8,23 +8,24 @@ BrightFutures offers an alternative to success and failure blocks that are often
 The goal of this project is to port Scala's Futures & Promises ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) to Swift. Second to this readme, the Scala documentation should therefore also be of help.
 
 ## Current State
-[![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures)
+[![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) (Travis is not yet supporting Swift 1.2)
 
 The project is currently moving towards a 1.0 release. Issue [#12](https://github.com/Thomvis/BrightFutures/issues/12) has been created to track the progress towards that goal. Please feel free to provide feedback or file your requests! Until 1.0, the API could change significantly.
 
-If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.3](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.3)' for the time being.
+If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.2](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.2)' for the time being.
 
 ## Installation
-CocoaPods 0.36.0 now supports Swift frameworks, thus allows you to add BrightFutures to your project:
+CocoaPods 0.36.0.beta.1 (a pre-release version) now supports Swift frameworks, thus allows you to add BrightFutures to your project:
 
 ```rb
-pod 'BrightFutures'
+pod 'BrightFutures', :git => "https://github.com/Thomvis/BrightFutures.git"
 ```
 
-You can also use BrightFutures through [Carthage](https://github.com/Carthage/Carthage) or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
+(It doesn't seem to work for me without `:git`, but it should.) You can also use BrightFutures through [Carthage](https://github.com/Carthage/Carthage) or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
 
 
 ## Examples
+### Motivating Use Case
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
 
 ```swift
