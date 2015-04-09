@@ -933,5 +933,5 @@ func fibonacciFuture(n: Int) -> Future<Int> {
 }
 
 func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-    return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue()))
+    return UnsafeMutablePointer<Void>(bitPattern: Word(ObjectIdentifier(object).uintValue))
 }
