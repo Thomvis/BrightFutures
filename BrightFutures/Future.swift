@@ -91,7 +91,7 @@ public class Future<T> {
     typealias SuccessCallback = (T) -> ()
     public typealias FailureCallback = (NSError) -> ()
     
-    var result: Result<T>? = nil
+    public internal(set) var result: Result<T>? = nil
     
     /**
      * This queue is used for all callback related administrative tasks
