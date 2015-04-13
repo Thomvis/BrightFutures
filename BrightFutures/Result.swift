@@ -80,3 +80,28 @@ public enum Result<T> {
         }
     }
 }
+
+extension Result {
+    
+    public func map<U>(f:T -> U) -> Result<U> {
+        switch self {
+        case .Success(let boxedValue):
+            return Result<U>.Success(Box(f(boxedValue.value)))
+        case .Failure(let err):
+            return Result<U>.Failure(err)
+        }
+    }
+    
+    public func flatMap<U>(f: T -> Result<U>) -> Result<U> {
+        return flatten(self.map(f))
+    }
+}
+
+func flatten<T>(result: Result<Result<T>>) -> Result<T> {
+    switch result {
+    case .Success(let boxedValue):
+        return boxedValue.value
+    case .Failure(let err):
+        return Result<T>.Failure(err)
+    }
+}
