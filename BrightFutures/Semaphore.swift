@@ -53,16 +53,16 @@ public class Semaphore {
         self.init(value: 1)
     }
     
-    public func wait() {
-        self.wait(.Forever)
+    public func wait() -> Int {
+        return self.wait(.Forever)
     }
     
-    public func wait(timeout: TimeInterval) {
-        dispatch_semaphore_wait(self.underlyingSemaphore, timeout.dispatchTime)
+    public func wait(timeout: TimeInterval) -> Int {
+        return dispatch_semaphore_wait(self.underlyingSemaphore, timeout.dispatchTime)
     }
     
-    public func signal() {
-        dispatch_semaphore_signal(self.underlyingSemaphore)
+    public func signal() -> Int {
+        return dispatch_semaphore_signal(self.underlyingSemaphore)
     }
 
     public func execute(task: () -> ()) {
