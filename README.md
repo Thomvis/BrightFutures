@@ -18,7 +18,7 @@ If you don't want to deal with frequent breaking changes, you are advised to use
 CocoaPods 0.36.0 now supports Swift frameworks, thus allows you to add BrightFutures to your project:
 
 ```rb
-pod 'BrightFutures'
+pod 'BrightFutures', '1.0.0-beta.5'
 ```
 
 You can also use BrightFutures through [Carthage](https://github.com/Carthage/Carthage) or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
