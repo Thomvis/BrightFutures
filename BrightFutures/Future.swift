@@ -258,6 +258,10 @@ public extension Future {
     public func asType<U>() -> Future<U> {
         return self.map { $0 as! U }
     }
+    
+    public func asVoid() -> Future<Void> {
+        return self.map { _ in return () }
+    }
 }
 
 /**
