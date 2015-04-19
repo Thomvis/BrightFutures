@@ -28,6 +28,17 @@ public func ImmediateExecutionContext(task: () -> ())  {
     task()
 }
 
+/**
+ * Runs immediately if on the main thread, otherwise asynchronously on the main thread
+ */
+public func ImmediateOnMainExecutionContext(task: () -> ())  {
+    if NSThread.isMainThread() {
+        task()
+    } else {
+        Queue.main.async(task)
+    }
+}
+
 public func toContext(queue: Queue) -> ExecutionContext {
     return { task in
         queue.async(task)
