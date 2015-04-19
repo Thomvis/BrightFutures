@@ -97,7 +97,7 @@ extension Result {
     }
 }
 
-func flatten<T>(result: Result<Result<T>>) -> Result<T> {
+public func flatten<T>(result: Result<Result<T>>) -> Result<T> {
     switch result {
     case .Success(let boxedValue):
         return boxedValue.value
