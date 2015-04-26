@@ -361,16 +361,7 @@ public extension Future {
 public extension Future {
 
     public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Future<U>) -> Future<U> {
-        let p: Promise<U> = Promise()
-        self.onComplete(context: c) { res in
-            switch (res) {
-            case .Failure(let e):
-                p.failure(e)
-            case .Success(let v):
-                p.completeWith(f(v.value))
-            }
-        }
-        return p.future
+        return flatten(map(context: c, f: f))
     }
 
     public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Result<U>) -> Future<U> {
@@ -496,6 +487,13 @@ public extension Future {
     }
 }
 
+public func flatten<T>(future: Future<Future<T>>) -> Future<T> {
+    let p = Promise<T>()
+    
+    future.onComplete { result in
+        switch result {
+        case .Success(let boxedFuture):
+            p.completeWith(boxedFuture.value)
 public func ?? <T>(lhs: Future<T>, @autoclosure(escaping) rhs: () -> T) -> Future<T> {
     return lhs.recover(context: executionContextForCurrentContext(), task: { _ in
         return rhs()
