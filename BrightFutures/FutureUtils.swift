@@ -22,59 +22,68 @@
 
 import Foundation
 
-/**
- * This class is the equivalent to Scala's Future object (i.e. singleton/static class)
- *
- * NOTE: the methods in this class should work on any Sequence, but the Swift compiler is currently
- * not supporting this fully.
- */
-public class FutureUtils {
+// The free functions in this file operate on sequences of Futures
+
+// The Swift compiler does not allow a context parameter with a default value
+// so we define some functions twice
+public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(seq: S, zero: R, f: (R, T) -> R) -> Future<R> {
     
-    public class func firstCompletedOf<T>(seq: [Future<T>]) -> Future<T> {
-        let p = Promise<T>()
-        
-        for fut in seq {
-            fut.onComplete(context: Queue.global.context) { res in
-                p.tryComplete(res)
-                return
+    return fold(seq, context: Queue.global.context, zero, f)
+}
+
+public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R> {
+    
+    return reduce(seq, Future.succeeded(zero)) { zero, elem in
+        return zero.flatMap { zeroVal in
+            elem.map(context: c) { elemVal in
+                return f(zeroVal, elemVal)
             }
         }
-        
-        return p.future
     }
+}
+
+public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, f: T -> Future<U>) -> Future<[U]> {
+    return traverse(seq, context: Queue.global.context, f)
+}
+
+
+public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U>) -> Future<[U]> {
     
-    public class func find<T>(seq: [Future<T>], context c: ExecutionContext = Queue.global.context, p: T -> Bool) -> Future<T> {
-        return self.sequence(seq).flatMap(context: c) { val -> Result<T> in
-            for elem in val {
-                if (p(elem)) {
-                    return .Success(Box(elem))
-                }
+    return fold(map(seq, f), context: c, [U]()) { (list: [U], elem: U) -> [U] in
+        return list + [elem]
+    }
+}
+
+public func sequence<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<[T]> {
+    return traverse(seq) { (fut: Future<T>) -> Future<T> in
+        return fut
+    }
+}
+
+public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, p: T -> Bool) -> Future<T> {
+    return find(seq, context: Queue.global.context, p)
+}
+
+public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T> {
+    return sequence(seq).flatMap(context: c) { val -> Result<T> in
+        for elem in val {
+            if (p(elem)) {
+                return .Success(Box(elem))
             }
-            return .Failure(errorFromCode(.NoSuchElement))
+        }
+        return .Failure(errorFromCode(.NoSuchElement))
+    }
+}
+
+public func firstCompletedOf<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<T> {
+    let p = Promise<T>()
+    
+    for fut in seq {
+        fut.onComplete(context: Queue.global.context) { res in
+            p.tryComplete(res)
+            return
         }
     }
     
-    public class func fold<T,R>(seq: [Future<T>], context c: ExecutionContext = Queue.global.context, zero: R, op: (R, T) -> R) -> Future<R> {
-        return seq.reduce(Future.succeeded(zero), combine: { zero, elem in
-            return zero.flatMap { zeroVal in
-                elem.map(context: c) { elemVal in
-                    return op(zeroVal, elemVal)
-                }
-            }
-        })
-    }
-    
-    public class func sequence<T>(seq: [Future<T>]) -> Future<[T]> {
-        return self.traverse(seq, fn: { (fut: Future<T>) -> Future<T> in
-            return fut
-        })
-    }
-    
-    public class func traverse<T, U>(seq: [T], context c: ExecutionContext = Queue.global.context, fn: T -> Future<U>) -> Future<[U]> {
-        
-        return self.fold(map(seq, fn), context: c, zero: [U](), op: { (list: [U], elem: U) -> [U] in
-            return list + [elem]
-        })
-    }
-    
+    return p.future
 }

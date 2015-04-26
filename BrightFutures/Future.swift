@@ -453,7 +453,7 @@ public extension Future {
 public extension Future {
     
     func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T> {
-        return FutureUtils.firstCompletedOf([self, token.future.asType()])
+        return firstCompletedOf([self, token.future.asType()])
     }
 
     public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T> -> ()) -> Future<T> {

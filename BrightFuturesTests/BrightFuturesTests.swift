@@ -530,7 +530,7 @@ extension BrightFuturesTests {
     func testUtilsTraverseSuccess() {
         let n = 10
         
-        let f = FutureUtils.traverse(Array(1...n)) { i in
+        let f = traverse(Array(1...n)) { i in
             Future.succeeded(fibonacci(i))
         }
         
@@ -550,7 +550,7 @@ extension BrightFuturesTests {
     
     func testUtilsTraverseEmpty() {
         let e = self.expectation()
-        FutureUtils.traverse([Int](), fn: {Future.succeeded($0)}).onSuccess { res in
+        traverse([Int]()) {Future.succeeded($0)}.onSuccess { res in
             XCTAssertEqual(res.count, 0);
             e.fulfill()
         }
@@ -571,7 +571,10 @@ extension BrightFuturesTests {
             }
         }
         
-        FutureUtils.traverse([2,4,6,8,9,10], fn: evenFuture).onFailure { err in
+        let f = traverse([2,4,6,8,9,10], context: Queue.global.context, evenFuture)
+            
+            
+        f.onFailure { err in
             XCTAssertEqual(err.code, 9)
             e.fulfill()
         }
@@ -592,7 +595,7 @@ extension BrightFuturesTests {
             }
         }
         
-        FutureUtils.traverse([20,22,23,26,27,30], fn: evenFuture).onFailure { err in
+        traverse([20,22,23,26,27,30], evenFuture).onFailure { err in
             XCTAssertEqual(err.code, 23)
             e.fulfill()
         }
@@ -603,7 +606,7 @@ extension BrightFuturesTests {
     func testUtilsTraverseWithExecutionContext() {
         let e = self.expectation()
         
-        FutureUtils.traverse(Array(1...10), context: Queue.main.context) { _ -> Future<Int> in
+        traverse(Array(1...10), context: Queue.main.context) { _ -> Future<Int> in
             XCTAssert(NSThread.isMainThread())
             return Future.succeeded(1)
         }.onComplete { _ in
@@ -621,7 +624,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        FutureUtils.fold(fibonacciList, zero: 0, op: { $0 + $1 }).onSuccess { val in
+        fold(fibonacciList, 0, { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, 143)
             e.fulfill()
         }
@@ -643,7 +646,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        FutureUtils.fold(fibonacciList, zero: 0, op: { $0 + $1 }).onFailure { err in
+        fold(fibonacciList, 0, { $0 + $1 }).onFailure { err in
             XCTAssertEqual(err, error)
             e.fulfill()
         }
@@ -654,7 +657,7 @@ extension BrightFuturesTests {
     func testUtilsFoldWithExecutionContext() {
         let e = self.expectation()
         
-        FutureUtils.fold([Future.succeeded(1)], context: Queue.main.context, zero: 10) { remainder, elem -> Int in
+        fold([Future.succeeded(1)], context: Queue.main.context, 10) { remainder, elem -> Int in
             XCTAssert(NSThread.isMainThread())
             return remainder + elem
         }.onSuccess { val in
@@ -670,7 +673,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        FutureUtils.fold([Future<String>](), zero: z, op: { $0 + $1 }).onSuccess { val in
+        fold([Future<String>](), z, { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, z)
             e.fulfill()
         }
@@ -690,7 +693,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        FutureUtils.firstCompletedOf(futures).onSuccess { val in
+        firstCompletedOf(futures).onSuccess { val in
             XCTAssertEqual(val, 9)
             e.fulfill()
         }
@@ -703,7 +706,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        FutureUtils.sequence(futures).onSuccess { fibs in
+        sequence(futures).onSuccess { fibs in
             for (index, num) in enumerate(fibs) {
                 XCTAssertEqual(fibonacci(index+1), num)
             }
@@ -717,7 +720,7 @@ extension BrightFuturesTests {
     func testUtilsSequenceEmpty() {
         let e = self.expectation()
         
-        FutureUtils.sequence([Future<Int>]()).onSuccess { val in
+        sequence([Future<Int>]()).onSuccess { val in
             XCTAssertEqual(val.count, 0)
             
             e.fulfill()
@@ -736,7 +739,7 @@ extension BrightFuturesTests {
             Future.succeeded(9)
         ];
         
-        let f = FutureUtils.find(futures, context: Queue.global.context) { val in
+        let f = find(futures, context: Queue.global.context) { val in
             return val % 2 == 0
         }
         
@@ -759,7 +762,7 @@ extension BrightFuturesTests {
             Future.completeAfter(0.4, withValue: 9),
         ];
         
-        let f = FutureUtils.find(futures) { val in
+        let f = find(futures) { val in
             return val % 2 == 0
         }
         

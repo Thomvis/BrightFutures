@@ -1,3 +1,6 @@
+# 1.0.0 (Unreleased)
+- The FutureUtils class has been removed in favor of a collection of free functions. This allows for a nicer function type signature (e.g. accepting all sequences instead of just arrays)
+
 # 1.0.0-beta.3
 Note: The overview for this release is incomplete
 - Changed `ExecutionContext` from a protocol to a function type. This allows for better composition. It does mean that a Queue cannot be used directly as an `ExecutionContext`, instead use the `context` property (e.g. `Queue.main.context`) or the `toContext` function (e.g. `toContext(Queue.main)`).
