@@ -83,7 +83,7 @@ public enum Result<T> {
 
 extension Result {
     
-    public func map<U>(f:T -> U) -> Result<U> {
+    public func map<U>(@noescape f:T -> U) -> Result<U> {
         switch self {
         case .Success(let boxedValue):
             return Result<U>.Success(Box(f(boxedValue.value)))
@@ -92,11 +92,11 @@ extension Result {
         }
     }
     
-    public func flatMap<U>(f: T -> Result<U>) -> Result<U> {
+    public func flatMap<U>(@noescape f: T -> Result<U>) -> Result<U> {
         return flatten(self.map(f))
     }
     
-    public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
+    public func flatMap<U>(@noescape f: T -> Future<U>) -> Future<U> {
         return flatten(self.map(f))
     }
 }

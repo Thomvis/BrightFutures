@@ -65,7 +65,7 @@ public class Semaphore {
         return dispatch_semaphore_signal(self.underlyingSemaphore)
     }
 
-    public func execute(task: () -> ()) {
+    public func execute(@noescape task: () -> ()) {
         self.wait()
         task()
         self.signal()
