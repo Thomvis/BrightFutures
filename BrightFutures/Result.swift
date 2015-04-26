@@ -118,3 +118,20 @@ public func flatten<T>(result: Result<Future<T>>) -> Future<T> {
         return Future.failed(err)
     }
 }
+
+public func sequence<S: SequenceType, T where S.Generator.Element == Result<T>>(seq: S) -> Result<[T]> {
+    return reduce(seq, Result([])) { (res, elem) -> Result<[T]> in
+        switch res {
+        case .Success(let boxedResultSequence):
+            switch elem {
+            case .Success(let boxedElemValue):
+                let newSeq = boxedResultSequence.value + [boxedElemValue.value]
+                return Result<[T]>.Success(Box(newSeq))
+            case .Failure(let elemError):
+                return Result<[T]>.Failure(elemError)
+            }
+        case .Failure(let err):
+            return res
+        }
+    }
+}

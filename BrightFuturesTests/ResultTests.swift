@@ -131,6 +131,29 @@ class ResultTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testSequenceSuccess() {
+        let results: [Result<Int>] = (1...10).map { i in
+            return divide(123, i)
+        }
+        
+        let result: Result<[Int]> = sequence(results)
+        
+        let outcome = [123, 61, 41, 30, 24, 20, 17, 15, 13, 12]
+        XCTAssertEqual(result.value!, outcome)
+    }
+    
+    func testSequenceFailure() {
+        let results: [Result<Int>] = (-10...10).map { i in
+            return divide(123, i)
+        }
+        
+        let r = sequence(results)
+        XCTAssert(r.isFailure)
+        XCTAssertEqual(r.error!.domain, "DivisionByZeroError")
+    }
+    
+    
+    
 }
 
 func divide(a: Int, b: Int) -> Result<Int> {
