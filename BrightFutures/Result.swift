@@ -95,6 +95,10 @@ extension Result {
     public func flatMap<U>(f: T -> Result<U>) -> Result<U> {
         return flatten(self.map(f))
     }
+    
+    public func flatMap<U>(f: T -> Future<U>) -> Future<U> {
+        return flatten(self.map(f))
+    }
 }
 
 public func flatten<T>(result: Result<Result<T>>) -> Result<T> {
@@ -103,5 +107,14 @@ public func flatten<T>(result: Result<Result<T>>) -> Result<T> {
         return boxedValue.value
     case .Failure(let err):
         return Result<T>.Failure(err)
+    }
+}
+
+public func flatten<T>(result: Result<Future<T>>) -> Future<T> {
+    switch result {
+    case .Success(let boxedFuture):
+        return boxedFuture.value
+    case .Failure(let err):
+        return Future.failed(err)
     }
 }

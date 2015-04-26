@@ -58,4 +58,85 @@ class ResultTests: XCTestCase {
         XCTAssertNil(result.value)
     }
     
+    func testMapSuccess() {
+        let r = Result.Success(Box(2)).map { i -> Bool in
+            XCTAssertEqual(i, 2)
+            return i % 2 == 0
+        }
+        
+        XCTAssertTrue(r.isSuccess)
+        XCTAssertEqual(r.value!, true)
+    }
+    
+    func testMapFailure() {
+        let r = Result<Int>.Failure(NSError(domain: "error", code: 1, userInfo: nil)).map { i -> Int in
+            XCTAssert(false, "map should not get called if the result failed")
+            return i * 2
+        }
+        
+        XCTAssert(r.isFailure)
+        XCTAssertEqual(r.error!.domain, "error")
+    }
+    
+    func testFlatMapResultSuccess() {
+        let r = divide(20, 5).flatMap {
+            divide($0, 2)
+        }
+        
+        XCTAssertEqual(r.value!, 2)
+    }
+    
+    func testFlatMapResultFailure() {
+        let r = divide(20, 0).flatMap { i -> Result<Int> in
+            XCTAssert(false, "flatMap should not get called if the result failed")
+            return divide(i, 2)
+        }
+        
+        XCTAssert(r.isFailure)
+        XCTAssertEqual(r.error!.domain, "DivisionByZeroError")
+    }
+    
+    func testFlatMapFutureSuccess() {
+        let f = divide(100, 10).flatMap { i -> Future<Int> in
+            return future {
+                fibonacci(i)
+            }
+        }
+        
+        let e = self.expectation()
+        
+        f.onSuccess { i in
+            XCTAssertEqual(i, 55)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testFlatMapFutureFailure() {
+        let f = divide(100, 0).flatMap { i -> Future<Int> in
+            XCTAssert(false, "flatMap should not get called if the result failed")
+            return future {
+                fibonacci(i)
+            }
+        }
+        
+        let e = self.expectation()
+        
+        f.onFailure { err in
+            XCTAssertEqual(err.domain, "DivisionByZeroError")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+}
+
+func divide(a: Int, b: Int) -> Result<Int> {
+    if (b == 0) {
+        return .Failure(NSError(domain: "DivisionByZeroError", code: 0, userInfo: nil))
+    }
+    
+    return Result(a / b)
 }
