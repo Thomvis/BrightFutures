@@ -22,6 +22,10 @@
 
 import Foundation
 
+public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T> {
+    return future(context: Queue.global.context, task)
+}
+
 public func future<T>(task: () -> T) -> Future<T> {
     return future(context: Queue.global.context, task)
 }
@@ -490,4 +494,16 @@ public extension Future {
         }
         return self
     }
+}
+
+public func ?? <T>(lhs: Future<T>, @autoclosure(escaping) rhs: () -> T) -> Future<T> {
+    return lhs.recover(context: executionContextForCurrentContext(), task: { _ in
+        return rhs()
+    })
+}
+
+public func ?? <T>(lhs: Future<T>, @autoclosure(escaping) rhs: () -> Future<T>) -> Future<T> {
+    return lhs.recoverWith(context: executionContextForCurrentContext(), task: { _ in
+        return rhs()
+    })
 }

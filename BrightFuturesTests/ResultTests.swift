@@ -152,8 +152,19 @@ class ResultTests: XCTestCase {
         XCTAssertEqual(r.error!.domain, "DivisionByZeroError")
     }
     
+    func testRecoverNeeded() {
+        let r = divide(10, 0).recover(2)
+        XCTAssertEqual(r, 2)
+        
+        XCTAssertEqual(divide(10, 0) ?? 2, 2)
+    }
     
-    
+    func testRecoverUnneeded() {
+        let r = divide(10, 3).recover(10)
+        XCTAssertEqual(r, 3)
+        
+        XCTAssertEqual(divide(10, 3) ?? 10, 3)
+    }
 }
 
 func divide(a: Int, b: Int) -> Result<Int> {

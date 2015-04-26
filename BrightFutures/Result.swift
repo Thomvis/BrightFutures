@@ -101,6 +101,23 @@ extension Result {
     }
 }
 
+extension Result {
+
+    public func recover(value: T) -> T {
+        return self.value ?? value
+    }
+    
+    public func recoverWith(result: Result<T>) -> Result<T> {
+        switch self {
+        case .Success(_):
+            return self
+        case .Failure(_):
+            return result
+        }
+    }
+
+}
+
 public func flatten<T>(result: Result<Result<T>>) -> Result<T> {
     switch result {
     case .Success(let boxedValue):
@@ -134,4 +151,12 @@ public func sequence<S: SequenceType, T where S.Generator.Element == Result<T>>(
             return res
         }
     }
+}
+
+public func ?? <T>(lhs: Result<T>, @autoclosure rhs: () -> T) -> T {
+    return lhs.recover(rhs())
+}
+
+public func ?? <T>(lhs: Result<T>, @autoclosure rhs: () -> Result<T>) -> Result<T> {
+    return lhs.recoverWith(rhs())
 }

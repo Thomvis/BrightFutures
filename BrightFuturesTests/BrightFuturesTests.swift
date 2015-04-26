@@ -365,13 +365,20 @@ extension BrightFuturesTests {
             e.fulfill()
         }
         
+        let e1 = self.expectation()
+        
+        (future(3) ?? 5).onSuccess { value in
+            XCTAssert(value == 3)
+            e1.fulfill()
+        }
+        
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testRecoverWith() {
         let e = self.expectation()
         
-        future { () -> Result <Int> in
+        future {
             .Failure(NSError(domain: "NaN", code: 0, userInfo: nil))
         }.recoverWith { _ in
             return future { _ in
@@ -380,6 +387,15 @@ extension BrightFuturesTests {
         }.onSuccess { value in
             XCTAssert(value == 5)
             e.fulfill()
+        }
+        
+        let e1 = self.expectation()
+        
+        let f: Future<Int> = Future.failed(NSError(domain: "NaN", code: 0, userInfo: nil)) ?? future(fibonacci(5))
+        
+        f.onSuccess {
+            XCTAssertEqual($0, 5)
+            e1.fulfill()
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
