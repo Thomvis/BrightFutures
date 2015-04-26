@@ -22,15 +22,15 @@
 
 import Foundation
 
+/// The context in which something can be executed
+/// By default, an execution context can be assumed to be asynchronous unless stated otherwise
 public typealias ExecutionContext = (() -> ()) -> ()
 
 public func ImmediateExecutionContext(task: () -> ())  {
     task()
 }
 
-/**
- * Runs immediately if on the main thread, otherwise asynchronously on the main thread
- */
+/// Runs immediately if on the main thread, otherwise asynchronously on the main thread
 public func ImmediateOnMainExecutionContext(task: () -> ())  {
     if NSThread.isMainThread() {
         task()
@@ -39,18 +39,17 @@ public func ImmediateOnMainExecutionContext(task: () -> ())  {
     }
 }
 
+/// Creates an asynchronous ExecutionContext bound to the given queue
 public func toContext(queue: Queue) -> ExecutionContext {
-    return { task in
-        queue.async(task)
-    }
+    return queue.context
 }
 
+/// Creates an asynchronous ExecutionContext bound to the given queue
 public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
-    return { task in
-        dispatch_async(queue, task)
-    }
+    return Queue(queue: queue).context
 }
 
+/// Creates a synchronous context that is guarded by the given semaphore
 func toContext(sema: Semaphore) -> ExecutionContext {
     return sema.execute
 }

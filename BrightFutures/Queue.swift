@@ -22,66 +22,54 @@
 
 import Dispatch
 
-/**
- * Queue is a tiny wrapper around a Grand Central Dispatch queue.
- * Queue provides a nice syntax for scheduling (async) execution of blocks. 
- * 
- * ```
- * q.async {
- *  // executes asynchronously
- * }
- * ```
- *
- * It also simplifies executing a block synchronously and getting the 
- * return value from the block:
- *
- * let n = q.sync {
- *  return 42
- * }
- * ```
- *
- */
+/// Queue is a tiny wrapper around a Grand Central Dispatch queue.
+/// Queue provides a nice syntax for scheduling (async) execution of closures.
+///
+/// ```
+/// q.async {
+///  // executes asynchronously
+/// }
+/// ```
+///
+/// It also simplifies executing a closure synchronously and getting the
+/// return value from the closure:
+///
+/// let n = q.sync {
+///  return 42
+/// }
+/// ```
 public struct Queue {
     
-    /**
-     * The queue that is bound to the main thread (`dispatch_get_main_queue()`)
-     */
+    /// The queue that is bound to the main thread (`dispatch_get_main_queue()`)
     public static let main = Queue(queue: dispatch_get_main_queue());
     
-    /**
-     * The global queue with default priority
-     */
+    /// The global queue with default priority
     public static let global = Queue(queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0))
     
+    /// The underlying `dispatch_queue_t`
     private(set) public var underlyingQueue: dispatch_queue_t
     
+    /// Returns an execution context that asynchronously performs tasks on this queue
     public var context: ExecutionContext {
         return { task in
             self.async(task)
         }
     }
     
-    /**
-     * Instantiates a new `Queue` with the given queue.
-     * If `param` is omitted, a serial queue with identifier "queue" is used.
-     */
+    /// Instantiates a new `Queue` with the given queue.
+    /// If `queue` is omitted, a serial queue with identifier "queue" is used.
     public init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
         self.underlyingQueue = queue
     }
     
-    /**
-     * Synchronously executes the given block on the queue. 
-     * Identical to dispatch_sync(self.underlyingQueue, block)
-     */
+    /// Synchronously executes the given closure on this queue.
+    /// Analogous to dispatch_sync(self.underlyingQueue, block)
     public func sync(block: () -> ()) {
         dispatch_sync(underlyingQueue, block)
     }
     
-    /**
-     * Synchronously executes the given block on the queue and returns
-     * the return value of the given block.
-     * @return the return value from the block
-     */
+    /// Synchronously executes the given closure on this queue and returns
+    /// the return value of the given closure.
     public func sync<T>(block: () -> T) -> T {
         var res: T? = nil
 
@@ -92,14 +80,14 @@ public struct Queue {
         return res!;
     }
     
-    /**
-     * Asynchronously executes the given block on the queue.
-     * Identical to dispatch_async(self.underlyingQueue, block)
-     */
+    /// Asynchronously executes the given closure on this queue.
+    /// Analogous to dispatch_async(self.underlyingQueue, block)
     public func async(block: () -> ()) {
         dispatch_async(underlyingQueue, block)
     }
     
+    /// Asynchronously executes the given closure on this queue and
+    /// returns a future that will succeed with the result of the closure.
     public func async<T>(block: () -> T) -> Future<T> {
         let p = Promise<T>()
 
@@ -110,14 +98,15 @@ public struct Queue {
         return p.future
     }
     
-    /**
-     * Asynchronously executes the given block on the queue after a delay
-     * Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
-     */
+    /// Asynchronously executes the given closure on the queue after a delay
+    /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
     public func after(delay: TimeInterval, block: () -> ()) {
         dispatch_after(delay.dispatchTime, underlyingQueue, block)
     }
     
+    /// Asynchronously executes the given closure on the queue after a delay
+    /// and returns a future that will succeed with the result of the closure.
+    /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
     public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T> {
         let p = Promise<T>()
         

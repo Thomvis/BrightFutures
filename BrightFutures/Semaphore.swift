@@ -22,10 +22,14 @@
 
 import Foundation
 
+/// Represents a TimeInterval. The interval is either ending 
+/// (e.g. `.In(2)` means 2 seconds)
+/// or never ending (e.g. `.Forever`)
 public enum TimeInterval {
     case Forever
     case In(NSTimeInterval)
     
+    /// Returns the `dispatch_time_t` representation of this interval
     public var dispatchTime: dispatch_time_t {
         get {
             switch self {
@@ -38,33 +42,42 @@ public enum TimeInterval {
     }
 }
 
-/**
- * A tiny wrapper around dispatch_semaphore
- */
+/// A tiny wrapper around dispatch_semaphore
 public class Semaphore {
-    
+
+    /// The underlying `dispatch_semaphore_t`
     private(set) public var underlyingSemaphore: dispatch_semaphore_t
     
+    /// Creates a new semaphore with the given initial value
+    /// See `dispatch_semaphore_create(value: Int) -> dispatch_semaphore_t!`
     public init(value: Int) {
         self.underlyingSemaphore = dispatch_semaphore_create(value)
     }
     
+    /// Creates a new semaphore with initial value 1
+    /// This kind of semaphores is useful to protect a critical section
     public convenience init() {
         self.init(value: 1)
     }
     
-    public func wait() -> Int {
-        return self.wait(.Forever)
+    /// Performs the wait operation on this semaphore
+    public func wait() {
+        self.wait(.Forever)
     }
     
+    /// Performs the wait operation on this semaphore until the timeout
+    /// Returns 0 if the semaphore was signalled before the timeout occurred
+    /// or non-zero if the timeout occurred.
     public func wait(timeout: TimeInterval) -> Int {
         return dispatch_semaphore_wait(self.underlyingSemaphore, timeout.dispatchTime)
     }
     
+    /// Performs the signal operation on this semaphore
     public func signal() -> Int {
         return dispatch_semaphore_signal(self.underlyingSemaphore)
     }
 
+    /// Executes the given closure between a `self.wait()` and `self.signal()`
     public func execute(@noescape task: () -> ()) {
         self.wait()
         task()

@@ -22,15 +22,19 @@
 
 import Foundation
 
-// The free functions in this file operate on sequences of Futures
+//// The free functions in this file operate on sequences of Futures
 
-// The Swift compiler does not allow a context parameter with a default value
-// so we define some functions twice
+/// Performs the fold operation over a sequence of futures. The folding is performed
+/// on `Queue.global`.
+/// (The Swift compiler does not allow a context parameter with a default value
+/// so we define some functions twice)
 public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(seq: S, zero: R, f: (R, T) -> R) -> Future<R> {
     
     return fold(seq, context: Queue.global.context, zero, f)
 }
 
+/// Performs the fold operation over a sequence of futures. The folding is performed
+/// in the given context.
 public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R> {
     
     return reduce(seq, Future.succeeded(zero)) { zero, elem in
@@ -42,11 +46,13 @@ public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(s
     }
 }
 
+/// See `traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U>) -> Future<[U]>`
 public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, f: T -> Future<U>) -> Future<[U]> {
     return traverse(seq, context: Queue.global.context, f)
 }
 
-
+/// Turns a sequence of T's into an array of Future<U>'s by calling the given closure for each element in the sequence.
+/// If no context is provided, the given closure is executed on `Queue.global`
 public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U>) -> Future<[U]> {
     
     return fold(map(seq, f), context: c, [U]()) { (list: [U], elem: U) -> [U] in
@@ -54,16 +60,25 @@ public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: 
     }
 }
 
+/// Turns a sequence of Future<T>'s into a future with an array of T's (Future<[T]>)
+/// If one of the futures in the given sequence fails, the returned future will fail
+/// with the error of the first future that comes first in the list.
 public func sequence<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<[T]> {
     return traverse(seq) { (fut: Future<T>) -> Future<T> in
         return fut
     }
 }
 
+/// See `find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
 public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, p: T -> Bool) -> Future<T> {
     return find(seq, context: Queue.global.context, p)
 }
 
+/// Returns a future that succeeds with the value from the first future in the given
+/// sequence that passes the test `p`. 
+/// If any of the futures in the given sequence fail, the returned future fails with the
+/// error of the first failed future in the sequence.
+/// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
 public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T> {
     return sequence(seq).flatMap(context: c) { val -> Result<T> in
         for elem in val {
@@ -75,6 +90,8 @@ public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq:
     }
 }
 
+/// Returns a future that returns with the first future from the given sequence that completes
+/// (regardless of whether that future succeeds or fails)
 public func firstCompletedOf<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<T> {
     let p = Promise<T>()
     
