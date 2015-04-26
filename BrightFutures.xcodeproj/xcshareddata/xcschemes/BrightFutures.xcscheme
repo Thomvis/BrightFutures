@@ -28,7 +28,26 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E9DF081F194470060083F7F2"
+               BuildableName = "BrightFuturesTests.xctest"
+               BlueprintName = "BrightFuturesTests"
+               ReferencedContainer = "container:BrightFutures.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E9DF0814194470060083F7F2"
+            BuildableName = "BrightFutures.framework"
+            BlueprintName = "BrightFutures"
+            ReferencedContainer = "container:BrightFutures.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
