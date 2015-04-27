@@ -25,19 +25,18 @@ import Dispatch
 /// Queue is a tiny wrapper around a Grand Central Dispatch queue.
 /// Queue provides a nice syntax for scheduling (async) execution of closures.
 ///
-/// ```
 /// q.async {
-///  // executes asynchronously
+///     // executes asynchronously
 /// }
-/// ```
+///
 ///
 /// It also simplifies executing a closure synchronously and getting the
 /// return value from the closure:
 ///
 /// let n = q.sync {
-///  return 42
+///     return 42
 /// }
-/// ```
+///
 public struct Queue {
     
     /// The queue that is bound to the main thread (`dispatch_get_main_queue()`)
