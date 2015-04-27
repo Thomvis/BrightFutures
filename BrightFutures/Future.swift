@@ -597,16 +597,16 @@ public func flatten<T>(future: Future<Future<T>>) -> Future<T> {
     return p.future
 }
 
-/// Short-hand for lhs.recover(rhs())
-/// rhs is executed according to the default threading model (see README.md)
+/// Short-hand for `lhs.recover(rhs())`
+/// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T>(lhs: Future<T>, @autoclosure(escaping) rhs: () -> T) -> Future<T> {
     return lhs.recover(context: executionContextForCurrentContext(), task: { _ in
         return rhs()
     })
 }
 
-/// Short-hand for lhs.recoverWith(rhs())
-/// rhs is executed according to the default threading model (see README.md)
+/// Short-hand for `lhs.recoverWith(rhs())`
+/// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T>(lhs: Future<T>, @autoclosure(escaping) rhs: () -> Future<T>) -> Future<T> {
     return lhs.recoverWith(context: executionContextForCurrentContext(), task: { _ in
         return rhs()

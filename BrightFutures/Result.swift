@@ -25,8 +25,11 @@ import Foundation
 /// Boxes a value of type `T`
 /// We have to box the Result value until Swift supports variable-layout enums
 public final class Box<T> {
+    
+    /// The boxed value
     public let value: T
     
+    /// Creates a new box with the given value
     public init(_ value: T) {
         self.value = value
     }
@@ -180,12 +183,12 @@ public func sequence<S: SequenceType, T where S.Generator.Element == Result<T>>(
     }
 }
 
-/// The .Failure coalescing operator (Short-hand for lhs.recover(rhs())
+/// The `.Failure` coalescing operator (Short-hand for `lhs.recover(rhs()`)
 public func ?? <T>(lhs: Result<T>, @autoclosure rhs: () -> T) -> T {
     return lhs.recover(rhs())
 }
 
-/// The .Failure coalescing operator (Short-hand for lhs.recoverWith(rhs())
+/// The `.Failure` coalescing operator (Short-hand for `lhs.recoverWith(rhs()`)
 public func ?? <T>(lhs: Result<T>, @autoclosure rhs: () -> Result<T>) -> Result<T> {
     return lhs.recoverWith(rhs())
 }

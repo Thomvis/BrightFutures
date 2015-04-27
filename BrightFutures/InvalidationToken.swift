@@ -14,13 +14,10 @@ public let InvalidationTokenInvalid = 1
 /// The type that all invalidation tokens conform to
 public protocol InvalidationTokenType {
     
-    /// Indicates if the token is invalid
     var isInvalid : Bool { get }
     
-    /// The Future will fail with an error with code `InvalidationTokenInvalid` when the token invalidates
     var future: Future<Void> { get }
     
-    /// The synchronous context on which the invalidation and callbacks are executed
     var context: ExecutionContext { get }
 }
 
@@ -34,18 +31,23 @@ public class InvalidationToken : ManualInvalidationTokenType {
    
     let promise = Promise<Void>()
     
+    /// The synchronous context on which the invalidation and callbacks are executed
     public let context = toContext(Semaphore(value: 1))
     
+    /// Creates a new valid token
     public init() { }
     
+    /// Indicates if the token is invalid
     public var isInvalid: Bool {
         return promise.future.isCompleted
     }
     
+    /// The future will fail with an error with code `InvalidationTokenInvalid` when the token invalidates
     public var future: Future<Void> {
         return self.promise.future
     }
     
+    /// Invalidates the token
     public func invalidate() {
         self.promise.failure(errorFromCode(.InvalidationTokenInvalidated))
     }
