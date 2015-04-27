@@ -160,7 +160,7 @@ public func flatten<T>(result: Result<Future<T>>) -> Future<T> {
     }
 }
 
-/// Turns a sequence of Result<T>'s into a Result with an array of T's (Result<[T]>)
+/// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)
 /// If one of the results in the given sequence is a .Failure, the returned result is a .Failure with the
 /// error from the first failed result from the sequence.
 public func sequence<S: SequenceType, T where S.Generator.Element == Result<T>>(seq: S) -> Result<[T]> {

@@ -428,7 +428,7 @@ public extension Future {
         return flatten(map(context: c, f: f))
     }
 
-    /// Transforms the given closure returning Result<U> to a closure returning Future<U> and then calls
+    /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
     public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Result<U>) -> Future<U> {
         return self.flatMap(context: c) { value in

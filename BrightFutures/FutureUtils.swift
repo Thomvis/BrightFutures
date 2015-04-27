@@ -51,7 +51,7 @@ public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: 
     return traverse(seq, context: Queue.global.context, f)
 }
 
-/// Turns a sequence of T's into an array of Future<U>'s by calling the given closure for each element in the sequence.
+/// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
 /// If no context is provided, the given closure is executed on `Queue.global`
 public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U>) -> Future<[U]> {
     
@@ -60,7 +60,7 @@ public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: 
     }
 }
 
-/// Turns a sequence of Future<T>'s into a future with an array of T's (Future<[T]>)
+/// Turns a sequence of `Future<T>`'s into a future with an array of T's (Future<[T]>)
 /// If one of the futures in the given sequence fails, the returned future will fail
 /// with the error of the first future that comes first in the list.
 public func sequence<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<[T]> {
