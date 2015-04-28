@@ -1,28 +1,39 @@
 BrightFutures
 =============
 
-BrightFutures is a simple Futures &amp; Promises library for iOS and OS X written in Swift.
+BrightFutures is a beautiful Futures &amp; Promises library for iOS and OS X written in Swift.
 
 BrightFutures offers an alternative to success and failure blocks that are often used to communicate the result of an asynchronous operation. Instead, those operations can immediately return a `Future`, which serves as a _ticket_ for the eventual resulting value (or failure). The user of the operation can add callbacks to the `Future` object, pass it a long and compose it in meaningful (functional) ways.
 
 The goal of this project is to port Scala's Futures & Promises ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) to Swift. Second to this readme, the Scala documentation should therefore also be of help.
 
 ## Current State
-[![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures)
+[![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-The project is currently moving towards a 1.0 release. Issue [#12](https://github.com/Thomvis/BrightFutures/issues/12) has been created to track the progress towards that goal. Please feel free to provide feedback or file your requests! Until 1.0, the API could change significantly.
-
-If you don't want to deal with frequent breaking changes, you are advised to use '[v1.0.0-beta.5](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.5)' for the time being. If you are looking for a version that is compatible with Swift 1.1, see '[v1.0.0-beta.4](https://github.com/Thomvis/BrightFutures/releases/tag/1.0.0-beta.4)'.
+## Documentation
+- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
+- This README covers almost all features of BrightFutures
+- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature
+- The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
 
 ## Installation
-CocoaPods 0.36.0 now supports Swift frameworks, thus allows you to add BrightFutures to your project:
+### [CocoaPods](http://cocoapods.org/)
+Version 0.36 or higher is required. Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
 
 ```rb
-pod 'BrightFutures', '1.0.0-beta.5'
+pod 'BrightFutures'
 ```
 
-You can also use BrightFutures through [Carthage](https://github.com/Carthage/Carthage) or by simply dragging the project into your workspace and adding the framework as a dependency of your target.
+Make sure that you are integrating your dependencies using frameworks: add `use_frameworks!` to your Podfile. Then run `pod install`.
 
+### [Carthage](https://github.com/Carthage/Carthage)
+Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
+
+```
+github "Thomvis/BrightFutures"
+```
+
+Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ## Examples
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
@@ -296,13 +307,9 @@ If you are looking for a way to cancel a running task, you should look into usin
 
 ## Credits
 
-BrightFutures is created by me, [Thomas Visser](https://github.com/Thomvis). I am an iOS Engineer at [Touchwonders](http://www.touchwonders.com/). I aspire for this project to have a growing list of [contributors](https://github.com/Thomvis/BrightFutures/graphs/contributors).
+BrightFutures' primary author is [Thomas Visser](https://twitter.com/thomvis88). He is lead iOS Engineer at [Highstreet](http://www.highstreetapp.com/). We welcome any feedback and pull requests. Put your name on [this list](https://github.com/Thomvis/BrightFutures/graphs/contributors)!
 
-I really like Facebook's [BFTasks](https://github.com/BoltsFramework/Bolts-iOS), had a good look at the Promises & Futures implementation in [Scala](http://docs.scala-lang.org/overviews/core/futures.html) and also like what Max Howell is doing with [PromiseKit](https://github.com/mxcl/PromiseKit).
-
-## Contact
-
-I am looking forward to your feedback. I am very much still learning Swift. We all are. Let me know how I could improve BrightFutures by creating an issue, a pull request or by reaching out on twitter. I'm [@thomvis88](https://twitter.com/thomvis88).
+BrightFutures was inspired by Facebook's [BFTasks](https://github.com/BoltsFramework/Bolts-iOS), the Promises & Futures implementation in [Scala](http://docs.scala-lang.org/overviews/core/futures.html) and Max Howell's [PromiseKit](https://github.com/mxcl/PromiseKit).
 
 ## License
 
