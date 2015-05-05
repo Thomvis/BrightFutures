@@ -1,4 +1,4 @@
-# 1.0.0 (Unreleased)
+# 1.0.0
 - The FutureUtils class has been removed in favor of a collection of free functions. This allows for a nicer function type signature (e.g. accepting all sequences instead of just arrays)
 
 # 1.0.0-beta.3
