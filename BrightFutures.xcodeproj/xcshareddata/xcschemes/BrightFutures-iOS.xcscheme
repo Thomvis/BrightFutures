@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E9DF0814194470060083F7F2"
-               BuildableName = "BrightFutures-iOS.framework"
+               BuildableName = "BrightFutures.framework"
                BlueprintName = "BrightFutures-iOS"
                ReferencedContainer = "container:BrightFutures.xcodeproj">
             </BuildableReference>
@@ -57,7 +57,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9DF0814194470060083F7F2"
-            BuildableName = "BrightFutures-iOS.framework"
+            BuildableName = "BrightFutures.framework"
             BlueprintName = "BrightFutures-iOS"
             ReferencedContainer = "container:BrightFutures.xcodeproj">
          </BuildableReference>
@@ -76,7 +76,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9DF0814194470060083F7F2"
-            BuildableName = "BrightFutures-iOS.framework"
+            BuildableName = "BrightFutures.framework"
             BlueprintName = "BrightFutures-iOS"
             ReferencedContainer = "container:BrightFutures.xcodeproj">
          </BuildableReference>
@@ -94,7 +94,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E9DF0814194470060083F7F2"
-            BuildableName = "BrightFutures-iOS.framework"
+            BuildableName = "BrightFutures.framework"
             BlueprintName = "BrightFutures-iOS"
             ReferencedContainer = "container:BrightFutures.xcodeproj">
          </BuildableReference>
