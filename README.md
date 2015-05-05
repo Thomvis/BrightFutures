@@ -8,10 +8,12 @@ BrightFutures implements proven functional concepts (i.e. [futures and promises]
 The goal of BrightFutures is to be *the* idiomatic Swift implementation of futures and promises.
 Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard library.
 
-## Current State
+## Latest news
 [![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-The latest stable BrightFutures release is 1.0.0. (Please don't mind Travis failing until they have Swift 1.2 support.)
+The latest stable BrightFutures release is 1.0.0.
+
+Please don't mind Travis failing until they have Swift 1.2 support.
 
 ## Requirements
 
@@ -315,7 +317,7 @@ If you are looking for a way to cancel a running task, you should look into usin
 
 ## Credits
 
-BrightFutures' primary author is [Thomas Visser](https://twitter.com/thomvis88). He is lead iOS Engineer at [Highstreet](http://www.highstreetapp.com/). We welcome any feedback and pull requests. Put your name on [this list](https://github.com/Thomvis/BrightFutures/graphs/contributors)!
+BrightFutures' primary author is [Thomas Visser](https://twitter.com/thomvis88). He is lead iOS Engineer at [Highstreet](http://www.highstreetapp.com/). We welcome any feedback and pull requests. Get your name on [this list](https://github.com/Thomvis/BrightFutures/graphs/contributors)!
 
 BrightFutures was inspired by Facebook's [BFTasks](https://github.com/BoltsFramework/Bolts-iOS), the Promises & Futures implementation in [Scala](http://docs.scala-lang.org/overviews/core/futures.html) and Max Howell's [PromiseKit](https://github.com/mxcl/PromiseKit).
 
