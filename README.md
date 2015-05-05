@@ -1,20 +1,24 @@
 BrightFutures
 =============
 
-BrightFutures is a beautiful Futures &amp; Promises library for iOS and OS X written in Swift.
+How to leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
-BrightFutures offers an alternative to success and failure blocks that are often used to communicate the result of an asynchronous operation. Instead, those operations can immediately return a `Future`, which serves as a _ticket_ for the eventual resulting value (or failure). The user of the operation can add callbacks to the `Future` object, pass it a long and compose it in meaningful (functional) ways.
+BrightFutures implements proven functional concepts (i.e. [futures and promises](http://en.wikipedia.org/wiki/Futures_and_promises)) that provide a powerful alternative to completion blocks and `NSErrorPointer`s.
 
-The goal of this project is to port Scala's Futures & Promises ([guide](http://docs.scala-lang.org/overviews/core/futures.html), [api](http://www.scala-lang.org/api/current/#scala.concurrent.Future)) to Swift. Second to this readme, the Scala documentation should therefore also be of help.
+The goal of BrightFutures is to be *the* idiomatic Swift implementation of futures and promises.
+Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard library.
 
 ## Current State
-[![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-## Documentation
-- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
-- This README covers almost all features of BrightFutures
-- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature
-- The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
+The latest BrightFutures release is 1.0.0.
+
+Swift moves fast and we want BrightFutures to move with it. We will therefore allow minor version updates (1.1, 1.2, etc.) to have breaking changes. We promise not to make changes that are not caught by the compiler (i.e. silent changes).
+
+## Requirements
+
+- Built with Swift 1.2
+- Runs on iOS 8 / OS X 10.10 and above
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
@@ -34,6 +38,12 @@ github "Thomvis/BrightFutures"
 ```
 
 Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
+
+## Documentation
+- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
+- This README covers almost all features of BrightFutures
+- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature
+- The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
 
 ## Examples
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
