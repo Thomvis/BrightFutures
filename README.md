@@ -13,11 +13,11 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 
 The latest BrightFutures release is 1.0.0.
 
-Swift moves fast and we want BrightFutures to move with it. We will therefore allow minor version updates (1.1, 1.2, etc.) to have breaking changes. We promise not to make changes that are not caught by the compiler (i.e. silent changes).
+Swift moves fast and we want BrightFutures to move with it. We will therefore allow minor version updates (1.1, 1.2, etc.) to have breaking changes. We promise not to make changes that are not caught by the compiler.
 
 ## Requirements
 
-- Built with Swift 1.2
+- Built for Swift 1.2
 - Runs on iOS 8 / OS X 10.10 and above
 
 ## Installation
