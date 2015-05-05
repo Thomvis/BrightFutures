@@ -11,9 +11,7 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 ## Current State
 [![Travis build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-The latest BrightFutures release is 1.0.0.
-
-Swift moves fast and we want BrightFutures to move with it. We will therefore allow minor version updates (1.1, 1.2, etc.) to have breaking changes. We promise not to make changes that are not caught by the compiler.
+The latest stable BrightFutures release is 1.0.0. (Please don't mind Travis failing until they have Swift 1.2 support.)
 
 ## Requirements
 
