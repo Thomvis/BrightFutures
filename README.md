@@ -3,7 +3,7 @@ BrightFutures
 
 How to leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
-BrightFutures implements proven functional concepts (i.e. [futures and promises](http://en.wikipedia.org/wiki/Futures_and_promises)) that provide a powerful alternative to completion blocks and `NSErrorPointer`s.
+BrightFutures implements proven functional concepts (i.e. [futures and promises](http://en.wikipedia.org/wiki/Futures_and_promises)) to provide a powerful alternative to completion blocks and `NSErrorPointer`s.
 
 The goal of BrightFutures is to be *the* idiomatic Swift implementation of futures and promises.
 Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard library.
