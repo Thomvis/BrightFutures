@@ -1,3 +1,6 @@
+# 1.0.1
+- Updated README to reflect the pre-1.0.0 change from FutureUtils functions to free functions
+
 # 1.0.0
 - The FutureUtils class has been removed in favor of a collection of free functions. This allows for a nicer function type signature (e.g. accepting all sequences instead of just arrays)
 
