@@ -222,39 +222,39 @@ let f = future { () -> Result<Int> in
 In addition to `recover`, `recoverWith` can be used to provide a Future that will provide the value to recover with.
 
 ## Utility Functions
-BrightFutures also comes with a number of utility functions that simplify working with multiple futures. These functions are part of the `FutureUtils` class, which is the counterpart of Scala's `Future` object.
+BrightFutures also comes with a number of utility functions that simplify working with multiple futures. These are implemented as free (i.e. global) functions to work around current limitations of Swift.
 
 ## Fold
 The built-in `fold` function allows you to turn a list of values into a single value by performing an operation on every element in the list that *consumes* it as it is added to the resulting value. A trivial usecase for fold would be to calculate the sum of a list of integers.
 
-Folding a list of Futures is not possible with the built-in fold function, which is why `FutureUtils` provides one that does work. Our version of fold turns a list of Futures into a single Future that contains the resulting value. This allows us, for example, to calculate the sum of the first 10 Future-wrapped elements of the fibonacci sequence:
+Folding a list of Futures is not very convenient with the built-in `fold` function, which is why BrightFutures provides one that works especially well for our use case. BrightFutures' `fold` turns a list of Futures into a single Future that contains the resulting value. This allows us to, for example, calculate the sum of the first 10 Future-wrapped elements of the fibonacci sequence:
 
 ```swift
 // 1+1+2+3+5+8+13+21+34+55
 let fibonacciSequence = [Future.succeeded(fibonacci(1)), Future.succeeded(fibonacci(2)), ... Future.succeeded(fibonacci(10))]
 
-FutureUtils.fold(fibonacciSequence, zero: 0, op: { $0 + $1 }).onSuccess { val in
+fold(fibonacciSequence, zero: 0, op: { $0 + $1 }).onSuccess { val in
   // value is 143
 }
 ```
 
 ## Sequence
-With `FutureUtils.sequence`, you can turn a list of Futures into a single Future that contains a list of the results from those futures.
+With `sequence`, you can turn a list of Futures into a single Future that contains a list of the results from those futures.
 
 ```swift
 // 1+1+2+3+5+8+13+21+34+55
 let fibonacciSequence = [Future.succeeded(fibonacci(1)), Future.succeeded(fibonacci(2)), ... Future.succeeded(fibonacci(10))]
 
-FutureUtils.sequence(fibonacciSequence).onSuccess { fibNumbers in
+sequence(fibonacciSequence).onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
 ```
 
 ## Traverse
-`FutureUtils.traverse` combines `map` and `fold` in one convenient function. `traverse` takes a list of values and a closure that takes a single value from that list and turns it into a Future. The result of `traverse` is a single Future containing an array of the values from the Futures returned by the given closure.
+`traverse` combines `map` and `fold` in one convenient function. `traverse` takes a list of values and a closure that takes a single value from that list and turns it into a Future. The result of `traverse` is a single Future containing an array of the values from the Futures returned by the given closure.
 
 ```swift
-FutureUtils.traverse(Array(1...10)) {
+traverse(Array(1...10)) {
     Future.succeeded(fibonacci($0))
 }.onSuccess { fibNumbers in
   // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
