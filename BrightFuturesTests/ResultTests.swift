@@ -24,6 +24,15 @@ import XCTest
 import Result
 import BrightFutures
 
+extension Result {
+    var isSuccess: Bool {
+        return self.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false })
+    }
+    var isFailure: Bool {
+        return !isSuccess
+    }
+}
+
 class ResultTests: XCTestCase {
 
     override func setUp() {
