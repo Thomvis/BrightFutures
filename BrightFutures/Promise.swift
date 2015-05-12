@@ -42,12 +42,7 @@ public class Promise<T> {
     /// Completes the promise's future with the given future
     public func completeWith(future: Future<T>) {
         future.onComplete { result in
-            switch result {
-            case .Success(let val):
-                self.success(val.value)
-            case .Failure(let err):
-                self.failure(err.value)
-            }
+            result.analysis(ifSuccess: self.success, ifFailure: self.failure)
         }
     }
     

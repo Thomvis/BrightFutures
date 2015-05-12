@@ -56,12 +56,7 @@ public func future<T>(context c: ExecutionContext, task: () -> Result<T,NSError>
     
     c {
         let result = task()
-        switch result {
-        case .Success(let boxedValue):
-            promise.success(boxedValue.value)
-        case .Failure(let boxedError):
-            promise.failure(boxedError.value)
-        }
+        result.analysis(ifSuccess: promise.success, ifFailure: promise.failure)
     }
     
     return promise.future
@@ -384,12 +379,7 @@ public extension Future {
     /// Returns self
     public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), callback: SuccessCallback) -> Future<T> {
         self.onComplete(context: c) { result in
-            switch result {
-            case .Success(let val):
-                callback(val.value)
-            default:
-                break
-            }
+            result.analysis(ifSuccess: callback, ifFailure: { _ in })
         }
         
         return self
@@ -400,12 +390,7 @@ public extension Future {
     /// Returns self
     public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), callback: FailureCallback) -> Future<T> {
         self.onComplete(context: c) { result in
-            switch result {
-            case .Failure(let err):
-                callback(err.value)
-            default:
-                break
-            }
+            result.analysis(ifSuccess: { _ in }, ifFailure: callback)
         }
         return self
     }
@@ -450,14 +435,9 @@ public extension Future {
         let p = Promise<U>()
         
         self.onComplete(context: c, callback: { result in
-            switch result {
-            case .Success(let v):
-                p.success(f(v.value))
-                break;
-            case .Failure(let e):
-                p.failure(e.value)
-                break;
-            }
+            result.analysis(
+                ifSuccess: { p.success(f($0)) },
+                ifFailure: p.failure )
         })
         
         return p.future
@@ -494,13 +474,10 @@ public extension Future {
     public func recoverWith(context c: ExecutionContext = executionContextForCurrentContext(), task: (NSError) -> Future<T>) -> Future<T> {
         let p = Promise<T>()
         
-        self.onComplete(context: c) { result -> () in
-            switch result {
-            case .Failure(let err):
-                p.completeWith(task(err.value))
-            case .Success(let val):
-                p.completeWith(self)
-            }
+        self.onComplete(context: c) { result in
+            result.analysis(
+                ifSuccess: { value in p.completeWith(self) },
+                ifFailure: { p.completeWith(task($0)) })
         }
         
         return p.future;
@@ -587,12 +564,9 @@ public func flatten<T>(future: Future<Future<T>>) -> Future<T> {
     let p = Promise<T>()
     
     future.onComplete { result in
-        switch result {
-        case .Success(let boxedFuture):
-            p.completeWith(boxedFuture.value)
-        case .Failure(let e):
-            p.failure(e.value)
-        }
+        result.analysis(
+            ifSuccess: { p.completeWith($0) },
+            ifFailure: { p.failure($0) })
     }
     
     return p.future
