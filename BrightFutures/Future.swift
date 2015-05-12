@@ -59,8 +59,8 @@ public func future<T>(context c: ExecutionContext, task: () -> Result<T,NSError>
         switch result {
         case .Success(let boxedValue):
             promise.success(boxedValue.value)
-        case .Failure(let error):
-            promise.failure(error)
+        case .Failure(let boxedError):
+            promise.failure(boxedError.value)
         }
     }
     
@@ -167,7 +167,7 @@ internal extension Future {
         case .Success(let val):
             return self.trySuccess(val.value)
         case .Failure(let err):
-            return self.tryFailure(err)
+            return self.tryFailure(err.value)
         }
     }
 
@@ -402,7 +402,7 @@ public extension Future {
         self.onComplete(context: c) { result in
             switch result {
             case .Failure(let err):
-                callback(err)
+                callback(err.value)
             default:
                 break
             }
@@ -455,7 +455,7 @@ public extension Future {
                 p.success(f(v.value))
                 break;
             case .Failure(let e):
-                p.failure(e)
+                p.failure(e.value)
                 break;
             }
         })
@@ -497,7 +497,7 @@ public extension Future {
         self.onComplete(context: c) { result -> () in
             switch result {
             case .Failure(let err):
-                p.completeWith(task(err))
+                p.completeWith(task(err.value))
             case .Success(let val):
                 p.completeWith(self)
             }
@@ -591,7 +591,7 @@ public func flatten<T>(future: Future<Future<T>>) -> Future<T> {
         case .Success(let boxedFuture):
             p.completeWith(boxedFuture.value)
         case .Failure(let e):
-            p.failure(e)
+            p.failure(e.value)
         }
     }
     

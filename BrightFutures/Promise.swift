@@ -46,7 +46,7 @@ public class Promise<T> {
             case .Success(let val):
                 self.success(val.value)
             case .Failure(let err):
-                self.failure(err)
+                self.failure(err.value)
             }
         }
     }

@@ -78,8 +78,8 @@ extension BrightFuturesTests {
             switch result {
             case .Success(let val):
                 XCTAssert(false)
-            case .Failure(let err):
-                XCTAssertEqual(err, error)
+            case .Failure(let boxedErr):
+                XCTAssertEqual(boxedErr.value, error)
             }
             completeExpectation.fulfill()
         }
