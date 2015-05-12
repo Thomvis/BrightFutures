@@ -238,14 +238,14 @@ public extension Future {
     /// `true` if the future completed with success, or `false` otherwise
     public var isSuccess: Bool {
         get {
-            return self.result?.isSuccess ?? false
+            return result?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
         }
     }
     
     /// `true` if the future failed, or `false` otherwise
     public var isFailure: Bool {
         get {
-            return self.result?.isFailure ?? false
+            return !isSuccess
         }
     }
     
