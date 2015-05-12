@@ -46,39 +46,29 @@ extension Result {
 
 /// Returns a .Failure with the error from the outer or inner result if either of the two failed
 /// or a .Success with the success value from the inner Result
-public func flatten<T>(result: Result<Result<T>>) -> Result<T> {
-    switch result {
-    case .Success(let boxedValue):
-        return boxedValue.value
-    case .Failure(let err):
-        return Result<T>.Failure(err)
-    }
+public func flatten<T>(result: Result<Result<T,NSError>,NSError>) -> Result<T,NSError> {
+    return result.analysis(ifSuccess: { $0 }, ifFailure: { Result(error: $0) })
 }
 
 /// Returns the inner future if the outer result succeeded or a failed future
 /// with the error from the outer result otherwise
-public func flatten<T>(result: Result<Future<T>>) -> Future<T> {
-    switch result {
-    case .Success(let boxedFuture):
-        return boxedFuture.value
-    case .Failure(let err):
-        return Future.failed(err)
-    }
+public func flatten<T>(result: Result<Future<T>,NSError>) -> Future<T> {
+    return result.analysis(ifSuccess: { $0 }, ifFailure: { Future.failed($0) })
 }
 
 /// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)
 /// If one of the results in the given sequence is a .Failure, the returned result is a .Failure with the
 /// error from the first failed result from the sequence.
-public func sequence<S: SequenceType, T where S.Generator.Element == Result<T>>(seq: S) -> Result<[T]> {
-    return reduce(seq, Result([])) { (res, elem) -> Result<[T]> in
+public func sequence<S: SequenceType, T where S.Generator.Element == Result<T,NSError>>(seq: S) -> Result<[T],NSError> {
+    return reduce(seq, Result(value: [])) { (res, elem) -> Result<[T],NSError> in
         switch res {
         case .Success(let boxedResultSequence):
             switch elem {
             case .Success(let boxedElemValue):
                 let newSeq = boxedResultSequence.value + [boxedElemValue.value]
-                return Result<[T]>.Success(Box(newSeq))
-            case .Failure(let elemError):
-                return Result<[T]>.Failure(elemError)
+                return Result<[T],NSError>(value: newSeq)
+            case .Failure(let boxedElemError):
+                return Result<[T],NSError>(error: boxedElemError.value)
             }
         case .Failure(let err):
             return res
