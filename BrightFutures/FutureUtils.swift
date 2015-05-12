@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import Result
 
 //// The free functions in this file operate on sequences of Futures
 
@@ -80,7 +81,7 @@ public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq:
 /// error of the first failed future in the sequence.
 /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
 public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T> {
-    return sequence(seq).flatMap(context: c) { val -> Result<T> in
+    return sequence(seq).flatMap(context: c) { val -> Result<T,NSError> in
         for elem in val {
             if (p(elem)) {
                 return .Success(Box(elem))

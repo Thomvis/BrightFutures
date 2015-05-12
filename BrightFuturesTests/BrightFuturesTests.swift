@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import XCTest
+import Result
 import BrightFutures
 
 class BrightFuturesTests: XCTestCase {
@@ -42,7 +43,7 @@ extension BrightFuturesTests {
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { (result: Result<Int>) in
+        f.onComplete { (result: Result<Int,NSError>) in
             XCTAssert(result.isSuccess)
             completeExpectation.fulfill()
         }
@@ -339,8 +340,8 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        future { () -> Result <Int> in
             .Failure(NSError(domain: "Tests", code: 123, userInfo: nil))
+        future { () -> Result <Int,NSError> in
         }.map { number in
             XCTAssert(false, "map should not be evaluated because of failure above")
         }.map { number in
@@ -417,7 +418,7 @@ extension BrightFuturesTests {
     }
     
     func testZipThisFails() {
-        let f = future { () -> Result<Bool> in
+        let f = future { () -> Result<Bool,NSError> in
             sleep(1)
             return .Failure(NSError(domain: "test", code: 2, userInfo: nil))
         }
@@ -436,7 +437,7 @@ extension BrightFuturesTests {
     }
     
     func testZipThatFails() {
-        let f = future { () -> Result<Int> in
+        let f = future { () -> Result<Int,NSError> in
             sleep(1)
             return .Failure(NSError(domain: "tester", code: 3, userInfo: nil))
         }
@@ -455,12 +456,12 @@ extension BrightFuturesTests {
     }
     
     func testZipBothFail() {
-        let f = future { () -> Result<Int> in
+        let f = future { () -> Result<Int,NSError> in
             sleep(1)
             return .Failure(NSError(domain: "f-error", code: 3, userInfo: nil))
         }
         
-        let f1 = future { () -> Result<Int> in
+        let f1 = future { () -> Result<Int,NSError> in
             sleep(1)
             return .Failure(NSError(domain: "f1-error", code: 4, userInfo: nil))
         }

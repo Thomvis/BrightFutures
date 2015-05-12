@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import Result
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T> {
@@ -34,23 +35,23 @@ public func future<T>(task: () -> T) -> Future<T> {
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
 public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T> {
-    return future(context: c, { () -> Result<T> in
         return Result<T>(task())
+    return future(context: c, { () -> Result<T,NSError> in
     })
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T>(@autoclosure(escaping) task: () -> Result<T>) -> Future<T> {
+public func future<T>(@autoclosure(escaping) task: () -> Result<T,NSError>) -> Future<T> {
     return future(context: Queue.global.context, task)
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T>(task: () -> Result<T>) -> Future<T> {
+public func future<T>(task: () -> Result<T,NSError>) -> Future<T> {
     return future(context: Queue.global.context, task)
 }
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
-public func future<T>(context c: ExecutionContext, task: () -> Result<T>) -> Future<T> {
+public func future<T>(context c: ExecutionContext, task: () -> Result<T,NSError>) -> Future<T> {
     let promise = Promise<T>();
     
     c {
@@ -115,12 +116,12 @@ internal func errorFromCode(code: ErrorCode, failureReason: String? = nil) -> NS
 public class Future<T> {
     
     typealias CallbackInternal = (future: Future<T>) -> ()
-    typealias CompletionCallback = (result: Result<T>) -> ()
+    typealias CompletionCallback = (result: Result<T,NSError>) -> ()
     typealias SuccessCallback = (T) -> ()
     public typealias FailureCallback = (NSError) -> ()
     
     /// The result of the operation this Future represents or `nil` if it is not yet completed
-    public internal(set) var result: Result<T>? = nil
+    public internal(set) var result: Result<T,NSError>? = nil
     
     /// This queue is used for all callback related administrative tasks
     /// to prevent that a callback is added to a completed future and never
@@ -153,7 +154,7 @@ internal extension Future {
     /// Completes the future with the given result
     /// If the future is already completed, this function does nothing
     /// and an assert will be raised (if enabled)
-    func complete(result: Result<T>) {
+    func complete(result: Result<T,NSError>) {
         let succeeded = tryComplete(result)
         assert(succeeded)
     }
@@ -161,7 +162,7 @@ internal extension Future {
     /// Tries to complete the future with the given result
     /// If the future is already completed, nothing happens and `false` is returned
     /// otherwise the future is completed and `true` is returned
-    func tryComplete(result: Result<T>) -> Bool {
+    func tryComplete(result: Result<T,NSError>) -> Bool {
         switch result {
         case .Success(let val):
             return self.trySuccess(val.value)
@@ -276,7 +277,7 @@ public extension Future {
     }
     
     /// Returns a new future that completed with the given result
-    public class func completed<T>(result: Result<T>) -> Future<T> {
+    public class func completed<T>(result: Result<T,NSError>) -> Future<T> {
         let res = Future<T>()
         res.result = result
         
@@ -317,24 +318,24 @@ public extension Future {
 public extension Future {
     
     /// Blocks the current thread until the future is completed and then returns the result
-    public func forced() -> Result<T>? {
+    public func forced() -> Result<T,NSError>? {
         return self.forced(TimeInterval.Forever)
     }
     
 
-    /// See `forced(timeout: TimeInterval) -> Result<T>?`
-    public func forced(timeout: NSTimeInterval) -> Result<T>? {
+    /// See `forced(timeout: TimeInterval) -> Result<T,NSError>?`
+    public func forced(timeout: NSTimeInterval) -> Result<T,NSError>? {
         return self.forced(.In(timeout))
     }
     
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
-    public func forced(timeout: TimeInterval) -> Result<T>? {
+    public func forced(timeout: TimeInterval) -> Result<T,NSError>? {
         if let certainResult = self.result {
             return certainResult
         } else {
             let sema = Semaphore(value: 0)
-            var res: Result<T>? = nil
+            var res: Result<T,NSError>? = nil
             self.onComplete(context: Queue.global.context) {
                 res = $0
                 sema.signal()
@@ -430,7 +431,7 @@ public extension Future {
 
     /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
-    public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Result<U>) -> Future<U> {
+    public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Result<U,NSError>) -> Future<U> {
         return self.flatMap(context: c) { value in
             Future.completed(f(value))
         }
@@ -465,7 +466,7 @@ public extension Future {
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: ExecutionContext = executionContextForCurrentContext(), callback: Result<T> -> ()) -> Future<T> {
+    public func andThen(context c: ExecutionContext = executionContextForCurrentContext(), callback: Result<T,NSError> -> ()) -> Future<T> {
         let p = Promise<T>()
         
         self.onComplete(context: c) { result in
@@ -520,7 +521,7 @@ public extension Future {
     /// `ErrorCode.NoSuchElement` if the test failed.
     /// If this future fails, the returned future fails with the same error.
     public func filter(p: T -> Bool) -> Future<T> {
-        return self.flatMap { value -> Result<T> in
+        return self.flatMap { value -> Result<T,NSError> in
             if p(value) {
                 return .Success(Box(value))
             } else {
@@ -541,7 +542,7 @@ public extension Future {
 
     /// See `onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T> -> ()) -> Future<T> {
+    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T,NSError> -> ()) -> Future<T> {
         firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
             token.context {
                 if !token.isInvalid {

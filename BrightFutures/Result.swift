@@ -21,109 +21,12 @@
 // SOFTWARE.
 
 import Foundation
-
-/// Boxes a value of type `T`
-/// We have to box the Result value until Swift supports variable-layout enums
-public final class Box<T> {
-    
-    /// The boxed value
-    public let value: T
-    
-    /// Creates a new box with the given value
-    public init(_ value: T) {
-        self.value = value
-    }
-}
-
-/// Represents the result of a failable operation, 
-/// which is either a succes with a value of type `T` 
-/// or a failure with an NSError
-public enum Result<T> {
-    case Success(Box<T>)
-    case Failure(NSError)
-    
-    /// Creates a new .Success that wraps the given value
-    public init(_ value: T) {
-        self = .Success(Box(value))
-    }
-    
-    /// `true` iff this result is a .Success
-    public var isSuccess: Bool {
-        get {
-            switch self {
-            case .Success(_):
-                return true
-            case .Failure(_):
-                return false
-            }
-        }
-    }
-    
-    /// `true` iff this result is a .Failure
-    public var isFailure: Bool {
-        get {
-            return !self.isSuccess
-        }
-    }
-    
-    /// Returns the value associated with this result if it is a .Success, `nil` otherwise
-    public var value: T? {
-        get {
-            switch self {
-            case .Success(let boxedValue):
-                return boxedValue.value
-            default:
-                return nil
-            }
-        }
-    }
-    
-    /// Returns the error associated with this result if it is a .Failure, `nil` otherwise
-    public var error: NSError? {
-        get {
-            switch self {
-            case .Failure(let error):
-                return error
-            default:
-                return nil
-            }
-        }
-    }
-}
+import Result
 
 extension Result {
-    
-    /// Returns a .Success with the value returned from the given closure when invoked with the
-    /// value associated with this result if it is a .Success. If this result is a .Failure, a
-    /// .Failure with the same error is returned.
-    public func map<U>(@noescape f:T -> U) -> Result<U> {
-        switch self {
-        case .Success(let boxedValue):
-            return Result<U>.Success(Box(f(boxedValue.value)))
-        case .Failure(let err):
-            return Result<U>.Failure(err)
-        }
-    }
-    
-    /// Enables the chaining of two failable operations where the second operation
-    /// depends on the success value of the first.
-    /// Like map, the given closure (that performs the second operation) is only executed
-    /// if the first operation result (this result) is a .Success
-    /// If a regular `map` was used, the result would be `Result<Result<U>>`.
-    /// The implementation of this function uses `map`, but then flattens the result before returning it.
-    public func flatMap<U>(@noescape f: T -> Result<U>) -> Result<U> {
-        return flatten(self.map(f))
-    }
     
     /// Enables the chaining of two failable operations where the second operation is asynchronous and
     /// represented by a future. See `flatMap<U>(@noescape f: T -> Result<U>) -> Result<U>`
-    public func flatMap<U>(@noescape f: T -> Future<U>) -> Future<U> {
-        return flatten(self.map(f))
-    }
-}
-
-extension Result {
-    
     /// Returns `self.value` if this result is a .Success, or the given value otherwise
     public func recover(value: T) -> T {
         return self.value ?? value

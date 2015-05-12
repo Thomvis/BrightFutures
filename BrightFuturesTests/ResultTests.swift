@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import XCTest
+import Result
 import BrightFutures
 
 class ResultTests: XCTestCase {
@@ -87,7 +88,7 @@ class ResultTests: XCTestCase {
     }
     
     func testFlatMapResultFailure() {
-        let r = divide(20, 0).flatMap { i -> Result<Int> in
+        let r = divide(20, 0).flatMap { i -> Result<Int,NSError> in
             XCTAssert(false, "flatMap should not get called if the result failed")
             return divide(i, 2)
         }
@@ -132,18 +133,18 @@ class ResultTests: XCTestCase {
     }
     
     func testSequenceSuccess() {
-        let results: [Result<Int>] = (1...10).map { i in
+        let results: [Result<Int,NSError>] = (1...10).map { i in
             return divide(123, i)
         }
         
-        let result: Result<[Int]> = sequence(results)
+        let result: Result<[Int],NSError> = sequence(results)
         
         let outcome = [123, 61, 41, 30, 24, 20, 17, 15, 13, 12]
         XCTAssertEqual(result.value!, outcome)
     }
     
     func testSequenceFailure() {
-        let results: [Result<Int>] = (-10...10).map { i in
+        let results: [Result<Int,NSError>] = (-10...10).map { i in
             return divide(123, i)
         }
         
@@ -167,7 +168,7 @@ class ResultTests: XCTestCase {
     }
 }
 
-func divide(a: Int, b: Int) -> Result<Int> {
+func divide(a: Int, b: Int) -> Result<Int,NSError> {
     if (b == 0) {
         return .Failure(NSError(domain: "DivisionByZeroError", code: 0, userInfo: nil))
     }
