@@ -84,10 +84,10 @@ public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq:
     return sequence(seq).flatMap(context: c) { val -> Result<T,NSError> in
         for elem in val {
             if (p(elem)) {
-                return .Success(Box(elem))
+                return Result(value: elem)
             }
         }
-        return .Failure(errorFromCode(.NoSuchElement))
+        return Result(error: errorFromCode(.NoSuchElement))
     }
 }
 

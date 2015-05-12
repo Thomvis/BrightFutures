@@ -37,13 +37,13 @@ class ResultTests: XCTestCase {
     }
     
     func testSuccess() {
-        let result = Result.Success(Box(3))
+        let result = Result<Int,NSError>.success(3)
         XCTAssert(result.isSuccess)
         XCTAssertFalse(result.isFailure)
         XCTAssertEqual(result.value!, 3)
         XCTAssertNil(result.error)
         
-        let result1 = Result(4)
+        let result1 = Result<Int,NSError>(value: 4)
         XCTAssert(result1.isSuccess)
         XCTAssertFalse(result1.isFailure)
         XCTAssertEqual(result1.value!, 4)
@@ -52,7 +52,7 @@ class ResultTests: XCTestCase {
     
     func testFailure() {
         let error = NSError()
-        let result = Result<Int>.Failure(error)
+        let result = Result<Int, NSError>(error: error)
         XCTAssert(result.isFailure)
         XCTAssertFalse(result.isSuccess)
         XCTAssertEqual(result.error!, error)
@@ -60,7 +60,7 @@ class ResultTests: XCTestCase {
     }
     
     func testMapSuccess() {
-        let r = Result.Success(Box(2)).map { i -> Bool in
+        let r = Result<Int,NSError>(value: 2).map { i -> Bool in
             XCTAssertEqual(i, 2)
             return i % 2 == 0
         }
@@ -70,7 +70,7 @@ class ResultTests: XCTestCase {
     }
     
     func testMapFailure() {
-        let r = Result<Int>.Failure(NSError(domain: "error", code: 1, userInfo: nil)).map { i -> Int in
+        let r = Result<Int, NSError>(error: NSError(domain: "error", code: 1, userInfo: nil)).map { i -> Int in
             XCTAssert(false, "map should not get called if the result failed")
             return i * 2
         }
@@ -170,8 +170,8 @@ class ResultTests: XCTestCase {
 
 func divide(a: Int, b: Int) -> Result<Int,NSError> {
     if (b == 0) {
-        return .Failure(NSError(domain: "DivisionByZeroError", code: 0, userInfo: nil))
+        return Result(error: NSError(domain: "DivisionByZeroError", code: 0, userInfo: nil))
     }
     
-    return Result(a / b)
+    return Result(value: a / b)
 }

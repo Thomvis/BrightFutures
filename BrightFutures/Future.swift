@@ -35,8 +35,8 @@ public func future<T>(task: () -> T) -> Future<T> {
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
 public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T> {
-        return Result<T>(task())
     return future(context: c, { () -> Result<T,NSError> in
+        return Result(value: task())
     })
 }
 
@@ -188,7 +188,7 @@ internal extension Future {
                 return false;
             }
             
-            self.result = Result(value)
+            self.result = Result(value: value)
             self.runCallbacks()
             return true;
         };
@@ -211,7 +211,7 @@ internal extension Future {
                 return false;
             }
             
-            self.result = .Failure(error)
+            self.result = Result(error: error)
             self.runCallbacks()
             return true;
         };
@@ -263,7 +263,7 @@ public extension Future {
     /// Returns a new future that succeeded with the given value
     public class func succeeded(value: T) -> Future<T> {
         let res = Future<T>();
-        res.result = Result(value)
+        res.result = Result(value: value)
         
         return res
     }
@@ -271,7 +271,7 @@ public extension Future {
     /// Returns a new future that failed with the given error
     public class func failed(error: NSError) -> Future<T> {
         let res = Future<T>();
-        res.result = .Failure(error)
+        res.result = Result(error: error)
         
         return res
     }
@@ -523,9 +523,9 @@ public extension Future {
     public func filter(p: T -> Bool) -> Future<T> {
         return self.flatMap { value -> Result<T,NSError> in
             if p(value) {
-                return .Success(Box(value))
+                return Result(value: value)
             } else {
-                return .Failure(errorFromCode(.NoSuchElement))
+                return Result(error: errorFromCode(.NoSuchElement))
             }
         }
     }
