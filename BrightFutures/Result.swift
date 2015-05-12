@@ -27,6 +27,9 @@ extension Result {
     
     /// Enables the chaining of two failable operations where the second operation is asynchronous and
     /// represented by a future. See `flatMap<U>(@noescape f: T -> Result<U>) -> Result<U>`
+//    public func flatMap<U>(@noescape f: T -> Future<U>) -> Future<U> {
+//        return flatten(self.map(f))
+//    }
 }
 
 /// Returns a .Failure with the error from the outer or inner result if either of the two failed
