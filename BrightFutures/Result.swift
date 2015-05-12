@@ -27,21 +27,6 @@ extension Result {
     
     /// Enables the chaining of two failable operations where the second operation is asynchronous and
     /// represented by a future. See `flatMap<U>(@noescape f: T -> Result<U>) -> Result<U>`
-    /// Returns `self.value` if this result is a .Success, or the given value otherwise
-    public func recover(value: T) -> T {
-        return self.value ?? value
-    }
-    
-    /// Returns this result if it is a .Success, or the given result otherwise
-    public func recoverWith(result: Result<T>) -> Result<T> {
-        switch self {
-        case .Success(_):
-            return self
-        case .Failure(_):
-            return result
-        }
-    }
-
 }
 
 /// Returns a .Failure with the error from the outer or inner result if either of the two failed
@@ -74,14 +59,4 @@ public func sequence<S: SequenceType, T where S.Generator.Element == Result<T,NS
             return res
         }
     }
-}
-
-/// The `.Failure` coalescing operator (Short-hand for `lhs.recover(rhs()`)
-public func ?? <T>(lhs: Result<T>, @autoclosure rhs: () -> T) -> T {
-    return lhs.recover(rhs())
-}
-
-/// The `.Failure` coalescing operator (Short-hand for `lhs.recoverWith(rhs()`)
-public func ?? <T>(lhs: Result<T>, @autoclosure rhs: () -> Result<T>) -> Result<T> {
-    return lhs.recoverWith(rhs())
 }
