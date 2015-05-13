@@ -105,42 +105,42 @@ class ResultTests: XCTestCase {
         XCTAssert(r.isFailure)
         XCTAssertEqual(r.error!.domain, "DivisionByZeroError")
     }
-//
-//    func testFlatMapFutureSuccess() {
-//        let f = divide(100, 10).flatMap { i -> Future<Int> in
-//            return future {
-//                fibonacci(i)
-//            }
-//        }
-//        
-//        let e = self.expectation()
-//        
-//        f.onSuccess { i in
-//            XCTAssertEqual(i, 55)
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
-//    }
-//    
-//    func testFlatMapFutureFailure() {
-//        let f = divide(100, 0).flatMap { i -> Future<Int> in
-//            XCTAssert(false, "flatMap should not get called if the result failed")
-//            return future {
-//                fibonacci(i)
-//            }
-//        }
-//        
-//        let e = self.expectation()
-//        
-//        f.onFailure { err in
-//            XCTAssertEqual(err.domain, "DivisionByZeroError")
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
-//    }
-//    
+
+    func testFlatMapFutureSuccess() {
+        let f = flatMap(divide(100, 10)) { i -> Future<Int> in
+            return future {
+                fibonacci(i)
+            }
+        }
+        
+        let e = self.expectation()
+        
+        f.onSuccess { i in
+            XCTAssertEqual(i, 55)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testFlatMapFutureFailure() {
+        let f = flatMap(divide(100, 0)) { i -> Future<Int> in
+            XCTAssert(false, "flatMap should not get called if the result failed")
+            return future {
+                fibonacci(i)
+            }
+        }
+        
+        let e = self.expectation()
+        
+        f.onFailure { err in
+            XCTAssertEqual(err.domain, "DivisionByZeroError")
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testSequenceSuccess() {
         let results: [Result<Int,NSError>] = (1...10).map { i in
             return divide(123, i)
