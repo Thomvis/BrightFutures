@@ -12,6 +12,6 @@ test:
       PROVISIONING_PROFILE=
       -destination 'platform=iOS Simulator,name=iPhone 6,OS=latest'
       -sdk iphonesimulator
-      -workspace BrightFutures.xcworkspace
-      -scheme "BrightFutures-iOS"
+      -project BrightFutures.xcodeproj
+      -scheme BrightFutures-iOS
       build build-tests run-tests
