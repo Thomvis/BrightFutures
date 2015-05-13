@@ -33,6 +33,8 @@
 		E9DF0836194470190083F7F2 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
 		E9DF0837194470190083F7F2 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
 		E9DF0838194470190083F7F2 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
+		E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +53,29 @@
 			remoteInfo = BrightFutures;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E9F496E21B0397D200F82839 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E9F496E41B03980600F82839 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
@@ -216,6 +241,7 @@
 				E9D45B061AF00659000F6CA7 /* Sources */,
 				E9D45B071AF00659000F6CA7 /* Frameworks */,
 				E9D45B081AF00659000F6CA7 /* Resources */,
+				E9F496E41B03980600F82839 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -252,6 +278,7 @@
 				E9DF081C194470060083F7F2 /* Sources */,
 				E9DF081D194470060083F7F2 /* Frameworks */,
 				E9DF081E194470060083F7F2 /* Resources */,
+				E9F496E21B0397D200F82839 /* CopyFiles */,
 			);
 			buildRules = (
 			);
