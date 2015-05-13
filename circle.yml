@@ -15,3 +15,14 @@ test:
       -project BrightFutures.xcodeproj
       -scheme BrightFutures-iOS
       build build-tests run-tests
+    - xctool
+      -reporter pretty
+      -reporter junit:$CIRCLE_TEST_REPORTS/xcode/results.xml
+      -reporter plain:$CIRCLE_ARTIFACTS/xctool.log
+      CODE_SIGNING_REQUIRED=NO
+      CODE_SIGN_IDENTITY=
+      PROVISIONING_PROFILE=
+      -sdk macosx
+      -project BrightFutures.xcodeproj
+      -scheme BrightFutures-Mac
+      build build-tests run-tests
