@@ -7,16 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B31A24241B0268F80016AE7A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; };
+		B31A24251B0268F80016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; };
+		B31A24291B02691A0016AE7A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; };
+		B31A242A1B02691A0016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; };
+		B31A24331B026D4B0016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; };
+		B31A24341B026D500016AE7A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; };
+		B31A24351B026D500016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; };
+		B31A243A1B0279120016AE7A /* Result.framework in Resources */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; };
+		B31A243B1B0279150016AE7A /* Box.framework in Resources */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
-		E9BD4A4919F3E43100BBD966 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BD4A4819F3E43100BBD966 /* Result.swift */; };
 		E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; };
 		E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
 		E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
-		E9D45B1C1AF00668000F6CA7 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BD4A4819F3E43100BBD966 /* Result.swift */; };
 		E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
 		E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 		E9D45B1F1AF00670000F6CA7 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
@@ -53,11 +60,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B31A24221B0268F80016AE7A /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
+		B31A24231B0268F80016AE7A /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/iOS/Box.framework; sourceTree = "<group>"; };
+		B31A24271B02691A0016AE7A /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
+		B31A24281B02691A0016AE7A /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/Mac/Box.framework; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* FutureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureUtils.swift; sourceTree = "<group>"; };
-		E9BD4A4819F3E43100BBD966 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D45B0A1AF00659000F6CA7 /* BrightFutures-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvalidationToken.swift; sourceTree = "<group>"; };
@@ -78,6 +88,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B31A24291B02691A0016AE7A /* Result.framework in Frameworks */,
+				B31A242A1B02691A0016AE7A /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */,
+				B31A24331B026D4B0016AE7A /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +106,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B31A24241B0268F80016AE7A /* Result.framework in Frameworks */,
+				B31A24251B0268F80016AE7A /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,15 +116,45 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */,
+				B31A24351B026D500016AE7A /* Box.framework in Frameworks */,
+				B31A24341B026D500016AE7A /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B31A24261B0269060016AE7A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B31A242B1B0269280016AE7A /* Mac */,
+				B31A242C1B02692E0016AE7A /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B31A242B1B0269280016AE7A /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				B31A24271B02691A0016AE7A /* Result.framework */,
+				B31A24281B02691A0016AE7A /* Box.framework */,
+			);
+			name = Mac;
+			sourceTree = "<group>";
+		};
+		B31A242C1B02692E0016AE7A /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				B31A24221B0268F80016AE7A /* Result.framework */,
+				B31A24231B0268F80016AE7A /* Box.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
 		E9DF080B194470060083F7F2 = {
 			isa = PBXGroup;
 			children = (
+				B31A24261B0269060016AE7A /* Frameworks */,
 				E9DF0817194470060083F7F2 /* BrightFutures */,
 				E9DF0824194470060083F7F2 /* BrightFuturesTests */,
 				E9DF0816194470060083F7F2 /* Products */,
@@ -133,7 +178,6 @@
 				E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */,
 				E9DF0831194470190083F7F2 /* ExecutionContext.swift */,
 				E9DF0832194470190083F7F2 /* Future.swift */,
-				E9BD4A4819F3E43100BBD966 /* Result.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
 				E9DF0834194470190083F7F2 /* Queue.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
@@ -235,6 +279,7 @@
 				E9DF0811194470060083F7F2 /* Frameworks */,
 				E9DF0812194470060083F7F2 /* Headers */,
 				E9DF0813194470060083F7F2 /* Resources */,
+				B31A242E1B0269790016AE7A /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -252,6 +297,7 @@
 				E9DF081C194470060083F7F2 /* Sources */,
 				E9DF081D194470060083F7F2 /* Frameworks */,
 				E9DF081E194470060083F7F2 /* Resources */,
+				B31A24381B02785F0016AE7A /* Carthage */,
 			);
 			buildRules = (
 			);
@@ -319,6 +365,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B31A243B1B0279150016AE7A /* Box.framework in Resources */,
+				B31A243A1B0279120016AE7A /* Result.framework in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,6 +386,41 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B31A242E1B0269790016AE7A /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Box.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
+			);
+			name = Carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		B31A24381B02785F0016AE7A /* Carthage */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Box.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
+			);
+			name = Carthage;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E9D45AFB1AF00659000F6CA7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -348,7 +431,6 @@
 				E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */,
 				E9D45B1F1AF00670000F6CA7 /* FutureUtils.swift in Sources */,
 				E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */,
-				E9D45B1C1AF00668000F6CA7 /* Result.swift in Sources */,
 				E9D45B201AF00670000F6CA7 /* Semaphore.swift in Sources */,
 				E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */,
 			);
@@ -369,7 +451,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9BD4A4919F3E43100BBD966 /* Result.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
@@ -417,6 +498,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -445,6 +530,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
+				);
 				FRAMEWORK_VERSION = A;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BrightFutures/Info.plist;
@@ -466,6 +555,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -490,6 +580,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
@@ -595,6 +686,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = BrightFutures/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -613,6 +708,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				INFOPLIST_FILE = BrightFutures/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -627,6 +726,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -645,6 +745,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
