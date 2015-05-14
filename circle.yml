@@ -1,8 +1,12 @@
 machine:
   xcode:
     version: "6.3.1"
+dependencies:
+  pre:
+    - brew install carthage
 test:
   override:
+    - carthage bootstrap
     - xctool
       -reporter pretty
       -reporter junit:$CIRCLE_TEST_REPORTS/xcode/results-ios.xml
