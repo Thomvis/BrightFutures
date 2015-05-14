@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import XCTest
+import Result
 import BrightFutures
 
 class BrightFuturesTests: XCTestCase {
@@ -42,7 +43,7 @@ extension BrightFuturesTests {
         
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
-        f.onComplete { (result: Result<Int>) in
+        f.onComplete { (result: Result<Int,NSError>) in
             XCTAssert(result.isSuccess)
             completeExpectation.fulfill()
         }
@@ -77,8 +78,8 @@ extension BrightFuturesTests {
             switch result {
             case .Success(let val):
                 XCTAssert(false)
-            case .Failure(let err):
-                XCTAssertEqual(err, error)
+            case .Failure(let boxedErr):
+                XCTAssertEqual(boxedErr.value, error)
             }
             completeExpectation.fulfill()
         }
@@ -144,7 +145,7 @@ extension BrightFuturesTests {
     func testControlFlowSyntaxWithError() {
         
         let f : Future<String?> = future {
-            .Failure(NSError(domain: "NaN", code: 0, userInfo: nil))
+            Result(error: NSError(domain: "NaN", code: 0, userInfo: nil))
         }
         
         let failureExpectation = self.expectationWithDescription("failure expected")
@@ -339,8 +340,8 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        future { () -> Result <Int> in
-            .Failure(NSError(domain: "Tests", code: 123, userInfo: nil))
+        future { () -> Result <Int,NSError> in
+            Result(error: NSError(domain: "Tests", code: 123, userInfo: nil))
         }.map { number in
             XCTAssert(false, "map should not be evaluated because of failure above")
         }.map { number in
@@ -379,7 +380,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         future {
-            .Failure(NSError(domain: "NaN", code: 0, userInfo: nil))
+            Result(error: NSError(domain: "NaN", code: 0, userInfo: nil))
         }.recoverWith { _ in
             return future { _ in
                 fibonacci(5)
@@ -417,9 +418,9 @@ extension BrightFuturesTests {
     }
     
     func testZipThisFails() {
-        let f = future { () -> Result<Bool> in
+        let f = future { () -> Result<Bool,NSError> in
             sleep(1)
-            return .Failure(NSError(domain: "test", code: 2, userInfo: nil))
+            return Result(error: NSError(domain: "test", code: 2, userInfo: nil))
         }
         
         let f1 = Future.succeeded(2)
@@ -436,9 +437,9 @@ extension BrightFuturesTests {
     }
     
     func testZipThatFails() {
-        let f = future { () -> Result<Int> in
+        let f = future { () -> Result<Int,NSError> in
             sleep(1)
-            return .Failure(NSError(domain: "tester", code: 3, userInfo: nil))
+            return Result(error: NSError(domain: "tester", code: 3, userInfo: nil))
         }
         
         let f1 = Future.succeeded(2)
@@ -455,14 +456,14 @@ extension BrightFuturesTests {
     }
     
     func testZipBothFail() {
-        let f = future { () -> Result<Int> in
+        let f = future { () -> Result<Int,NSError> in
             sleep(1)
-            return .Failure(NSError(domain: "f-error", code: 3, userInfo: nil))
+            return Result(error: NSError(domain: "f-error", code: 3, userInfo: nil))
         }
         
-        let f1 = future { () -> Result<Int> in
+        let f1 = future { () -> Result<Int,NSError> in
             sleep(1)
-            return .Failure(NSError(domain: "f1-error", code: 4, userInfo: nil))
+            return Result(error: NSError(domain: "f1-error", code: 4, userInfo: nil))
         }
         
         let e = self.expectation()
@@ -580,9 +581,9 @@ extension BrightFuturesTests {
         let evenFuture: Int -> Future<Bool> = { i in
             return future {
                 if i % 2 == 0 {
-                    return .Success(Box(true))
+                    return Result(value: true)
                 } else {
-                    return .Failure(NSError(domain: "traverse-single-error", code: i, userInfo: nil))
+                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
                 }
             }
         }
@@ -604,9 +605,9 @@ extension BrightFuturesTests {
         let evenFuture: Int -> Future<Bool> = { i in
             return future { err in
                 if i % 2 == 0 {
-                    return .Success(Box(true))
+                    return Result(value: true)
                 } else {
-                    return .Failure(NSError(domain: "traverse-single-error", code: i, userInfo: nil))
+                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
                 }
             }
         }
@@ -926,14 +927,14 @@ extension XCTestCase {
     func failingFuture<U>() -> Future<U> {
         return future { error in
             usleep(arc4random_uniform(100))
-            return .Failure(NSError(domain: "failedFuture", code: 0, userInfo: nil))
+            return Result(error: NSError(domain: "failedFuture", code: 0, userInfo: nil))
         }
     }
     
     func succeedingFuture<U>(val: U) -> Future<U> {
         return future { _ in
             usleep(arc4random_uniform(100))
-            return .Success(Box(val))
+            return Result(value: val)
         }
     }
 }
