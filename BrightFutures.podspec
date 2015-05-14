@@ -13,5 +13,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'BrightFutures/*.swift'
 
+  s.dependency 'Result', '~> 0.4.2'
+
   s.requires_arc = true
 end
