@@ -29,16 +29,16 @@ import Result
 /// on `Queue.global`.
 /// (The Swift compiler does not allow a context parameter with a default value
 /// so we define some functions twice)
-public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(seq: S, zero: R, f: (R, T) -> R) -> Future<R> {
+public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, zero: R, f: (R, T) -> R) -> Future<R, E> {
     
     return fold(seq, context: Queue.global.context, zero, f)
 }
 
 /// Performs the fold operation over a sequence of futures. The folding is performed
 /// in the given context.
-public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R> {
+public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R, E> {
     
-    return reduce(seq, Future.succeeded(zero)) { zero, elem in
+    return reduce(seq, Future<R, E>.succeeded(zero)) { zero, elem in
         return zero.flatMap { zeroVal in
             elem.map(context: c) { elemVal in
                 return f(zeroVal, elemVal)
@@ -48,13 +48,13 @@ public func fold<S: SequenceType, T, R where S.Generator.Element == Future<T>>(s
 }
 
 /// See `traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U>) -> Future<[U]>`
-public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, f: T -> Future<U>) -> Future<[U]> {
+public func traverse<S: SequenceType, T, U, E where S.Generator.Element == T>(seq: S, f: T -> Future<U, E>) -> Future<[U], E> {
     return traverse(seq, context: Queue.global.context, f)
 }
 
 /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
 /// If no context is provided, the given closure is executed on `Queue.global`
-public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U>) -> Future<[U]> {
+public func traverse<S: SequenceType, T, U, E where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U, E>) -> Future<[U], E> {
     
     return fold(map(seq, f), context: c, [U]()) { (list: [U], elem: U) -> [U] in
         return list + [elem]
@@ -64,14 +64,14 @@ public func traverse<S: SequenceType, T, U where S.Generator.Element == T>(seq: 
 /// Turns a sequence of `Future<T>`'s into a future with an array of T's (Future<[T]>)
 /// If one of the futures in the given sequence fails, the returned future will fail
 /// with the error of the first future that comes first in the list.
-public func sequence<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<[T]> {
-    return traverse(seq) { (fut: Future<T>) -> Future<T> in
+public func sequence<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S) -> Future<[T], E> {
+    return traverse(seq) { (fut: Future<T, E>) -> Future<T, E> in
         return fut
     }
 }
 
 /// See `find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
-public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, p: T -> Bool) -> Future<T> {
+public func find<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S, p: T -> Bool) -> Future<T, EitherError<E,BrightFuturesError>> {
     return find(seq, context: Queue.global.context, p)
 }
 
@@ -80,21 +80,23 @@ public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq:
 /// If any of the futures in the given sequence fail, the returned future fails with the
 /// error of the first failed future in the sequence.
 /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
-public func find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T> {
-    return sequence(seq).flatMap(context: c) { val -> Result<T,NSError> in
+public func find<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T, EitherError<E,BrightFuturesError>> {
+    return sequence(seq).mapError { error in
+        return EitherError.left(error)
+    }.flatMap(context: c) { val -> Result<T, EitherError<E,BrightFuturesError>> in
         for elem in val {
             if (p(elem)) {
                 return Result(value: elem)
             }
         }
-        return Result(error: errorFromCode(.NoSuchElement))
+        return Result(error: EitherError.right(.NoSuchElement))
     }
 }
 
 /// Returns a future that returns with the first future from the given sequence that completes
 /// (regardless of whether that future succeeds or fails)
-public func firstCompletedOf<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S) -> Future<T> {
-    let p = Promise<T>()
+public func firstCompletedOf<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S) -> Future<T, E> {
+    let p = Promise<T, E>()
     
     for fut in seq {
         fut.onComplete(context: Queue.global.context) { res in
@@ -113,19 +115,19 @@ public func firstCompletedOf<S: SequenceType, T where S.Generator.Element == Fut
 /// if the first operation result is a .Success
 /// If a regular `map` was used, the result would be `Result<Future<U>>`.
 /// The implementation of this function uses `map`, but then flattens the result before returning it.
-public func flatMap<T,U>(result: Result<T,NSError>, @noescape f: T -> Future<U>) -> Future<U> {
+public func flatMap<T,U, E>(result: Result<T,E>, @noescape f: T -> Future<U, E>) -> Future<U, E> {
     return flatten(result.map(f))
 }
 
 /// Returns a .Failure with the error from the outer or inner result if either of the two failed
 /// or a .Success with the success value from the inner Result
-public func flatten<T>(result: Result<Result<T,NSError>,NSError>) -> Result<T,NSError> {
+public func flatten<T, E>(result: Result<Result<T,E>,E>) -> Result<T,E> {
     return result.analysis(ifSuccess: { $0 }, ifFailure: { Result(error: $0) })
 }
 
 /// Returns the inner future if the outer result succeeded or a failed future
 /// with the error from the outer result otherwise
-public func flatten<T>(result: Result<Future<T>,NSError>) -> Future<T> {
+public func flatten<T, E>(result: Result<Future<T, E>,E>) -> Future<T, E> {
     return result.analysis(ifSuccess: { $0 }, ifFailure: { Future.failed($0) })
 }
 
