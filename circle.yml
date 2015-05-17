@@ -6,7 +6,7 @@ dependencies:
     - brew install carthage
 test:
   override:
-    - carthage bootstrap --platform Mac
+    - carthage bootstrap --verbose
     - xctool
       -reporter pretty
       -reporter junit:$CIRCLE_TEST_REPORTS/xcode/results-mac.xml
