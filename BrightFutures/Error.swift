@@ -53,7 +53,7 @@ public enum EitherError<E1: ErrorType, E2: ErrorType> : ErrorType {
 public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
 /// An enum representing every possible error code for errors returned by BrightFutures
-public enum BrightFuturesError: ErrorType {
+public enum BrightFuturesError: ErrorType, Equatable {
     
     case NoSuchElement
     case InvalidationTokenInvalidated

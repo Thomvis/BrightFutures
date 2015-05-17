@@ -30,14 +30,12 @@ import Result
 /// (The Swift compiler does not allow a context parameter with a default value
 /// so we define some functions twice)
 public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, zero: R, f: (R, T) -> R) -> Future<R, E> {
-    
     return fold(seq, context: Queue.global.context, zero, f)
 }
 
 /// Performs the fold operation over a sequence of futures. The folding is performed
 /// in the given context.
 public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R, E> {
-    
     return reduce(seq, Future<R, E>.succeeded(zero)) { zero, elem in
         return zero.flatMap { zeroVal in
             elem.map(context: c) { elemVal in
@@ -55,7 +53,6 @@ public func traverse<S: SequenceType, T, U, E where S.Generator.Element == T>(se
 /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
 /// If no context is provided, the given closure is executed on `Queue.global`
 public func traverse<S: SequenceType, T, U, E where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U, E>) -> Future<[U], E> {
-    
     return fold(map(seq, f), context: c, [U]()) { (list: [U], elem: U) -> [U] in
         return list + [elem]
     }
@@ -134,16 +131,16 @@ public func flatten<T, E>(result: Result<Future<T, E>,E>) -> Future<T, E> {
 /// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)
 /// If one of the results in the given sequence is a .Failure, the returned result is a .Failure with the
 /// error from the first failed result from the sequence.
-public func sequence<S: SequenceType, T where S.Generator.Element == Result<T,NSError>>(seq: S) -> Result<[T],NSError> {
-    return reduce(seq, Result(value: [])) { (res, elem) -> Result<[T],NSError> in
+public func sequence<S: SequenceType, T, E where S.Generator.Element == Result<T, E>>(seq: S) -> Result<[T], E> {
+    return reduce(seq, Result(value: [])) { (res, elem) -> Result<[T], E> in
         switch res {
         case .Success(let boxedResultSequence):
             switch elem {
             case .Success(let boxedElemValue):
                 let newSeq = boxedResultSequence.value + [boxedElemValue.value]
-                return Result<[T],NSError>(value: newSeq)
+                return Result<[T], E>(value: newSeq)
             case .Failure(let boxedElemError):
-                return Result<[T],NSError>(error: boxedElemError.value)
+                return Result<[T], E>(error: boxedElemError.value)
             }
         case .Failure(let err):
             return res

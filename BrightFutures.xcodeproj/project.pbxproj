@@ -9,9 +9,10 @@
 /* Begin PBXBuildFile section */
 		B31A24291B02691A0016AE7A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; };
 		B31A242A1B02691A0016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; };
-		B31A24331B026D4B0016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
+		E92B90781B088CBF005EDB6C /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E92B90791B088CC2005EDB6C /* Box.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
 		E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; };
@@ -38,10 +39,6 @@
 		E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496E61B05086100F82839 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; };
 		E9F496E71B05086300F82839 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; };
-		E9F496E81B05088000F82839 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E9F496E91B05088200F82839 /* Box.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E9F496EA1B05088F00F82839 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; };
-		E9F496EB1B05089100F82839 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; };
 		E9F496EC1B05089F00F82839 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496ED1B0508A100F82839 /* Box.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496EF1B052F1400F82839 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Error.swift */; };
@@ -73,8 +70,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */,
-				E9F496E81B05088000F82839 /* Result.framework in CopyFiles */,
-				E9F496E91B05088200F82839 /* Box.framework in CopyFiles */,
+				E92B90781B088CBF005EDB6C /* Result.framework in CopyFiles */,
+				E92B90791B088CC2005EDB6C /* Box.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,7 +129,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */,
-				B31A24331B026D4B0016AE7A /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,8 +146,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */,
-				E9F496EB1B05089100F82839 /* Box.framework in Frameworks */,
-				E9F496EA1B05088F00F82839 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,7 +324,6 @@
 			buildPhases = (
 				E9DF081C194470060083F7F2 /* Sources */,
 				E9DF081D194470060083F7F2 /* Frameworks */,
-				E9DF081E194470060083F7F2 /* Resources */,
 				E9F496E21B0397D200F82839 /* CopyFiles */,
 			);
 			buildRules = (
@@ -396,13 +389,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E9DF0813194470060083F7F2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E9DF081E194470060083F7F2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (

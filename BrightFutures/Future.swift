@@ -24,18 +24,18 @@ import Foundation
 import Result
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T, E>(@autoclosure(escaping) task: () -> T) -> Future<T, E> {
+public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
     return future(context: Queue.global.context, task)
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T, E>(task: () -> T) -> Future<T, E> {
+public func future<T>(task: () -> T) -> Future<T, NoError> {
     return future(context: Queue.global.context, task)
 }
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
-public func future<T, E>(context c: ExecutionContext, task: () -> T) -> Future<T, E> {
-    return future(context: c, { () -> Result<T, E> in
+public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T, NoError> {
+    return future(context: c, { () -> Result<T, NoError> in
         return Result(value: task())
     })
 }
@@ -51,7 +51,7 @@ public func future<T, E>(task: () -> Result<T, E>) -> Future<T, E> {
 }
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
-public func future<T, E: ErrorType>(context c: ExecutionContext, task: () -> Result<T, E>) -> Future<T, E> {
+public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) -> Future<T, E> {
     let promise = Promise<T, E>();
     
     c {
@@ -266,8 +266,8 @@ public extension Future {
     }
     
     /// Returns a new future with the new type.
-    /// The value that this future succeeds with will be downcasted to the new type using `as!` and may fail
-    public func asType<U, E1>() -> Future<U, E1> {
+    /// The value or error will be casted using `as!` and may cause a runtime error
+    public func forceType<U, E1>() -> Future<U, E1> {
         return self.map { $0 as! U }.mapError { $0 as! E1}
     }
     
@@ -445,9 +445,9 @@ public extension Future {
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func recover(context c: ExecutionContext = executionContextForCurrentContext(), task: (E) -> T) -> Future<T, E> {
-        return self.recoverWith(context: c) { error -> Future<T, E> in
-            return Future.succeeded(task(error))
+    public func recover(context c: ExecutionContext = executionContextForCurrentContext(), task: (E) -> T) -> Future<T, NoError> {
+        return self.recoverWith(context: c) { error -> Future<T, NoError> in
+            return Future<T, NoError>.succeeded(task(error))
         }
     }
 
@@ -456,12 +456,12 @@ public extension Future {
     /// This function should be used in cases where there are two asynchronous operations where the second operation (returned from the given closure)
     /// should only be executed if the first (this future) fails.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func recoverWith(context c: ExecutionContext = executionContextForCurrentContext(), task: (E) -> Future<T, E>) -> Future<T, E> {
-        let p = Promise<T, E>()
+    public func recoverWith<E1: ErrorType>(context c: ExecutionContext = executionContextForCurrentContext(), task: (E) -> Future<T, E1>) -> Future<T, E1> {
+        let p = Promise<T, E1>()
         
         self.onComplete(context: c) { result in
             result.analysis(
-                ifSuccess: { value in p.completeWith(self) },
+                ifSuccess: { value in p.success(value) },
                 ifFailure: { p.completeWith(task($0)) })
         }
         
@@ -500,8 +500,16 @@ public extension Future {
  */
 public extension Future {
     
-    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, E> {
-        return firstCompletedOf([self, token.future.asType()])
+    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, EitherError<E, BrightFuturesError>> {
+        return firstCompletedOf([
+            self.mapError {
+                EitherError.left($0)
+            },
+            promoteValue(token.future.mapError {
+                EitherError.right($0)
+            })
+            ]
+        )
     }
 
     /// See `onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T, E>`
@@ -510,7 +518,7 @@ public extension Future {
         firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
             token.context {
                 if !token.isInvalid {
-                    callback(res)
+                    callback(self.result!)
                 }
             }
         }
@@ -537,7 +545,7 @@ public extension Future {
         firstCompletedOfSelfAndToken(token).onFailure(context: c) { error in
             token.context {
                 if !token.isInvalid {
-                    callback(error)
+                    callback(self.result!.error!)
                 }
             }
         }
@@ -561,7 +569,7 @@ public func flatten<T, E>(future: Future<Future<T, E>, E>) -> Future<T, E> {
 
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) -> Future<T, E> {
+public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) -> Future<T, NoError> {
     return lhs.recover(context: executionContextForCurrentContext(), task: { _ in
         return rhs()
     })
@@ -569,8 +577,19 @@ public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) ->
 
 /// Short-hand for `lhs.recoverWith(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> Future<T, E>) -> Future<T, E> {
+public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> Future<T, E1>) -> Future<T, E1> {
     return lhs.recoverWith(context: executionContextForCurrentContext(), task: { _ in
         return rhs()
     })
+}
+
+public func promoteError<T, E>(future: Future<T, NoError>) -> Future<T, E> {
+    return future.mapError { $0 as! E } // future will never fail, so this map block will never get called
+}
+
+/// If a future has this as its value type, it will never complete with success
+public enum NoValue { }
+
+public func promoteValue<T, E>(future: Future<NoValue, E>) -> Future<T, E> {
+    return future.map { $0 as! T } // future will never succeed, so this map block will never get called
 }

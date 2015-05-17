@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>3A31C8B6-B0CD-4D79-9DFB-AE57C9B04C9F</string>
 	<key>IDESourceControlProjectName</key>
-	<string>BrightFutures</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>93608FFF008CD82ADDFA850BB9C1630FA754586F</key>
 		<string>github.com:Thomvis/BrightFutures.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>BrightFutures.xcodeproj</string>
+	<string>BrightFutures.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>93608FFF008CD82ADDFA850BB9C1630FA754586F</key>

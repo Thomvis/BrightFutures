@@ -16,7 +16,7 @@ public protocol InvalidationTokenType {
     
     var isInvalid : Bool { get }
     
-    var future: Future<Void, BrightFuturesError> { get }
+    var future: Future<NoValue, BrightFuturesError> { get }
     
     var context: ExecutionContext { get }
 }
@@ -29,7 +29,7 @@ public protocol ManualInvalidationTokenType : InvalidationTokenType {
 /// A default invalidation token implementation
 public class InvalidationToken : ManualInvalidationTokenType {
    
-    let promise = Promise<Void, BrightFuturesError>()
+    let promise = Promise<NoValue, BrightFuturesError>()
     
     /// The synchronous context on which the invalidation and callbacks are executed
     public let context = toContext(Semaphore(value: 1))
@@ -43,7 +43,7 @@ public class InvalidationToken : ManualInvalidationTokenType {
     }
     
     /// The future will fail with an error with code `InvalidationTokenInvalid` when the token invalidates
-    public var future: Future<Void, BrightFuturesError> {
+    public var future: Future<NoValue, BrightFuturesError> {
         return self.promise.future
     }
     

@@ -97,20 +97,20 @@ class ResultTests: XCTestCase {
     }
     
     func testFlatMapResultFailure() {
-        let r = divide(20, 0).flatMap { i -> Result<Int,NSError> in
+        let r = divide(20, 0).flatMap { i -> Result<Int, MathError> in
             XCTAssert(false, "flatMap should not get called if the result failed")
             return divide(i, 2)
         }
         
         XCTAssert(r.isFailure)
-        XCTAssertEqual(r.error!.domain, "DivisionByZeroError")
+        XCTAssertEqual(r.error!.nsError.code, 123)
     }
 
     func testFlatMapFutureSuccess() {
-        let f = flatMap(divide(100, 10)) { i -> Future<Int> in
-            return future {
+        let f = flatMap(divide(100, 10)) { i -> Future<Int, MathError> in
+            return promoteError(future {
                 fibonacci(i)
-            }
+            })
         }
         
         let e = self.expectation()
@@ -124,17 +124,17 @@ class ResultTests: XCTestCase {
     }
     
     func testFlatMapFutureFailure() {
-        let f = flatMap(divide(100, 0)) { i -> Future<Int> in
+        let f = flatMap(divide(100, 0)) { i -> Future<Int, MathError> in
             XCTAssert(false, "flatMap should not get called if the result failed")
-            return future {
+            return promoteError(future {
                 fibonacci(i)
-            }
+            })
         }
         
         let e = self.expectation()
         
         f.onFailure { err in
-            XCTAssertEqual(err.domain, "DivisionByZeroError")
+            XCTAssertEqual(err.nsError.code, 123)
             e.fulfill()
         }
         
@@ -142,24 +142,24 @@ class ResultTests: XCTestCase {
     }
     
     func testSequenceSuccess() {
-        let results: [Result<Int,NSError>] = (1...10).map { i in
+        let results: [Result<Int, MathError>] = (1...10).map { i in
             return divide(123, i)
         }
         
-        let result: Result<[Int],NSError> = sequence(results)
+        let result: Result<[Int], MathError> = sequence(results)
         
         let outcome = [123, 61, 41, 30, 24, 20, 17, 15, 13, 12]
         XCTAssertEqual(result.value!, outcome)
     }
     
     func testSequenceFailure() {
-        let results: [Result<Int,NSError>] = (-10...10).map { i in
+        let results: [Result<Int, MathError>] = (-10...10).map { i in
             return divide(123, i)
         }
         
         let r = sequence(results)
         XCTAssert(r.isFailure)
-        XCTAssertEqual(r.error!.domain, "DivisionByZeroError")
+        XCTAssertEqual(r.error!.nsError.code, 123)
     }
 
     func testRecoverNeeded() {
@@ -177,9 +177,20 @@ class ResultTests: XCTestCase {
     }
 }
 
-func divide(a: Int, b: Int) -> Result<Int,NSError> {
+enum MathError: ErrorType {
+    case DivisionByZero
+    
+    var nsError: NSError {
+        switch self {
+        case .DivisionByZero:
+            return NSError(domain: "nl.thomvis.brightfuturestests", code: 123, userInfo: nil);
+        }
+    }
+}
+
+func divide(a: Int, b: Int) -> Result<Int, MathError> {
     if (b == 0) {
-        return Result(error: NSError(domain: "DivisionByZeroError", code: 0, userInfo: nil))
+        return Result(error: .DivisionByZero)
     }
     
     return Result(value: a / b)
