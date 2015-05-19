@@ -187,37 +187,27 @@ public extension Future {
     
     /// Returns the value that the future succesfully completed with, or `nil` if the future failed or is still in progress
     public var value: T? {
-        get {
-            return self.result?.value
-        }
+        return self.result?.value
     }
 
     /// Returns the error that the future failed with, or `nil` if the future succeeded or is still in progress
     public var error: E? {
-        get {
-            return self.result?.error
-        }
+        return self.result?.error
     }
     
     /// `true` if the future completed with success, or `false` otherwise
     public var isSuccess: Bool {
-        get {
-            return result?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
-        }
+        return result?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
     }
     
     /// `true` if the future failed, or `false` otherwise
     public var isFailure: Bool {
-        get {
-            return !isSuccess
-        }
+        return !isSuccess
     }
     
     /// `true` if the future completed (either `isSuccess` or `isFailure` will be `true`)
     public var isCompleted: Bool {
-        get {
-            return self.result != nil
-        }
+        return self.result != nil
     }
 }
 
