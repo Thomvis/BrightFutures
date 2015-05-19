@@ -472,14 +472,14 @@ public extension Future {
     /// (i.e. the given closure returns `true` when invoked with the success value) or an error with code
     /// `ErrorCode.NoSuchElement` if the test failed.
     /// If this future fails, the returned future fails with the same error.
-    public func filter(p: (T -> Bool)) -> Future<T, EitherError<E, BrightFuturesError>> {
-        return self.mapError { error -> EitherError<E, BrightFuturesError> in
-            return EitherError.left(error)
-        }.flatMap { value -> Result<T, EitherError<E, BrightFuturesError>> in
+    public func filter(p: (T -> Bool)) -> Future<T, BrightFuturesError> {
+        return self.mapError { error -> BrightFuturesError in
+            return BrightFuturesError.External(error: error)
+        }.flatMap { value -> Result<T, BrightFuturesError> in
             if p(value) {
                 return Result.success(value)
             } else {
-                return Result.failure(EitherError.right(.NoSuchElement))
+                return Result.failure(.NoSuchElement)
             }
         }
     }
@@ -490,14 +490,12 @@ public extension Future {
  */
 public extension Future {
     
-    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, EitherError<E, BrightFuturesError>> {
+    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError> {
         return firstCompletedOf([
             self.mapError {
-                EitherError.left($0)
+                BrightFuturesError.External(error: $0)
             },
-            promoteValue(token.future.mapError {
-                EitherError.right($0)
-            })
+            promoteValue(token.future)
             ]
         )
     }

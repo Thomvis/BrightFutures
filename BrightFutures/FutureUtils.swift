@@ -68,7 +68,7 @@ public func sequence<S: SequenceType, T, E where S.Generator.Element == Future<T
 }
 
 /// See `find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
-public func find<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S, p: T -> Bool) -> Future<T, EitherError<E,BrightFuturesError>> {
+public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == Future<T, E>>(seq: S, p: T -> Bool) -> Future<T, BrightFuturesError> {
     return find(seq, context: Queue.global.context, p)
 }
 
@@ -77,16 +77,16 @@ public func find<S: SequenceType, T, E where S.Generator.Element == Future<T, E>
 /// If any of the futures in the given sequence fail, the returned future fails with the
 /// error of the first failed future in the sequence.
 /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
-public func find<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T, EitherError<E,BrightFuturesError>> {
+public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T, BrightFuturesError> {
     return sequence(seq).mapError { error in
-        return EitherError.left(error)
-    }.flatMap(context: c) { val -> Result<T, EitherError<E,BrightFuturesError>> in
+        return BrightFuturesError.External(error: error)
+    }.flatMap(context: c) { val -> Result<T, BrightFuturesError> in
         for elem in val {
             if (p(elem)) {
                 return Result(value: elem)
             }
         }
-        return Result(error: EitherError.right(.NoSuchElement))
+        return Result(error: .NoSuchElement)
     }
 }
 
