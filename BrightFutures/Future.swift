@@ -85,7 +85,15 @@ public class Future<T, E: ErrorType> {
     public typealias FailureCallback = E -> ()
     
     /// The result of the operation this Future represents or `nil` if it is not yet completed
-    public internal(set) var result: Result<T,E>? = nil
+    public internal(set) var result: Result<T,E>? = nil {
+        willSet {
+            assert(result == nil)
+        }
+        
+        didSet {
+            runCallbacks()
+        }
+    }
     
     /// This queue is used for all callback related administrative tasks
     /// to prevent that a callback is added to a completed future and never
@@ -153,7 +161,6 @@ internal extension Future {
             }
             
             self.result = Result(value: value)
-            self.runCallbacks()
             return true;
         };
     }
@@ -176,7 +183,6 @@ internal extension Future {
             }
             
             self.result = Result(error: error)
-            self.runCallbacks()
             return true;
         };
     }
