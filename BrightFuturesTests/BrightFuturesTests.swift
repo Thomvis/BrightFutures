@@ -126,6 +126,32 @@ extension BrightFuturesTests {
         XCTAssert(!f.isCompleted)
     }
     
+    func testForceTypeSuccess() {
+        let f: Future<Double, NoError> = Future.succeeded(NSTimeInterval(3.0))
+        let f1: Future<NSTimeInterval, NoError> = f.forceType()
+        
+        XCTAssertEqual(NSTimeInterval(3.0), f1.result!.value!, "Should be a time interval")
+    }
+    
+    func testForceTypeFailure() {
+        class TestError: ErrorType {
+            var nsError: NSError {
+                return NSError(domain: "", code: 1, userInfo: nil)
+            }
+        }
+        
+        class SubError: TestError {
+            override var nsError: NSError {
+                return NSError(domain: "", code: 2, userInfo: nil)
+            }
+        }
+        
+        let f: Future<NoValue, TestError> = Future.failed(SubError())
+        let f1: Future<NoValue, SubError> = f.forceType()
+        
+        XCTAssertEqual(f1.result!.error!.nsError.code, 2, "Should be a SubError")
+    }
+    
     func testControlFlowSyntax() {
         
         let f = future { _ in

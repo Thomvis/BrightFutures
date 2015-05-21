@@ -264,12 +264,16 @@ public extension Future {
     /// Returns a new future with the new type.
     /// The value or error will be casted using `as!` and may cause a runtime error
     public func forceType<U, E1>() -> Future<U, E1> {
-        return self.map { $0 as! U }.mapError { $0 as! E1}
+        return self.map(context: ImmediateExecutionContext) {
+            $0 as! U
+        }.mapError(context: ImmediateExecutionContext) {
+            $0 as! E1
+        }
     }
     
     /// Returns a new future that completes with this future, but returns Void on success
     public func asVoid() -> Future<Void, E> {
-        return self.map { _ in return () }
+        return self.map(context: ImmediateExecutionContext) { _ in return () }
     }
 }
 
@@ -415,7 +419,7 @@ public extension Future {
     public func mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1> {
         let p = Promise<T, E1>()
         
-        self.onComplete { result in
+        self.onComplete(context:c) { result in
             result.analysis(
                 ifSuccess: p.success ,
                 ifFailure: { p.failure(f($0)) })
