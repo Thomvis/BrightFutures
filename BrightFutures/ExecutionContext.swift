@@ -27,6 +27,7 @@ import Foundation
 public typealias ExecutionContext = (() -> ()) -> ()
 
 public func ImmediateExecutionContext(task: () -> ())  {
+/// Immediately executes the given task. No threading, no semaphores.
     task()
 }
 

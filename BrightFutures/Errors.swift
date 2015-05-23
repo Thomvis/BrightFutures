@@ -23,6 +23,8 @@
 import Foundation
 import Box
 
+/// To be able to use a type as an error type with BrightFutures, it needs to conform
+/// to this protocol.
 public protocol ErrorType {
     /// An NSError describing this error
     var nsError: NSError { get }
@@ -32,14 +34,21 @@ public protocol ErrorType {
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
 public enum NoError {}
 
+/// Extends `NSError` to conform to `ErrorType`
 extension NoError: ErrorType {
+    
+    /// From `ErrorType`: an NSError describing this error.
+    /// Since `NoError` cannot be constructed, this property can also never be accessed.
     public var nsError: NSError {
         fatalError("Impossible to construct NoError")
     }
 }
 
-/// Ensures `NSError` conforms to `ErrorType`
+/// An extension of `NSError` to make it conform to `ErrorType`
 extension NSError: ErrorType {
+    
+    /// From `ErrorType`: An NSError describing this error.
+    /// Will return `self`.
     public var nsError: NSError {
         return self
     }
@@ -57,6 +66,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     case InvalidationTokenInvalidated
     case External(error: E)
 
+    /// From `ErrorType`: An NSError describing this error.
     public var nsError: NSError {
         switch self {
         case .NoSuchElement:

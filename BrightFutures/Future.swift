@@ -412,10 +412,15 @@ public extension Future {
         return p.future
     }
     
+    /// See `mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1>`
+    /// The given closure is executed according to the default threading model (see README.md)
     public func mapError<E1>(f: E -> E1) -> Future<T, E1> {
         return mapError(context: executionContextForCurrentContext(), f: f)
     }
     
+    /// Returns a future that fails with the error returned from the given closure when it is invoked with the error
+    /// from this future. If this future succeeds, the returned future succeeds with the same value and the closure is not executed.
+    /// The closure is executed on the given context.
     public func mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1> {
         let p = Promise<T, E1>()
         
@@ -500,7 +505,7 @@ public extension Future {
  */
 public extension Future {
     
-    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError<E>> {
+    private func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError<E>> {
         return firstCompletedOf([
             self.mapError {
                 BrightFuturesError<E>.External(error: $0)

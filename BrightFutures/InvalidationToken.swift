@@ -14,15 +14,19 @@ public let InvalidationTokenInvalid = 1
 /// The type that all invalidation tokens conform to
 public protocol InvalidationTokenType {
     
+    /// Indicates if the token is invalid
     var isInvalid : Bool { get }
     
+    /// The future will fail with an error with .InvalidationTokenInvalidated when the token invalidates
     var future: Future<NoValue, BrightFuturesError<NoError>> { get }
     
+    /// The synchronous context on which the invalidation and callbacks are executed
     var context: ExecutionContext { get }
 }
 
 /// The type that all invalidation tokens that can be manually invalidated conform to
 public protocol ManualInvalidationTokenType : InvalidationTokenType {
+    /// Invalidates the token
     func invalidate()
 }
 
@@ -42,7 +46,7 @@ public class InvalidationToken : ManualInvalidationTokenType {
         return promise.future.isCompleted
     }
     
-    /// The future will fail with an error with code `InvalidationTokenInvalid` when the token invalidates
+    /// The future will fail with an error with .InvalidationTokenInvalidated when the token invalidates
     public var future: Future<NoValue, BrightFuturesError<NoError>> {
         return self.promise.future
     }
