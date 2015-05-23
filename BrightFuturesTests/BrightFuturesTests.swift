@@ -386,7 +386,8 @@ extension BrightFuturesTests {
         future { _ in
             3
         }.recover { _ in
-            5
+            XCTFail("recover task should not be executed")
+            return 5
         }.onSuccess { value in
             XCTAssert(value == 3)
             e.fulfill()
@@ -394,7 +395,13 @@ extension BrightFuturesTests {
         
         let e1 = self.expectation()
         
-        (future(3) ?? 5).onSuccess { value in
+        
+        let recov: () -> Int = {
+            XCTFail("recover task should not be executed")
+            return 5
+        }
+        
+        (future(3) ?? recov()).onSuccess { value in
             XCTAssert(value == 3)
             e1.fulfill()
         }
