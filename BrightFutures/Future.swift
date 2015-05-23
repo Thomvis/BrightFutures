@@ -586,7 +586,7 @@ public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> F
 /// for operations such as `sequence` and `firstCompletedOf`
 /// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
 public func promoteError<T, E>(future: Future<T, NoError>) -> Future<T, E> {
-    return future.mapError { $0 as! E } // future will never fail, so this map block will never get called
+    return future.mapError(context: ImmediateExecutionContext) { $0 as! E } // future will never fail, so this map block will never get called
 }
 
 /// 'promotes' a `Future` with error type `BrightFuturesError<NoError>` to a `Future` with an 
@@ -595,7 +595,7 @@ public func promoteError<T, E>(future: Future<T, NoError>) -> Future<T, E> {
 /// for operations such as `sequence` and `firstCompletedOf`
 /// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
 public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -> Future<T, BrightFuturesError<E>> {
-    return future.mapError { err in
+    return future.mapError(context: ImmediateExecutionContext) { err in
         switch err {
         case .NoSuchElement:
             return BrightFuturesError<E>.NoSuchElement
@@ -616,5 +616,5 @@ public enum NoValue { }
 /// for operations such as `sequence` and `firstCompletedOf`
 /// This is a safe operation, because a `Future` with value type `NoValue` is guaranteed never to succeed
 public func promoteValue<T, E>(future: Future<NoValue, E>) -> Future<T, E> {
-    return future.map { $0 as! T } // future will never succeed, so this map block will never get called
+    return future.map(context: ImmediateExecutionContext) { $0 as! T } // future will never succeed, so this map block will never get called
 }
