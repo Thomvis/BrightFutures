@@ -581,10 +581,19 @@ public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> F
     })
 }
 
+/// 'promotes' a `Future` with error type `NoError` to a `Future` with an error type of choice.
+/// This allows the `Future` to be used more easily in combination with other futures 
+/// for operations such as `sequence` and `firstCompletedOf`
+/// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
 public func promoteError<T, E>(future: Future<T, NoError>) -> Future<T, E> {
     return future.mapError { $0 as! E } // future will never fail, so this map block will never get called
 }
 
+/// 'promotes' a `Future` with error type `BrightFuturesError<NoError>` to a `Future` with an 
+/// `BrightFuturesError<E>` error type where `E` can be any type conforming to `ErrorType`.
+/// This allows the `Future` to be used more easily in combination with other futures
+/// for operations such as `sequence` and `firstCompletedOf`
+/// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
 public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -> Future<T, BrightFuturesError<E>> {
     return future.mapError { err in
         switch err {
@@ -598,9 +607,14 @@ public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -
     }
 }
 
-/// If a future has this as its value type, it will never complete with success
+/// Can be used as the value type of a `Future` or `Result` to indicate it can never be a success.
+/// This is guaranteed by the type system, because `NoValue` has no possible values and thus cannot be created.
 public enum NoValue { }
 
+/// 'promotes' a `Future` with value type `NoValue` to a `Future` with a value type of choice.
+/// This allows the `Future` to be used more easily in combination with other futures
+/// for operations such as `sequence` and `firstCompletedOf`
+/// This is a safe operation, because a `Future` with value type `NoValue` is guaranteed never to succeed
 public func promoteValue<T, E>(future: Future<NoValue, E>) -> Future<T, E> {
     return future.map { $0 as! T } // future will never succeed, so this map block will never get called
 }

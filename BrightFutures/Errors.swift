@@ -28,6 +28,8 @@ public protocol ErrorType {
     var nsError: NSError { get }
 }
 
+/// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
+/// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
 public enum NoError {}
 
 extension NoError: ErrorType {
@@ -36,15 +38,19 @@ extension NoError: ErrorType {
     }
 }
 
+/// Ensures `NSError` conforms to `ErrorType`
 extension NSError: ErrorType {
     public var nsError: NSError {
         return self
     }
 }
 
+/// The name of the domain that will be used when returning `NSError` representations of `BrightFuturesError` instances
 public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
-/// An enum representing every possible error code for errors returned by BrightFutures
+/// An enum representing every possible error for errors returned by BrightFutures
+/// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
+/// in its `External` case. `BrightFuturesError` has the type of the external error as its generic parameter.
 public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
