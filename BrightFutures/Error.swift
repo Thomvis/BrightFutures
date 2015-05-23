@@ -31,11 +31,11 @@ extension NSError: ErrorType {
 public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
 
 /// An enum representing every possible error code for errors returned by BrightFutures
-public enum BrightFuturesError: ErrorType {
+public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
     case InvalidationTokenInvalidated
-    case External(error: ErrorType)
+    case External(error: E)
 
     public var nsError: NSError {
         switch self {

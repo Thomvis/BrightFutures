@@ -482,10 +482,10 @@ public extension Future {
     /// (i.e. the given closure returns `true` when invoked with the success value) or an error with code
     /// `ErrorCode.NoSuchElement` if the test failed.
     /// If this future fails, the returned future fails with the same error.
-    public func filter(p: (T -> Bool)) -> Future<T, BrightFuturesError> {
-        return self.mapError { error -> BrightFuturesError in
+    public func filter(p: (T -> Bool)) -> Future<T, BrightFuturesError<E>> {
+        return self.mapError { error -> BrightFuturesError<E> in
             return BrightFuturesError.External(error: error)
-        }.flatMap { value -> Result<T, BrightFuturesError> in
+        }.flatMap { value -> Result<T, BrightFuturesError<E>> in
             if p(value) {
                 return Result.success(value)
             } else {
@@ -500,12 +500,12 @@ public extension Future {
  */
 public extension Future {
     
-    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError> {
+    func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError<E>> {
         return firstCompletedOf([
             self.mapError {
-                BrightFuturesError.External(error: $0)
+                BrightFuturesError<E>.External(error: $0)
             },
-            promoteValue(token.future)
+            promoteError(promoteValue(token.future))
             ]
         )
     }
@@ -583,6 +583,19 @@ public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> F
 
 public func promoteError<T, E>(future: Future<T, NoError>) -> Future<T, E> {
     return future.mapError { $0 as! E } // future will never fail, so this map block will never get called
+}
+
+public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -> Future<T, BrightFuturesError<E>> {
+    return future.mapError { err in
+        switch err {
+        case .NoSuchElement:
+            return BrightFuturesError<E>.NoSuchElement
+        case .InvalidationTokenInvalidated:
+            return BrightFuturesError<E>.InvalidationTokenInvalidated
+        case .External(let err):
+            fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
+        }
+    }
 }
 
 /// If a future has this as its value type, it will never complete with success
