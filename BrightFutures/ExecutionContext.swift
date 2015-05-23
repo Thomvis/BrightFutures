@@ -26,8 +26,8 @@ import Foundation
 /// By default, an execution context can be assumed to be asynchronous unless stated otherwise
 public typealias ExecutionContext = (() -> ()) -> ()
 
-public func ImmediateExecutionContext(task: () -> ())  {
 /// Immediately executes the given task. No threading, no semaphores.
+public func ImmediateExecutionContext(@noescape task: () -> ())  {
     task()
 }
 
