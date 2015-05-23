@@ -41,8 +41,8 @@
 		E9F496E71B05086300F82839 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; };
 		E9F496EC1B05089F00F82839 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496ED1B0508A100F82839 /* Box.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E9F496EF1B052F1400F82839 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Error.swift */; };
-		E9F496F01B052F1400F82839 /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Error.swift */; };
+		E9F496EF1B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
+		E9F496F01B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,7 +111,7 @@
 		E9DF0832194470190083F7F2 /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		E9DF0833194470190083F7F2 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		E9DF0834194470190083F7F2 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		E9F496EE1B052F1400F82839 /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		E9F496EE1B052F1400F82839 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,7 +211,7 @@
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 				E979E5F31975B1AA007FE914 /* FutureUtils.swift */,
 				E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */,
-				E9F496EE1B052F1400F82839 /* Error.swift */,
+				E9F496EE1B052F1400F82839 /* Errors.swift */,
 			);
 			path = BrightFutures;
 			sourceTree = "<group>";
@@ -402,7 +402,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9F496F01B052F1400F82839 /* Error.swift in Sources */,
+				E9F496F01B052F1400F82839 /* Errors.swift in Sources */,
 				E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */,
 				E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */,
 				E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */,
@@ -428,7 +428,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9F496EF1B052F1400F82839 /* Error.swift in Sources */,
+				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
