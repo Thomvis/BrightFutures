@@ -208,10 +208,10 @@
 				E9DF0832194470190083F7F2 /* Future.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
 				E9DF0834194470190083F7F2 /* Queue.swift */,
-				E9DF0818194470060083F7F2 /* Supporting Files */,
 				E979E5F31975B1AA007FE914 /* FutureUtils.swift */,
 				E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */,
 				E9F496EE1B052F1400F82839 /* Errors.swift */,
+				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFutures;
 			sourceTree = "<group>";
