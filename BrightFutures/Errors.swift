@@ -32,7 +32,11 @@ public protocol ErrorType {
 
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
-public enum NoError {}
+public class NoError {
+    private init() {
+        fatalError("impossible to instantiate NoError")
+    }
+}
 
 /// Extends `NSError` to conform to `ErrorType`
 extension NoError: ErrorType {
