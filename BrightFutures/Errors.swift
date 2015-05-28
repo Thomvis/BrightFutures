@@ -40,7 +40,7 @@ extension NoError: ErrorType {
     /// From `ErrorType`: an NSError describing this error.
     /// Since `NoError` cannot be constructed, this property can also never be accessed.
     public var nsError: NSError {
-        fatalError("Impossible to construct NoError")
+        preconditionFailure("Impossible to construct NoError")
     }
 }
 
