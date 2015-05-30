@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import Result
 
 /**
  * An Objective-C compatible Result
@@ -62,39 +63,43 @@ import Foundation
         self.success = false
         self.value = nil;
     }
+    
+    public convenience init(error: ErrorType) {
+        self.init(error: error.nsError)
+    }
 }
 
-func bridge(result: Result<AnyObject?>) -> BFResult {
+func bridge<E: ErrorType>(result: Result<AnyObject?, E>) -> BFResult {
     return bridge(result)!
 }
 
-func bridge(optionalResult: Result<AnyObject?>?) -> BFResult? {
+func bridge<E: ErrorType>(optionalResult: Result<AnyObject?, E>?) -> BFResult? {
     if let res = optionalResult {
         switch res {
         case .Success(let boxedValue):
             return BFResult(value: boxedValue.value)
-        case .Failure(let error):
-            return BFResult(error: error)
+        case .Failure(let boxedError):
+            return BFResult(error: boxedError.value)
         }
     }
     
     return nil
 }
 
-func bridge(result: BFResult) -> Result<AnyObject?> {
+func bridge(result: BFResult) -> Result<AnyObject?, NSError> {
     if result.isSuccess {
-        return Result.Success(Box(result.value))
+        return Result(value: result.value)
     }
-    return Result.Failure(result.error!)
+    return Result(error: result.error!)
 }
 
-func bridge<T>(f: T -> BFResult) -> (T -> Result<AnyObject?>) {
+func bridge<T>(f: T -> BFResult) -> (T -> Result<AnyObject?, NSError>) {
     return { param in
         bridge(f(param))
     }
 }
 
-func bridge(f: BFResult -> ()) -> (Result<AnyObject?> -> ()) {
+func bridge(f: BFResult -> ()) -> (Result<AnyObject?, NSError> -> ()) {
     return { res in
         f(bridge(res))
     }

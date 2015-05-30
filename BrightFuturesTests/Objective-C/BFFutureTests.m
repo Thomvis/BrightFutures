@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 @import BrightFutures;
 
-#import "BrightFuturesTests-Swift.h"
 #import "Helpers.h"
 
 @interface BFFutureTests : XCTestCase
@@ -427,7 +426,7 @@
         return [num integerValue] > 5;
     }] onComplete:^(BFResult *res) {
         XCTAssert(res.isFailure);
-        XCTAssertEqual(res.error.code, 1);
+        XCTAssertEqual(res.error.code, 0);
         XCTAssertEqualObjects(res.error.domain, @"nl.thomvis.BrightFutures");
         [e fulfill];
     }];
@@ -453,13 +452,15 @@
 
 - (void)testForcedFuture
 {
-    BFResult *res = [[BFFuture wrap:^id{
-        [NSThread sleepForTimeInterval:0.5];
-        return @3;
-    }] forced];
+    XCTFail(@"The test below that has been commented out hangs indefinately");
     
-    XCTAssert(res.isSuccess);
-    XCTAssertEqualObjects(res.value, @3);
+//    BFResult *res = [[BFFuture wrap:^id{
+//        [NSThread sleepForTimeInterval:0.5];
+//        return @3;
+//    }] forced];
+//    
+//    XCTAssert(res.isSuccess);
+//    XCTAssertEqualObjects(res.value, @3);
 }
 
 - (void)testForcedFutureWithTimeout

@@ -8,8 +8,6 @@
 
 #import <XCTest/XCTest.h>
 @import BrightFutures;
-
-#import "BrightFuturesTests-Swift.h"
 #import "Helpers.h"
 
 @interface BFFutureUtilsTests : XCTestCase

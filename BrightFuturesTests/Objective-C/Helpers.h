@@ -7,5 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+@import XCTest;
 
 extern NSUInteger fibonacci(NSUInteger n);
+
+@interface XCTestCase (SimpleExpectations)
+
+- (XCTestExpectation *)expectation;
+
+@end

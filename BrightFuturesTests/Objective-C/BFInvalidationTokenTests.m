@@ -7,9 +7,9 @@
 //
 
 @import Foundation;
-#import <XCTest/XCTest.h>
-#import "BrightFuturesTests-Swift.h"
+@import XCTest;
 @import BrightFutures;
+#import "Helpers.h"
 
 @interface BFInvalidationTokenTests : XCTestCase
 @property (nonatomic) NSUInteger counter;

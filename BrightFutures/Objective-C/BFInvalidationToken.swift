@@ -46,9 +46,6 @@ import Foundation
     
     public func invalidate() {
         token.invalidate()
-        
-        let f = token.future
-        let f1 = bridge(token.future)
     }
 }
 
@@ -69,8 +66,8 @@ func bridge(token: BFInvalidationTokenType) -> InvalidationTokenType {
             return bridge(token.context)
         }
         
-        private var future: Future<Void> {
-            return bridge(token.future)
+        private var future: Future<NoValue, BrightFuturesError<NoError>> {
+            return bridge(token.future).forceType()
         }
         
         private var isInvalid: Bool {
