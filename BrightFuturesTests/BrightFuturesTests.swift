@@ -951,7 +951,7 @@ extension BrightFuturesTests {
     
     func testPerformance1() {
         self.measureBlock {
-            let f = Future.succeeded(3)
+            let f = Future<Int, NoError>.succeeded(3)
             let e = self.expectation()
             
             f.filter { _ in
