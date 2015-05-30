@@ -87,8 +87,8 @@ public struct Queue {
     
     /// Asynchronously executes the given closure on this queue and
     /// returns a future that will succeed with the result of the closure.
-    public func async<T>(block: () -> T) -> Future<T> {
-        let p = Promise<T>()
+    public func async<T>(block: () -> T) -> Future<T, NoError> {
+        let p = Promise<T, NoError>()
 
         async {
             p.success(block())
@@ -106,8 +106,8 @@ public struct Queue {
     /// Asynchronously executes the given closure on the queue after a delay
     /// and returns a future that will succeed with the result of the closure.
     /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
-    public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T> {
-        let p = Promise<T>()
+    public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T, NoError> {
+        let p = Promise<T, NoError>()
         
         after(delay) {
             p.success(block())

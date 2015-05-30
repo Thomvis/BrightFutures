@@ -22,35 +22,47 @@
 
 import Foundation
 
-/// The context in which something can be executed
-/// By default, an execution context can be assumed to be asynchronous unless stated otherwise
-public typealias ExecutionContext = (() -> ()) -> ()
-
-/// Immediately executes the given task. No threading, no semaphores.
-public func ImmediateExecutionContext(@noescape task: () -> ())  {
-    task()
-}
-
-/// Runs immediately if on the main thread, otherwise asynchronously on the main thread
-public func ImmediateOnMainExecutionContext(task: () -> ())  {
-    if NSThread.isMainThread() {
-        task()
-    } else {
-        Queue.main.async(task)
+/**
+ * We use NSObject as a base class because it should be easy
+ * to instantiate it from Objective-C
+ */
+@objc public class BFPromise : NSObject {
+    
+    private let promise: Promise<AnyObject?>
+    
+    public var future: BFFuture {
+        return bridge(self.promise.future)
     }
-}
-
-/// Creates an asynchronous ExecutionContext bound to the given queue
-public func toContext(queue: Queue) -> ExecutionContext {
-    return queue.context
-}
-
-/// Creates an asynchronous ExecutionContext bound to the given queue
-public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
-    return Queue(queue: queue).context
-}
-
-/// Creates a synchronous context that is guarded by the given semaphore
-func toContext(sema: Semaphore) -> ExecutionContext {
-    return sema.execute
+    
+    public override init() {
+        self.promise = Promise<AnyObject?>()
+    }
+    
+    public func completeWith(future: BFFuture) {
+        self.promise.completeWith(bridge(future))
+    }
+    
+    public func success(value: AnyObject) {
+        self.promise.success(value)
+    }
+    
+    public func trySuccess(value: AnyObject) -> Bool {
+        return self.promise.trySuccess(value)
+    }
+    
+    public func failure(error: NSError) {
+        self.promise.failure(error)
+    }
+    
+    public func tryFailure(error: NSError) -> Bool {
+        return self.promise.tryFailure(error)
+    }
+    
+    public func complete(result: BFResult) {
+        return self.promise.complete(bridge(result))
+    }
+    
+    public func tryComplete(result: BFResult) -> Bool {
+        return self.promise.tryComplete(bridge(result))
+    }
 }

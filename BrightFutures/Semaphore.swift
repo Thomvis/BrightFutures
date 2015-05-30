@@ -31,13 +31,11 @@ public enum TimeInterval {
     
     /// Returns the `dispatch_time_t` representation of this interval
     public var dispatchTime: dispatch_time_t {
-        get {
-            switch self {
-            case .Forever:
-                return DISPATCH_TIME_FOREVER
-            case .In(let interval):
-                return dispatch_time(DISPATCH_TIME_NOW, Int64(interval * NSTimeInterval(NSEC_PER_SEC)))
-            }
+        switch self {
+        case .Forever:
+            return DISPATCH_TIME_FOREVER
+        case .In(let interval):
+            return dispatch_time(DISPATCH_TIME_NOW, Int64(interval * NSTimeInterval(NSEC_PER_SEC)))
         }
     }
 }

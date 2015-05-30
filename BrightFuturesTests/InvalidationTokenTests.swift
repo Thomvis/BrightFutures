@@ -28,7 +28,7 @@ class InvalidationTokenTests: XCTestCase {
         XCTAssert(!token.future.isCompleted, "token should have a future and not be complete")
         token.invalidate()
         XCTAssert(token.future.error != nil, "future should have an error")
-        if let error = token.future.error {
+        if let error = token.future.error?.nsError {
             XCTAssertEqual(error.domain, BrightFuturesErrorDomain)
             XCTAssertEqual(error.code, InvalidationTokenInvalid)
         }
@@ -37,12 +37,12 @@ class InvalidationTokenTests: XCTestCase {
     func testCompletionAfterInvalidation() {
         let token = InvalidationToken()
         
-        let p = Promise<Int>()
+        let p = Promise<Int, NSError>()
         
         p.future.onSuccess(token: token) { val in
             XCTAssert(false, "onSuccess should not get called")
         }.onFailure(token: token) { error in
-            XCTAssert(false, "onSuccess should not get called")
+            XCTAssert(false, "onFailure should not get called")
         }
         
         let e = self.expectation()
