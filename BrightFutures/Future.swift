@@ -489,7 +489,7 @@ public extension Future {
     /// If this future fails, the returned future fails with the same error.
     public func filter(p: (T -> Bool)) -> Future<T, BrightFuturesError<E>> {
         return self.mapError { error -> BrightFuturesError<E> in
-            return BrightFuturesError.External(error: error)
+            return BrightFuturesError(external: error)
         }.flatMap { value -> Result<T, BrightFuturesError<E>> in
             if p(value) {
                 return Result.success(value)
@@ -508,7 +508,7 @@ public extension Future {
     private func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError<E>> {
         return firstCompletedOf([
             self.mapError {
-                BrightFuturesError<E>.External(error: $0)
+                BrightFuturesError(external: $0)
             },
             promoteError(promoteValue(token.future))
             ]

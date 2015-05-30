@@ -79,7 +79,7 @@ public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == F
 /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
 public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T, BrightFuturesError<E>> {
     return sequence(seq).mapError { error in
-        return BrightFuturesError.External(error: error)
+        return BrightFuturesError(external: error)
     }.flatMap(context: c) { val -> Result<T, BrightFuturesError<E>> in
         for elem in val {
             if (p(elem)) {

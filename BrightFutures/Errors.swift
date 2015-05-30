@@ -64,8 +64,12 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
     case InvalidationTokenInvalidated
-    case External(error: E)
+    case External(Box<E>)
 
+    public init(external: E) {
+        self = .External(Box(external))
+    }
+    
     /// From `ErrorType`: An NSError describing this error.
     public var nsError: NSError {
         switch self {
@@ -73,8 +77,8 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
             return NSError(domain: BrightFuturesErrorDomain, code: 0, userInfo: nil)
         case .InvalidationTokenInvalidated:
             return NSError(domain: BrightFuturesErrorDomain, code: 1, userInfo: nil)
-        case .External(let error):
-            return error.nsError
+        case .External(let boxedError):
+            return boxedError.value.nsError
         }
     }
 
