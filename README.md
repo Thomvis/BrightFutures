@@ -1,7 +1,15 @@
+### Warning
+
+You are currently on the 2.0-development branch. 
+
+- 2.0 will be the next major version
+- Until it is released, breaking changes might occur
+- PR #51 tracks the progress
+- See the [Migration guide](Documentation/Migration_2.0.md)
+- The README has not yet been updated
+
 BrightFutures
 =============
-
-### Please note you are currently on the 2.0-development branch. 2.0 will be the next major version and until it is released, breaking changes might occur. See the [Migration guide](Documentation/Migration_2.0.md).
 
 How do you leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
