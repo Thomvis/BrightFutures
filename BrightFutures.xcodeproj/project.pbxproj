@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B31A24291B02691A0016AE7A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; };
-		B31A242A1B02691A0016AE7A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
-		E92B90781B088CBF005EDB6C /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E92B90791B088CC2005EDB6C /* Box.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E90E9D581B1B8A3600A8F9F3 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D571B1B8A3600A8F9F3 /* Box.framework */; };
+		E90E9D5E1B1B8A7200A8F9F3 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D591B1B8A4100A8F9F3 /* Box.framework */; };
+		E90E9D601B1B8A9B00A8F9F3 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */; };
+		E90E9D621B1B8AA500A8F9F3 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D611B1B8AA500A8F9F3 /* Result.framework */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
 		E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; };
@@ -37,10 +37,6 @@
 		E9DF0838194470190083F7F2 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 		E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E9F496E61B05086100F82839 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24221B0268F80016AE7A /* Result.framework */; };
-		E9F496E71B05086300F82839 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B31A24231B0268F80016AE7A /* Box.framework */; };
-		E9F496EC1B05089F00F82839 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24271B02691A0016AE7A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E9F496ED1B0508A100F82839 /* Box.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B31A24281B02691A0016AE7A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496EF1B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 		E9F496F01B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 /* End PBXBuildFile section */
@@ -70,8 +66,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */,
-				E92B90781B088CBF005EDB6C /* Result.framework in CopyFiles */,
-				E92B90791B088CC2005EDB6C /* Box.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,20 +76,18 @@
 			dstSubfolderSpec = 10;
 			files = (
 				E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */,
-				E9F496EC1B05089F00F82839 /* Result.framework in CopyFiles */,
-				E9F496ED1B0508A100F82839 /* Box.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B31A24221B0268F80016AE7A /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
-		B31A24231B0268F80016AE7A /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/iOS/Box.framework; sourceTree = "<group>"; };
-		B31A24271B02691A0016AE7A /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
-		B31A24281B02691A0016AE7A /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/Mac/Box.framework; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
+		E90E9D571B1B8A3600A8F9F3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Checkouts/Result/Carthage/Checkouts/Box/build/Debug/Box.framework; sourceTree = "<group>"; };
+		E90E9D591B1B8A4100A8F9F3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = "../../../Library/Developer/Xcode/DerivedData/BrightFutures-brlkgomqpbjfnpbdastdlmrhcaoc/Build/Products/Debug/Box.framework"; sourceTree = "<group>"; };
+		E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = "Carthage/Checkouts/Result/build/Debug-iphoneos/Result.framework"; sourceTree = "<group>"; };
+		E90E9D611B1B8AA500A8F9F3 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Checkouts/Result/build/Debug/Result.framework; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* FutureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureUtils.swift; sourceTree = "<group>"; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -119,8 +111,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B31A24291B02691A0016AE7A /* Result.framework in Frameworks */,
-				B31A242A1B02691A0016AE7A /* Box.framework in Frameworks */,
+				E90E9D621B1B8AA500A8F9F3 /* Result.framework in Frameworks */,
+				E90E9D581B1B8A3600A8F9F3 /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,8 +128,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9F496E61B05086100F82839 /* Result.framework in Frameworks */,
-				E9F496E71B05086300F82839 /* Box.framework in Frameworks */,
+				E90E9D601B1B8A9B00A8F9F3 /* Result.framework in Frameworks */,
+				E90E9D5E1B1B8A7200A8F9F3 /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,37 +144,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B31A24261B0269060016AE7A /* Frameworks */ = {
+		E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B31A242B1B0269280016AE7A /* Mac */,
-				B31A242C1B02692E0016AE7A /* iOS */,
+				E90E9D5D1B1B8A5B00A8F9F3 /* Mac */,
+				E90E9D5C1B1B8A5400A8F9F3 /* iOS */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B31A242B1B0269280016AE7A /* Mac */ = {
+		E90E9D5C1B1B8A5400A8F9F3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				B31A24271B02691A0016AE7A /* Result.framework */,
-				B31A24281B02691A0016AE7A /* Box.framework */,
-			);
-			name = Mac;
-			sourceTree = "<group>";
-		};
-		B31A242C1B02692E0016AE7A /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				B31A24221B0268F80016AE7A /* Result.framework */,
-				B31A24231B0268F80016AE7A /* Box.framework */,
+				E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */,
+				E90E9D591B1B8A4100A8F9F3 /* Box.framework */,
 			);
 			name = iOS;
+			sourceTree = "<group>";
+		};
+		E90E9D5D1B1B8A5B00A8F9F3 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				E90E9D611B1B8AA500A8F9F3 /* Result.framework */,
+				E90E9D571B1B8A3600A8F9F3 /* Box.framework */,
+			);
+			name = Mac;
 			sourceTree = "<group>";
 		};
 		E9DF080B194470060083F7F2 = {
 			isa = PBXGroup;
 			children = (
-				B31A24261B0269060016AE7A /* Frameworks */,
+				E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */,
 				E9DF0817194470060083F7F2 /* BrightFutures */,
 				E9DF0824194470060083F7F2 /* BrightFuturesTests */,
 				E9DF0816194470060083F7F2 /* Products */,
@@ -476,10 +468,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -508,10 +496,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/Mac",
-				);
 				FRAMEWORK_VERSION = A;
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BrightFutures/Info.plist;
@@ -664,10 +648,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = BrightFutures/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -686,10 +666,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-				);
 				INFOPLIST_FILE = BrightFutures/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
