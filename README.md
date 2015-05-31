@@ -1,6 +1,8 @@
 BrightFutures
 =============
 
+### Please note you are currently on the 2.0-development branch. 2.0 will be the next major version and until it is released, breaking changes might occur. See the [Migration guide](Documentation/Migration_2.0.md).
+
 How do you leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
 BrightFutures implements proven functional concepts (i.e. [futures and promises](http://en.wikipedia.org/wiki/Futures_and_promises)) to provide a powerful alternative to completion blocks and `NSErrorPointer`s.
