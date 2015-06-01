@@ -42,7 +42,7 @@ class InvalidationTokenTests: XCTestCase {
         p.future.onSuccess(token: token) { val in
             XCTAssert(false, "onSuccess should not get called")
         }.onFailure(token: token) { error in
-            XCTAssert(false, "onSuccess should not get called")
+            XCTAssert(false, "onFailure should not get called")
         }
         
         let e = self.expectation()
