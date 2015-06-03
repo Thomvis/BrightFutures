@@ -23,6 +23,7 @@
 import XCTest
 import Result
 import BrightFutures
+import Result
 
 class BrightFuturesTests: XCTestCase {
     
@@ -187,7 +188,7 @@ extension BrightFuturesTests {
     func testAutoClosure() {
         let names = ["Steve", "Tim"]
         
-        let f = Future<Int, NoError>.succeeded(names.count)
+        let f = future(names.count)
         let e = self.expectation()
         
         f.onSuccess { value in
@@ -200,6 +201,28 @@ extension BrightFuturesTests {
         let e1 = self.expectation()
         Future<Int, NSError>.succeeded(fibonacci(10)).onSuccess { value in
             XCTAssert(value == 55);
+            e1.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testAutoClosureWithResult() {
+        let f = future(Result<Int, NoError>(value:2))
+        let e = self.expectation()
+        
+        f.onSuccess { value in
+            XCTAssert(value == 2)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+        
+        let f1 = future(Result<Int,BrightFuturesError<NoError>>(error: .NoSuchElement))
+        let e1 = self.expectation()
+
+        f1.onFailure { error in
+            XCTAssertEqual(error.nsError, BrightFuturesError<NoError>.NoSuchElement.nsError)
             e1.fulfill()
         }
         
