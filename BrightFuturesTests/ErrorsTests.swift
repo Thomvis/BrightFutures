@@ -25,30 +25,9 @@ import BrightFutures
 
 enum TestError: ErrorType {
     case JustAnError
-    
-    var nsError: NSError {
-        return NSError(domain: "TestError", code: 1, userInfo: nil)
-    }
 }
 
 class ErrorsTests: XCTestCase {
-    
-    func testNSError() {
-        let error = NSError(domain: "TestDomain", code: 2, userInfo: nil)
-        XCTAssert(error === error.nsError, "nsError should return itself")
-    }
-    
-    func testNoSuchElementError() {
-        let error = BrightFuturesError<NoError>.NoSuchElement
-        XCTAssertEqual(error.nsError.domain, BrightFuturesErrorDomain)
-        XCTAssertEqual(error.nsError.code, 0)
-    }
-    
-    func testInvalidationError() {
-        let error = BrightFuturesError<NoError>.InvalidationTokenInvalidated
-        XCTAssertEqual(error.nsError.domain, BrightFuturesErrorDomain)
-        XCTAssertEqual(error.nsError.code, 1)
-    }
     
     func testExternalError() {
         let externalError = TestError.JustAnError
@@ -60,8 +39,6 @@ class ErrorsTests: XCTestCase {
         default:
             XCTFail("Should match with the external case")
         }
-        
-        XCTAssertEqual(externalError.nsError, error.nsError)
     }
     
 }

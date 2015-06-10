@@ -137,23 +137,18 @@ extension BrightFuturesTests {
     func testForceTypeFailure() {
         class TestError: ErrorType {
             var _domain: String { return "TestError" }
-            var _code: Int { return 2 }
-            
-            var nsError: NSError {
-                return NSError(domain: "", code: 1, userInfo: nil)
-            }
+            var _code: Int { return 1 }
         }
         
         class SubError: TestError {
-            override var nsError: NSError {
-                return NSError(domain: "", code: 2, userInfo: nil)
-            }
+            override var _domain: String { return "" }
+            override var _code: Int { return 2 }
         }
         
         let f: Future<NoValue, TestError> = Future.failed(SubError())
         let f1: Future<NoValue, SubError> = f.forceType()
         
-        XCTAssertEqual(f1.result!.error!.nsError.code, 2, "Should be a SubError")
+        XCTAssertEqual(f1.result!.error!._code, 2, "Should be a SubError")
     }
     
     func testControlFlowSyntax() {
@@ -225,7 +220,7 @@ extension BrightFuturesTests {
         let e1 = self.expectation()
 
         f1.onFailure { error in
-            XCTAssertEqual(error.nsError, BrightFuturesError<NoError>.NoSuchElement.nsError)
+            XCTAssertEqual(error, BrightFuturesError<NoError>.NoSuchElement)
             e1.fulfill()
         }
         
@@ -540,7 +535,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         Future<Int, NoError>.succeeded(3).filter { $0 > 5}.onComplete { result in
             if let err = result.error {
-                XCTAssert(err.nsError.code == 0, "filter should yield no result")
+                XCTAssert(err == BrightFuturesError<NoError>.NoSuchElement, "filter should yield no result")
             }
             
             e.fulfill()
@@ -846,7 +841,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         f.onFailure { err in
-            XCTAssertEqual(err.nsError.code, 0, "No matching elements")
+            XCTAssertEqual(err, BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
             e.fulfill()
         }
         

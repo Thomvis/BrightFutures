@@ -22,39 +22,12 @@
 
 import Foundation
 
-/// To be able to use a type as an error type with BrightFutures, it needs to conform
-/// to this protocol.
-public extension ErrorType {
-    /// An NSError describing this error
-    var nsError: NSError { return NSError(domain: "fake", code: 0, userInfo: nil) }
-}
-
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
 public enum NoError {}
 
-/// Extends `NSError` to conform to `ErrorType`
-extension NoError: ErrorType {
-    
-    /// From `ErrorType`: an NSError describing this error.
-    /// Since `NoError` cannot be constructed, this property can also never be accessed.
-    public var nsError: NSError {
-        fatalError("Impossible to construct NoError")
-    }
-}
-
-/// An extension of `NSError` to make it conform to `ErrorType`
-extension NSError {
-    
-    /// From `ErrorType`: An NSError describing this error.
-    /// Will return `self`.
-    public var nsError: NSError {
-        return self
-    }
-}
-
-/// The name of the domain that will be used when returning `NSError` representations of `BrightFuturesError` instances
-public let BrightFuturesErrorDomain = "nl.thomvis.BrightFutures"
+/// Extends `NoError` to conform to `ErrorType`
+extension NoError: ErrorType {}
 
 /// An enum representing every possible error for errors returned by BrightFutures
 /// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
@@ -68,17 +41,17 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     public init(external: E) {
         self = .External(external)
     }
-    
-    /// From `ErrorType`: An NSError describing this error.
-    public var nsError: NSError {
-        switch self {
-        case .NoSuchElement:
-            return NSError(domain: BrightFuturesErrorDomain, code: 0, userInfo: nil)
-        case .InvalidationTokenInvalidated:
-            return NSError(domain: BrightFuturesErrorDomain, code: 1, userInfo: nil)
-        case .External(let error):
-            return error.nsError
-        }
-    }
+}
 
+/// Extends `BrightFuturesError` to conform to `Equatable`
+extension BrightFuturesError: Equatable {}
+
+/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
+public func ==<E: ErrorType>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
+    switch (lhs, rhs) {
+    case (.NoSuchElement, .NoSuchElement): return true
+    case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
+    case (.External(_), .External(_)): return true
+    default: return false
+    }
 }

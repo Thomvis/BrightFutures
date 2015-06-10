@@ -103,7 +103,7 @@ class ResultTests: XCTestCase {
         }
         
         XCTAssert(r.isFailure)
-        XCTAssertEqual(r.error!.nsError.code, 123)
+        XCTAssertEqual(r.error!, MathError.DivisionByZero)
     }
 
     func testFlatMapFutureSuccess() {
@@ -134,7 +134,7 @@ class ResultTests: XCTestCase {
         let e = self.expectation()
         
         f.onFailure { err in
-            XCTAssertEqual(err.nsError.code, 123)
+            XCTAssertEqual(err, MathError.DivisionByZero)
             e.fulfill()
         }
         
@@ -159,7 +159,7 @@ class ResultTests: XCTestCase {
         
         let r = sequence(results)
         XCTAssert(r.isFailure)
-        XCTAssertEqual(r.error!.nsError.code, 123)
+        XCTAssertEqual(r.error!, MathError.DivisionByZero)
     }
 
     func testRecoverNeeded() {
@@ -179,13 +179,6 @@ class ResultTests: XCTestCase {
 
 enum MathError: ErrorType {
     case DivisionByZero
-    
-    var nsError: NSError {
-        switch self {
-        case .DivisionByZero:
-            return NSError(domain: "nl.thomvis.brightfuturestests", code: 123, userInfo: nil);
-        }
-    }
 }
 
 func divide(a: Int, _ b: Int) -> Result<Int, MathError> {
