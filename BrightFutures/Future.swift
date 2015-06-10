@@ -25,29 +25,29 @@ import Result
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
-    return future(context: Queue.global.context, task)
+    return future(context: Queue.global.context, task: task)
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(task: () -> T) -> Future<T, NoError> {
-    return future(context: Queue.global.context, task)
+    return future(context: Queue.global.context, task: task)
 }
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
 public func future<T>(context c: ExecutionContext, task: () -> T) -> Future<T, NoError> {
-    return future(context: c, { () -> Result<T, NoError> in
+    return future(context: c) { () -> Result<T, NoError> in
         return Result(value: task())
-    })
+    }
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T, E>(@autoclosure(escaping) task: () -> Result<T, E>) -> Future<T, E> {
-    return future(context: Queue.global.context, task)
+    return future(context: Queue.global.context, task: task)
 }
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T, E>(task: () -> Result<T, E>) -> Future<T, E> {
-    return future(context: Queue.global.context, task)
+    return future(context: Queue.global.context, task: task)
 }
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
@@ -137,9 +137,9 @@ internal extension Future {
     func tryComplete(result: Result<T,E>) -> Bool {
         switch result {
         case .Success(let val):
-            return self.trySuccess(val.value)
+            return self.trySuccess(val)
         case .Failure(let err):
-            return self.tryFailure(err.value)
+            return self.tryFailure(err)
         }
     }
 
@@ -606,7 +606,7 @@ public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -
             return BrightFuturesError<E>.NoSuchElement
         case .InvalidationTokenInvalidated:
             return BrightFuturesError<E>.InvalidationTokenInvalidated
-        case .External(let err):
+        case .External(_):
             fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
         }
     }

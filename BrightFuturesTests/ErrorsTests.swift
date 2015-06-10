@@ -34,7 +34,7 @@ enum TestError: ErrorType {
 class ErrorsTests: XCTestCase {
     
     func testNSError() {
-        let error = NSError()
+        let error = NSError(domain: "TestDomain", code: 2, userInfo: nil)
         XCTAssert(error === error.nsError, "nsError should return itself")
     }
     
@@ -55,8 +55,8 @@ class ErrorsTests: XCTestCase {
         let error = BrightFuturesError(external: externalError)
         
         switch error {
-        case .External(let boxedError):
-            XCTAssertEqual(boxedError.value, TestError.JustAnError, "Should be same error")
+        case .External(let err):
+            XCTAssertEqual(err, TestError.JustAnError, "Should be same error")
         default:
             XCTFail("Should match with the external case")
         }

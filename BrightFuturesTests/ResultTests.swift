@@ -60,7 +60,7 @@ class ResultTests: XCTestCase {
     }
     
     func testFailure() {
-        let error = NSError()
+        let error = NSError(domain: "TestDomain", code: 2, userInfo: nil)
         let result = Result<Int, NSError>(error: error)
         XCTAssert(result.isFailure)
         XCTAssertFalse(result.isSuccess)
@@ -188,7 +188,7 @@ enum MathError: ErrorType {
     }
 }
 
-func divide(a: Int, b: Int) -> Result<Int, MathError> {
+func divide(a: Int, _ b: Int) -> Result<Int, MathError> {
     if (b == 0) {
         return Result(error: .DivisionByZero)
     }

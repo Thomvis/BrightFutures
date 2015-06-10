@@ -77,10 +77,10 @@ extension BrightFuturesTests {
         
         f.onComplete { result in
             switch result {
-            case .Success(let val):
+            case .Success(_):
                 XCTAssert(false)
-            case .Failure(let boxedErr):
-                XCTAssertEqual(boxedErr.value, error)
+            case .Failure(let err):
+                XCTAssertEqual(err, error)
             }
             completeExpectation.fulfill()
         }
@@ -136,6 +136,9 @@ extension BrightFuturesTests {
     
     func testForceTypeFailure() {
         class TestError: ErrorType {
+            var _domain: String { return "TestError" }
+            var _code: Int { return 2 }
+            
             var nsError: NSError {
                 return NSError(domain: "", code: 1, userInfo: nil)
             }
@@ -241,7 +244,7 @@ extension BrightFuturesTests {
         p.future.onComplete { result in
             switch result {
             case .Success(let val):
-                XCTAssert(Int(55) == val.value)
+                XCTAssert(Int(55) == val)
             case .Failure(_):
                 XCTAssert(false)
             }
@@ -645,7 +648,7 @@ extension BrightFuturesTests {
             }
         }
         
-        let f = traverse([2,4,6,8,9,10], context: Queue.global.context, evenFuture)
+        let f = traverse([2,4,6,8,9,10], context: Queue.global.context, f: evenFuture)
             
             
         f.onFailure { err in
@@ -669,7 +672,7 @@ extension BrightFuturesTests {
             }
         }
         
-        traverse([20,22,23,26,27,30], evenFuture).onFailure { err in
+        traverse([20,22,23,26,27,30], f: evenFuture).onFailure { err in
             XCTAssertEqual(err.code, 23)
             e.fulfill()
         }
@@ -698,7 +701,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        fold(fibonacciList, 0, { $0 + $1 }).onSuccess { val in
+        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, 143)
             e.fulfill()
         }
@@ -720,7 +723,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        fold(fibonacciList, 0, { $0 + $1 }).onFailure { err in
+        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onFailure { err in
             XCTAssertEqual(err, error)
             e.fulfill()
         }
@@ -731,7 +734,7 @@ extension BrightFuturesTests {
     func testUtilsFoldWithExecutionContext() {
         let e = self.expectation()
         
-        fold([Future<Int, NoError>.succeeded(1)], context: Queue.main.context, 10) { remainder, elem -> Int in
+        fold([Future<Int, NoError>.succeeded(1)], context: Queue.main.context, zero: 10) { remainder, elem -> Int in
             XCTAssert(NSThread.isMainThread())
             return remainder + elem
         }.onSuccess { val in
@@ -747,7 +750,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        fold([Future<String, NoError>](), z, { $0 + $1 }).onSuccess { val in
+        fold([Future<String, NoError>](), zero: z, f: { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, z)
             e.fulfill()
         }
@@ -781,7 +784,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         sequence(futures).onSuccess { fibs in
-            for (index, num) in enumerate(fibs) {
+            for (index, num) in fibs.enumerate() {
                 XCTAssertEqual(fibonacci(index+1), num)
             }
             

@@ -21,13 +21,12 @@
 // SOFTWARE.
 
 import Foundation
-import Box
 
 /// To be able to use a type as an error type with BrightFutures, it needs to conform
 /// to this protocol.
-public protocol ErrorType {
+public extension ErrorType {
     /// An NSError describing this error
-    var nsError: NSError { get }
+    var nsError: NSError { return NSError(domain: "fake", code: 0, userInfo: nil) }
 }
 
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
@@ -45,7 +44,7 @@ extension NoError: ErrorType {
 }
 
 /// An extension of `NSError` to make it conform to `ErrorType`
-extension NSError: ErrorType {
+extension NSError {
     
     /// From `ErrorType`: An NSError describing this error.
     /// Will return `self`.
@@ -64,10 +63,10 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
     case InvalidationTokenInvalidated
-    case External(Box<E>)
+    case External(E)
 
     public init(external: E) {
-        self = .External(Box(external))
+        self = .External(external)
     }
     
     /// From `ErrorType`: An NSError describing this error.
@@ -77,8 +76,8 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
             return NSError(domain: BrightFuturesErrorDomain, code: 0, userInfo: nil)
         case .InvalidationTokenInvalidated:
             return NSError(domain: BrightFuturesErrorDomain, code: 1, userInfo: nil)
-        case .External(let boxedError):
-            return boxedError.value.nsError
+        case .External(let error):
+            return error.nsError
         }
     }
 
