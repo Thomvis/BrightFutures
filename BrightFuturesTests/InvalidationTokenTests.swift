@@ -28,9 +28,8 @@ class InvalidationTokenTests: XCTestCase {
         XCTAssert(!token.future.isCompleted, "token should have a future and not be complete")
         token.invalidate()
         XCTAssert(token.future.error != nil, "future should have an error")
-        if let error = token.future.error?.nsError {
-            XCTAssertEqual(error.domain, BrightFuturesErrorDomain)
-            XCTAssertEqual(error.code, InvalidationTokenInvalid)
+        if let error = token.future.error {
+            XCTAssertEqual(error, BrightFuturesError.InvalidationTokenInvalidated)
         }
     }
     
