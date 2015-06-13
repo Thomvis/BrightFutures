@@ -220,7 +220,7 @@ extension BrightFuturesTests {
         let e1 = self.expectation()
 
         f1.onFailure { error in
-            XCTAssertEqual(error, BrightFuturesError<NoError>.NoSuchElement)
+            XCTAssert(error == BrightFuturesError<NoError>.NoSuchElement)
             e1.fulfill()
         }
         
@@ -841,7 +841,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         f.onFailure { err in
-            XCTAssertEqual(err, BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
+            XCTAssert(err == BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
             e.fulfill()
         }
         

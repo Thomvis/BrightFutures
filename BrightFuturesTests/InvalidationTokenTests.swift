@@ -29,7 +29,7 @@ class InvalidationTokenTests: XCTestCase {
         token.invalidate()
         XCTAssert(token.future.error != nil, "future should have an error")
         if let error = token.future.error {
-            XCTAssertEqual(error, BrightFuturesError.InvalidationTokenInvalidated)
+            XCTAssert(error == BrightFuturesError.InvalidationTokenInvalidated)
         }
     }
     

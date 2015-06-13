@@ -41,4 +41,18 @@ class ErrorsTests: XCTestCase {
         }
     }
     
+    func testEqualErrors() {
+        XCTAssert(BrightFuturesError<NoError>.NoSuchElement == BrightFuturesError<NoError>.NoSuchElement)
+        XCTAssert(BrightFuturesError<NoError>.InvalidationTokenInvalidated == BrightFuturesError<NoError>.InvalidationTokenInvalidated)
+        XCTAssertFalse(BrightFuturesError<NoError>.NoSuchElement == BrightFuturesError<NoError>.InvalidationTokenInvalidated)
+        
+        XCTAssert(BrightFuturesError(external: MainError.A) == BrightFuturesError(external: MainError.A))
+        XCTAssertFalse(BrightFuturesError(external: MainError.A) == BrightFuturesError(external: MainError.B))
+    }
+    
+}
+
+enum MainError: Int, ErrorType {
+    case A = 1
+    case B = 2
 }
