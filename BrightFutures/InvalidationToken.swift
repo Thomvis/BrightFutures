@@ -8,9 +8,6 @@
 
 import Foundation
 
-/// The error code that a token's future will fail with when the token is invalidated
-public let InvalidationTokenInvalid = 1
-
 /// The type that all invalidation tokens conform to
 public protocol InvalidationTokenType {
     
