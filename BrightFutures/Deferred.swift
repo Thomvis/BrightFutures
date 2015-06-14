@@ -42,10 +42,15 @@ extension MutableDeferredType {
 public extension DeferredType {
     
     func flatMap<D: DeferredType, U where D.Res == U>(f: Res -> D) -> D {
-        return map(transform: f).flatten()
+        return map(f).flatten()
     }
     
-    func map<U>(context c: ExecutionContext = defaultContext(), transform: Res -> U) -> Deferred<U> {
+    /// Shorthand for map(context:transform:), needed to be able to do d.map(func)
+    func map<U>(transform: Res -> U) -> Deferred<U> {
+        return map(context: defaultContext(), transform: transform)
+    }
+    
+    func map<U>(context c: ExecutionContext, transform: Res -> U) -> Deferred<U> {
         let d = Deferred<U>()
         
         onComplete(context: c) { res in
@@ -65,14 +70,14 @@ public extension DeferredType {
     
     /// Returns a new future that will succeed with the given value after the given time interval
     /// The implementation of this function uses dispatch_after
-    static func completeAfter(delay: NSTimeInterval, withResult result: Res) -> Deferred<Res> {
+    static func completeAfter(delay: NSTimeInterval, withResult result: Res) -> Self {
         let res = Deferred<Res>()
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.underlyingQueue) {
             try! res.complete(result)
         }
         
-        return res
+        return Self(other: res)
     }
     
     public func forceType<U>() -> Deferred<U> {

@@ -125,6 +125,14 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
         return completed(Res(error: error))
     }
     
+    static func completeAfter(delay: NSTimeInterval, withValue value: Res.Value) -> Self {
+        return completeAfter(delay, withResult: Res(value: value))
+    }
+    
+    static func completeAfter(delay: NSTimeInterval, withError error: Res.Error) -> Self {
+        return completeAfter(delay, withResult: Res(error: error))
+    }
+    
     /// Returns the value that the future succesfully completed with, or `nil` if the future failed or is still in progress
     public var value: Res.Value? {
         return self.result?.value
@@ -156,8 +164,13 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
             res.analysis(ifSuccess: { _ in }, ifFailure: callback)
         }
     }
+    
+    /// Shorthand for map(context:transform:), needed to be able to do d.map(func)
+    func map<U>(transform: Res.Value -> U) -> Future<U, Res.Error> {
+        return map(context: defaultContext(), transform: transform)
+    }
 
-    func map<U>(context c: ExecutionContext = defaultContext(), transform: Res.Value -> U) -> Future<U, Res.Error> {
+    func map<U>(context c: ExecutionContext, transform: Res.Value -> U) -> Future<U, Res.Error> {
         let f = Future<U, Res.Error>()
         
         onComplete(context: c) { res in
@@ -169,12 +182,14 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
     
     public func flatMap<U>(context c: ExecutionContext = defaultContext(), f: Res.Value -> Future<U, Res.Error>) -> Future<U, Res.Error> {
         let f = map(context: c, transform: f)
-        fatalError()
+        
+        return Future<U, Res.Error>()
     }
     
     public func flatMap<R: ResultType>(context c: ExecutionContext = defaultContext(), f: Res.Value -> R) -> Future<R.Value, Res.Error> {
         let f = map(context: c, transform: f)
-        fatalError()
+        
+        return Future<R.Value, Res.Error>()
     }
     
     public func mapError<E1>(context c: ExecutionContext, f: Res.Error -> E1) -> Future<Res.Value, E1> {
@@ -203,6 +218,14 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
         return f
     }
     
+    public func zip<D: DeferredType where D.Res: ResultType, D.Res.Error == Res.Error>(other: D) -> Future<(Res.Value,D.Res.Value), D.Res.Error> {
+        return flatMap(context: ImmediateExecutionContext) { (thisVal: Res.Value) -> Future<(Res.Value,D.Res.Value), D.Res.Error> in
+            return other.map { otherVal in
+                return (thisVal, otherVal)
+            }
+        }
+    }
+    
     public func filter(p: (Res.Value -> Bool)) -> Future<Res.Value, BrightFuturesError<Res.Error>> {
         return self.mapError(context: ImmediateExecutionContext) { error -> BrightFuturesError<Res.Error> in
             return BrightFuturesError(external: error)
@@ -213,6 +236,18 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
                 return Result.failure(.NoSuchElement)
             }
         }
+    }
+    
+    public func forceType<U, E1>() -> Future<U, E1> {
+        return map(context: ImmediateExecutionContext) {
+            $0 as! U
+        }.mapError(context: ImmediateExecutionContext) {
+            $0 as! E1
+        }
+    }
+    
+    public func asVoid() -> Future<Void,Res.Error> {
+        return map { _ in () }
     }
     
 }
