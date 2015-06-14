@@ -79,6 +79,22 @@ public struct Queue {
         return res!;
     }
     
+    public func sync(block: () throws -> ()) throws -> () {
+        var error: ErrorType?
+        
+        sync {
+            do {
+                try block()
+            } catch let e {
+                error = e
+            }
+        }
+        
+        if let error = error {
+            throw error
+        }
+    }
+    
     /// Asynchronously executes the given closure on this queue.
     /// Analogous to dispatch_async(self.underlyingQueue, block)
     public func async(block: () -> ()) {

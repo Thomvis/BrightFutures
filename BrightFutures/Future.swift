@@ -23,6 +23,20 @@
 import Foundation
 import Result
 
+public protocol ResultType {
+    typealias Value
+    typealias Error
+    
+    var value: Value? { get }
+    var error: Error? { get }
+}
+
+extension Result: ResultType { }
+
+public protocol FutureType: DeferredType {
+    typealias Res: ResultType
+}
+
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
     return future(context: Queue.global.context, task: task)
@@ -77,10 +91,11 @@ func executionContextForCurrentContext() -> ExecutionContext {
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
-public class Future<T, E: ErrorType> {
+public class Future<T, E: ErrorType>: FutureType {
     
-    typealias CallbackInternal = (future: Future<T, E>) -> ()
-    typealias CompletionCallback = (result: Result<T,E>) -> ()
+    typealias Res = Result<T, E>
+    
+    typealias CallbackInternal = Future<T, E> -> ()
     typealias SuccessCallback = T -> ()
     public typealias FailureCallback = E -> ()
     
@@ -111,10 +126,22 @@ public class Future<T, E: ErrorType> {
         
     }
     
+    public required init(result: Result<T, E>) {
+        self.result = result
+    }
+    
+    public init(value: T) {
+        result = Result(value: value)
+    }
+    
+    public init(error: E) {
+        result = Result(error: error)
+    }
+    
     /// Should be run on the callbackAdministrationQueue
     private func runCallbacks() {
         for callback in self.callbacks {
-            callback(future: self)
+            callback(self)
         }
         
         self.callbacks.removeAll()
@@ -219,7 +246,7 @@ public extension Future {
 
 /// This extension contains all (static) methods for Future creation
 public extension Future {
-
+    
     /// Returns a new future that succeeded with the given value
     public class func succeeded(value: T) -> Future<T, E> {
         let res = Future<T, E>();
@@ -300,6 +327,7 @@ public extension Future {
         } else {
             let sema = Semaphore(value: 0)
             var res: Result<T, E>? = nil
+            
             self.onComplete(context: Queue.global.context) {
                 res = $0
                 sema.signal()
@@ -319,12 +347,12 @@ public extension Future {
     /// Adds the given closure as a callback for when the future completes. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T, E> {
+    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: Result<T, E> -> ()) -> Self {
         let wrappedCallback : Future<T, E> -> () = { future in
             if let realRes = self.result {
                 c {
                     self.callbackExecutionSemaphore.execute {
-                        callback(result: realRes)
+                        callback(realRes)
                         return
                     }
                     return
@@ -346,7 +374,7 @@ public extension Future {
     /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), callback: SuccessCallback) -> Future<T, E> {
+    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), callback: SuccessCallback) -> Self {
         self.onComplete(context: c) { result in
             result.analysis(ifSuccess: callback, ifFailure: { _ in })
         }
@@ -357,7 +385,7 @@ public extension Future {
     /// Adds the given closure as a callback for when the future fails. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), callback: FailureCallback) -> Future<T, E> {
+    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), callback: FailureCallback) -> Self {
         self.onComplete(context: c) { result in
             result.analysis(ifSuccess: { _ in }, ifFailure: callback)
         }
@@ -380,7 +408,8 @@ public extension Future {
     ///
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Future<U, E>) -> Future<U, E> {
-        return flatten(map(context: c, f: f))
+//        return flatten(map(context: c, f: f))
+        fatalError()
     }
 
     /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
@@ -517,7 +546,7 @@ public extension Future {
 
     /// See `onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T, E> -> ()) -> Future<T, E> {
+    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T, E> -> ()) -> Self {
         firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
             token.context {
                 if !token.isInvalid {
@@ -606,6 +635,8 @@ public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -
             return BrightFuturesError<E>.NoSuchElement
         case .InvalidationTokenInvalidated:
             return BrightFuturesError<E>.InvalidationTokenInvalidated
+        case .IllegalState:
+            return BrightFuturesError<E>.IllegalState
         case .External(_):
             fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
         }

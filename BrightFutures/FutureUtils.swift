@@ -23,7 +23,34 @@
 import Foundation
 import Result
 
-//// The free functions in this file operate on sequences of Futures
+extension SequenceType where Generator.Element : DeferredType {
+    public func firstCompletedOf() -> Generator.Element {
+        fatalError("not yet implemented")
+    }
+
+    public func fold<R>(zero: R, f: (R, Generator.Element.Res) -> R) -> Deferred<R> {
+        return self.reduce(Deferred(result: zero)) { (res: Deferred<R>, fut: Generator.Element) in
+            res.flatMap { zeroVal in
+                fut.map { futVal in
+                    return f(zeroVal, futVal)
+                }
+            }
+        }
+    }
+
+//    public func traverse<D: DeferredType where D.Res == Generator.Element>(f: Generator.Element -> D) -> Deferred<[Generator.Element]> {
+//        fatalError("not yet implemented")
+//    }
+
+    public func sequence() -> Deferred<[Generator.Element]> {
+        fatalError("not yet implemented")
+    }
+
+    public func find(test: Generator.Element -> Bool) -> Deferred<Result<Generator.Element, BrightFuturesError<NoError>>> {
+        fatalError("not yet implemented")
+    }
+
+}
 
 /// Performs the fold operation over a sequence of futures. The folding is performed
 /// on `Queue.global`.
@@ -99,7 +126,6 @@ public func firstCompletedOf<S: SequenceType, T, E where S.Generator.Element == 
     
     return p.future
 }
-
 
 /// Enables the chaining of two failable operations where the second operation is asynchronous and
 /// represented by a future. 

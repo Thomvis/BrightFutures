@@ -39,6 +39,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
     case InvalidationTokenInvalidated
+    case IllegalState
     case External(E)
 
     public init(external: E) {
