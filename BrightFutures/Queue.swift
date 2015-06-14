@@ -107,7 +107,7 @@ public struct Queue {
         let p = Promise<T, NoError>()
 
         async {
-            p.success(block())
+            try! p.success(block())
         }
         
         return p.future
@@ -126,7 +126,7 @@ public struct Queue {
         let p = Promise<T, NoError>()
         
         after(delay) {
-            p.success(block())
+            try! p.success(block())
         }
         
         return p.future
