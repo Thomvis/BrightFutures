@@ -24,7 +24,7 @@ public protocol InvalidationTokenType {
 /// The type that all invalidation tokens that can be manually invalidated conform to
 public protocol ManualInvalidationTokenType : InvalidationTokenType {
     /// Invalidates the token
-    func invalidate()
+    func invalidate() throws
 }
 
 /// A default invalidation token implementation
@@ -49,7 +49,48 @@ public class InvalidationToken : ManualInvalidationTokenType {
     }
     
     /// Invalidates the token
-    public func invalidate() {
-        self.promise.failure(.InvalidationTokenInvalidated)
+    public func invalidate() throws {
+        try self.promise.failure(.InvalidationTokenInvalidated)
+    }
+}
+
+public extension DeferredType {
+    
+    public func onComplete(context c: ExecutionContext = defaultContext(), token: InvalidationToken, callback: Res -> ()) -> Self {
+        onComplete(context: c) { res in
+            token.context {
+                if !token.isInvalid {
+                    callback(res)
+                }
+            }
+        }
+        
+        return self
+    }
+    
+}
+
+public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
+    public func onSuccess(context c: ExecutionContext = defaultContext(), token: InvalidationTokenType, callback: Res.Value -> ()) -> Self {
+        onSuccess(context: c) { value in
+            token.context {
+                if !token.isInvalid {
+                    callback(value)
+                }
+            }
+        }
+        
+        return self
+    }
+    
+    public func onFailure(context c: ExecutionContext = defaultContext(), token: InvalidationTokenType, callback: Res.Error -> ()) -> Self {
+        onFailure(context: c) { error in
+            token.context {
+                if !token.isInvalid {
+                    callback(self.result!.error!)
+                }
+            }
+        }
+        return self
     }
 }

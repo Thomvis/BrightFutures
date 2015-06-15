@@ -18,7 +18,7 @@ class InvalidationTokenTests: XCTestCase {
     
     func testInvalidateToken() {
         let token = InvalidationToken()
-        token.invalidate()
+        try! token.invalidate()
         XCTAssert(token.isInvalid, "a token should become invalid after invalidating")
     }
     
@@ -26,10 +26,10 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         XCTAssertNotNil(token.future, "token should have a future")
         XCTAssert(!token.future.isCompleted, "token should have a future and not be complete")
-        token.invalidate()
+        try! token.invalidate()
         XCTAssert(token.future.error != nil, "future should have an error")
         if let error = token.future.error {
-            XCTAssertEqual(error, BrightFuturesError.InvalidationTokenInvalidated)
+            XCTAssert(error == BrightFuturesError.InvalidationTokenInvalidated)
         }
     }
     
@@ -46,8 +46,8 @@ class InvalidationTokenTests: XCTestCase {
         
         let e = self.expectation()
         Queue.global.async {
-            token.invalidate()
-            p.success(2)
+            try! token.invalidate()
+            try! p.success(2)
             NSThread.sleepForTimeInterval(0.2); // make sure onSuccess is not called
             e.fulfill()
         }
@@ -82,7 +82,7 @@ class InvalidationTokenTests: XCTestCase {
             
             token.context {
                 counter.i++
-                token.invalidate()
+                try! token.invalidate()
             }
         }
         

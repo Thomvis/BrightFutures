@@ -32,24 +32,24 @@ import Result
 public class Promise<T, E: ErrorType> {
 
     /// The future that will complete through this promise
-    public let future: Future<T, E>
+    public lazy var future: Future<T, E> = Future<T, E>()
     
     /// Creates a new promise with a pending future
     public init() {
-        self.future = Future<T, E>()
+
     }
     
     /// Completes the promise's future with the given future
     public func completeWith(future: Future<T, E>) {
         future.onComplete { result in
-            result.analysis(ifSuccess: self.success, ifFailure: self.failure)
+            try! self.complete(result)
         }
     }
     
     /// Completes the promise's future with the given success value
     /// See `Future.success(value: T)`
-    public func success(value: T) {
-        self.future.success(value)
+    public func success(value: T) throws {
+        try self.future.success(value)
     }
     
     /// Attempts to complete the promise's future with the given success value
@@ -60,8 +60,8 @@ public class Promise<T, E: ErrorType> {
     
     /// Completes the promise's future with the given error
     /// See `future.failure(error: E)`
-    public func failure(error: E) {
-        self.future.failure(error)
+    public func failure(error: E) throws {
+        try self.future.failure(error)
     }
 
     /// Attempts to complete the promise's future with the given error
@@ -72,8 +72,8 @@ public class Promise<T, E: ErrorType> {
 
     /// Completes the promise's future with the given result
     /// See `future.complete(result: Result<T, E>)`
-    public func complete(result: Result<T, E>) {
-        return self.future.complete(result)
+    public func complete(result: Result<T, E>) throws {
+        try self.future.complete(result)
     }
     
     /// Attempts to complete the promise's future with the given result

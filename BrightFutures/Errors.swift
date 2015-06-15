@@ -24,10 +24,13 @@ import Foundation
 
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
-public enum NoError {}
+public enum NoError: ErrorType {}
 
-/// Extends `NoError` to conform to `ErrorType`
-extension NoError: ErrorType {}
+extension NoError: Equatable {}
+
+public func ==(lhs: NoError, rhs: NoError) -> Bool {
+    return true
+}
 
 /// An enum representing every possible error for errors returned by BrightFutures
 /// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
@@ -36,6 +39,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
     case InvalidationTokenInvalidated
+    case IllegalState
     case External(E)
 
     public init(external: E) {
@@ -43,15 +47,12 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     }
 }
 
-/// Extends `BrightFuturesError` to conform to `Equatable`
-extension BrightFuturesError: Equatable {}
-
 /// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
-public func ==<E: ErrorType>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
-    switch (lhs, rhs) {
-    case (.NoSuchElement, .NoSuchElement): return true
-    case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
-    case (.External(_), .External(_)): return true
-    default: return false
+public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
+   switch (lhs, rhs) {
+        case (.NoSuchElement, .NoSuchElement): return true
+        case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
+        case (.External(let lhs), .External(let rhs)): return lhs == rhs
+        default: return false
     }
 }

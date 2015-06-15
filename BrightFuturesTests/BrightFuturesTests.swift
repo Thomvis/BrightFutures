@@ -45,7 +45,7 @@ extension BrightFuturesTests {
         let completeExpectation = self.expectationWithDescription("immediate complete")
         
         f.onComplete { result in
-            XCTAssert(result.isSuccess)
+            XCTAssert(result == .Success(2))
             completeExpectation.fulfill()
         }
         
@@ -100,7 +100,7 @@ extension BrightFuturesTests {
     }
     
     func testCompleteAfterFuture() {
-        let f = Future<Int, NoError>.completeAfter(1, withValue: 3)
+        let f = Future<Int, NoError>.completeAfter(1, withResult: Result(value: 3))
         
         XCTAssertFalse(f.isCompleted)
         
@@ -220,7 +220,7 @@ extension BrightFuturesTests {
         let e1 = self.expectation()
 
         f1.onFailure { error in
-            XCTAssertEqual(error, BrightFuturesError<NoError>.NoSuchElement)
+            XCTAssert(error == BrightFuturesError<NoError>.NoSuchElement)
             e1.fulfill()
         }
         
@@ -231,7 +231,7 @@ extension BrightFuturesTests {
         let p = Promise<Int, NoError>()
         
         Queue.global.async {
-            p.success(fibonacci(10))
+            try! p.success(fibonacci(10))
         }
         
         let e = self.expectationWithDescription("complete expectation")
@@ -443,16 +443,18 @@ extension BrightFuturesTests {
             XCTAssert(value == 5)
             e.fulfill()
         }
-        
-        let e1 = self.expectation()
-        
-        let f: Future<Int, NoError> = Future<Int, NSError>.failed(NSError(domain: "NaN", code: 0, userInfo: nil)) ?? future(fibonacci(5))
-        
-        f.onSuccess {
-            XCTAssertEqual($0, 5)
-            e1.fulfill()
-        }
-        
+
+        XCTFail("fails with an EXC_BAD_ACCESS")
+//        let e1 = self.expectation()
+//        
+//
+//        let f: Future<Int, NoError> = Future<Int, NSError>.failed(NSError(domain: "NaN", code: 0, userInfo: nil)) ?? future(fibonacci(5))
+//        
+//        f.onSuccess {
+//            XCTAssertEqual($0, 5)
+//            e1.fulfill()
+//        }
+//        
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
@@ -462,7 +464,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        f.zip(f1).onSuccess { (let a, let b) in
+        f.zip(f1).onSuccess { (a, b) in
             XCTAssertEqual(a, 1)
             XCTAssertEqual(b, 2)
             e.fulfill()
@@ -600,103 +602,109 @@ extension BrightFuturesTests {
  */
 extension BrightFuturesTests {
     func testUtilsTraverseSuccess() {
-        let n = 10
-        
-        let f = traverse(Array(1...n)) { i in
-            Future<Int, NoError>.succeeded(fibonacci(i))
-        }
-        
-        let e = self.expectation()
-        
-        f.onSuccess { fibSeq in
-            XCTAssertEqual(fibSeq.count, n)
-            
-            for var i = 0; i < fibSeq.count; i++ {
-                XCTAssertEqual(fibSeq[i], fibonacci(i+1))
-            }
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(4, handler: nil)
+        XCTFail("does not compile")
+//        
+//        let n = 10
+//        
+//        let f = Array(1...n).traverse { i in
+//            Future<Int, NoError>.succeeded(fibonacci(i))
+//        }
+//        
+//        let e = self.expectation()
+//        
+//        f.onSuccess { fibSeq in
+//            XCTAssertEqual(fibSeq.count, n)
+//            
+//            for var i = 0; i < fibSeq.count; i++ {
+//                XCTAssertEqual(fibSeq[i], fibonacci(i+1))
+//            }
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(4, handler: nil)
     }
     
     func testUtilsTraverseEmpty() {
-        let e = self.expectation()
-        traverse([Int]()) {Future<Int, NoError>.succeeded($0)}.onSuccess { res in
-            XCTAssertEqual(res.count, 0);
-            e.fulfill()
-        }
+        XCTFail("does not compile")
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+//        let e = self.expectation()
+//        traverse([Int]()) {Future<Int, NoError>.succeeded($0)}.onSuccess { res in
+//            XCTAssertEqual(res.count, 0);
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsTraverseSingleError() {
-        let e = self.expectation()
-        
-        let evenFuture: Int -> Future<Bool, NSError> = { i in
-            return future {
-                if i % 2 == 0 {
-                    return Result(value: true)
-                } else {
-                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
-                }
-            }
-        }
-        
-        let f = traverse([2,4,6,8,9,10], context: Queue.global.context, f: evenFuture)
-            
-            
-        f.onFailure { err in
-            XCTAssertEqual(err.code, 9)
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let e = self.expectation()
+//        
+//        let evenFuture: Int -> Future<Bool, NSError> = { i in
+//            return future {
+//                if i % 2 == 0 {
+//                    return Result(value: true)
+//                } else {
+//                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
+//                }
+//            }
+//        }
+//        
+//        let f = traverse([2,4,6,8,9,10], context: Queue.global.context, f: evenFuture)
+//            
+//            
+//        f.onFailure { err in
+//            XCTAssertEqual(err.code, 9)
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsTraverseMultipleErrors() {
-        let e = self.expectation()
-        
-        let evenFuture: Int -> Future<Bool, NSError> = { i in
-            return future { err in
-                if i % 2 == 0 {
-                    return Result(value: true)
-                } else {
-                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
-                }
-            }
-        }
-        
-        traverse([20,22,23,26,27,30], f: evenFuture).onFailure { err in
-            XCTAssertEqual(err.code, 23)
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let e = self.expectation()
+//        
+//        let evenFuture: Int -> Future<Bool, NSError> = { i in
+//            return future { err in
+//                if i % 2 == 0 {
+//                    return Result(value: true)
+//                } else {
+//                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
+//                }
+//            }
+//        }
+//        
+//        traverse([20,22,23,26,27,30], f: evenFuture).onFailure { err in
+//            XCTAssertEqual(err.code, 23)
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsTraverseWithExecutionContext() {
-        let e = self.expectation()
-        
-        traverse(Array(1...10), context: Queue.main.context) { _ -> Future<Int, NoError> in
-            XCTAssert(NSThread.isMainThread())
-            return Future.succeeded(1)
-        }.onComplete { _ in
-            e.fulfill()
-        }
-
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let e = self.expectation()
+//        
+//        traverse(Array(1...10), context: Queue.main.context) { _ -> Future<Int, NoError> in
+//            XCTAssert(NSThread.isMainThread())
+//            return Future.succeeded(1)
+//        }.onComplete { _ in
+//            e.fulfill()
+//        }
+//
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFold() {
+    func testUtilsReduce() {
         // create a list of Futures containing the Fibonacci sequence
         let fibonacciList = (1...10).map { val in
             fibonacciFuture(val)
         }
-        
+
         let e = self.expectation()
-        
-        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onSuccess { val in
+        fibonacciList.reduce(0, combine: { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, 143)
             e.fulfill()
         }
@@ -704,7 +712,7 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFoldWithError() {
+    func testUtilsReduceWithError() {
         let error = NSError(domain: "fold-with-error", code: 0, userInfo: nil)
         
         // create a list of Futures containing the Fibonacci sequence and one error
@@ -712,13 +720,13 @@ extension BrightFuturesTests {
             if val == 3 {
                 return Future<Int, NSError>.failed(error)
             } else {
-                return promoteError(fibonacciFuture(val))
+                return fibonacciFuture(val).promoteError()
             }
         }
         
         let e = self.expectation()
         
-        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onFailure { err in
+        fibonacciList.reduce(0, combine: { $0 + $1 }).onFailure { err in
             XCTAssertEqual(err, error)
             e.fulfill()
         }
@@ -726,12 +734,12 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFoldWithExecutionContext() {
+    func testUtilsReduceWithExecutionContext() {
         let e = self.expectation()
         
-        fold([Future<Int, NoError>.succeeded(1)], context: Queue.main.context, zero: 10) { remainder, elem -> Int in
+        [Future<Int, NoError>(value: 1)].reduce(10, context: Queue.main.context) { acc, elem -> Int in
             XCTAssert(NSThread.isMainThread())
-            return remainder + elem
+            return acc + elem
         }.onSuccess { val in
             XCTAssertEqual(val, 11)
             e.fulfill()
@@ -740,12 +748,12 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFoldWithEmptyList() {
+    func testUtilsReducedWithEmptyList() {
         let z = "NaN"
         
         let e = self.expectation()
         
-        fold([Future<String, NoError>](), zero: z, f: { $0 + $1 }).onSuccess { val in
+        [Future<String, NoError>]().reduce(z, combine: { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, z)
             e.fulfill()
         }
@@ -765,7 +773,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        firstCompletedOf(futures).onSuccess { val in
+        futures.firstCompletedOf().onSuccess { val in
             XCTAssertEqual(val, 9)
             e.fulfill()
         }
@@ -774,78 +782,82 @@ extension BrightFuturesTests {
     }
     
     func testUtilsSequence() {
-        let futures = (1...10).map { fibonacciFuture($0) }
-        
-        let e = self.expectation()
-        
-        sequence(futures).onSuccess { fibs in
-            for (index, num) in fibs.enumerate() {
-                XCTAssertEqual(fibonacci(index+1), num)
-            }
-            
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let futures = (1...10).map { fibonacciFuture($0) }
+//        
+//        let e = self.expectation()
+//        
+//        sequence(futures).onSuccess { fibs in
+//            for (index, num) in fibs.enumerate() {
+//                XCTAssertEqual(fibonacci(index+1), num)
+//            }
+//            
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsSequenceEmpty() {
-        let e = self.expectation()
-        
-        sequence([Future<Int, NoError>]()).onSuccess { val in
-            XCTAssertEqual(val.count, 0)
-            
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let e = self.expectation()
+//        
+//        sequence([Future<Int, NoError>]()).onSuccess { val in
+//            XCTAssertEqual(val.count, 0)
+//            
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsFindSuccess() {
-        let futures: [Future<Int, NoError>] = [
-            Future.succeeded(1),
-            Future.completeAfter(0.2, withValue: 3),
-            Future.succeeded(5),
-            Future.succeeded(7),
-            Future.completeAfter(0.3, withValue: 8),
-            Future.succeeded(9)
-        ];
-        
-        let f = find(futures, context: Queue.global.context) { val in
-            return val % 2 == 0
-        }
-        
-        let e = self.expectation()
-        
-        f.onSuccess { val in
-            XCTAssertEqual(val, 8, "First matching value is 8")
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let futures: [Future<Int, NoError>] = [
+//            Future.succeeded(1),
+//            Future.completeAfter(0.2, withValue: 3),
+//            Future.succeeded(5),
+//            Future.succeeded(7),
+//            Future.completeAfter(0.3, withValue: 8),
+//            Future.succeeded(9)
+//        ];
+//        
+//        let f = find(futures, context: Queue.global.context) { val in
+//            return val % 2 == 0
+//        }
+//        
+//        let e = self.expectation()
+//        
+//        f.onSuccess { val in
+//            XCTAssertEqual(val, 8, "First matching value is 8")
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsFindNoSuchElement() {
-        let futures: [Future<Int, NoError>] = [
-            Future.succeeded(1),
-            Future.completeAfter(0.2, withValue: 3),
-            Future.succeeded(5),
-            Future.succeeded(7),
-            Future.completeAfter(0.4, withValue: 9),
-        ];
-        
-        let f = find(futures) { val in
-            return val % 2 == 0
-        }
-        
-        let e = self.expectation()
-        
-        f.onFailure { err in
-            XCTAssertEqual(err, BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
-            e.fulfill()
-        }
-        
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        XCTFail("does not compile")
+//        let futures: [Future<Int, NoError>] = [
+//            Future.succeeded(1),
+//            Future.completeAfter(0.2, withValue: 3),
+//            Future.succeeded(5),
+//            Future.succeeded(7),
+//            Future.completeAfter(0.4, withValue: 9),
+//        ];
+//        
+//        let f = find(futures) { val in
+//            return val % 2 == 0
+//        }
+//        
+//        let e = self.expectation()
+//        
+//        f.onFailure { err in
+//            XCTAssert(err == BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
+//            e.fulfill()
+//        }
+//        
+//        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
  
 }
@@ -946,7 +958,7 @@ extension BrightFuturesTests {
             }
         }
         
-        p.success()
+        try! p.success()
         
         self.waitForExpectationsWithTimeout(5, handler: nil)
     }
