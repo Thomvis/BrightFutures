@@ -25,7 +25,7 @@ import Result
 
 public protocol ResultType {
     typealias Value
-    typealias Error
+    typealias Error: ErrorType
     
     var value: Value? { get }
     var error: Error? { get }
@@ -37,10 +37,6 @@ public protocol ResultType {
 }
 
 extension Result: ResultType { }
-
-public protocol FutureType: DeferredType {
-    typealias Res: ResultType
-}
 
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
@@ -180,23 +176,19 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
         return f
     }
     
-    public func flatMap<U>(context c: ExecutionContext = defaultContext(), f: Res.Value -> Future<U, Res.Error>) -> Future<U, Res.Error> {
-        let f = map(context: c, transform: f)
-        
-        return Future<U, Res.Error>()
+    public func flatMap<U>(context c: ExecutionContext = defaultContext(), transform: Res.Value -> Future<U, Res.Error>) -> Future<U, Res.Error> {
+        return map(context: c, transform: transform).flatten()
     }
     
-    public func flatMap<R: ResultType>(context c: ExecutionContext = defaultContext(), f: Res.Value -> R) -> Future<R.Value, Res.Error> {
-        let f = map(context: c, transform: f)
-        
-        return Future<R.Value, Res.Error>()
+    public func flatMap<U>(context c: ExecutionContext = defaultContext(), transform: Res.Value -> Result<U, Res.Error>) -> Future<U, Res.Error> {
+        return map(context: c, transform: transform).flatten()
     }
     
-    public func mapError<E1>(context c: ExecutionContext, f: Res.Error -> E1) -> Future<Res.Value, E1> {
+    func mapError<E1>(context c: ExecutionContext, transform: Res.Error -> E1) -> Future<Res.Value, E1> {
         let f = Future<Res.Value, E1>()
         
-        onComplete(context:c) { res in
-            
+        onComplete(context: c) { res in
+            res.analysis(ifSuccess: { try! f.success($0) }, ifFailure: { try! f.failure(transform($0)) })
         }
         
         return f
@@ -268,6 +260,44 @@ internal extension MutableDeferredType where Res: ResultType {
     
     func tryFailure(error: Res.Error) -> Bool {
         return tryComplete(Res(error: error))
+    }
+    
+}
+
+extension DeferredType where Res: ResultType, Res.Value: ResultType, Res.Error: ErrorType, Res.Error == Res.Value.Error {
+    
+    /// Flattens a result in a future
+    public func flatten() -> Future<Res.Value.Value, Res.Error> {
+        let f = Future<Res.Value.Value, Res.Error>()
+        
+        onComplete(context: ImmediateExecutionContext) { res in
+            res.analysis(ifSuccess: { res in
+                res.analysis(ifSuccess: { try! f.success($0); return }, ifFailure: { err in try! f.failure(err); return })
+            }, ifFailure: {
+                try! f.failure($0)
+            })
+        }
+        
+        return f
+    }
+    
+}
+
+extension DeferredType where Res: ResultType, Res.Value: DeferredType, Res.Value.Res: ResultType, Res.Error: ErrorType, Res.Value.Res.Error == Res.Error {
+    
+    /// Flattens a future in a future
+    public func flatten() -> Future<Res.Value.Res.Value, Res.Error> {
+        let f = Future<Res.Value.Res.Value, Res.Error>()
+
+        onComplete(context: ImmediateExecutionContext) { res in
+            res.analysis(ifSuccess: { innerFuture -> () in
+                innerFuture.onComplete(context: ImmediateExecutionContext) { (res:Res.Value.Res) in
+                    res.analysis(ifSuccess: { try! f.success($0) }, ifFailure: { err in try! f.failure(err) })
+                }
+            }, ifFailure: { try! f.failure($0) })
+        }
+        
+        return f
     }
     
 }

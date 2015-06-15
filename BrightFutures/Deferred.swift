@@ -141,7 +141,13 @@ public extension DeferredType {
 extension DeferredType where Res: DeferredType {
     
     func flatten() -> Res {
-        fatalError()
+        let signal = Deferred<Res>()
+        
+        onComplete(context: ImmediateExecutionContext) { innerDeferred in
+            signal.completeWith(innerDeferred)
+        }
+        
+        return Res(other: signal)
     }
     
 }
