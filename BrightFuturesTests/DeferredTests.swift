@@ -8,6 +8,7 @@
 
 import XCTest
 import BrightFutures
+import Result
 
 class DeferredTests: XCTestCase {
 
@@ -30,7 +31,7 @@ class DeferredTests: XCTestCase {
     }
     
     func testOnComplete() {
-        let d = deferred { _ -> Int in
+        let d = deferred { () -> Int in
             sleep(1)
             return 3
         }
@@ -39,6 +40,20 @@ class DeferredTests: XCTestCase {
         let e = self.expectation()
         d.onComplete { res in
             XCTAssert(res == 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testDeferredAsFuture() {
+        let d = deferred { () -> Result<Int,NoError> in
+            return Result(value: 3)
+        }
+        
+        let e = self.expectation()
+        d.onSuccess { val in
+            XCTAssertEqual(3, val)
             e.fulfill()
         }
         

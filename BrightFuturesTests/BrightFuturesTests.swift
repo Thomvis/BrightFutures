@@ -697,94 +697,88 @@ extension BrightFuturesTests {
 //        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFold() {
-        XCTFail("does not compile")
-//        // create a list of Futures containing the Fibonacci sequence
-//        let fibonacciList = (1...10).map { val in
-//            fibonacciFuture(val)
-//        }
-//        
-//        let e = self.expectation()
-//        
-//        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onSuccess { val in
-//            XCTAssertEqual(val, 143)
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
+    func testUtilsReduce() {
+        // create a list of Futures containing the Fibonacci sequence
+        let fibonacciList = (1...10).map { val in
+            fibonacciFuture(val)
+        }
+
+        let e = self.expectation()
+        fibonacciList.reduce(0, combine: { $0 + $1 }).onSuccess { val in
+            XCTAssertEqual(val, 143)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFoldWithError() {
-        XCTFail("does not compile")
-//        let error = NSError(domain: "fold-with-error", code: 0, userInfo: nil)
-//        
-//        // create a list of Futures containing the Fibonacci sequence and one error
-//        let fibonacciList = (1...10).map { val -> Future<Int, NSError> in
-//            if val == 3 {
-//                return Future<Int, NSError>.failed(error)
-//            } else {
-//                return promoteError(fibonacciFuture(val))
-//            }
-//        }
-//        
-//        let e = self.expectation()
-//        
-//        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onFailure { err in
-//            XCTAssertEqual(err, error)
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
+    func testUtilsReduceWithError() {
+        let error = NSError(domain: "fold-with-error", code: 0, userInfo: nil)
+        
+        // create a list of Futures containing the Fibonacci sequence and one error
+        let fibonacciList = (1...10).map { val -> Future<Int, NSError> in
+            if val == 3 {
+                return Future<Int, NSError>.failed(error)
+            } else {
+                return fibonacciFuture(val).promoteError()
+            }
+        }
+        
+        let e = self.expectation()
+        
+        fibonacciList.reduce(0, combine: { $0 + $1 }).onFailure { err in
+            XCTAssertEqual(err, error)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFoldWithExecutionContext() {
-        XCTFail("does not compile")
-//        let e = self.expectation()
-//        
-//        fold([Future<Int, NoError>.succeeded(1)], context: Queue.main.context, zero: 10) { remainder, elem -> Int in
-//            XCTAssert(NSThread.isMainThread())
-//            return remainder + elem
-//        }.onSuccess { val in
-//            XCTAssertEqual(val, 11)
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
+    func testUtilsReduceWithExecutionContext() {
+        let e = self.expectation()
+        
+        [Future<Int, NoError>(value: 1)].reduce(10, context: Queue.main.context) { acc, elem -> Int in
+            XCTAssert(NSThread.isMainThread())
+            return acc + elem
+        }.onSuccess { val in
+            XCTAssertEqual(val, 11)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
-    func testUtilsFoldWithEmptyList() {
-        XCTFail("does not compile")
-//        let z = "NaN"
-//        
-//        let e = self.expectation()
-//        
-//        fold([Future<String, NoError>](), zero: z, f: { $0 + $1 }).onSuccess { val in
-//            XCTAssertEqual(val, z)
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
+    func testUtilsReducedWithEmptyList() {
+        let z = "NaN"
+        
+        let e = self.expectation()
+        
+        [Future<String, NoError>]().reduce(z, combine: { $0 + $1 }).onSuccess { val in
+            XCTAssertEqual(val, z)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsFirstCompleted() {
-        XCTFail("does not compile")
-//        let futures: [Future<Int, NoError>] = [
-//            Future.completeAfter(0.2, withValue: 3),
-//            Future.completeAfter(0.3, withValue: 13),
-//            Future.completeAfter(0.4, withValue: 23),
-//            Future.completeAfter(0.3, withValue: 4),
-//            Future.completeAfter(0.1, withValue: 9),
-//            Future.completeAfter(0.4, withValue: 83),
-//        ]
-//        
-//        let e = self.expectation()
-//        
-//        firstCompletedOf(futures).onSuccess { val in
-//            XCTAssertEqual(val, 9)
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
+        let futures: [Future<Int, NoError>] = [
+            Future.completeAfter(0.2, withValue: 3),
+            Future.completeAfter(0.3, withValue: 13),
+            Future.completeAfter(0.4, withValue: 23),
+            Future.completeAfter(0.3, withValue: 4),
+            Future.completeAfter(0.1, withValue: 9),
+            Future.completeAfter(0.4, withValue: 83),
+        ]
+        
+        let e = self.expectation()
+        
+        futures.firstCompletedOf().onSuccess { val in
+            XCTAssertEqual(val, 9)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsSequence() {

@@ -23,16 +23,31 @@
 import Foundation
 import Result
 
-extension SequenceType where Generator.Element : DeferredType {
+extension SequenceType {
+    func test() {
+        
+    }
+}
+
+public extension SequenceType where Generator.Element: DeferredType {
+    
     public func firstCompletedOf() -> Generator.Element {
-        fatalError("not yet implemented")
+        let signal = Deferred<Generator.Element.Res>()
+        
+        for d in self {
+            d.onComplete(context: ImmediateExecutionContext) { res in
+                signal.tryComplete(res)
+            }
+        }
+        
+        return Generator.Element(other: signal)
     }
 
-    public func fold<R>(zero: R, f: (R, Generator.Element.Res) -> R) -> Deferred<R> {
-        return self.reduce(Deferred(result: zero)) { (res: Deferred<R>, fut: Generator.Element) in
-            res.flatMap { zeroVal in
-                fut.map { futVal in
-                    return f(zeroVal, futVal)
+    public func reduce<R>(initial: R, context c: ExecutionContext = defaultContext(), combine: (R, Generator.Element.Res) -> R) -> Deferred<R> {
+        return self.reduce(Deferred(result: initial)) { acc, elem in
+            acc.flatMap { zeroVal in
+                elem.map(context: c) { futVal in
+                    return combine(zeroVal, futVal)
                 }
             }
         }
@@ -50,6 +65,20 @@ extension SequenceType where Generator.Element : DeferredType {
         fatalError("not yet implemented")
     }
 
+}
+
+public extension SequenceType where Generator.Element: DeferredType, Generator.Element.Res: ResultType {
+    
+    public func reduce<R>(initial: R, context c: ExecutionContext = defaultContext(),combine: (R, Generator.Element.Res.Value) -> R) -> Future<R, Generator.Element.Res.Error> {
+        return self.reduce(Future<R, Generator.Element.Res.Error>(value: initial)) { acc, elem in
+            acc.flatMap { zeroVal in
+                elem.map(context: c) { futVal in
+                    return combine(zeroVal, futVal)
+                }
+            }
+        }
+    }
+    
 }
 
 ///// Performs the fold operation over a sequence of futures. The folding is performed
