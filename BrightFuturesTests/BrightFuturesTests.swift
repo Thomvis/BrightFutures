@@ -443,16 +443,18 @@ extension BrightFuturesTests {
             XCTAssert(value == 5)
             e.fulfill()
         }
-        
-        let e1 = self.expectation()
-        
-        let f: Future<Int, NoError> = Future<Int, NSError>.failed(NSError(domain: "NaN", code: 0, userInfo: nil)) ?? future(fibonacci(5))
-        
-        f.onSuccess {
-            XCTAssertEqual($0, 5)
-            e1.fulfill()
-        }
-        
+
+        XCTFail("fails with an EXC_BAD_ACCESS")
+//        let e1 = self.expectation()
+//        
+//
+//        let f: Future<Int, NoError> = Future<Int, NSError>.failed(NSError(domain: "NaN", code: 0, userInfo: nil)) ?? future(fibonacci(5))
+//        
+//        f.onSuccess {
+//            XCTAssertEqual($0, 5)
+//            e1.fulfill()
+//        }
+//        
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
