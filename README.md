@@ -23,6 +23,8 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 
 The latest stable BrightFutures release is 1.0.1.
 
+[BrightFutures 2.0](https://github.com/Thomvis/BrightFutures/tree/2.0-development) is currently under development. A beta release is available. It would really help if you'd check it out.
+
 ## Requirements
 
 - Built for Swift 1.2
