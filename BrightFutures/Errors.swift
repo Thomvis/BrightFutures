@@ -66,6 +66,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     case InvalidationTokenInvalidated
     case External(Box<E>)
 
+    /// Constructs a BrightFutures.External with the given external error
     public init(external: E) {
         self = .External(Box(external))
     }
