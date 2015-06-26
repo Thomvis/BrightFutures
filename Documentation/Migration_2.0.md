@@ -1,3 +1,5 @@
+Please read the [changelog](CHANGELOG.md) for 2.0 first.
+
 BrightFutures 2.0 has two new dependencies: Result and Box. If you're using CocoaPods, `pod update` should automatically integrate it into your project. If you're using Carthage, after running `carthage update`, you need to add `Result.framework` and `Box.framework` to your target like you have also done for `BrightFutures.framework`. 
 
 In files where you're using `Result` or `Box`, you'll also need to add an import statement for the respecive frameworks. If you fail to do this, you will see errors like "Use of undeclared type 'Result'".
@@ -28,4 +30,4 @@ The easiest way to create `Result` instances is through its two constructors. Yo
 Result(success: 1314) // a Result.Success
 Result(error: .DeserializationFailed(object: json) // a Result.Failure
 ```
-
+In addition to this migration guide, you can take a look at the changes that were made to the tests during the development of 2.0. These can be found in the [2.0 PR diff](https://github.com/Thomvis/BrightFutures/pull/51/files#diff-a6ad99ed0ef578b716f34ca4e2d578f7L43).
