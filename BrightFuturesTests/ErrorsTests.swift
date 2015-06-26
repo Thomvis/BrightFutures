@@ -25,11 +25,20 @@ import BrightFutures
 
 enum TestError: ErrorType {
     case JustAnError
+    case JustAnotherError
     
     var nsError: NSError {
-        return NSError(domain: "TestError", code: 1, userInfo: nil)
+        switch self {
+        case .JustAnError:
+            return NSError(domain: "TestError", code: 1, userInfo: nil)
+        case .JustAnotherError:
+            return NSError(domain: "AnotherTestError", code: 2, userInfo: nil)
+        }
+        
     }
 }
+
+extension TestError: Equatable {}
 
 class ErrorsTests: XCTestCase {
     

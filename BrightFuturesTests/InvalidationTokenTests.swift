@@ -56,6 +56,42 @@ class InvalidationTokenTests: XCTestCase {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testNonInvalidatedSucceededFutureOnSuccess() {
+        let token = InvalidationToken()
+        
+        let e = self.expectation()
+        Future<Int, NoError>.succeeded(3).onSuccess(token: token) { val in
+            XCTAssertEqual(val, 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testNonInvalidatedSucceededFutureOnComplete() {
+        let token = InvalidationToken()
+        
+        let e = self.expectation()
+        Future<Int, NoError>.succeeded(3).onComplete(token: token) { res in
+            XCTAssertEqual(res.value!, 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testNonInvalidatedFailedFutureOnFailure() {
+        let token = InvalidationToken()
+        
+        let e = self.expectation()
+        Future<Int, TestError>.failed(TestError.JustAnError).onFailure(token: token) { err in
+            XCTAssertEqual(err, TestError.JustAnError)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testStress() {
         class Counter {
             var i = 0

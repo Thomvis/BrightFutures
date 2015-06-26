@@ -81,5 +81,14 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
             return boxedError.value.nsError
         }
     }
+}
 
+/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
+public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
+    switch (lhs, rhs) {
+    case (.NoSuchElement, .NoSuchElement): return true
+    case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
+    case (.External(let lhs), .External(let rhs)): return lhs == rhs
+    default: return false
+    }
 }
