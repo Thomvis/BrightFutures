@@ -21,7 +21,7 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 ## Latest news
 [![CircleCI build status badge](https://img.shields.io/circleci/project/Thomvis/BrightFutures/master.svg)](https://circleci.com/gh/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests and documentation have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
+BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests (97% coverage) and documentation (100% coverage) have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
 
 ## Requirements
 
