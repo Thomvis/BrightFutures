@@ -5,7 +5,7 @@ You are currently on the 2.0-development branch.
 - 2.0 will be the next major version
 - Until it is released, breaking changes might occur
 - PR #51 tracks the progress
-- See the [Migration guide](Documentation/Migration_2.0.md)
+- See the 
 - The README has not yet been updated
 
 BrightFutures
@@ -21,9 +21,7 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 ## Latest news
 [![CircleCI build status badge](https://img.shields.io/circleci/project/Thomvis/BrightFutures/master.svg)](https://circleci.com/gh/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-The latest stable BrightFutures release is 1.0.1.
-
-[BrightFutures 2.0](https://github.com/Thomvis/BrightFutures/tree/2.0-development) is currently under development. A beta release is available. It would really help if you'd check it out.
+BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests and documentation have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
 
 ## Requirements
 
@@ -50,10 +48,11 @@ github "Thomvis/BrightFutures"
 Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ## Documentation
-- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
+- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures) (100% documentation coverage)
 - This README covers almost all features of BrightFutures
-- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature
+- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature (97% test coverage)
 - The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
+- The [Highstreet Watch App](https://github.com/GetHighstreet/HighstreetWatchApp) is an Open Source WatchKit app that makes extensive use of BrightFutures
 
 ## Examples
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
