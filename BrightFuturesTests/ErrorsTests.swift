@@ -25,6 +25,7 @@ import BrightFutures
 
 enum TestError: ErrorType {
     case JustAnError
+    case JustAnotherError
 }
 
 extension TestError: Equatable {}

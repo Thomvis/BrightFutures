@@ -26,6 +26,12 @@ import Foundation
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
 public enum NoError {}
 
+extension NoError: Equatable { }
+
+public func ==(lhs: NoError, rhs: NoError) -> Bool {
+    return true
+}
+
 /// Extends `NoError` to conform to `ErrorType`
 extension NoError: ErrorType {}
 
@@ -43,9 +49,6 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
         self = .External(external)
     }
 }
-
-/// Extends `BrightFuturesError` to conform to `Equatable`
-extension BrightFuturesError: Equatable {}
 
 /// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
 public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {

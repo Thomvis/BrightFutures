@@ -231,7 +231,7 @@ extension BrightFuturesTests {
         let e1 = self.expectation()
 
         f1.onFailure { error in
-            XCTAssertEqual(error, BrightFuturesError<NoError>.NoSuchElement)
+            XCTAssert(error == BrightFuturesError<NoError>.NoSuchElement)
             e1.fulfill()
         }
         
@@ -272,10 +272,10 @@ extension BrightFuturesTests {
         
         p.future.onComplete { result in
             switch result {
-            case .Success(let val):
+            case .Success(_):
                 XCTFail("should not be success")
             case .Failure(let err):
-                XCTAssertEqual(err.value, TestError.JustAnError)
+                XCTAssertEqual(err, TestError.JustAnError)
             }
             
             e.fulfill()
@@ -480,7 +480,7 @@ extension BrightFuturesTests {
 
     func testRecover() {
         let e = self.expectation()
-        let f = Future<Int, TestError>.failed(TestError.JustAnError).recover { _ in
+        Future<Int, TestError>.failed(TestError.JustAnError).recover { _ in
             return 3
         }.onSuccess { val in
             XCTAssertEqual(val, 3)
@@ -957,7 +957,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         f.onFailure { err in
-            XCTAssertEqual(err, BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
+            XCTAssert(err == BrightFuturesError<NoError>.NoSuchElement, "No matching elements")
             e.fulfill()
         }
         
