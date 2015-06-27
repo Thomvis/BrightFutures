@@ -21,6 +21,10 @@ Latest releases:
 - 2.0.0
     - Built for Swift 1.2
     - Runs on iOS 8 / OS X 10.10 and above
+- 1.0.1
+    - Superseded by 2.0.0, 1.x is in maintenance mode
+    - Built for Swift 1.2
+    - Runs on iOS 8 / OS X 10.10 and above
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
