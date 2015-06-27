@@ -13,10 +13,14 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 
 BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests (97% coverage) and documentation (100% coverage) have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
 
-## Requirements
+A Swift 2.0 compatible version is in the works. Check out the [swift-2.0](https://github.com/Thomvis/BrightFutures/tree/swift-2.0) branch.
 
-- Built for Swift 1.2
-- Runs on iOS 8 / OS X 10.10 and above
+## Releases
+
+Latest releases:
+- 2.0.0
+    - Built for Swift 1.2
+    - Runs on iOS 8 / OS X 10.10 and above
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
