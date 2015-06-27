@@ -1,13 +1,3 @@
-### Warning
-
-You are currently on the 2.0-development branch. 
-
-- 2.0 will be the next major version
-- Until it is released, breaking changes might occur
-- PR #51 tracks the progress
-- See the 
-- The README has not yet been updated
-
 BrightFutures
 =============
 
