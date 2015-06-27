@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Foundation
+import Result
 
 /// The source of a future. Create a `Promise` when you are
 /// performing an asynchronous task and want to return a future.
@@ -28,25 +29,20 @@ import Foundation
 /// when the asynchronous operation is completion. Completing a 
 /// promise is thread safe and is typically performed from the 
 /// (background) thread where the operation itself is also performed.
-public class Promise<T> {
+public class Promise<T, E: ErrorType> {
 
     /// The future that will complete through this promise
-    public let future: Future<T>
+    public let future: Future<T, E>
     
     /// Creates a new promise with a pending future
     public init() {
-        self.future = Future<T>()
+        self.future = Future<T, E>()
     }
     
     /// Completes the promise's future with the given future
-    public func completeWith(future: Future<T>) {
+    public func completeWith(future: Future<T, E>) {
         future.onComplete { result in
-            switch result {
-            case .Success(let val):
-                self.success(val.value)
-            case .Failure(let err):
-                self.failure(err)
-            }
+            result.analysis(ifSuccess: self.success, ifFailure: self.failure)
         }
     }
     
@@ -63,26 +59,26 @@ public class Promise<T> {
     }
     
     /// Completes the promise's future with the given error
-    /// See `future.failure(error: NSError)`
-    public func failure(error: NSError) {
+    /// See `future.failure(error: E)`
+    public func failure(error: E) {
         self.future.failure(error)
     }
 
     /// Attempts to complete the promise's future with the given error
-    /// See `future.tryFailure(error: NSError)`
-    public func tryFailure(error: NSError) -> Bool {
+    /// See `future.tryFailure(error: E)`
+    public func tryFailure(error: E) -> Bool {
         return self.future.tryFailure(error)
     }
 
     /// Completes the promise's future with the given result
-    /// See `future.complete(result: Result<T>)`
-    public func complete(result: Result<T>) {
+    /// See `future.complete(result: Result<T, E>)`
+    public func complete(result: Result<T, E>) {
         return self.future.complete(result)
     }
     
     /// Attempts to complete the promise's future with the given result
-    /// See `future.tryComplete(result: Result<T>)`
-    public func tryComplete(result: Result<T>) -> Bool {
+    /// See `future.tryComplete(result: Result<T, E>)`
+    public func tryComplete(result: Result<T,E>) -> Bool {
         return self.future.tryComplete(result)
     }
     

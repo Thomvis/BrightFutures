@@ -11,14 +11,20 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 ## Latest news
 [![CircleCI build status badge](https://img.shields.io/circleci/project/Thomvis/BrightFutures/master.svg)](https://circleci.com/gh/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-The latest stable BrightFutures release is 1.0.1.
+BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests (97% coverage) and documentation (100% coverage) have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
 
-[BrightFutures 2.0](https://github.com/Thomvis/BrightFutures/tree/2.0-development) is currently under development. A beta release is available. It would really help if you'd check it out.
+A Swift 2.0 compatible version is in the works. Check out the [swift-2.0](https://github.com/Thomvis/BrightFutures/tree/swift-2.0) branch.
 
-## Requirements
+## Releases
 
-- Built for Swift 1.2
-- Runs on iOS 8 / OS X 10.10 and above
+Latest releases:
+- 2.0.0
+    - Built for Swift 1.2
+    - Runs on iOS 8 / OS X 10.10 and above
+- 1.0.1
+    - Superseded by 2.0.0, 1.x is in maintenance mode
+    - Built for Swift 1.2
+    - Runs on iOS 8 / OS X 10.10 and above
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
@@ -40,23 +46,24 @@ github "Thomvis/BrightFutures"
 Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ## Documentation
-- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
+- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures) (100% documentation coverage)
 - This README covers almost all features of BrightFutures
-- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature
+- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature (97% test coverage)
 - The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
+- The [Highstreet Watch App](https://github.com/GetHighstreet/HighstreetWatchApp) is an Open Source WatchKit app that makes extensive use of BrightFutures
 
 ## Examples
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
 
 ```swift
 User.logIn(username, password) { user, error in
-  if !error {
-    Posts.fetchPosts(user, success: { posts in
-        // do something with the user's posts
-    }, failure: handleError)
-  } else {
-    handleError(error) // handeError is a custom function to handle errors
-  }
+    if !error {
+        Posts.fetchPosts(user, success: { posts in
+            // do something with the user's posts
+        }, failure: handleError)
+    } else {
+        handleError(error) // handeError is a custom function to handle errors
+    }
 }
 ```
 
@@ -64,11 +71,11 @@ Now let's see what BrightFutures can do for you:
 
 ```swift
 User.logIn(username,password).flatMap { user in
-  Posts.fetchPosts(user)
+    Posts.fetchPosts(user)
 }.onSuccess { posts in
-  // do something with the user's posts
+    // do something with the user's posts
 }.onFailure { error in
-  // either logging in or fetching posts failed
+    // either logging in or fetching posts failed
 }
 ```
 
@@ -83,50 +90,48 @@ If you already have a function (or really any expression) defined that you just 
 
 ```swift
 future {
-  fibonacci(50)
+    fibonacci(50)
 }.onSuccess { num in
-  // value is 12586269025
+    // value is 12586269025
 }
 ```
 
 While this is really short and simple, it is equally limited. In many cases, you will need a way to indicate that the task failed. To do this, instead of returning the value, you can return a Result. Results can indicate either a success or a failure:
 
 ```swift
-let f = future { () -> Result<NSDate> in
-  let now: NSDate? = serverTime()
-  if let someNow = now {
-    return .Success(Box(someNow))
-  }
-  
-  return .Failure(NSError(domain: "TimeServiceErrorDomain", code: 404, userInfo: nil))
+let f = future { () -> Result<NSDate, ReadmeError> in
+   let now: NSDate? = serverTime()
+    if let now = now {
+        return Result(value: now)
+    }
+    
+    return Result(error: ReadmeError.TimeServiceError)
 }
 
 f.onSuccess { value in
-  // value will the NSDate from the server
+    // value will the NSDate from the server
 }
 ```
 
-(The future block needs an explict type because the Swift compiler is not able to deduce the type of multi-statement blocks. The returned date needs to be _boxed_ because the Swift compiler does not yet support variable layout enums.)
+The future block needs an explict type because the Swift compiler is not able to deduce the type of multi-statement blocks. `ReadmeError` is an enum consisting of all errors that can happen in this readme.
 
 ## Providing Futures
 Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.failure(error)` when the operation ended. Futures can only be completed through a Promise.
 
 ```swift
-func asyncCalculation() -> Future<String> {
-  let promise = Promise<String>()
-
-  Queue.global.async {
-  
-    // do a complicated task
+func asyncCalculation() -> Future<String, NoError> {
+    let promise = Promise<String, NoError>()
     
-    promise.success("forty-two")
-  }
-
-  return promise.future
+    Queue.global.async {
+        // do a complicated task and then hand the result to the promise:
+        promise.success("forty-two")
+    }
+    
+    return promise.future
 }
 ```
 
-`Queue` is a simple wrapper around a dispatch queue.
+`Queue` is a simple wrapper around a dispatch queue. `NoError` indicates that the `Future` cannot fail. This is guaranteed by the type system, since `NoError` has no initializers.
 
 ## Callbacks
 You can be informed of the result of a `Future` by registering callbacks: `onComplete`, `onSuccess` and `onFailure`. The order in which the callbacks are executed upon completion of the future is not guaranteed, but it is guaranteed that the callbacks are executed serially. It is not safe to add a new callback from within a callback of the same future.
@@ -138,24 +143,21 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 var answer = 10
 
-let f = Future.succeeded(4).andThen { result in
+let f = Future<Int, NoError>.succeeded(4).andThen { result in
     switch result {
-      case .Success(let val):
+    case .Success(let val):
         answer *= val.value
-      case .Failure(_):
+    case .Failure(_):
         break
     }
 }.andThen { result in
     if let val = result.value {
-      answer += 2
+        answer += 2
     }
-    return
 }
 
 // answer will be 42 (not 48)
 ```
-
-`result` is an instance of `Result`, which mimics a typical `Try` construct as much as the Swift compiler currently allows. Due to limitations of generic enum types, the actual value needs to be boxed. (See [#8](https://github.com/Thomvis/BrightFutures/issues/8).)
 
 ## Functional Composition
 
@@ -191,12 +193,12 @@ f.zip(f1).onSuccess { (let a, let b) in
 
 ### filter
 ```swift
-Future.succeeded(3).filter { $0 > 5 }.onComplete { result in
-  // failed with error NoSuchElementError
+future(3).filter { $0 > 5 }.onComplete { result in
+    // failed with error NoSuchElementError
 }
 
-Future.succeeded("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
-  // succeeded with value "Swift"
+future("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
+    // succeeded with value "Swift"
 }
 ```
 
@@ -204,17 +206,12 @@ Future.succeeded("Swift").filter { $0.hasPrefix("Sw") }.onComplete { result in
 If a `Future` fails, use `recover` to offer a default or alternative value and continue the callback chain.
 
 ```swift
-let f = future { () -> Result<Int> in
-    // request something from the web
-    
-    if (request.error) { // it could fail
-        return .Failure(request.error)
-    }
-    
-    return .Success(Box(10))
+let f = future {
+    // imagine a request failed
+    return Result<Int, ReadmeError>(error: ReadmeError.RequestFailed)
 }.recover { _ in // provide an offline default
     return 5
-}.onSuccess { value in // either the request or the recovery succeeded
+}.onSuccess { value in
     // value is 5 if the request failed or 10 if the request succeeded
 }
 ```
@@ -230,11 +227,11 @@ The built-in `fold` function allows you to turn a list of values into a single v
 Folding a list of Futures is not very convenient with the built-in `fold` function, which is why BrightFutures provides one that works especially well for our use case. BrightFutures' `fold` turns a list of Futures into a single Future that contains the resulting value. This allows us to, for example, calculate the sum of the first 10 Future-wrapped elements of the fibonacci sequence:
 
 ```swift
-// 1+1+2+3+5+8+13+21+34+55
-let fibonacciSequence = [Future.succeeded(fibonacci(1)), Future.succeeded(fibonacci(2)), ... Future.succeeded(fibonacci(10))]
+let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ...,  future(fibonacci(10))]
 
-fold(fibonacciSequence, zero: 0, op: { $0 + $1 }).onSuccess { val in
-  // value is 143
+// 1+1+2+3+5+8+13+21+34+55
+fold(fibonacciSequence, 0, { $0 + $1 }).onSuccess { sum in
+    // sum is 143
 }
 ```
 
@@ -242,9 +239,8 @@ fold(fibonacciSequence, zero: 0, op: { $0 + $1 }).onSuccess { val in
 With `sequence`, you can turn a list of Futures into a single Future that contains a list of the results from those futures.
 
 ```swift
-// 1+1+2+3+5+8+13+21+34+55
-let fibonacciSequence = [Future.succeeded(fibonacci(1)), Future.succeeded(fibonacci(2)), ... Future.succeeded(fibonacci(10))]
-
+let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ..., future(fibonacci(10))]
+    
 sequence(fibonacciSequence).onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
@@ -254,10 +250,10 @@ sequence(fibonacciSequence).onSuccess { fibNumbers in
 `traverse` combines `map` and `fold` in one convenient function. `traverse` takes a list of values and a closure that takes a single value from that list and turns it into a Future. The result of `traverse` is a single Future containing an array of the values from the Futures returned by the given closure.
 
 ```swift
-traverse(Array(1...10)) {
-    Future.succeeded(fibonacci($0))
+traverse(1...10) {
+    i in future(fibonacci(i))
 }.onSuccess { fibNumbers in
-  // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
+    // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
 ```
 
@@ -277,12 +273,12 @@ If you want to have custom threading behavior, skip do do not the section. next
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
 
 ```swift
-let f = future(context: ImmediateExecutionContext { _ in
-  fibonacci(10)
+let f = future(context: ImmediateExecutionContext) {
+    fibonacci(10)
 }
-
+    
 f.onComplete(context: Queue.main.context) { value in
-  // update the UI, we're on the main thread
+    // update the UI, we're on the main thread
 }
 ```
 
@@ -293,19 +289,19 @@ An invalidation token can be used to invalidate a callback, preventing it from b
 
 ```swift
 class MyCell : UICollectionViewCell {
-  var token = InvalidationToken()
+    var token = InvalidationToken()
 
-  public override func prepareForReuse() {
-    super.prepareForReuse()
-    token.invalidate()
-    token = InvalidationToken()
-  }
-
-  public func setModel(model: Model) {
-    ImageLoader.loadImage(model.image).onSuccess(token: token) { [weak self] UIImage in
-      self.imageView.image = UIImage
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        token.invalidate()
+        token = InvalidationToken()
     }
-  }
+
+    public func setModel(model: Model) {
+        ImageLoader.loadImage(model.image).onSuccess(token: token) { [weak self] UIImage in
+            self.imageView.image = UIImage
+        }
+    }
 }
 ```
 

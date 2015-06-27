@@ -9,14 +9,16 @@
 /* Begin PBXBuildFile section */
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
+		E90E9D581B1B8A3600A8F9F3 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D571B1B8A3600A8F9F3 /* Box.framework */; };
+		E90E9D5E1B1B8A7200A8F9F3 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D591B1B8A4100A8F9F3 /* Box.framework */; };
+		E90E9D601B1B8A9B00A8F9F3 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */; };
+		E90E9D621B1B8AA500A8F9F3 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D611B1B8AA500A8F9F3 /* Result.framework */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
-		E9BD4A4919F3E43100BBD966 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BD4A4819F3E43100BBD966 /* Result.swift */; };
 		E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; };
 		E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
 		E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
-		E9D45B1C1AF00668000F6CA7 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9BD4A4819F3E43100BBD966 /* Result.swift */; };
 		E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
 		E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 		E9D45B1F1AF00670000F6CA7 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
@@ -33,8 +35,14 @@
 		E9DF0836194470190083F7F2 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
 		E9DF0837194470190083F7F2 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
 		E9DF0838194470190083F7F2 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
+		E9E422C61B1FA28F0000558F /* ErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C51B1FA28F0000558F /* ErrorsTests.swift */; };
+		E9E422C71B1FA28F0000558F /* ErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C51B1FA28F0000558F /* ErrorsTests.swift */; };
+		E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */; };
+		E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */; };
 		E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E9F496EF1B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
+		E9F496F01B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,9 +88,12 @@
 /* Begin PBXFileReference section */
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
+		E90E9D571B1B8A3600A8F9F3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Checkouts/Result/Carthage/Checkouts/Box/build/Debug/Box.framework; sourceTree = "<group>"; };
+		E90E9D591B1B8A4100A8F9F3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = "../../../Library/Developer/Xcode/DerivedData/BrightFutures-brlkgomqpbjfnpbdastdlmrhcaoc/Build/Products/Debug/Box.framework"; sourceTree = "<group>"; };
+		E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = "Carthage/Checkouts/Result/build/Debug-iphoneos/Result.framework"; sourceTree = "<group>"; };
+		E90E9D611B1B8AA500A8F9F3 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Checkouts/Result/build/Debug/Result.framework; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* FutureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureUtils.swift; sourceTree = "<group>"; };
-		E9BD4A4819F3E43100BBD966 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D45B0A1AF00659000F6CA7 /* BrightFutures-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvalidationToken.swift; sourceTree = "<group>"; };
@@ -96,6 +107,9 @@
 		E9DF0832194470190083F7F2 /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		E9DF0833194470190083F7F2 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		E9DF0834194470190083F7F2 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		E9E422C51B1FA28F0000558F /* ErrorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorsTests.swift; sourceTree = "<group>"; };
+		E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContextTests.swift; sourceTree = "<group>"; };
+		E9F496EE1B052F1400F82839 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +117,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E90E9D621B1B8AA500A8F9F3 /* Result.framework in Frameworks */,
+				E90E9D581B1B8A3600A8F9F3 /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +134,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E90E9D601B1B8A9B00A8F9F3 /* Result.framework in Frameworks */,
+				E90E9D5E1B1B8A7200A8F9F3 /* Box.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -132,9 +150,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E90E9D5D1B1B8A5B00A8F9F3 /* Mac */,
+				E90E9D5C1B1B8A5400A8F9F3 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E90E9D5C1B1B8A5400A8F9F3 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */,
+				E90E9D591B1B8A4100A8F9F3 /* Box.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		E90E9D5D1B1B8A5B00A8F9F3 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				E90E9D611B1B8AA500A8F9F3 /* Result.framework */,
+				E90E9D571B1B8A3600A8F9F3 /* Box.framework */,
+			);
+			name = Mac;
+			sourceTree = "<group>";
+		};
 		E9DF080B194470060083F7F2 = {
 			isa = PBXGroup;
 			children = (
+				E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */,
 				E9DF0817194470060083F7F2 /* BrightFutures */,
 				E9DF0824194470060083F7F2 /* BrightFuturesTests */,
 				E9DF0816194470060083F7F2 /* Products */,
@@ -158,12 +204,12 @@
 				E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */,
 				E9DF0831194470190083F7F2 /* ExecutionContext.swift */,
 				E9DF0832194470190083F7F2 /* Future.swift */,
-				E9BD4A4819F3E43100BBD966 /* Result.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
 				E9DF0834194470190083F7F2 /* Queue.swift */,
-				E9DF0818194470060083F7F2 /* Supporting Files */,
 				E979E5F31975B1AA007FE914 /* FutureUtils.swift */,
 				E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */,
+				E9F496EE1B052F1400F82839 /* Errors.swift */,
+				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFutures;
 			sourceTree = "<group>";
@@ -184,6 +230,8 @@
 				E9319EA31A397D2C00A0604A /* QueueTests.swift */,
 				E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */,
 				E9D923AD1A6CE69B00CADD9F /* InvalidationTokenTests.swift */,
+				E9E422C51B1FA28F0000558F /* ErrorsTests.swift */,
+				E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */,
 			);
 			path = BrightFuturesTests;
 			sourceTree = "<group>";
@@ -240,7 +288,6 @@
 			buildPhases = (
 				E9D45B061AF00659000F6CA7 /* Sources */,
 				E9D45B071AF00659000F6CA7 /* Frameworks */,
-				E9D45B081AF00659000F6CA7 /* Resources */,
 				E9F496E41B03980600F82839 /* CopyFiles */,
 			);
 			buildRules = (
@@ -277,7 +324,6 @@
 			buildPhases = (
 				E9DF081C194470060083F7F2 /* Sources */,
 				E9DF081D194470060083F7F2 /* Frameworks */,
-				E9DF081E194470060083F7F2 /* Resources */,
 				E9F496E21B0397D200F82839 /* CopyFiles */,
 			);
 			buildRules = (
@@ -342,21 +388,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E9D45B081AF00659000F6CA7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E9DF0813194470060083F7F2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E9DF081E194470060083F7F2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -370,12 +402,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9F496F01B052F1400F82839 /* Errors.swift in Sources */,
 				E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */,
 				E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */,
 				E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */,
 				E9D45B1F1AF00670000F6CA7 /* FutureUtils.swift in Sources */,
 				E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */,
-				E9D45B1C1AF00668000F6CA7 /* Result.swift in Sources */,
 				E9D45B201AF00670000F6CA7 /* Semaphore.swift in Sources */,
 				E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */,
 			);
@@ -385,9 +417,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9E422C71B1FA28F0000558F /* ErrorsTests.swift in Sources */,
 				E9D45B241AF00676000F6CA7 /* InvalidationTokenTests.swift in Sources */,
 				E9D45B211AF00676000F6CA7 /* BrightFuturesTests.swift in Sources */,
 				E9D45B221AF00676000F6CA7 /* QueueTests.swift in Sources */,
+				E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9D45B231AF00676000F6CA7 /* ResultTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -396,7 +430,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9BD4A4919F3E43100BBD966 /* Result.swift in Sources */,
+				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
@@ -411,9 +445,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9E422C61B1FA28F0000558F /* ErrorsTests.swift in Sources */,
 				E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */,
 				E9D923AE1A6CE69B00CADD9F /* InvalidationTokenTests.swift in Sources */,
 				E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */,
+				E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,6 +529,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -517,6 +554,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
@@ -545,7 +583,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -591,7 +628,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -618,6 +654,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -636,6 +673,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -651,9 +689,11 @@
 		E9DF082F194470060083F7F2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -669,9 +709,11 @@
 		E9DF0830194470060083F7F2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

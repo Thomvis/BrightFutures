@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>3A31C8B6-B0CD-4D79-9DFB-AE57C9B04C9F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>BrightFutures</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>57C931977B7D2307CC013C2BD93F90CF7C676790</key>
+		<string>https://github.com/robrix/Box.git</string>
+		<key>93608FFF008CD82ADDFA850BB9C1630FA754586F</key>
+		<string>github.com:Thomvis/BrightFutures.git</string>
+		<key>956D2B21DD155C49504BB67697A67F7C5351A353</key>
+		<string>https://github.com/antitypical/Result.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>BrightFutures.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>57C931977B7D2307CC013C2BD93F90CF7C676790</key>
+		<string>..Carthage/Checkouts/Result/Carthage/Checkouts/Box</string>
+		<key>93608FFF008CD82ADDFA850BB9C1630FA754586F</key>
+		<string>..</string>
+		<key>956D2B21DD155C49504BB67697A67F7C5351A353</key>
+		<string>..Carthage/Checkouts/Result</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:Thomvis/BrightFutures.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>93608FFF008CD82ADDFA850BB9C1630FA754586F</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>57C931977B7D2307CC013C2BD93F90CF7C676790</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Box</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>93608FFF008CD82ADDFA850BB9C1630FA754586F</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BrightFutures</string>
+		</dict>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>956D2B21DD155C49504BB67697A67F7C5351A353</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Result</string>
+		</dict>
+	</array>
+</dict>
+</plist>

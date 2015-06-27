@@ -28,7 +28,7 @@ class InvalidationTokenTests: XCTestCase {
         XCTAssert(!token.future.isCompleted, "token should have a future and not be complete")
         token.invalidate()
         XCTAssert(token.future.error != nil, "future should have an error")
-        if let error = token.future.error {
+        if let error = token.future.error?.nsError {
             XCTAssertEqual(error.domain, BrightFuturesErrorDomain)
             XCTAssertEqual(error.code, InvalidationTokenInvalid)
         }
@@ -37,7 +37,7 @@ class InvalidationTokenTests: XCTestCase {
     func testCompletionAfterInvalidation() {
         let token = InvalidationToken()
         
-        let p = Promise<Int>()
+        let p = Promise<Int, NSError>()
         
         p.future.onSuccess(token: token) { val in
             XCTAssert(false, "onSuccess should not get called")
@@ -50,6 +50,42 @@ class InvalidationTokenTests: XCTestCase {
             token.invalidate()
             p.success(2)
             NSThread.sleepForTimeInterval(0.2); // make sure onSuccess is not called
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testNonInvalidatedSucceededFutureOnSuccess() {
+        let token = InvalidationToken()
+        
+        let e = self.expectation()
+        Future<Int, NoError>.succeeded(3).onSuccess(token: token) { val in
+            XCTAssertEqual(val, 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testNonInvalidatedSucceededFutureOnComplete() {
+        let token = InvalidationToken()
+        
+        let e = self.expectation()
+        Future<Int, NoError>.succeeded(3).onComplete(token: token) { res in
+            XCTAssertEqual(res.value!, 3)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testNonInvalidatedFailedFutureOnFailure() {
+        let token = InvalidationToken()
+        
+        let e = self.expectation()
+        Future<Int, TestError>.failed(TestError.JustAnError).onFailure(token: token) { err in
+            XCTAssertEqual(err, TestError.JustAnError)
             e.fulfill()
         }
         
