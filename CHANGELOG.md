@@ -1,3 +1,12 @@
+# 2.0.0
+- Replaced homegrown `Result` and `Box` types with Rob Rix' excellent types.
+- Futures & Promises are now also parametrizable by their error type, in addition to their value type: `Future<ValueType, ErrorType>`. This allows you to use your own (Swifty) error type, instead of `NSError`!
+- Adds `BrightFuturesError` enum, containing all three possible errors that BrightFutures can return
+- Renames `asType` to `forceType` to indicate that it is a _dangerous_ operation
+
+- Adds missing documentation (jazzy reports 100% documentation coverage!)
+- Adds a lot of tests (test coverage is now at 97%, according to [SwiftCov](https://github.com/realm/SwiftCov)!)
+
 # 1.0.1
 - Updated README to reflect the pre-1.0.0 change from FutureUtils functions to free functions
 

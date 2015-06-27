@@ -38,6 +38,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     case InvalidationTokenInvalidated
     case External(E)
 
+    /// Constructs a BrightFutures.External with the given external error
     public init(external: E) {
         self = .External(external)
     }
@@ -47,11 +48,11 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
 extension BrightFuturesError: Equatable {}
 
 /// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
-public func ==<E: ErrorType>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
+public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
     switch (lhs, rhs) {
     case (.NoSuchElement, .NoSuchElement): return true
     case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
-    case (.External(_), .External(_)): return true
+    case (.External(let lhs), .External(let rhs)): return lhs == rhs
     default: return false
     }
 }

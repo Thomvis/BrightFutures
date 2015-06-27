@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'BrightFutures'
-  s.version = '2.0.0-beta.1'
+  s.version = '2.0.0'
   s.license = 'MIT'
   s.summary = 'A simple Futures & Promises library for iOS and OS X written in Swift'
   s.homepage = 'https://github.com/Thomvis/BrightFutures'
@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'BrightFutures/*.swift'
 
-  s.dependency 'Result', '~> 0.4.2'
+  s.dependency 'Result', '~> 0.4.3'
 
   s.requires_arc = true
 end

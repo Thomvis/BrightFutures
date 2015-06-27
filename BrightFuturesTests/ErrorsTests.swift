@@ -27,6 +27,8 @@ enum TestError: ErrorType {
     case JustAnError
 }
 
+extension TestError: Equatable {}
+
 class ErrorsTests: XCTestCase {
     
     func testExternalError() {
