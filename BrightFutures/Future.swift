@@ -23,21 +23,6 @@
 import Foundation
 import Result
 
-public protocol ResultType {
-    typealias Value
-    typealias Error: ErrorType
-    
-    var value: Value? { get }
-    var error: Error? { get }
-    
-    init(value: Value)
-    init(error: Error)
-    
-    func analysis<U>(@noescape ifSuccess ifSuccess: Value -> U, @noescape ifFailure: Error -> U) -> U
-}
-
-extension Result: ResultType { }
-
 /// Executes the given task on `Queue.global` and wraps the result of the task in a Future
 public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
     return future(context: Queue.global.context, task: task)
@@ -67,13 +52,13 @@ public func future<T, E>(task: () -> Result<T, E>) -> Future<T, E> {
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
 public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) -> Future<T, E> {
-    let promise = Promise<T, E>();
+    let f = Future<T, E>()
     
     c {
-        try! promise.complete(task())
+        try! f.complete(task())
     }
     
-    return promise.future
+    return f
 }
 
 /// Defines BrightFutures' default threading behavior:
@@ -91,7 +76,7 @@ func defaultContext() -> ExecutionContext {
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
-public class Future<T, E: ErrorType>: Deferred<Result<T, E>> {
+public final class Future<T, E: ErrorType>: Deferred<Result<T, E>> {
     
     public typealias FailureCallback = E -> ()
     
@@ -223,9 +208,9 @@ public extension DeferredType where Res: ResultType, Res.Error: ErrorType {
             return BrightFuturesError(external: error)
         }.flatMap { value -> Result<Res.Value, BrightFuturesError<Res.Error>> in
             if p(value) {
-                return Result.success(value)
+                return Result(value: value)
             } else {
-                return Result.failure(.NoSuchElement)
+                return Result(error: .NoSuchElement)
             }
         }
     }
@@ -298,6 +283,14 @@ extension DeferredType where Res: ResultType, Res.Value: DeferredType, Res.Value
         }
         
         return f
+    }
+    
+}
+
+extension DeferredType where Res: SequenceType, Res.Generator.Element: ResultType {
+    
+    public func sequence() -> Deferred<Result<[Res.Generator.Element.Value],Res.Generator.Element.Error>> {
+        fatalError()
     }
     
 }

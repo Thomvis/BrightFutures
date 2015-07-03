@@ -23,12 +23,6 @@
 import Foundation
 import Result
 
-extension SequenceType {
-    func test() {
-        
-    }
-}
-
 public extension SequenceType where Generator.Element: DeferredType {
     
     public func firstCompletedOf() -> Generator.Element {
@@ -53,18 +47,35 @@ public extension SequenceType where Generator.Element: DeferredType {
         }
     }
 
-//    public func traverse<D: DeferredType where D.Res == Generator.Element>(f: Generator.Element -> D) -> Deferred<[Generator.Element]> {
-//        fatalError("not yet implemented")
-//    }
-
-    public func sequence() -> Deferred<[Generator.Element]> {
+    public func sequence() -> Deferred<[Generator.Element.Res]> {
         fatalError("not yet implemented")
     }
 
-    public func find(test: Generator.Element -> Bool) -> Deferred<Result<Generator.Element, BrightFuturesError<NoError>>> {
-        fatalError("not yet implemented")
+    public func find(context c: ExecutionContext = defaultContext(), test: Generator.Element.Res -> Bool) -> Deferred<Result<Generator.Element.Res, BrightFuturesError<NoError>>> {
+        return reduce(Result<Generator.Element.Res, BrightFuturesError<NoError>>(error: BrightFuturesError<NoError>.NoSuchElement), context: c) { acc, elem in
+            
+            if acc.error != nil && test(elem) {
+                return Result(value: elem)
+            }
+            
+            return acc
+        }
     }
+    
 
+
+}
+
+public extension SequenceType {
+    public func traverse<U, D: DeferredType where D.Res == U>(f: Generator.Element -> D) -> Deferred<[U]> {
+        return map(f).reduce([U](), context: Queue.global.context) { (accum, elem) in
+            return accum + [elem]
+        }
+    }
+    
+    public func traverse<D: DeferredType where D.Res: ResultType>(f: Generator.Element -> D) -> Deferred<Result<[D.Res.Value],D.Res.Error>> {
+        return traverse(f).sequence()
+    }
 }
 
 public extension SequenceType where Generator.Element: DeferredType, Generator.Element.Res: ResultType {
@@ -79,7 +90,40 @@ public extension SequenceType where Generator.Element: DeferredType, Generator.E
         }
     }
     
+    public func find(context c: ExecutionContext = defaultContext(), test: Generator.Element.Res.Value -> Bool) -> Deferred<Result<Generator.Element.Res.Value, BrightFuturesError<NoError>>> {
+        
+        return reduce(Result<Generator.Element.Res.Value, BrightFuturesError<NoError>>(error: BrightFuturesError<NoError>.NoSuchElement), context: c) { acc, elem in
+            
+            if let value = elem.value {
+                if acc.error != nil && test(value) {
+                    return Result(value: value)
+                }
+            }
+            
+            return acc
+        }
+    
+    }
+    
+    public func sequence() -> Future<[Generator.Element.Res.Value], BrightFuturesError<Generator.Element.Res.Error>> {
+//        return traverse { $0 }
+        fatalError()
+    }
+    
 }
+
+//extension SequenceType {
+//    /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
+//    /// If no context is provided, the given closure is executed on `Queue.global`
+//    public func traverse<U, E: ErrorType>(context c: ExecutionContext = Queue.global.context, f: Generator.Element -> Future<U, E>) -> Future<[U], E> {
+//        
+//        
+//        let fs: [Future<U, E>] = map(f)
+//        fs.reduce([U]()) { (acc:[U], alem:Future<U, E>) in
+//            return 0
+//        }
+//    }
+//}
 
 ///// Performs the fold operation over a sequence of futures. The folding is performed
 ///// on `Queue.global`.

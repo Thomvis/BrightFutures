@@ -24,7 +24,7 @@ internal protocol MutableDeferredType: DeferredType {
     func complete(result: Res) throws
 }
 
-extension MutableDeferredType {
+internal extension MutableDeferredType {
     func tryComplete(result: Res) -> Bool {
         do {
             try complete(result)

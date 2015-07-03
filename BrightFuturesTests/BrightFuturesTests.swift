@@ -402,7 +402,7 @@ extension BrightFuturesTests {
     }
 
     func testSkippedRecover() {
-        let e = self.expectation()
+        let e = self.expectationWithDescription("first")
         
         future { _ in
             3
@@ -414,8 +414,7 @@ extension BrightFuturesTests {
             e.fulfill()
         }
         
-        let e1 = self.expectation()
-        
+        let e1 = self.expectationWithDescription("second")
         
         let recov: () -> Int = {
             XCTFail("recover task should not be executed")
@@ -603,25 +602,25 @@ extension BrightFuturesTests {
 extension BrightFuturesTests {
     func testUtilsTraverseSuccess() {
         XCTFail("does not compile")
-//        
-//        let n = 10
-//        
-//        let f = Array(1...n).traverse { i in
-//            Future<Int, NoError>.succeeded(fibonacci(i))
-//        }
-//        
-//        let e = self.expectation()
-//        
-//        f.onSuccess { fibSeq in
-//            XCTAssertEqual(fibSeq.count, n)
-//            
-//            for var i = 0; i < fibSeq.count; i++ {
-//                XCTAssertEqual(fibSeq[i], fibonacci(i+1))
-//            }
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(4, handler: nil)
+        
+        let n = 10
+        
+        let f = Array(1...n).traverse { i in
+            Future<Int, NoError>.succeeded(fibonacci(i))
+        }
+        
+        let e = self.expectation()
+        
+        f.onSuccess { fibSeq in
+            XCTAssertEqual(fibSeq.count, n)
+            
+            for var i = 0; i < fibSeq.count; i++ {
+                XCTAssertEqual(fibSeq[i], fibonacci(i+1))
+            }
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(4, handler: nil)
     }
     
     func testUtilsTraverseEmpty() {
@@ -782,20 +781,21 @@ extension BrightFuturesTests {
     }
     
     func testUtilsSequence() {
-        XCTFail("does not compile")
-//        let futures = (1...10).map { fibonacciFuture($0) }
-//        
-//        let e = self.expectation()
-//        
-//        sequence(futures).onSuccess { fibs in
-//            for (index, num) in fibs.enumerate() {
-//                XCTAssertEqual(fibonacci(index+1), num)
-//            }
-//            
-//            e.fulfill()
-//        }
-//        
-//        self.waitForExpectationsWithTimeout(2, handler: nil)
+        let futures = (1...10).map { fibonacciFuture($0) }
+        
+        let e = self.expectation()
+        
+        futures.sequence()
+        
+        futures.sequence().onSuccess { fibs in
+            for (index, num) in fibs.enumerate() {
+                XCTAssertEqual(fibonacci(index+1), num)
+            }
+            
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
     func testUtilsSequenceEmpty() {
@@ -812,7 +812,7 @@ extension BrightFuturesTests {
     }
     
     func testUtilsFindSuccess() {
-        XCTFail("does not compile")
+        XCTFail("crashes with a bad access")
 //        let futures: [Future<Int, NoError>] = [
 //            Future.succeeded(1),
 //            Future.completeAfter(0.2, withValue: 3),
@@ -822,7 +822,7 @@ extension BrightFuturesTests {
 //            Future.succeeded(9)
 //        ];
 //        
-//        let f = find(futures, context: Queue.global.context) { val in
+//        let f = futures.find(context: Queue.global.context) { (val: Int) in
 //            return val % 2 == 0
 //        }
 //        

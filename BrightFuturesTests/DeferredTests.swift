@@ -59,5 +59,4 @@ class DeferredTests: XCTestCase {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
-    
 }
