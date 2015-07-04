@@ -785,8 +785,6 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        futures.sequence()
-        
         futures.sequence().onSuccess { fibs in
             for (index, num) in fibs.enumerate() {
                 XCTAssertEqual(fibonacci(index+1), num)

@@ -105,9 +105,24 @@ public extension SequenceType where Generator.Element: DeferredType, Generator.E
     
     }
     
-    public func sequence() -> Future<[Generator.Element.Res.Value], BrightFuturesError<Generator.Element.Res.Error>> {
-//        return traverse { $0 }
-        fatalError()
+    public func sequence() -> Deferred<Result<[Generator.Element.Res.Value], Generator.Element.Res.Error>> {
+        return traverse { (fut: Generator.Element) -> Generator.Element in
+            return fut
+        }
+    }
+    
+}
+
+public extension SequenceType where Generator.Element: ResultType {
+    
+    public func sequence() -> Result<[Generator.Element.Value], Generator.Element.Error> {
+        return reduce(Result(value: [])) { (res, elem) -> Result<[Generator.Element.Value], Generator.Element.Error> in
+            return res.analysis(ifSuccess: { val in
+                elem.analysis(ifSuccess: { Result(value:val+[$0]) }, ifFailure: { Result(error:$0) })
+            }, ifFailure: { err in
+                res
+            })
+        }
     }
     
 }

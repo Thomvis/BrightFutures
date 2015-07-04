@@ -290,7 +290,7 @@ extension DeferredType where Res: ResultType, Res.Value: DeferredType, Res.Value
 extension DeferredType where Res: SequenceType, Res.Generator.Element: ResultType {
     
     public func sequence() -> Deferred<Result<[Res.Generator.Element.Value],Res.Generator.Element.Error>> {
-        fatalError()
+        return map { $0.sequence() }
     }
     
 }
