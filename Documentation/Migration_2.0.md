@@ -1,10 +1,12 @@
+# Migrating from 1.0.1 to 2.0.0
+
 Please read the [changelog](../CHANGELOG.md) for 2.0 first.
 
-BrightFutures 2.0 has a new dependency: Result. If you're using CocoaPods, `pod update` should automatically integrate it into your project. If you're using Carthage, after running `carthage update`, you need to add `Result.framework` to your target like you have also done for `BrightFutures.framework`. 
+BrightFutures 2.0 has two new dependencies: Result and Box. If you're using CocoaPods, `pod update` should automatically integrate it into your project. If you're using Carthage, after running `carthage update`, you need to add `Result.framework` and `Box.framework` to your target like you have also done for `BrightFutures.framework`. 
 
-In files where you're using `Result`, you'll also need to add an import statement for the respecive frameworks. If you fail to do this, you will see errors like "Use of undeclared type 'Result'".
+In files where you're using `Result` or `Box`, you'll also need to add an import statement for the respecive frameworks. If you fail to do this, you will see errors like "Use of undeclared type 'Result'".
 
-If you see error messages around `import Result`, the new dependencies have not yet been integrated correctly.
+If you see error messages around `import Result` or `import Box`, the new dependencies have not yet been integrated correctly.
 
 `Future` and `Result` in BrightFutures 1.0 have only one generic parameter: the value type. In BrightFutures 2.0, both types have gained a second generic parameter: the error type. This removes the dependency on `NSError`. If you want to continue to use `NSError`, this means that you'll have to go through your code and update the occurrences of `Future` and `Result`
 
@@ -24,7 +26,7 @@ If you have been using `Future<Void>` in cases where you know the future will ne
 
 If you have futures that you know can never fail, consider using the `NoError` as the error type. Like `NoValue`, `NoError` cannot be instantiated.
 
-The easiest way to create `Result` instances is through its two constructors.
+The easiest way to create `Result` instances is through its two constructors. You won't need to use `Box` then:
 
 ```swift
 Result(success: 1314) // a Result.Success
