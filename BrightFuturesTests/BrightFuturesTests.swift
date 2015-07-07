@@ -708,6 +708,24 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+	
+	func testFlatMapByPassingFunction() {
+		let e = self.expectation()
+		
+		func toString(n: Int) -> Future<String, NoError> {
+			return Future<String, NoError>.succeeded("\(n)")
+		}
+		
+		let n = 1
+		let flatMapped = Future<Int, NoError>.succeeded(n).flatMap(toString)
+		
+		flatMapped.onSuccess { s in
+			XCTAssertEqual(s, "\(n)", "strings are not equal")
+			e.fulfill()
+		}
+		
+		self.waitForExpectationsWithTimeout(2, handler: nil)
+	}
 }
 
 // MARK: FutureUtils

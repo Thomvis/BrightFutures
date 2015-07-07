@@ -379,17 +379,29 @@ public extension Future {
     /// If this future succeeds, the returned future will complete with the future returned from the given closure.
     ///
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Future<U, E>) -> Future<U, E> {
+    public func flatMap<U>(context c: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E> {
         return flatten(map(context: c, f: f))
     }
+	
+	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E>`
+	/// The given closure is executed according to the default threading model (see README.md)
+	public func flatMap<U>(f: T -> Future<U, E>) -> Future<U, E> {
+		return flatMap(context: executionContextForCurrentContext(), f: f)
+	}
 
     /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
-    public func flatMap<U>(context c: ExecutionContext = executionContextForCurrentContext(), f: T -> Result<U, E>) -> Future<U, E> {
+    public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
         return self.flatMap(context: c) { value in
             Future.completed(f(value))
         }
     }
+
+	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E>`
+	/// The given closure is executed according to the default threading model (see README.md)
+	public func flatMap<U>(f: T -> Result<U, E>) -> Future<U, E> {
+		return flatMap(context: executionContextForCurrentContext(), f: f)
+	}
 
     /// See `map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U>`
     /// The given closure is executed according to the default threading model (see README.md)
