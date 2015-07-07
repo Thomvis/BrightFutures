@@ -46,7 +46,7 @@ class ResultTests: XCTestCase {
     }
     
     func testSuccess() {
-        let result = Result<Int,NSError>.success(3)
+        let result = Result<Int,NSError>(value: 3)
         XCTAssert(result.isSuccess)
         XCTAssertFalse(result.isFailure)
         XCTAssertEqual(result.value!, 3)

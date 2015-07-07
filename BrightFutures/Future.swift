@@ -504,9 +504,9 @@ public extension Future {
             return BrightFuturesError(external: error)
         }.flatMap { value -> Result<T, BrightFuturesError<E>> in
             if p(value) {
-                return Result.success(value)
+                return Result(value: value)
             } else {
-                return Result.failure(.NoSuchElement)
+                return Result(error: .NoSuchElement)
             }
         }
     }
