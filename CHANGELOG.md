@@ -1,3 +1,6 @@
+# 2.0.1
+- Adds an implementation of `flatMap` that allows a function to be passed in immediately. Thanks @nghialv!
+
 # 3.0.0-beta.1
 This release is compatible with Swift 2. It is a direct port of 2.0, meaning it makes no use of new Swift 2 features yet.
 

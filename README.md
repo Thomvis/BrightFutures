@@ -18,10 +18,10 @@ A Swift 2.0 compatible version is in the works and will be released as BrightFut
 ## Releases
 
 Latest releases:
-- 3.0.0-beta.1
+- 3.0.0-beta.2
     - Built for Swift 2.0
     - Runs on iOS 8 / OS X 10.10 and above
-- 2.0.0
+- 2.0.1
     - Built for Swift 1.2
     - Runs on iOS 8 / OS X 10.10 and above
 - 1.0.1
