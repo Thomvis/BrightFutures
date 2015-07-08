@@ -1,3 +1,6 @@
+# 2.0.1
+- Adds an implementation of `flatMap` that allows a function to be passed in immediately. Thanks @nghialv!
+
 # 2.0.0
 - Replaced homegrown `Result` and `Box` types with Rob Rix' excellent types.
 - Futures & Promises are now also parametrizable by their error type, in addition to their value type: `Future<ValueType, ErrorType>`. This allows you to use your own (Swifty) error type, instead of `NSError`!
