@@ -18,7 +18,7 @@ A Swift 2.0 compatible version is in the works. Check out the [swift-2.0](https:
 ## Releases
 
 Latest releases:
-- 2.0.0
+- 2.0.1
     - Built for Swift 1.2
     - Runs on iOS 8 / OS X 10.10 and above
 - 1.0.1
