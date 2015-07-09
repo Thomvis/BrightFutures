@@ -67,6 +67,26 @@ public struct Queue {
         dispatch_sync(underlyingQueue, block)
     }
     
+    /// Synchronously executes the given closure on this queue
+    /// If the closure throws an error, the error is rethrown to the caller.
+    /// Note: we cannot use the rethrows key here because we are not
+    /// directly executing the closure. (It is passed to `dispatch_sync`)
+    public func sync(block: () throws -> ()) throws {
+        var error: ErrorType?
+        
+        sync {
+            do {
+                try block()
+            } catch let e {
+                error = e
+            }
+        }
+        
+        if let error = error {
+            throw error
+        }
+    }
+    
     /// Synchronously executes the given closure on this queue and returns
     /// the return value of the given closure.
     public func sync<T>(block: () -> T) -> T {
