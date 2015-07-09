@@ -62,13 +62,6 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
     return promise.future
 }
 
-/// Defines BrightFutures' default threading behavior:
-/// - if on the main thread, `Queue.main.context` is returned
-/// - if off the main thread, `Queue.global.context` is returned
-func executionContextForCurrentContext() -> ExecutionContext {
-    return toContext(NSThread.isMainThread() ? Queue.main : Queue.global)
-}
-
 /// A Future represents the outcome of an asynchronous operation
 /// The outcome will be represented as an instance of the `Result` enum and will be stored
 /// in the `result` property. As long as the operation is not yet completed, `result` will be nil.
@@ -102,7 +95,7 @@ public class Future<T, E: ErrorType> {
 
     /// Upon completion of the future, all callbacks are asynchronously scheduled to their
     /// respective execution contexts (which is either given by the client or returned from
-    /// executionContextForCurrentContext). Inside the context, this semaphore will be used
+    /// DefaultThreadingModel). Inside the context, this semaphore will be used
     /// to make sure that all callbacks are executed serially.
     let callbackExecutionSemaphore = Semaphore(value: 1);
     var callbacks: [CallbackInternal] = Array<CallbackInternal>()
@@ -319,7 +312,7 @@ public extension Future {
     /// Adds the given closure as a callback for when the future completes. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T, E> {
+    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E> {
         let wrappedCallback : Future<T, E> -> () = { future in
             if let realRes = self.result {
                 c {
@@ -346,7 +339,7 @@ public extension Future {
     /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), callback: SuccessCallback) -> Future<T, E> {
+    public func onSuccess(context c: ExecutionContext = DefaultThreadingModel(), callback: SuccessCallback) -> Future<T, E> {
         self.onComplete(context: c) { result in
             result.analysis(ifSuccess: callback, ifFailure: { _ in })
         }
@@ -357,7 +350,7 @@ public extension Future {
     /// Adds the given closure as a callback for when the future fails. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), callback: FailureCallback) -> Future<T, E> {
+    public func onFailure(context c: ExecutionContext = DefaultThreadingModel(), callback: FailureCallback) -> Future<T, E> {
         self.onComplete(context: c) { result in
             result.analysis(ifSuccess: { _ in }, ifFailure: callback)
         }
@@ -386,7 +379,7 @@ public extension Future {
 	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E>`
 	/// The given closure is executed according to the default threading model (see README.md)
 	public func flatMap<U>(f: T -> Future<U, E>) -> Future<U, E> {
-		return flatMap(context: executionContextForCurrentContext(), f: f)
+		return flatMap(context: DefaultThreadingModel(), f: f)
 	}
 
     /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
@@ -400,13 +393,13 @@ public extension Future {
 	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E>`
 	/// The given closure is executed according to the default threading model (see README.md)
 	public func flatMap<U>(f: T -> Result<U, E>) -> Future<U, E> {
-		return flatMap(context: executionContextForCurrentContext(), f: f)
+		return flatMap(context: DefaultThreadingModel(), f: f)
 	}
 
     /// See `map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U>`
     /// The given closure is executed according to the default threading model (see README.md)
     public func map<U>(f: (T) -> U) -> Future<U, E> {
-        return self.map(context: executionContextForCurrentContext(), f: f)
+        return self.map(context: DefaultThreadingModel(), f: f)
     }
     
     /// Returns a future that succeeds with the value returned from the given closure when it is invoked with the success value
@@ -427,7 +420,7 @@ public extension Future {
     /// See `mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1>`
     /// The given closure is executed according to the default threading model (see README.md)
     public func mapError<E1>(f: E -> E1) -> Future<T, E1> {
-        return mapError(context: executionContextForCurrentContext(), f: f)
+        return mapError(context: DefaultThreadingModel(), f: f)
     }
     
     /// Returns a future that fails with the error returned from the given closure when it is invoked with the error
@@ -448,7 +441,7 @@ public extension Future {
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: ExecutionContext = executionContextForCurrentContext(), callback: Result<T, E> -> ()) -> Future<T, E> {
+    public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Result<T, E> -> ()) -> Future<T, E> {
         let p = Promise<T, E>()
         
         self.onComplete(context: c) { result in
@@ -462,7 +455,7 @@ public extension Future {
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func recover(context c: ExecutionContext = executionContextForCurrentContext(), task: (E) -> T) -> Future<T, NoError> {
+    public func recover(context c: ExecutionContext = DefaultThreadingModel(), task: (E) -> T) -> Future<T, NoError> {
         return self.recoverWith(context: c) { error -> Future<T, NoError> in
             return Future<T, NoError>.succeeded(task(error))
         }
@@ -473,7 +466,7 @@ public extension Future {
     /// This function should be used in cases where there are two asynchronous operations where the second operation (returned from the given closure)
     /// should only be executed if the first (this future) fails.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func recoverWith<E1: ErrorType>(context c: ExecutionContext = executionContextForCurrentContext(), task: (E) -> Future<T, E1>) -> Future<T, E1> {
+    public func recoverWith<E1: ErrorType>(context c: ExecutionContext = DefaultThreadingModel(), task: (E) -> Future<T, E1>) -> Future<T, E1> {
         let p = Promise<T, E1>()
         
         self.onComplete(context: c) { result in
@@ -527,9 +520,9 @@ public extension Future {
         )
     }
 
-    /// See `onComplete(context c: ExecutionContext = executionContextForCurrentContext(), callback: CompletionCallback) -> Future<T, E>`
+    /// See `onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onComplete(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: Result<T, E> -> ()) -> Future<T, E> {
+    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: Result<T, E> -> ()) -> Future<T, E> {
         firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
             token.context {
                 if !token.isInvalid {
@@ -540,9 +533,9 @@ public extension Future {
         return self;
     }
 
-    /// See `onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), callback: SuccessCallback) -> Future<T, E>`
+    /// See `onSuccess(context c: ExecutionContext = DefaultThreadingModel(), callback: SuccessCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onSuccess(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T, E> {
+    public func onSuccess(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T, E> {
         firstCompletedOfSelfAndToken(token).onSuccess(context: c) { value in
             token.context {
                 if !token.isInvalid {
@@ -554,9 +547,9 @@ public extension Future {
         return self
     }
 
-    /// See `onFailure(context c: ExecutionContext = executionContextForCurrentContext(), callback: FailureCallback) -> Future<T, E>`
+    /// See `onFailure(context c: ExecutionContext = DefaultThreadingModel(), callback: FailureCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onFailure(context c: ExecutionContext = executionContextForCurrentContext(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T, E> {
+    public func onFailure(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T, E> {
         firstCompletedOfSelfAndToken(token).onFailure(context: c) { error in
             token.context {
                 if !token.isInvalid {
@@ -585,7 +578,7 @@ public func flatten<T, E>(future: Future<Future<T, E>, E>) -> Future<T, E> {
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) -> Future<T, NoError> {
-    return lhs.recover(context: executionContextForCurrentContext(), task: { _ in
+    return lhs.recover(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })
 }
@@ -593,7 +586,7 @@ public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) ->
 /// Short-hand for `lhs.recoverWith(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> Future<T, E1>) -> Future<T, E1> {
-    return lhs.recoverWith(context: executionContextForCurrentContext(), task: { _ in
+    return lhs.recoverWith(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })
 }
@@ -618,6 +611,8 @@ public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -
             return BrightFuturesError<E>.NoSuchElement
         case .InvalidationTokenInvalidated:
             return BrightFuturesError<E>.InvalidationTokenInvalidated
+        case .IllegalState:
+            return BrightFuturesError<E>.IllegalState
         case .External(_):
             fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
         }

@@ -27,12 +27,12 @@ import Foundation
 public typealias ExecutionContext = (() -> ()) -> ()
 
 /// Immediately executes the given task. No threading, no semaphores.
-public func ImmediateExecutionContext(@noescape task: () -> ())  {
+let ImmediateExecutionContext: ExecutionContext = { task in
     task()
 }
 
 /// Runs immediately if on the main thread, otherwise asynchronously on the main thread
-public func ImmediateOnMainExecutionContext(task: () -> ())  {
+let ImmediateOnMainExecutionContext: ExecutionContext = { task in
     if NSThread.isMainThread() {
         task()
     } else {
@@ -53,4 +53,16 @@ public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
 /// Creates a synchronous context that is guarded by the given semaphore
 func toContext(sema: Semaphore) -> ExecutionContext {
     return sema.execute
+}
+
+
+typealias ThreadingModel = () -> ExecutionContext
+
+var DefaultThreadingModel: ThreadingModel = defaultContext
+
+/// Defines BrightFutures' default threading behavior:
+/// - if on the main thread, `Queue.main.context` is returned
+/// - if off the main thread, `Queue.global.context` is returned
+func defaultContext() -> ExecutionContext {
+    return toContext(NSThread.isMainThread() ? Queue.main : Queue.global)
 }
