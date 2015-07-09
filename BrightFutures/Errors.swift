@@ -42,6 +42,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
     case NoSuchElement
     case InvalidationTokenInvalidated
+    case IllegalState
     case External(E)
 
     /// Constructs a BrightFutures.External with the given external error
