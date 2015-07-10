@@ -43,7 +43,7 @@ extension MutableAsyncType {
     }
 
     func completeWith<A: AsyncType where A.Value == Value>(other: A) {
-        other.onComplete(context: DefaultThreadingModel()) {
+        other.onComplete(context: ImmediateExecutionContext) {
             try! self.complete($0)
         }
     }
