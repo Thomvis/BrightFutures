@@ -36,7 +36,7 @@ public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T,
 /// Performs the fold operation over a sequence of futures. The folding is performed
 /// in the given context.
 public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R, E> {
-    return seq.reduce(Future<R, E>.succeeded(zero)) { zero, elem in
+    return seq.reduce(Future<R, E>(successValue: zero)) { zero, elem in
         return zero.flatMap { zeroVal in
             elem.map(context: c) { elemVal in
                 return f(zeroVal, elemVal)
@@ -120,7 +120,7 @@ public func flatten<T, E>(result: Result<Result<T,E>,E>) -> Result<T,E> {
 /// Returns the inner future if the outer result succeeded or a failed future
 /// with the error from the outer result otherwise
 public func flatten<T, E>(result: Result<Future<T, E>,E>) -> Future<T, E> {
-    return result.analysis(ifSuccess: { $0 }, ifFailure: { Future.failed($0) })
+    return result.analysis(ifSuccess: { $0 }, ifFailure: { Future(error: $0) })
 }
 
 /// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)

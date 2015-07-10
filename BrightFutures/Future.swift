@@ -88,6 +88,14 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         super.init(other: other)
     }
     
+    public convenience init(successValue: T) {
+        self.init(value: Result(value: successValue))
+    }
+    
+    public convenience init(error: E) {
+        self.init(value: Result(error: error))
+    }
+    
     public var result: Future.Value? {
         return self.value
     }
@@ -96,21 +104,6 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
 
 /// This extension contains all (static) methods for Future creation
 public extension Future {
-
-    /// Returns a new future that succeeded with the given value
-    public class func succeeded(value: T) -> Future<T, E> {
-        return Future<T, E>(value: Result<T, E>(value: value))
-    }
-    
-    /// Returns a new future that failed with the given error
-    public class func failed(error: E) -> Future<T, E> {
-        return Future<T, E>(value: Result<T, E>(error: error))
-    }
-    
-    /// Returns a new future that completed with the given result
-    public class func completed(result: Result<T, E>) -> Future<T, E> {
-        return Future<T, E>(value: result)
-    }
     
     /// Returns a new future that will succeed with the given value after the given time interval
     /// The implementation of this function uses dispatch_after
@@ -234,7 +227,7 @@ public extension Future {
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
     public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
         return self.flatMap(context: c) { value in
-            return Future<U, E>.completed(f(value))
+            return Future<U, E>.init(value: f(value))
         }
     }
 
@@ -305,7 +298,7 @@ public extension Future {
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func recover(context c: ExecutionContext = DefaultThreadingModel(), task: (E) -> T) -> Future<T, NoError> {
         return self.recoverWith(context: c) { error -> Future<T, NoError> in
-            return Future<T, NoError>.succeeded(task(error))
+            return Future<T, NoError>(successValue: task(error))
         }
     }
 

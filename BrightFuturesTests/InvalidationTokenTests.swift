@@ -59,7 +59,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, NoError>.succeeded(3).onSuccess(token: token) { val in
+        Future<Int, NoError>(successValue: 3).onSuccess(token: token) { val in
             XCTAssertEqual(val, 3)
             e.fulfill()
         }
@@ -71,7 +71,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, NoError>.succeeded(3).onComplete(token: token) { res in
+        Future<Int, NoError>(successValue: 3).onComplete(token: token) { res in
             XCTAssertEqual(res.value!, 3)
             e.fulfill()
         }
@@ -83,7 +83,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, TestError>.failed(TestError.JustAnError).onFailure(token: token) { err in
+        Future<Int, TestError>(error: TestError.JustAnError).onFailure(token: token) { err in
             XCTAssertEqual(err, TestError.JustAnError)
             e.fulfill()
         }
