@@ -27,12 +27,12 @@ import Foundation
 public typealias ExecutionContext = (() -> ()) -> ()
 
 /// Immediately executes the given task. No threading, no semaphores.
-let ImmediateExecutionContext: ExecutionContext = { task in
+public let ImmediateExecutionContext: ExecutionContext = { task in
     task()
 }
 
 /// Runs immediately if on the main thread, otherwise asynchronously on the main thread
-let ImmediateOnMainExecutionContext: ExecutionContext = { task in
+public let ImmediateOnMainExecutionContext: ExecutionContext = { task in
     if NSThread.isMainThread() {
         task()
     } else {
