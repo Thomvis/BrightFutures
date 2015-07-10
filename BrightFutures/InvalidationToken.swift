@@ -24,7 +24,7 @@ public protocol InvalidationTokenType {
 /// The type that all invalidation tokens that can be manually invalidated conform to
 public protocol ManualInvalidationTokenType : InvalidationTokenType {
     /// Invalidates the token
-    func invalidate()
+    func invalidate() throws
 }
 
 /// A default invalidation token implementation
@@ -49,7 +49,7 @@ public class InvalidationToken : ManualInvalidationTokenType {
     }
     
     /// Invalidates the token
-    public func invalidate() {
-        self.promise.failure(.InvalidationTokenInvalidated)
+    public func invalidate() throws {
+        try self.promise.failure(.InvalidationTokenInvalidated)
     }
 }
