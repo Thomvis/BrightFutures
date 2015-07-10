@@ -61,7 +61,6 @@ public class Async<Value>: AsyncType {
     
     public func complete(value: Value) throws {
         try queue.sync {
-            print("attempting to complete \(self)")
             guard self.value == nil else {
                 throw BrightFuturesError<NoError>.IllegalState
             }
@@ -82,9 +81,7 @@ public class Async<Value>: AsyncType {
         let wrappedCallback : Value -> () = { value in
             c {
                 self.callbackExecutionSemaphore.execute {
-                    print("calling back with value \(value)")
                     callback(value)
-                    print("done calling back")
                 }
                 return
             }
