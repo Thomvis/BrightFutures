@@ -12,7 +12,7 @@ public class Async<Value>: AsyncType {
 
     typealias CompletionCallback = Value -> ()
     
-    public var value: Value? {
+    public private(set) var value: Value? {
         willSet {
             assert(value == nil)
         }
@@ -23,7 +23,15 @@ public class Async<Value>: AsyncType {
         }
     }
     
+    /// This queue is used for all callback related administrative tasks
+    /// to prevent that a callback is added to a completed future and never
+    /// executed or perhaps excecuted twice.
     private let queue = Queue()
+
+    /// Upon completion of the future, all callbacks are asynchronously scheduled to their
+    /// respective execution contexts (which is either given by the client or returned from
+    /// DefaultThreadingModel). Inside the context, this semaphore will be used
+    /// to make sure that all callbacks are executed serially.
     private let callbackExecutionSemaphore = Semaphore(value: 1);
     private var callbacks = [CompletionCallback]()
     
@@ -40,12 +48,12 @@ public class Async<Value>: AsyncType {
     }
     
     private func runCallbacks() throws {
-        guard let value = self.value else {
+        guard let result = self.value else {
             throw BrightFuturesError<NoError>.IllegalState
         }
         
         for callback in self.callbacks {
-            callback(value)
+            callback(result)
         }
         
         self.callbacks.removeAll()
@@ -53,6 +61,7 @@ public class Async<Value>: AsyncType {
     
     public func complete(value: Value) throws {
         try queue.sync {
+            print("attempting to complete \(self)")
             guard self.value == nil else {
                 throw BrightFuturesError<NoError>.IllegalState
             }
@@ -66,16 +75,18 @@ public class Async<Value>: AsyncType {
         return self.value != nil
     }
     
+    /// Adds the given closure as a callback for when the Async completes. The closure is executed on the given context.
+    /// If no context is given, the behavior is defined by the default threading model (see README.md)
+    /// Returns self
     public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: Value -> ()) -> Self {
-        let wrappedCallback : Value -> () = { future in
-            if let value = self.value {
-                c {
-                    self.callbackExecutionSemaphore.execute {
-                        callback(value)
-                        return
-                    }
-                    return
+        let wrappedCallback : Value -> () = { value in
+            c {
+                self.callbackExecutionSemaphore.execute {
+                    print("calling back with value \(value)")
+                    callback(value)
+                    print("done calling back")
                 }
+                return
             }
         }
         
@@ -94,3 +105,13 @@ public class Async<Value>: AsyncType {
 }
 
 extension Async: MutableAsyncType { }
+
+extension Async: CustomStringConvertible, CustomDebugStringConvertible {
+    public var description: String {
+        return "Async<\(Value.self)>(\(self.value))"
+    }
+    
+    public var debugDescription: String {
+        return description
+    }
+}

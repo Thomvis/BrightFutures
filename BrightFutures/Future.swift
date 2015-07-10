@@ -56,7 +56,7 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
     
     c {
         let result = task()
-        result.analysis(ifSuccess: promise.success, ifFailure: promise.failure)
+        try! promise.complete(result)
     }
     
     return promise.future
@@ -70,71 +70,33 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
-public class Future<T, E: ErrorType> {
+public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     
     typealias CallbackInternal = (future: Future<T, E>) -> ()
     typealias CompletionCallback = (result: Result<T,E>) -> ()
     typealias SuccessCallback = T -> ()
     public typealias FailureCallback = E -> ()
     
-    /// The result of the operation this Future represents or `nil` if it is not yet completed
-    public internal(set) var result: Result<T,E>? = nil {
-        willSet {
-            assert(result == nil)
-        }
-        
-        didSet {
-            runCallbacks()
-        }
+    public required init() {
+        super.init()
     }
     
-    /// This queue is used for all callback related administrative tasks
-    /// to prevent that a callback is added to a completed future and never
-    /// executed or perhaps excecuted twice.
-    let callbackAdministrationQueue = Queue()
-
-    /// Upon completion of the future, all callbacks are asynchronously scheduled to their
-    /// respective execution contexts (which is either given by the client or returned from
-    /// DefaultThreadingModel). Inside the context, this semaphore will be used
-    /// to make sure that all callbacks are executed serially.
-    let callbackExecutionSemaphore = Semaphore(value: 1);
-    var callbacks: [CallbackInternal] = Array<CallbackInternal>()
-    
-    internal init() {
-        
+    public required init(value: Future.Value) {
+        super.init(value: value)
     }
     
-    /// Should be run on the callbackAdministrationQueue
-    private func runCallbacks() {
-        for callback in self.callbacks {
-            callback(future: self)
-        }
-        
-        self.callbacks.removeAll()
+    public required init<A: AsyncType where A.Value == Value>(other: A) {
+        super.init(other: other)
     }
+    
+    public var result: Future.Value? {
+        return self.value
+    }
+    
 }
 
 /// The internal API for completing a Future
 internal extension Future {
-    /// Completes the future with the given result
-    /// If the future is already completed, this function does nothing
-    /// and an assert will be raised (if enabled)
-    func complete(result: Result<T,E>) {
-        let succeeded = tryComplete(result)
-        assert(succeeded)
-    }
-    
-    /// Tries to complete the future with the given result
-    /// If the future is already completed, nothing happens and `false` is returned
-    /// otherwise the future is completed and `true` is returned
-    func tryComplete(result: Result<T,E>) -> Bool {
-        switch result {
-        case .Success(let val):
-            return self.trySuccess(val)
-        case .Failure(let err):
-            return self.tryFailure(err)
-        }
-    }
 
     /// Completes the future with the given success value
     /// If the future is already completed, this function does nothing
@@ -148,65 +110,35 @@ internal extension Future {
     /// If the future is already completed, nothing happens and `false` is returned
     /// otherwise the future is completed and `true` is returned
     func trySuccess(value: T) -> Bool {
-        return self.callbackAdministrationQueue.sync {
-            if self.result != nil {
-                return false;
-            }
-            
-            self.result = Result(value: value)
-            return true;
-        };
+        return tryComplete(Result(value: value))
     }
     
     /// Completes the future with the given error
     /// If the future is already completed, this function does nothing
     /// and an assert will be raised (if enabled)
-    func failure(error: E) {
-        let succeeded = self.tryFailure(error)
-        assert(succeeded)
+    func failure(error: E) throws {
+        try complete(Result(error: error))
     }
     
     /// Tries to complete the future with the given error
     /// If the future is already completed, nothing happens and `false` is returned
     /// otherwise the future is completed and `true` is returned
     func tryFailure(error: E) -> Bool {
-        return self.callbackAdministrationQueue.sync {
-            if self.result != nil {
-                return false;
-            }
-            
-            self.result = Result(error: error)
-            return true;
-        };
+        return tryComplete(Result(error: error))
     }
 }
 
 /// This extension contains all functions to query the current state of the Future in a synchronous & non-blocking fashion
 public extension Future {
     
-    /// Returns the value that the future succesfully completed with, or `nil` if the future failed or is still in progress
-    public var value: T? {
-        return self.result?.value
-    }
-
-    /// Returns the error that the future failed with, or `nil` if the future succeeded or is still in progress
-    public var error: E? {
-        return self.result?.error
-    }
-    
     /// `true` if the future completed with success, or `false` otherwise
     public var isSuccess: Bool {
-        return result?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
+        return value?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
     }
     
     /// `true` if the future failed, or `false` otherwise
     public var isFailure: Bool {
         return !isSuccess
-    }
-    
-    /// `true` if the future completed (either `isSuccess` or `isFailure` will be `true`)
-    public var isCompleted: Bool {
-        return self.result != nil
     }
 }
 
@@ -215,26 +147,17 @@ public extension Future {
 
     /// Returns a new future that succeeded with the given value
     public class func succeeded(value: T) -> Future<T, E> {
-        let res = Future<T, E>();
-        res.result = Result(value: value)
-        
-        return res
+        return Future<T, E>(value: Result<T, E>(value: value))
     }
     
     /// Returns a new future that failed with the given error
     public class func failed(error: E) -> Future<T, E> {
-        let res = Future<T, E>();
-        res.result = Result<T, E>(error: error)
-        
-        return res
+        return Future<T, E>(value: Result<T, E>(error: error))
     }
     
     /// Returns a new future that completed with the given result
-    public class func completed<T>(result: Result<T, E>) -> Future<T, E> {
-        let res = Future<T, E>()
-        res.result = result
-        
-        return res
+    public class func completed(result: Result<T, E>) -> Future<T, E> {
+        return Future<T, E>(value: result)
     }
     
     /// Returns a new future that will succeed with the given value after the given time interval
@@ -288,8 +211,8 @@ public extension Future {
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
     public func forced(timeout: TimeInterval) -> Result<T, E>? {
-        if let certainResult = self.result {
-            return certainResult
+        if let value = self.value {
+            return value
         } else {
             let sema = Semaphore(value: 0)
             var res: Result<T, E>? = nil
@@ -309,33 +232,6 @@ public extension Future {
 /// This extension contains all methods for registering callbacks
 public extension Future {
     
-    /// Adds the given closure as a callback for when the future completes. The closure is executed on the given context.
-    /// If no context is given, the behavior is defined by the default threading model (see README.md)
-    /// Returns self
-    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E> {
-        let wrappedCallback : Future<T, E> -> () = { future in
-            if let realRes = self.result {
-                c {
-                    self.callbackExecutionSemaphore.execute {
-                        callback(result: realRes)
-                        return
-                    }
-                    return
-                }
-            }
-        }
-        
-        self.callbackAdministrationQueue.sync {
-            if self.result == nil {
-                self.callbacks.append(wrappedCallback)
-            } else {
-                wrappedCallback(self)
-            }
-        }
-        
-        return self
-    }
-
     /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
@@ -386,7 +282,7 @@ public extension Future {
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
     public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
         return self.flatMap(context: c) { value in
-            Future.completed(f(value))
+            return Future<U, E>.completed(f(value))
         }
     }
 
@@ -411,7 +307,7 @@ public extension Future {
         self.onComplete(context: c, callback: { (result: Result<T, E>) in
             result.analysis(
                 ifSuccess: { p.success(f($0)) },
-                ifFailure: p.failure )
+                ifFailure: { try! p.failure($0) })
         })
         
         return p.future
@@ -432,7 +328,7 @@ public extension Future {
         self.onComplete(context:c) { result in
             result.analysis(
                 ifSuccess: p.success ,
-                ifFailure: { p.failure(f($0)) })
+                ifFailure: { try! p.failure(f($0)) })
         }
         
         return p.future
@@ -446,7 +342,7 @@ public extension Future {
         
         self.onComplete(context: c) { result in
             callback(result)
-            p.completeWith(self)
+            try! p.complete(result)
         }
 
         return p.future
@@ -569,7 +465,7 @@ public func flatten<T, E>(future: Future<Future<T, E>, E>) -> Future<T, E> {
     future.onComplete { result in
         result.analysis(
             ifSuccess: { p.completeWith($0) },
-            ifFailure: { p.failure($0) })
+            ifFailure: { try! p.failure($0) })
     }
     
     return p.future

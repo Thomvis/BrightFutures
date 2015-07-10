@@ -21,18 +21,21 @@ public protocol AsyncType {
 }
 
 internal protocol MutableAsyncType: AsyncType {
+    /// Completes the Async with the given result
+    /// If the Async is already completed, this function throws an error
     func complete(value: Value) throws
-    func tryComplete(value: Value) -> Bool
+    
+    /// Tries to complete the Async with the given value
+    /// If the Async is already completed, nothing happens and `false` is returned
+    /// otherwise the future is completed and `true` is returned
+    func tryComplete(result: Value) -> Bool
 }
 
 extension MutableAsyncType {
     
-    /// Tries to complete the Async with the given value
-    /// If the Async is already completed, nothing happens and `false` is returned
-    /// otherwise the Async is completed and `true` is returned
-    func tryComplete(value: Value) -> Bool {
+    func tryComplete(result: Value) -> Bool {
         do {
-            try complete(value)
+            try complete(result)
             return true
         } catch {
             return false
@@ -40,7 +43,7 @@ extension MutableAsyncType {
     }
 
     func completeWith<A: AsyncType where A.Value == Value>(other: A) {
-        other.onComplete(context: ImmediateExecutionContext) {
+        other.onComplete(context: DefaultThreadingModel()) {
             try! self.complete($0)
         }
     }
