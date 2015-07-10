@@ -991,60 +991,62 @@ extension BrightFuturesTests {
 extension BrightFuturesTests {
     // Creates a lot of futures and adds completion blocks concurrently, which should all fire
     func testStress() {
-        let instances = 100;
-        var successfulFutures = [Future<Int, NSError>]()
-        var failingFutures = [Future<Int, NSError>]()
-        let contexts: [ExecutionContext] = [ImmediateExecutionContext, Queue.main.context, Queue.global.context]
-        
-        let randomContext: () -> ExecutionContext = { contexts[Int(arc4random_uniform(UInt32(contexts.count)))] }
-        let randomFuture: () -> Future<Int, NSError> = {
-            if arc4random() % 2 == 0 {
-                return successfulFutures[Int(arc4random_uniform(UInt32(successfulFutures.count)))]
-            } else {
-                return failingFutures[Int(arc4random_uniform(UInt32(failingFutures.count)))]
-            }
-        }
-        
-        var finalSum = 0;
-        
-        for _ in 1...instances {
-            var future: Future<Int, NSError>
-            if arc4random() % 2 == 0 {
-                let futureResult: Int = Int(arc4random_uniform(10))
-                finalSum += futureResult
-                future = self.succeedingFuture(futureResult)
-                successfulFutures.append(future)
-            } else {
-                future = self.failingFuture()
-                failingFutures.append(future)
-            }
+        self.measureBlock {
+            let instances = 100;
+            var successfulFutures = [Future<Int, NSError>]()
+            var failingFutures = [Future<Int, NSError>]()
+            let contexts: [ExecutionContext] = [ImmediateExecutionContext, Queue.main.context, Queue.global.context]
             
-            let context = randomContext()
-            let e = self.expectationWithDescription("future completes in context \(context)")
-            
-            future.onComplete(context: context) { res in
-                e.fulfill()
-            }
-            
-            
-        }
-        
-        for _ in 1...instances*10 {
-            let f = randomFuture()
-            
-            let context = randomContext()
-            let e = self.expectationWithDescription("future completes in context \(context)")
-            
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-                usleep(arc4random_uniform(100))
-                
-                f.onComplete(context: context) { res in
-                    e.fulfill()
+            let randomContext: () -> ExecutionContext = { contexts[Int(arc4random_uniform(UInt32(contexts.count)))] }
+            let randomFuture: () -> Future<Int, NSError> = {
+                if arc4random() % 2 == 0 {
+                    return successfulFutures[Int(arc4random_uniform(UInt32(successfulFutures.count)))]
+                } else {
+                    return failingFutures[Int(arc4random_uniform(UInt32(failingFutures.count)))]
                 }
             }
+            
+            var finalSum = 0;
+            
+            for _ in 1...instances {
+                var future: Future<Int, NSError>
+                if arc4random() % 2 == 0 {
+                    let futureResult: Int = Int(arc4random_uniform(10))
+                    finalSum += futureResult
+                    future = self.succeedingFuture(futureResult)
+                    successfulFutures.append(future)
+                } else {
+                    future = self.failingFuture()
+                    failingFutures.append(future)
+                }
+                
+                let context = randomContext()
+                let e = self.expectationWithDescription("future completes in context \(context)")
+                
+                future.onComplete(context: context) { res in
+                    e.fulfill()
+                }
+                
+                
+            }
+            
+            for _ in 1...instances*10 {
+                let f = randomFuture()
+                
+                let context = randomContext()
+                let e = self.expectationWithDescription("future completes in context \(context)")
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+                    usleep(arc4random_uniform(100))
+                    
+                    f.onComplete(context: context) { res in
+                        e.fulfill()
+                    }
+                }
+            }
+            
+            self.waitForExpectationsWithTimeout(10, handler: nil)
         }
-        
-        self.waitForExpectationsWithTimeout(10, handler: nil)
     }
     
     func testSerialCallbacks() {
