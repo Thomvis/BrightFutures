@@ -670,7 +670,7 @@ extension BrightFuturesTests {
 
     func testForcedFuture() {
         var x = 10
-        let f: Future<Void, NoError> = future { () -> () in
+        let f: Future<Void, NoError> = future { () -> Void in
             NSThread.sleepForTimeInterval(0.5)
             x = 3
         }

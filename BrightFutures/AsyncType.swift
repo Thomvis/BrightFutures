@@ -17,7 +17,7 @@ public protocol AsyncType {
     init(value: Value)
     init<A: AsyncType where A.Value == Value>(other: A)
     
-    func onComplete(context c: ExecutionContext, callback: Value -> ()) -> Self
+    func onComplete(context c: ExecutionContext, callback: Value -> Void) -> Self
 }
 
 internal protocol MutableAsyncType: AsyncType {

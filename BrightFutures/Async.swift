@@ -10,7 +10,7 @@ import Foundation
 
 public class Async<Value>: AsyncType {
 
-    typealias CompletionCallback = Value -> ()
+    typealias CompletionCallback = Value -> Void
     
     public private(set) var value: Value? {
         willSet {
@@ -77,8 +77,8 @@ public class Async<Value>: AsyncType {
     /// Adds the given closure as a callback for when the Async completes. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: Value -> ()) -> Self {
-        let wrappedCallback : Value -> () = { value in
+    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: Value -> Void) -> Self {
+        let wrappedCallback : Value -> Void = { value in
             c {
                 self.callbackExecutionSemaphore.execute {
                     callback(value)

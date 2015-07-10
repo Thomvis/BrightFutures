@@ -119,7 +119,7 @@ public struct Queue {
     
     /// Asynchronously executes the given closure on the queue after a delay
     /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
-    public func after(delay: TimeInterval, block: () -> ()) {
+    public func after(delay: TimeInterval, block: () -> Void) {
         dispatch_after(delay.dispatchTime, underlyingQueue, block)
     }
     

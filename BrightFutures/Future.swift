@@ -72,10 +72,9 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
 /// For more info, see the project README.md
 public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     
-    typealias CallbackInternal = (future: Future<T, E>) -> ()
-    typealias CompletionCallback = (result: Result<T,E>) -> ()
-    typealias SuccessCallback = T -> ()
-    public typealias FailureCallback = E -> ()
+    typealias CompletionCallback = (result: Result<T,E>) -> Void
+    typealias SuccessCallback = T -> Void
+    public typealias FailureCallback = E -> Void
     
     public required init() {
         super.init()
@@ -337,7 +336,7 @@ public extension Future {
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Result<T, E> -> ()) -> Future<T, E> {
+    public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Result<T, E> -> Void) -> Future<T, E> {
         let p = Promise<T, E>()
         
         self.onComplete(context: c) { result in
@@ -418,7 +417,7 @@ public extension Future {
 
     /// See `onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: Result<T, E> -> ()) -> Future<T, E> {
+    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: Result<T, E> -> Void) -> Future<T, E> {
         firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
             token.context {
                 if !token.isInvalid {

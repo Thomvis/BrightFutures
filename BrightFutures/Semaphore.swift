@@ -76,7 +76,7 @@ public class Semaphore {
     }
 
     /// Executes the given closure between a `self.wait()` and `self.signal()`
-    public func execute(@noescape task: () -> ()) {
+    public func execute(@noescape task: () -> Void) {
         self.wait()
         task()
         self.signal()
