@@ -46,8 +46,8 @@ public class Promise<T, E: ErrorType> {
     
     /// Completes the promise's future with the given success value
     /// See `Future.success(value: T)`
-    public func success(value: T) {
-        future.success(value)
+    public func success(value: T) throws {
+        try! future.success(value)
     }
     
     /// Attempts to complete the promise's future with the given success value

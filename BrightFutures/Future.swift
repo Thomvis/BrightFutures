@@ -94,39 +94,6 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     
 }
 
-/// The internal API for completing a Future
-internal extension Future {
-
-    /// Completes the future with the given success value
-    /// If the future is already completed, this function does nothing
-    /// and an assert will be raised (if enabled)
-    func success(value: T) {
-        let succeeded = self.trySuccess(value)
-        assert(succeeded)
-    }
-    
-    /// Tries to complete the future with the given success value
-    /// If the future is already completed, nothing happens and `false` is returned
-    /// otherwise the future is completed and `true` is returned
-    func trySuccess(value: T) -> Bool {
-        return tryComplete(Result(value: value))
-    }
-    
-    /// Completes the future with the given error
-    /// If the future is already completed, this function does nothing
-    /// and an assert will be raised (if enabled)
-    func failure(error: E) throws {
-        try complete(Result(error: error))
-    }
-    
-    /// Tries to complete the future with the given error
-    /// If the future is already completed, nothing happens and `false` is returned
-    /// otherwise the future is completed and `true` is returned
-    func tryFailure(error: E) -> Bool {
-        return tryComplete(Result(error: error))
-    }
-}
-
 /// This extension contains all functions to query the current state of the Future in a synchronous & non-blocking fashion
 public extension Future {
     
@@ -165,7 +132,7 @@ public extension Future {
         let res = Future<T, E>()
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.underlyingQueue) {
-            res.success(value)
+            try! res.success(value)
         }
         
         return res
@@ -305,7 +272,7 @@ public extension Future {
         
         self.onComplete(context: c, callback: { (result: Result<T, E>) in
             result.analysis(
-                ifSuccess: { p.success(f($0)) },
+                ifSuccess: { try! p.success(f($0)) },
                 ifFailure: { try! p.failure($0) })
         })
         
@@ -326,7 +293,7 @@ public extension Future {
         
         self.onComplete(context:c) { result in
             result.analysis(
-                ifSuccess: p.success ,
+                ifSuccess: { try! p.success($0) } ,
                 ifFailure: { try! p.failure(f($0)) })
         }
         
@@ -366,7 +333,7 @@ public extension Future {
         
         self.onComplete(context: c) { result in
             result.analysis(
-                ifSuccess: { value in p.success(value) },
+                ifSuccess: { try! p.success($0) },
                 ifFailure: { p.completeWith(task($0)) })
         }
         

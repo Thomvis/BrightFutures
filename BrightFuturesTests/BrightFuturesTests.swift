@@ -242,7 +242,7 @@ extension BrightFuturesTests {
         let p = Promise<Int, NoError>()
         
         Queue.global.async {
-            p.success(fibonacci(10))
+            try! p.success(fibonacci(10))
         }
         
         let e = self.expectationWithDescription("complete expectation")
@@ -1081,7 +1081,7 @@ extension BrightFuturesTests {
             }
         }
         
-        p.success()
+        try! p.success()
         
         self.waitForExpectationsWithTimeout(5, handler: nil)
     }

@@ -47,7 +47,7 @@ class InvalidationTokenTests: XCTestCase {
         let e = self.expectation()
         Queue.global.async {
             try! token.invalidate()
-            p.success(2)
+            try! p.success(2)
             NSThread.sleepForTimeInterval(0.2); // make sure onSuccess is not called
             e.fulfill()
         }
