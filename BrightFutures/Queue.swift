@@ -63,7 +63,7 @@ public struct Queue {
     
     /// Synchronously executes the given closure on this queue.
     /// Analogous to dispatch_sync(self.underlyingQueue, block)
-    public func sync(block: () -> ()) {
+    public func sync(block: () -> Void) {
         dispatch_sync(underlyingQueue, block)
     }
     
@@ -71,7 +71,7 @@ public struct Queue {
     /// If the closure throws an error, the error is rethrown to the caller.
     /// Note: we cannot use the rethrows key here because we are not
     /// directly executing the closure. (It is passed to `dispatch_sync`)
-    public func sync(block: () throws -> ()) throws {
+    public func sync(block: () throws -> Void) throws {
         var error: ErrorType?
         
         sync {
@@ -101,7 +101,7 @@ public struct Queue {
     
     /// Asynchronously executes the given closure on this queue.
     /// Analogous to dispatch_async(self.underlyingQueue, block)
-    public func async(block: () -> ()) {
+    public func async(block: () -> Void) {
         dispatch_async(underlyingQueue, block)
     }
     
