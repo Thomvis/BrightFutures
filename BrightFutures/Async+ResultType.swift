@@ -35,4 +35,14 @@ public extension Async where Value: ResultType {
     func tryFailure(error: Value.Error) -> Bool {
         return tryComplete(Value(error: error))
     }
+    
+    /// `true` if the future completed with success, or `false` otherwise
+    public var isSuccess: Bool {
+        return value?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
+    }
+    
+    /// `true` if the future failed, or `false` otherwise
+    public var isFailure: Bool {
+        return !isSuccess
+    }
 }

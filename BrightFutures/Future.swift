@@ -94,20 +94,6 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     
 }
 
-/// This extension contains all functions to query the current state of the Future in a synchronous & non-blocking fashion
-public extension Future {
-    
-    /// `true` if the future completed with success, or `false` otherwise
-    public var isSuccess: Bool {
-        return value?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
-    }
-    
-    /// `true` if the future failed, or `false` otherwise
-    public var isFailure: Bool {
-        return !isSuccess
-    }
-}
-
 /// This extension contains all (static) methods for Future creation
 public extension Future {
 
