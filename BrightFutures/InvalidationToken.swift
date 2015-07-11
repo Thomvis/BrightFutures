@@ -30,7 +30,7 @@ public protocol ManualInvalidationTokenType : InvalidationTokenType {
 /// A default invalidation token implementation
 public class InvalidationToken : ManualInvalidationTokenType {
    
-    let promise = Promise<NoValue, BrightFuturesError<NoError>>()
+    public let future = Future<NoValue, BrightFuturesError<NoError>>()
     
     /// The synchronous context on which the invalidation and callbacks are executed
     public let context = toContext(Semaphore(value: 1))
@@ -40,16 +40,11 @@ public class InvalidationToken : ManualInvalidationTokenType {
     
     /// Indicates if the token is invalid
     public var isInvalid: Bool {
-        return promise.future.isCompleted
-    }
-    
-    /// The future will fail with an error with .InvalidationTokenInvalidated when the token invalidates
-    public var future: Future<NoValue, BrightFuturesError<NoError>> {
-        return self.promise.future
+        return future.isCompleted
     }
     
     /// Invalidates the token
     public func invalidate() throws {
-        try self.promise.failure(.InvalidationTokenInvalidated)
+        try future.failure(.InvalidationTokenInvalidated)
     }
 }

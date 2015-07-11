@@ -52,14 +52,14 @@ public func future<T, E>(task: () -> Result<T, E>) -> Future<T, E> {
 
 /// Executes the given task on the given context and wraps the result of the task in a Future
 public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) -> Future<T, E> {
-    let promise = Promise<T, E>();
+    let future = Future<T, E>();
     
     c {
         let result = task()
-        try! promise.complete(result)
+        try! future.complete(result)
     }
     
-    return promise.future
+    return future
 }
 
 /// A Future represents the outcome of an asynchronous operation
@@ -247,15 +247,15 @@ public extension Future {
     /// from this future. If this future fails, the returned future fails with the same error.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U, E> {
-        let p = Promise<U, E>()
+        let res = Future<U, E>()
         
         self.onComplete(context: c, callback: { (result: Result<T, E>) in
             result.analysis(
-                ifSuccess: { try! p.success(f($0)) },
-                ifFailure: { try! p.failure($0) })
+                ifSuccess: { try! res.success(f($0)) },
+                ifFailure: { try! res.failure($0) })
         })
         
-        return p.future
+        return res
     }
     
     /// See `mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1>`
@@ -268,29 +268,29 @@ public extension Future {
     /// from this future. If this future succeeds, the returned future succeeds with the same value and the closure is not executed.
     /// The closure is executed on the given context.
     public func mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1> {
-        let p = Promise<T, E1>()
+        let res = Future<T, E1>()
         
         self.onComplete(context:c) { result in
             result.analysis(
-                ifSuccess: { try! p.success($0) } ,
-                ifFailure: { try! p.failure(f($0)) })
+                ifSuccess: { try! res.success($0) } ,
+                ifFailure: { try! res.failure(f($0)) })
         }
         
-        return p.future
+        return res
     }
 
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns a future that completes with the result from this future but only after executing the given closure
     public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Result<T, E> -> Void) -> Future<T, E> {
-        let p = Promise<T, E>()
+        let res = Future<T, E>()
         
         self.onComplete(context: c) { result in
             callback(result)
-            try! p.complete(result)
+            try! res.complete(result)
         }
 
-        return p.future
+        return res
     }
 
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
@@ -308,15 +308,15 @@ public extension Future {
     /// should only be executed if the first (this future) fails.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func recoverWith<E1: ErrorType>(context c: ExecutionContext = DefaultThreadingModel(), task: (E) -> Future<T, E1>) -> Future<T, E1> {
-        let p = Promise<T, E1>()
+        let res = Future<T, E1>()
         
         self.onComplete(context: c) { result in
             result.analysis(
-                ifSuccess: { try! p.success($0) },
-                ifFailure: { p.completeWith(task($0)) })
+                ifSuccess: { try! res.success($0) },
+                ifFailure: { res.completeWith(task($0)) })
         }
         
-        return p.future;
+        return res
     }
     
     /// Returns a future that succeeds with a tuple consisting of the success value of this future and the success value of the given future
@@ -405,15 +405,15 @@ public extension Future {
 /// Returns a future that fails with the error from the outer or inner future or succeeds with the value from the inner future 
 /// if both futures succeed.
 public func flatten<T, E>(future: Future<Future<T, E>, E>) -> Future<T, E> {
-    let p = Promise<T, E>()
+    let res = Future<T, E>()
     
     future.onComplete { result in
         result.analysis(
-            ifSuccess: { p.completeWith($0) },
-            ifFailure: { try! p.failure($0) })
+            ifSuccess: { res.completeWith($0) },
+            ifFailure: { try! res.failure($0) })
     }
     
-    return p.future
+    return res
 }
 
 /// Short-hand for `lhs.recover(rhs())`
