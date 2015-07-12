@@ -212,8 +212,8 @@
 				E9F496EE1B052F1400F82839 /* Errors.swift */,
 				E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */,
 				E9DD4EF01B4ED6850070C2AF /* Async.swift */,
-				E9DF0818194470060083F7F2 /* Supporting Files */,
 				E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */,
+				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFutures;
 			sourceTree = "<group>";

@@ -59,21 +59,6 @@ public class Async<Value>: AsyncType {
         self.callbacks.removeAll()
     }
     
-    public func complete(value: Value) throws {
-        try queue.sync {
-            guard self.value == nil else {
-                throw BrightFuturesError<NoError>.IllegalState
-            }
-            
-            self.value = value
-        }
-    }
-    
-    /// `true` if the future completed (either `isSuccess` or `isFailure` will be `true`)
-    public var isCompleted: Bool {
-        return self.value != nil
-    }
-    
     /// Adds the given closure as a callback for when the Async completes. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
@@ -101,7 +86,17 @@ public class Async<Value>: AsyncType {
     
 }
 
-extension Async: MutableAsyncType { }
+extension Async: MutableAsyncType {
+    func complete(value: Value) throws {
+        try queue.sync {
+            guard self.value == nil else {
+                throw BrightFuturesError<NoError>.IllegalState
+            }
+            
+            self.value = value
+        }
+    }
+}
 
 extension Async: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {

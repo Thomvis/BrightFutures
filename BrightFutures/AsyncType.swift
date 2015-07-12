@@ -20,19 +20,24 @@ public protocol AsyncType {
     func onComplete(context c: ExecutionContext, callback: Value -> Void) -> Self
 }
 
+public extension AsyncType {
+    /// `true` if the future completed (either `isSuccess` or `isFailure` will be `true`)
+    public var isCompleted: Bool {
+        return self.value != nil
+    }
+}
+
 internal protocol MutableAsyncType: AsyncType {
     /// Completes the Async with the given result
     /// If the Async is already completed, this function throws an error
     func complete(value: Value) throws
-    
-    /// Tries to complete the Async with the given value
-    /// If the Async is already completed, nothing happens and `false` is returned
-    /// otherwise the future is completed and `true` is returned
-    func tryComplete(result: Value) -> Bool
 }
 
 extension MutableAsyncType {
     
+    /// Tries to complete the Async with the given value
+    /// If the Async is already completed, nothing happens and `false` is returned
+    /// otherwise the future is completed and `true` is returned
     func tryComplete(result: Value) -> Bool {
         do {
             try complete(result)
