@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class Async<Value>: AsyncType {
+public class Async<Value>: MutableAsyncType, CustomStringConvertible, CustomDebugStringConvertible {
 
     typealias CompletionCallback = Value -> Void
     
@@ -99,14 +99,14 @@ public class Async<Value>: AsyncType {
         return self
     }
     
-}
-
-extension Async: MutableAsyncType { }
-
-extension Async: CustomStringConvertible, CustomDebugStringConvertible {
+    // MARK: CustomStringConvertible
+    
     public var description: String {
         return "Async<\(Value.self)>(\(self.value))"
     }
+    
+    
+    // MARK: CustomDebugStringConvertible
     
     public var debugDescription: String {
         return description
