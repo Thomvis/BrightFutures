@@ -12,6 +12,7 @@
 		E90E9D601B1B8A9B00A8F9F3 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D5F1B1B8A9B00A8F9F3 /* Result.framework */; };
 		E90E9D621B1B8AA500A8F9F3 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E90E9D611B1B8AA500A8F9F3 /* Result.framework */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
+		E95507001B525D0B00359F73 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
 		E992A95F1B501AC800A9FC4F /* Async+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */; };
 		E992A9601B501AC800A9FC4F /* Async+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */; };
@@ -30,7 +31,6 @@
 		E9D923AC1A6CE29A00CADD9F /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
 		E9D923AE1A6CE69B00CADD9F /* InvalidationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AD1A6CE69B00CADD9F /* InvalidationTokenTests.swift */; };
 		E9DD4EEF1B4ED51A0070C2AF /* AsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */; };
-		E9DD4EF11B4ED6850070C2AF /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
 		E9DD4EF21B4F16C00070C2AF /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
 		E9DD4EF31B4F16C30070C2AF /* AsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */; };
 		E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; };
@@ -440,6 +440,7 @@
 			files = (
 				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */,
+				E95507001B525D0B00359F73 /* Async.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
 				E9DD4EEF1B4ED51A0070C2AF /* AsyncType.swift in Sources */,
@@ -447,7 +448,6 @@
 				E9D923AC1A6CE29A00CADD9F /* InvalidationToken.swift in Sources */,
 				E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */,
 				E992A95F1B501AC800A9FC4F /* Async+ResultType.swift in Sources */,
-				E9DD4EF11B4ED6850070C2AF /* Async.swift in Sources */,
 				E9DF0838194470190083F7F2 /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
