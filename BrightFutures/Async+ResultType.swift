@@ -7,7 +7,8 @@
 //
 import Result
 
-public extension Async where Value: ResultType {
+// Note: I'd like this to be an extension of MutableAsyncType, but that makes the compiler crash
+internal extension Async where Value: ResultType {
     /// Completes the future with the given success value
     /// If the future is already completed, this function does nothing
     /// and an assert will be raised (if enabled)
@@ -35,7 +36,9 @@ public extension Async where Value: ResultType {
     func tryFailure(error: Value.Error) -> Bool {
         return tryComplete(Value(error: error))
     }
-    
+}
+
+public extension AsyncType where Value: ResultType {
     /// `true` if the future completed with success, or `false` otherwise
     public var isSuccess: Bool {
         return value?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
