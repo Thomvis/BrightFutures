@@ -18,6 +18,8 @@ public protocol AsyncType {
     init<A: AsyncType where A.Value == Value>(other: A)
     
     func onComplete(context c: ExecutionContext, callback: Value -> Void) -> Self
+    
+    func map<U>(context: ExecutionContext, transform: Value -> U) -> Async<U>;
 }
 
 public extension AsyncType {
@@ -25,31 +27,24 @@ public extension AsyncType {
     public var isCompleted: Bool {
         return self.value != nil
     }
-}
-
-internal protocol MutableAsyncType: AsyncType {
-    /// Completes the Async with the given result
-    /// If the Async is already completed, this function throws an error
-    func complete(value: Value) throws
-}
-
-extension MutableAsyncType {
     
-    /// Tries to complete the Async with the given value
-    /// If the Async is already completed, nothing happens and `false` is returned
-    /// otherwise the future is completed and `true` is returned
-    func tryComplete(result: Value) -> Bool {
-        do {
-            try complete(result)
-            return true
-        } catch {
-            return false
-        }
+    /// See `map<U>(context c: ExecutionContext, f: T -> U) -> Async<U>`
+    /// The given closure is executed according to the default threading model (see README.md)
+    public func map<U>(transform: Value -> U) -> Async<U> {
+        return self.map(DefaultThreadingModel(), transform: transform)
     }
-
-    func completeWith<A: AsyncType where A.Value == Value>(other: A) {
-        other.onComplete(context: ImmediateExecutionContext) {
-            try! self.complete($0)
+    
+    /// Returns an Async that succeeds with the value returned from the given closure when it is invoked with the success value
+    /// from this future. If this Async fails, the returned future fails with the same error.
+    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
+    public func map<U>(context: ExecutionContext, transform: Value -> U) -> Async<U> {
+        let res = Async<U>()
+        
+        onComplete(context: context) { value in
+            try! res.complete(transform(value))
         }
+        
+        return res
     }
+    
 }
