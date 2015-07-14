@@ -84,6 +84,10 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         super.init(value: value)
     }
     
+    public init(successValue: T, delay: NSTimeInterval) {
+        super.init(value: Result<T, E>(value: successValue), delay: delay)
+    }
+    
     public required init<A: AsyncType where A.Value == Value>(other: A) {
         super.init(other: other)
     }
@@ -104,18 +108,6 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
 
 /// This extension contains all (static) methods for Future creation
 public extension Future {
-    
-    /// Returns a new future that will succeed with the given value after the given time interval
-    /// The implementation of this function uses dispatch_after
-    public class func completeAfter(delay: NSTimeInterval, withValue value: T) -> Future<T, E> {
-        let res = Future<T, E>()
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(delay * NSTimeInterval(NSEC_PER_SEC))), Queue.global.underlyingQueue) {
-            try! res.success(value)
-        }
-        
-        return res
-    }
     
     /// Returns a new future with the new type.
     /// The value or error will be casted using `as!` and may cause a runtime error

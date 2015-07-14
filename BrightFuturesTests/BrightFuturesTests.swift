@@ -100,7 +100,7 @@ extension BrightFuturesTests {
     }
     
     func testCompleteAfterFuture() {
-        let f = Future<Int, NoError>.completeAfter(1, withValue: 3)
+        let f = Future<Int, NoError>(successValue: 3, delay: 1)
         
         XCTAssertFalse(f.isCompleted)
         
@@ -890,12 +890,12 @@ extension BrightFuturesTests {
     
     func testUtilsFirstCompleted() {
         let futures: [Future<Int, NoError>] = [
-            Future.completeAfter(0.2, withValue: 3),
-            Future.completeAfter(0.3, withValue: 13),
-            Future.completeAfter(0.4, withValue: 23),
-            Future.completeAfter(0.3, withValue: 4),
-            Future.completeAfter(0.1, withValue: 9),
-            Future.completeAfter(0.4, withValue: 83),
+            Future(successValue: 3, delay: 0.2),
+            Future(successValue: 13, delay: 0.3),
+            Future(successValue: 23, delay: 0.4),
+            Future(successValue: 4, delay: 0.3),
+            Future(successValue: 9, delay: 0.1),
+            Future(successValue: 83, delay: 0.4),
         ]
         
         let e = self.expectation()
@@ -939,10 +939,10 @@ extension BrightFuturesTests {
     func testUtilsFindSuccess() {
         let futures: [Future<Int, NoError>] = [
             Future(successValue: 1),
-            Future.completeAfter(0.2, withValue: 3),
+            Future(successValue: 3, delay: 0.2),
             Future(successValue: 5),
             Future(successValue: 7),
-            Future.completeAfter(0.3, withValue: 8),
+            Future(successValue: 8, delay: 0.3),
             Future(successValue: 9)
         ];
         
@@ -963,10 +963,10 @@ extension BrightFuturesTests {
     func testUtilsFindNoSuchElement() {
         let futures: [Future<Int, NoError>] = [
             Future(successValue: 1),
-            Future.completeAfter(0.2, withValue: 3),
+            Future(successValue: 3, delay: 0.2),
             Future(successValue: 5),
             Future(successValue: 7),
-            Future.completeAfter(0.4, withValue: 9),
+            Future(successValue: 9, delay: 0.4),
         ];
         
         let f = find(futures) { val in
