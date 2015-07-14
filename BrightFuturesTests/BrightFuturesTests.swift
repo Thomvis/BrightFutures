@@ -64,7 +64,7 @@ extension BrightFuturesTests {
     }
     
     func testCompletedVoidFuture() {
-        let f = Future<Void, NoError>()
+        let f = Future<Void, NoError>(successValue: ())
         XCTAssert(f.isCompleted, "void future should be completed")
         XCTAssert(f.isSuccess, "void future should be success")
     }
