@@ -119,7 +119,7 @@ extension BrightFuturesTests {
     
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
-        let f = Future<Int, NoError>.never()
+        let f = Future<Int, NoError>()
         XCTAssert(!f.isCompleted)
         
         sleep(UInt32(Double(arc4random_uniform(100))/100.0))

@@ -117,11 +117,6 @@ public extension Future {
         return res
     }
     
-    /// Returns a new future that will never complete
-    public class func never() -> Future<T, E> {
-        return Future<T, E>()
-    }
-    
     /// Returns a new future with the new type.
     /// The value or error will be casted using `as!` and may cause a runtime error
     public func forceType<U, E1>() -> Future<U, E1> {
