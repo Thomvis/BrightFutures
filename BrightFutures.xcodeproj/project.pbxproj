@@ -86,6 +86,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CF5A10B11B5B11330039E87B /* BrightFutures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = BrightFutures.playground; path = ../../BrightFutures/BrightFutures.playground; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E90E9D571B1B8A3600A8F9F3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Checkouts/Result/Carthage/Checkouts/Box/build/Debug/Box.framework; sourceTree = "<group>"; };
@@ -150,6 +151,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CF5A10B01B5B11210039E87B /* Playground */ = {
+			isa = PBXGroup;
+			children = (
+				CF5A10B11B5B11330039E87B /* BrightFutures.playground */,
+			);
+			name = Playground;
+			sourceTree = "<group>";
+		};
 		E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -180,6 +189,7 @@
 		E9DF080B194470060083F7F2 = {
 			isa = PBXGroup;
 			children = (
+				CF5A10B01B5B11210039E87B /* Playground */,
 				E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */,
 				E9DF0817194470060083F7F2 /* BrightFutures */,
 				E9DF0824194470060083F7F2 /* BrightFuturesTests */,
