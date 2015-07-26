@@ -70,7 +70,7 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
-public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
+public final class Future<T, E: ErrorType>: Async<Result<T, E>>, FutureType {
     
     public typealias CompletionCallback = (result: Result<T,E>) -> Void
     public typealias SuccessCallback = T -> Void
