@@ -10,7 +10,7 @@ import Result
 public extension AsyncType where Value: ResultType {
     /// `true` if the future completed with success, or `false` otherwise
     public var isSuccess: Bool {
-        return value?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
+        return result?.analysis(ifSuccess: { _ in return true }, ifFailure: { _ in return false }) ?? false
     }
     
     /// `true` if the future failed, or `false` otherwise

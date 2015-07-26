@@ -11,7 +11,7 @@ import Foundation
 public protocol AsyncType {
     typealias Value
     
-    var value: Value? { get }
+    var result: Value? { get }
     
     init()
     init(value: Value)
@@ -26,7 +26,7 @@ public protocol AsyncType {
 public extension AsyncType {
     /// `true` if the future completed (either `isSuccess` or `isFailure` will be `true`)
     public var isCompleted: Bool {
-        return self.value != nil
+        return self.result != nil
     }
     
     /// See `map<U>(context c: ExecutionContext, f: T -> U) -> Async<U>`

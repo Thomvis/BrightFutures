@@ -12,13 +12,13 @@ public class Async<Value>: AsyncType {
 
     typealias CompletionCallback = Value -> Void
     
-    public private(set) var value: Value? {
+    public private(set) var result: Value? {
         willSet {
-            assert(value == nil)
+            assert(result == nil)
         }
         
         didSet {
-            assert(value != nil)
+            assert(result != nil)
             try! runCallbacks()
         }
     }
@@ -40,7 +40,7 @@ public class Async<Value>: AsyncType {
     }
     
     public required init(value: Value) {
-        self.value = value
+        self.result = value
     }
     
     public required init(value: Value, delay: NSTimeInterval) {
@@ -54,7 +54,7 @@ public class Async<Value>: AsyncType {
     }
     
     private func runCallbacks() throws {
-        guard let result = self.value else {
+        guard let result = self.result else {
             throw BrightFuturesError<NoError>.IllegalState
         }
         
@@ -79,7 +79,7 @@ public class Async<Value>: AsyncType {
         }
         
         queue.sync {
-            if let value = self.value {
+            if let value = self.result {
                 wrappedCallback(value)
             } else {
                 self.callbacks.append(wrappedCallback)
@@ -95,18 +95,18 @@ public class Async<Value>: AsyncType {
 extension Async: MutableAsyncType {
     func complete(value: Value) throws {
         try queue.sync {
-            guard self.value == nil else {
+            guard self.result == nil else {
                 throw BrightFuturesError<NoError>.IllegalState
             }
             
-            self.value = value
+            self.result = value
         }
     }
 }
 
 extension Async: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
-        return "Async<\(Value.self)>(\(self.value))"
+        return "Async<\(Value.self)>(\(self.result))"
     }
     
     public var debugDescription: String {

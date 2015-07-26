@@ -84,24 +84,20 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         super.init(value: value)
     }
     
-    public init(successValue: T, delay: NSTimeInterval) {
-        super.init(value: Result<T, E>(value: successValue), delay: delay)
+    public init(value: T, delay: NSTimeInterval) {
+        super.init(value: Result<T, E>(value: value), delay: delay)
     }
     
     public required init<A: AsyncType where A.Value == Value>(other: A) {
         super.init(other: other)
     }
     
-    public convenience init(successValue: T) {
-        self.init(value: Result(value: successValue))
+    public convenience init(value: T) {
+        self.init(value: Result(value: value))
     }
     
     public convenience init(error: E) {
         self.init(value: Result(error: error))
-    }
-    
-    public var result: Future.Value? {
-        return self.value
     }
     
 }
@@ -143,8 +139,8 @@ public extension Future {
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
     public func forced(timeout: TimeInterval) -> Result<T, E>? {
-        if let value = self.value {
-            return value
+        if let result = self.result {
+            return result
         } else {
             let sema = Semaphore(value: 0)
             var res: Result<T, E>? = nil
@@ -285,7 +281,7 @@ public extension Future {
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func recover(context c: ExecutionContext = DefaultThreadingModel(), task: (E) -> T) -> Future<T, NoError> {
         return self.recoverWith(context: c) { error -> Future<T, NoError> in
-            return Future<T, NoError>(successValue: task(error))
+            return Future<T, NoError>(value: task(error))
         }
     }
 
