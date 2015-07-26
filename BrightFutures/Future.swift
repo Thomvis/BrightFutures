@@ -121,42 +121,6 @@ public extension Future {
     }
 }
 
-/// This extension contains methods to query the current status
-/// of the future and to access the result and/or error
-public extension Future {
-    
-    /// Blocks the current thread until the future is completed and then returns the result
-    public func forced() -> Result<T, E>? {
-        return self.forced(TimeInterval.Forever)
-    }
-    
-
-    /// See `forced(timeout: TimeInterval) -> Result<T, E>?`
-    public func forced(timeout: NSTimeInterval) -> Result<T, E>? {
-        return self.forced(.In(timeout))
-    }
-    
-    /// Blocks the current thread until the future is completed, but no longer than the given timeout
-    /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
-    public func forced(timeout: TimeInterval) -> Result<T, E>? {
-        if let result = self.result {
-            return result
-        } else {
-            let sema = Semaphore(value: 0)
-            var res: Result<T, E>? = nil
-            self.onComplete(context: Queue.global.context) {
-                res = $0
-                sema.signal()
-            }
-            
-            sema.wait(timeout)
-            
-            return res
-        }
-    }
-}
-
-
 /// This extension contains all methods for registering callbacks
 public extension Future {
     

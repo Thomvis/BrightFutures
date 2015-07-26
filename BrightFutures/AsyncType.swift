@@ -29,6 +29,36 @@ public extension AsyncType {
         return self.result != nil
     }
     
+    /// Blocks the current thread until the future is completed and then returns the result
+    public func forced() -> Value? {
+        return self.forced(TimeInterval.Forever)
+    }
+    
+    
+    /// See `forced(timeout: TimeInterval) -> Result<T, E>?`
+    public func forced(timeout: NSTimeInterval) -> Value? {
+        return self.forced(.In(timeout))
+    }
+    
+    /// Blocks the current thread until the future is completed, but no longer than the given timeout
+    /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
+    public func forced(timeout: TimeInterval) -> Value? {
+        if let result = self.result {
+            return result
+        } else {
+            let sema = Semaphore(value: 0)
+            var res: Value? = nil
+            self.onComplete(context: Queue.global.context) {
+                res = $0
+                sema.signal()
+            }
+            
+            sema.wait(timeout)
+            
+            return res
+        }
+    }
+    
     /// See `map<U>(context c: ExecutionContext, f: T -> U) -> Async<U>`
     /// The given closure is executed according to the default threading model (see README.md)
     public func map<U>(transform: Value -> U) -> Async<U> {
