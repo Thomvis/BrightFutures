@@ -121,31 +121,6 @@ public extension Future {
     }
 }
 
-/// This extension contains all methods for registering callbacks
-public extension Future {
-    
-    /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
-    /// If no context is given, the behavior is defined by the default threading model (see README.md)
-    /// Returns self
-    public func onSuccess(context c: ExecutionContext = DefaultThreadingModel(), callback: SuccessCallback) -> Future<T, E> {
-        self.onComplete(context: c) { result in
-            result.analysis(ifSuccess: callback, ifFailure: { _ in })
-        }
-        
-        return self
-    }
-
-    /// Adds the given closure as a callback for when the future fails. The closure is executed on the given context.
-    /// If no context is given, the behavior is defined by the default threading model (see README.md)
-    /// Returns self
-    public func onFailure(context c: ExecutionContext = DefaultThreadingModel(), callback: FailureCallback) -> Future<T, E> {
-        self.onComplete(context: c) { result in
-            result.analysis(ifSuccess: { _ in }, ifFailure: callback)
-        }
-        return self
-    }
-}
-
 /**
  * This extension contains all methods related to functional composition
  */
