@@ -35,7 +35,7 @@ public extension AsyncType {
     }
     
     
-    /// See `forced(timeout: TimeInterval) -> Result<T, E>?`
+    /// See `forced(timeout: TimeInterval) -> Value?`
     public func forced(timeout: NSTimeInterval) -> Value? {
         return self.forced(.In(timeout))
     }
