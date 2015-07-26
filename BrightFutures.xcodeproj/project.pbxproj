@@ -14,8 +14,8 @@
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E95507001B525D0B00359F73 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
 		E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* FutureUtils.swift */; };
-		E992A95F1B501AC800A9FC4F /* Async+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */; };
-		E992A9601B501AC800A9FC4F /* Async+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */; };
+		E992A95F1B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */; };
+		E992A9601B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */; };
 		E9B094681B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
 		E9B094691B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
 		E9CA7B411B555DB200102F87 /* MutableAsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */; };
@@ -100,7 +100,7 @@
 		E90E9D611B1B8AA500A8F9F3 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Checkouts/Result/build/Debug/Result.framework; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* FutureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureUtils.swift; sourceTree = "<group>"; };
-		E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Async+ResultType.swift"; sourceTree = "<group>"; };
+		E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType.swift"; sourceTree = "<group>"; };
 		E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MutableAsyncType+ResultType.swift"; sourceTree = "<group>"; };
 		E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableAsyncType.swift; sourceTree = "<group>"; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -218,7 +218,7 @@
 				E9F496EE1B052F1400F82839 /* Errors.swift */,
 				E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */,
 				E9DD4EF01B4ED6850070C2AF /* Async.swift */,
-				E992A95E1B501AC800A9FC4F /* Async+ResultType.swift */,
+				E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */,
 				E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */,
 				E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
@@ -425,7 +425,7 @@
 				E9CA7B421B555DB200102F87 /* MutableAsyncType.swift in Sources */,
 				E9B094691B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */,
 				E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */,
-				E992A9601B501AC800A9FC4F /* Async+ResultType.swift in Sources */,
+				E992A9601B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */,
 				E9D45B201AF00670000F6CA7 /* Semaphore.swift in Sources */,
 				E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */,
 			);
@@ -459,7 +459,7 @@
 				E9B094681B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */,
 				E9D923AC1A6CE29A00CADD9F /* InvalidationToken.swift in Sources */,
 				E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */,
-				E992A95F1B501AC800A9FC4F /* Async+ResultType.swift in Sources */,
+				E992A95F1B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */,
 				E9DF0838194470190083F7F2 /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
