@@ -14,8 +14,8 @@ public protocol AsyncType {
     var result: Value? { get }
     
     init()
-    init(value: Value)
-    init(value: Value, delay: NSTimeInterval)
+    init(result: Value)
+    init(result: Value, delay: NSTimeInterval)
     init<A: AsyncType where A.Value == Value>(other: A)
     
     func onComplete(context c: ExecutionContext, callback: Value -> Void) -> Self

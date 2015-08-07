@@ -80,12 +80,12 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>>, FutureType {
         super.init()
     }
     
-    public required init(value: Future.Value) {
-        super.init(value: value)
+    public required init(result: Future.Value) {
+        super.init(result: result)
     }
     
     public init(value: T, delay: NSTimeInterval) {
-        super.init(value: Result<T, E>(value: value), delay: delay)
+        super.init(result: Result<T, E>(value: value), delay: delay)
     }
     
     public required init<A: AsyncType where A.Value == Value>(other: A) {
@@ -93,11 +93,11 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>>, FutureType {
     }
     
     public convenience init(value: T) {
-        self.init(value: Result(value: value))
+        self.init(result: Result(value: value))
     }
     
     public convenience init(error: E) {
-        self.init(value: Result(error: error))
+        self.init(result: Result(error: error))
     }
     
 }
@@ -149,7 +149,7 @@ public extension Future {
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
     public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
         return self.flatMap(context: c) { value in
-            return Future<U, E>.init(value: f(value))
+            return Future<U, E>(result: f(value))
         }
     }
 

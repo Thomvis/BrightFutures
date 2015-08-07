@@ -39,13 +39,13 @@ public class Async<Value>: AsyncType {
         
     }
     
-    public required init(value: Value) {
-        self.result = value
+    public required init(result: Value) {
+        self.result = result
     }
     
-    public required init(value: Value, delay: NSTimeInterval) {
+    public required init(result: Value, delay: NSTimeInterval) {
         Queue.global.after(TimeInterval.In(delay)) {
-            try! self.complete(value)
+            try! self.complete(result)
         }
     }
     
