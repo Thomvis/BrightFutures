@@ -369,7 +369,7 @@ extension BrightFuturesTests {
     }
     
     func testPromoteErrorNoSuchElement() {
-        let f: Future<Int, BrightFuturesError<TestError>> = promoteError(future(3).filter { _ in false })
+        let f: Future<Int, BrightFuturesError<TestError>> = future(3).filter { _ in false }.promoteError()
         
         let e = self.expectation()
         f.onFailure { err in
@@ -847,7 +847,7 @@ extension BrightFuturesTests {
             if val == 3 {
                 return Future<Int, NSError>(error: error)
             } else {
-                return promoteError(fibonacciFuture(val))
+                return fibonacciFuture(val).promoteError()
             }
         }
         
