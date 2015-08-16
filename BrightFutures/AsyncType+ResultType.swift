@@ -140,6 +140,44 @@ public extension AsyncType where Value: ResultType {
         return res
     }
     
+    /// Adds the given closure as a callback for when this future completes.
+    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
+    /// Returns a future that completes with the result from this future but only after executing the given closure
+    public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Self.Value -> Void) -> Self {
+        return Self { complete in
+            onComplete(c) { result in
+                callback(result)
+                try! complete(result)
+            }
+        }
+    }
+    
+    /// Returns a future that succeeds with a tuple consisting of the success value of this future and the success value of the given future
+    /// If either of the two futures fail, the returned future fails with the failure of this future or that future (in this order)
+    public func zip<U>(that: Future<U, Value.Error>) -> Future<(Value.Value,U), Value.Error> {
+        return flatMap { thisVal -> Future<(Value.Value,U), Value.Error> in
+            return that.map { thatVal in
+                return (thisVal, thatVal)
+            }
+        }
+    }
+    
+    /// Returns a future that succeeds with the value that this future succeeds with if it passes the test
+    /// (i.e. the given closure returns `true` when invoked with the success value) or an error with code
+    /// `ErrorCode.NoSuchElement` if the test failed.
+    /// If this future fails, the returned future fails with the same error.
+    public func filter(p: Value.Value -> Bool) -> Future<Value.Value, BrightFuturesError<Value.Error>> {
+        return self.mapError { error -> BrightFuturesError<Value.Error> in
+            return BrightFuturesError(external: error)
+            }.flatMap { value -> Result<Value.Value, BrightFuturesError<Value.Error>> in
+                if p(value) {
+                    return Result(value: value)
+                } else {
+                    return Result(error: .NoSuchElement)
+                }
+        }
+    }
+    
     /// Returns a new future with the new type.
     /// The value or error will be casted using `as!` and may cause a runtime error
     public func forceType<U, E1>() -> Future<U, E1> {

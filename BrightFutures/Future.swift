@@ -103,54 +103,6 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
 }
 
 /**
- * This extension contains all methods related to functional composition
- */
-public extension Future {
-    
-    
-
-    /// Adds the given closure as a callback for when this future completes.
-    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Result<T, E> -> Void) -> Future<T, E> {
-        let res = Future<T, E>()
-        
-        self.onComplete(c) { result in
-            callback(result)
-            try! res.complete(result)
-        }
-
-        return res
-    }
-    
-    /// Returns a future that succeeds with a tuple consisting of the success value of this future and the success value of the given future
-    /// If either of the two futures fail, the returned future fails with the failure of this future or that future (in this order)
-    public func zip<U>(that: Future<U, E>) -> Future<(T,U), E> {
-        return self.flatMap { thisVal -> Future<(T,U), E> in
-            return that.map { thatVal in
-                return (thisVal, thatVal)
-            }
-        }
-    }
-    
-    /// Returns a future that succeeds with the value that this future succeeds with if it passes the test 
-    /// (i.e. the given closure returns `true` when invoked with the success value) or an error with code
-    /// `ErrorCode.NoSuchElement` if the test failed.
-    /// If this future fails, the returned future fails with the same error.
-    public func filter(p: (T -> Bool)) -> Future<T, BrightFuturesError<E>> {
-        return self.mapError { error -> BrightFuturesError<E> in
-            return BrightFuturesError(external: error)
-        }.flatMap { value -> Result<T, BrightFuturesError<E>> in
-            if p(value) {
-                return Result(value: value)
-            } else {
-                return Result(error: .NoSuchElement)
-            }
-        }
-    }
-}
-
-/**
  I'd like this to be in InvalidationToken.swift, but the compiler does not like that.
  */
 public extension Future {
