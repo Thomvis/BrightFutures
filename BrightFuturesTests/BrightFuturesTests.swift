@@ -112,7 +112,7 @@ extension BrightFuturesTests {
 
         XCTAssert(f.isCompleted)
         
-        if let val = f.result?.value {
+        if let val = f.value {
             XCTAssertEqual(val, 3);
         }
     }
@@ -404,21 +404,17 @@ extension BrightFuturesTests {
             answer += 2
         }
         
-        f2.onSuccess { fval in
-            e.fulfill()
+        f1.onSuccess { fval in
+            f1.onSuccess { f1val in
+                f2.onSuccess { f2val in
+                    
+                    XCTAssertEqual(fval, f1val, "future value should be passed transparently")
+                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
+                    
+                    e.fulfill()
+                }
+            }
         }
-//            f1.onSuccess { f1val in
-//                f2.onSuccess { f2val in
-//                    
-//                    XCTAssertEqual(fval, f1val, "future value should be passed transparently")
-//                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
-//                    
-//                    e.fulfill()
-//                }
-//                return
-//            }
-//            return
-//        }
         
         self.waitForExpectationsWithTimeout(20, handler: nil)
         
