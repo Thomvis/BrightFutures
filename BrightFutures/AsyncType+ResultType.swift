@@ -18,6 +18,14 @@ public extension AsyncType where Value: ResultType {
         return !isSuccess
     }
     
+    public var value: Value.Value? {
+        return result?.value
+    }
+    
+    public var error: Value.Error? {
+        return result?.error
+    }
+    
     /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
