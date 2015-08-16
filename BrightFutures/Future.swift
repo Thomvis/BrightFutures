@@ -102,63 +102,6 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     
 }
 
-/**
- I'd like this to be in InvalidationToken.swift, but the compiler does not like that.
- */
-public extension Future {
-    
-    private func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError<E>> {
-        return firstCompletedOf([
-            self.mapError {
-                BrightFuturesError(external: $0)
-            },
-            token.future.promoteError().promoteValue()
-            ]
-        )
-    }
-
-    /// See `onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E>`
-    /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: Result<T, E> -> Void) -> Future<T, E> {
-        firstCompletedOfSelfAndToken(token).onComplete(c) { res in
-            token.context {
-                if !token.isInvalid {
-                    callback(self.result!)
-                }
-            }
-        }
-        return self;
-    }
-
-    /// See `onSuccess(context c: ExecutionContext = DefaultThreadingModel(), callback: SuccessCallback) -> Future<T, E>`
-    /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onSuccess(context: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T, E> {
-        firstCompletedOfSelfAndToken(token).onSuccess(context) { value in
-            token.context {
-                if !token.isInvalid {
-                    callback(value)
-                }
-            }
-        }
-        
-        return self
-    }
-
-    /// See `onFailure(context c: ExecutionContext = DefaultThreadingModel(), callback: FailureCallback) -> Future<T, E>`
-    /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onFailure(context: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T, E> {
-        firstCompletedOfSelfAndToken(token).onFailure(context) { error in
-            token.context {
-                if !token.isInvalid {
-                    callback(self.result!.error!)
-                }
-            }
-        }
-        return self
-    }
-}
-
-
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) -> Future<T, NoError> {
