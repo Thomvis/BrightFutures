@@ -139,6 +139,21 @@ public extension AsyncType where Value: ResultType {
         
         return res
     }
+    
+    /// Returns a new future with the new type.
+    /// The value or error will be casted using `as!` and may cause a runtime error
+    public func forceType<U, E1>() -> Future<U, E1> {
+        return self.map(ImmediateExecutionContext) {
+            $0 as! U
+        }.mapError(ImmediateExecutionContext) {
+            $0 as! E1
+        }
+    }
+    
+    /// Returns a new future that completes with this future, but returns Void on success
+    public func asVoid() -> Future<Void, Value.Error> {
+        return self.map(ImmediateExecutionContext) { _ in return () }
+    }
 }
 
 public extension AsyncType where Value: ResultType, Value.Value: AsyncType, Value.Value.Value: ResultType, Value.Error == Value.Value.Value.Error {
