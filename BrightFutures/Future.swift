@@ -126,59 +126,7 @@ public extension Future {
  */
 public extension Future {
     
-    /// Enables the the chaining of two future-wrapped asynchronous operations where the second operation depends on the success value of the first.
-    /// Like map, the given closure (that returns the second operation) is only executed if the first operation (this future) is successful.
-    /// If a regular `map` was used, the result would be a `Future<Future<U>>`. The implementation of this function uses `map`, but then flattens the result
-    /// before returning it.
-    ///
-    /// If this future fails, the returned future will fail with the same error.
-    /// If this future succeeds, the returned future will complete with the future returned from the given closure.
-    ///
-    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func flatMap<U>(context: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E> {
-        return map(context, f: f).flatten()
-    }
-	
-	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E>`
-	/// The given closure is executed according to the default threading model (see README.md)
-	public func flatMap<U>(f: T -> Future<U, E>) -> Future<U, E> {
-		return flatMap(DefaultThreadingModel(), f: f)
-	}
-
-    /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
-    /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
-    public func flatMap<U>(context: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
-        return self.flatMap(context) { value in
-            return Future<U, E>(result: f(value))
-        }
-    }
-
-	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E>`
-	/// The given closure is executed according to the default threading model (see README.md)
-	public func flatMap<U>(f: T -> Result<U, E>) -> Future<U, E> {
-		return flatMap(DefaultThreadingModel(), f: f)
-	}
-
-    /// See `map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U>`
-    /// The given closure is executed according to the default threading model (see README.md)
-    public func map<U>(f: (T) -> U) -> Future<U, E> {
-        return self.map(DefaultThreadingModel(), f: f)
-    }
     
-    /// Returns a future that succeeds with the value returned from the given closure when it is invoked with the success value
-    /// from this future. If this future fails, the returned future fails with the same error.
-    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func map<U>(context: ExecutionContext, f: (T) -> U) -> Future<U, E> {
-        let res = Future<U, E>()
-        
-        self.onComplete(context, callback: { (result: Result<T, E>) in
-            result.analysis(
-                ifSuccess: { try! res.success(f($0)) },
-                ifFailure: { try! res.failure($0) })
-        })
-        
-        return res
-    }
 
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
@@ -231,7 +179,7 @@ public extension Future {
             self.mapError {
                 BrightFuturesError(external: $0)
             },
-            promoteValue(token.future).promoteError()
+            token.future.promoteError().promoteValue()
             ]
         )
     }
@@ -297,11 +245,3 @@ public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> F
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never be a success.
 /// This is guaranteed by the type system, because `NoValue` has no possible values and thus cannot be created.
 public enum NoValue { }
-
-/// 'promotes' a `Future` with value type `NoValue` to a `Future` with a value type of choice.
-/// This allows the `Future` to be used more easily in combination with other futures
-/// for operations such as `sequence` and `firstCompletedOf`
-/// This is a safe operation, because a `Future` with value type `NoValue` is guaranteed never to succeed
-public func promoteValue<T, E>(future: Future<NoValue, E>) -> Future<T, E> {
-    return future.map(ImmediateExecutionContext) { $0 as! T } // future will never succeed, so this map block will never get called
-}
