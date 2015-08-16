@@ -70,7 +70,7 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
-public final class Future<T, E: ErrorType>: Async<Result<T, E>>, FutureType {
+public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     
     public typealias CompletionCallback = (result: Result<T,E>) -> Void
     public typealias SuccessCallback = T -> Void
@@ -108,7 +108,7 @@ public extension Future {
     /// Returns a new future with the new type.
     /// The value or error will be casted using `as!` and may cause a runtime error
     public func forceType<U, E1>() -> Future<U, E1> {
-        return self.map(context: ImmediateExecutionContext) {
+        return self.map(ImmediateExecutionContext) {
             $0 as! U
         }.mapError(context: ImmediateExecutionContext) {
             $0 as! E1
@@ -117,7 +117,7 @@ public extension Future {
     
     /// Returns a new future that completes with this future, but returns Void on success
     public func asVoid() -> Future<Void, E> {
-        return self.map(context: ImmediateExecutionContext) { _ in return () }
+        return self.map(ImmediateExecutionContext) { _ in return () }
     }
 }
 
@@ -135,20 +135,20 @@ public extension Future {
     /// If this future succeeds, the returned future will complete with the future returned from the given closure.
     ///
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func flatMap<U>(context c: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E> {
-        return flatten(map(context: c, f: f))
+    public func flatMap<U>(context: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E> {
+        return map(context, f: f).flatten()
     }
 	
 	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Future<U, E>) -> Future<U, E>`
 	/// The given closure is executed according to the default threading model (see README.md)
 	public func flatMap<U>(f: T -> Future<U, E>) -> Future<U, E> {
-		return flatMap(context: DefaultThreadingModel(), f: f)
+		return flatMap(DefaultThreadingModel(), f: f)
 	}
 
     /// Transforms the given closure returning `Result<U>` to a closure returning `Future<U>` and then calls
     /// `flatMap<U>(context c: ExecutionContext, f: T -> Future<U>) -> Future<U>`
-    public func flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
-        return self.flatMap(context: c) { value in
+    public func flatMap<U>(context: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E> {
+        return self.flatMap(context) { value in
             return Future<U, E>(result: f(value))
         }
     }
@@ -156,22 +156,22 @@ public extension Future {
 	/// See `flatMap<U>(context c: ExecutionContext, f: T -> Result<U, E>) -> Future<U, E>`
 	/// The given closure is executed according to the default threading model (see README.md)
 	public func flatMap<U>(f: T -> Result<U, E>) -> Future<U, E> {
-		return flatMap(context: DefaultThreadingModel(), f: f)
+		return flatMap(DefaultThreadingModel(), f: f)
 	}
 
     /// See `map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U>`
     /// The given closure is executed according to the default threading model (see README.md)
     public func map<U>(f: (T) -> U) -> Future<U, E> {
-        return self.map(context: DefaultThreadingModel(), f: f)
+        return self.map(DefaultThreadingModel(), f: f)
     }
     
     /// Returns a future that succeeds with the value returned from the given closure when it is invoked with the success value
     /// from this future. If this future fails, the returned future fails with the same error.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U, E> {
+    public func map<U>(context: ExecutionContext, f: (T) -> U) -> Future<U, E> {
         let res = Future<U, E>()
         
-        self.onComplete(context: c, callback: { (result: Result<T, E>) in
+        self.onComplete(context, callback: { (result: Result<T, E>) in
             result.analysis(
                 ifSuccess: { try! res.success(f($0)) },
                 ifFailure: { try! res.failure($0) })
@@ -186,7 +186,7 @@ public extension Future {
     public func andThen(context c: ExecutionContext = DefaultThreadingModel(), callback: Result<T, E> -> Void) -> Future<T, E> {
         let res = Future<T, E>()
         
-        self.onComplete(context: c) { result in
+        self.onComplete(c) { result in
             callback(result)
             try! res.complete(result)
         }
@@ -239,7 +239,7 @@ public extension Future {
     /// See `onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
     public func onComplete(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: Result<T, E> -> Void) -> Future<T, E> {
-        firstCompletedOfSelfAndToken(token).onComplete(context: c) { res in
+        firstCompletedOfSelfAndToken(token).onComplete(c) { res in
             token.context {
                 if !token.isInvalid {
                     callback(self.result!)
@@ -251,8 +251,8 @@ public extension Future {
 
     /// See `onSuccess(context c: ExecutionContext = DefaultThreadingModel(), callback: SuccessCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onSuccess(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T, E> {
-        firstCompletedOfSelfAndToken(token).onSuccess(context: c) { value in
+    public func onSuccess(context: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: SuccessCallback) -> Future<T, E> {
+        firstCompletedOfSelfAndToken(token).onSuccess(context) { value in
             token.context {
                 if !token.isInvalid {
                     callback(value)
@@ -265,8 +265,8 @@ public extension Future {
 
     /// See `onFailure(context c: ExecutionContext = DefaultThreadingModel(), callback: FailureCallback) -> Future<T, E>`
     /// If the given invalidation token is invalidated when the future is completed, the given callback is not invoked
-    public func onFailure(context c: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T, E> {
-        firstCompletedOfSelfAndToken(token).onFailure(context: c) { error in
+    public func onFailure(context: ExecutionContext = DefaultThreadingModel(), token: InvalidationTokenType, callback: FailureCallback) -> Future<T, E> {
+        firstCompletedOfSelfAndToken(token).onFailure(context) { error in
             token.context {
                 if !token.isInvalid {
                     callback(self.result!.error!)
@@ -277,19 +277,6 @@ public extension Future {
     }
 }
 
-/// Returns a future that fails with the error from the outer or inner future or succeeds with the value from the inner future 
-/// if both futures succeed.
-public func flatten<T, E>(future: Future<Future<T, E>, E>) -> Future<T, E> {
-    let res = Future<T, E>()
-    
-    future.onComplete { result in
-        result.analysis(
-            ifSuccess: { res.completeWith($0) },
-            ifFailure: { try! res.failure($0) })
-    }
-    
-    return res
-}
 
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
@@ -344,5 +331,5 @@ public enum NoValue { }
 /// for operations such as `sequence` and `firstCompletedOf`
 /// This is a safe operation, because a `Future` with value type `NoValue` is guaranteed never to succeed
 public func promoteValue<T, E>(future: Future<NoValue, E>) -> Future<T, E> {
-    return future.map(context: ImmediateExecutionContext) { $0 as! T } // future will never succeed, so this map block will never get called
+    return future.map(ImmediateExecutionContext) { $0 as! T } // future will never succeed, so this map block will never get called
 }

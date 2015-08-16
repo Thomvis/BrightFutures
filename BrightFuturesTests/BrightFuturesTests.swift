@@ -322,7 +322,7 @@ extension BrightFuturesTests {
         
         let e = self.expectationWithDescription("immediate success expectation")
         
-        f.onSuccess(context: ImmediateExecutionContext) { value in
+        f.onSuccess(ImmediateExecutionContext) { value in
             e.fulfill()
         }
         
@@ -335,7 +335,7 @@ extension BrightFuturesTests {
         future { _ -> Int in
             XCTAssert(!NSThread.isMainThread())
             return 1
-        }.onSuccess(context: Queue.main.context) { value in
+        }.onSuccess(Queue.main.context) { value in
             XCTAssert(NSThread.isMainThread())
             e.fulfill()
         }
@@ -1023,7 +1023,7 @@ extension BrightFuturesTests {
                 let context = randomContext()
                 let e = self.expectationWithDescription("future completes in context \(context)")
                 
-                future.onComplete(context: context) { res in
+                future.onComplete(context) { res in
                     e.fulfill()
                 }
                 
@@ -1039,7 +1039,7 @@ extension BrightFuturesTests {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
                     usleep(arc4random_uniform(100))
                     
-                    f.onComplete(context: context) { res in
+                    f.onComplete(context) { res in
                         e.fulfill()
                     }
                 }
@@ -1055,7 +1055,7 @@ extension BrightFuturesTests {
         var executingCallbacks = 0
         for _ in 0..<10 {
             let e = self.expectation()
-            p.future.onComplete(context: Queue.global.context) { _ in
+            p.future.onComplete(Queue.global.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
                 executingCallbacks++
@@ -1069,7 +1069,7 @@ extension BrightFuturesTests {
             }
             
             let e1 = self.expectation()
-            p.future.onComplete(context: Queue.main.context) { _ in
+            p.future.onComplete(Queue.main.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
                 executingCallbacks++
@@ -1099,7 +1099,7 @@ extension BrightFuturesTests {
         XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "value should have been set on the main (i.e. current) queue")
         
         let e = self.expectation()
-        Future<Int, NoError>(value: 1).onSuccess(context: Queue.main.context) { val in
+        Future<Int, NoError>(value: 1).onSuccess(Queue.main.context) { val in
             XCTAssertEqual(dispatch_get_specific(&key), valuePointer, "we should now too be on the main queue")
             e.fulfill()
         }

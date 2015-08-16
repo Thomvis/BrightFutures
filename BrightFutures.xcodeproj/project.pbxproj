@@ -18,8 +18,6 @@
 		E992A9601B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */; };
 		E9B094681B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
 		E9B094691B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
-		E9B4EB021B64DF5200EE5540 /* FutureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B4EB011B64DF5200EE5540 /* FutureType.swift */; };
-		E9B4EB031B64DF5200EE5540 /* FutureType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B4EB011B64DF5200EE5540 /* FutureType.swift */; };
 		E9CA7B411B555DB200102F87 /* MutableAsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */; };
 		E9CA7B421B555DB200102F87 /* MutableAsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */; };
 		E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; };
@@ -104,7 +102,6 @@
 		E979E5F31975B1AA007FE914 /* FutureUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureUtils.swift; sourceTree = "<group>"; };
 		E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType.swift"; sourceTree = "<group>"; };
 		E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MutableAsyncType+ResultType.swift"; sourceTree = "<group>"; };
-		E9B4EB011B64DF5200EE5540 /* FutureType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureType.swift; sourceTree = "<group>"; };
 		E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableAsyncType.swift; sourceTree = "<group>"; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D45B0A1AF00659000F6CA7 /* BrightFutures-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -213,7 +210,6 @@
 			children = (
 				E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */,
 				E9DF0831194470190083F7F2 /* ExecutionContext.swift */,
-				E9B4EB011B64DF5200EE5540 /* FutureType.swift */,
 				E9DF0832194470190083F7F2 /* Future.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
 				E9DF0834194470190083F7F2 /* Queue.swift */,
@@ -424,7 +420,6 @@
 				E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */,
 				E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */,
 				E9DD4EF21B4F16C00070C2AF /* Async.swift in Sources */,
-				E9B4EB031B64DF5200EE5540 /* FutureType.swift in Sources */,
 				E9D45B1F1AF00670000F6CA7 /* FutureUtils.swift in Sources */,
 				E9DD4EF31B4F16C30070C2AF /* AsyncType.swift in Sources */,
 				E9CA7B421B555DB200102F87 /* MutableAsyncType.swift in Sources */,
@@ -458,7 +453,6 @@
 				E95507001B525D0B00359F73 /* Async.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
-				E9B4EB021B64DF5200EE5540 /* FutureType.swift in Sources */,
 				E9DD4EEF1B4ED51A0070C2AF /* AsyncType.swift in Sources */,
 				E9DF0837194470190083F7F2 /* Promise.swift in Sources */,
 				E9CA7B411B555DB200102F87 /* MutableAsyncType.swift in Sources */,

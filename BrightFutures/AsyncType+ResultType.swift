@@ -21,8 +21,8 @@ public extension AsyncType where Value: ResultType {
     /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onSuccess(context c: ExecutionContext = DefaultThreadingModel(), callback: Value.Value -> Void) -> Self {
-        self.onComplete(context: c) { result in
+    public func onSuccess(context: ExecutionContext = DefaultThreadingModel(), callback: Value.Value -> Void) -> Self {
+        self.onComplete(context) { result in
             result.analysis(ifSuccess: callback, ifFailure: { _ in })
         }
         
@@ -32,8 +32,8 @@ public extension AsyncType where Value: ResultType {
     /// Adds the given closure as a callback for when the future fails. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onFailure(context c: ExecutionContext = DefaultThreadingModel(), callback: Value.Error -> Void) -> Self {
-        self.onComplete(context: c) { result in
+    public func onFailure(context: ExecutionContext = DefaultThreadingModel(), callback: Value.Error -> Void) -> Self {
+        self.onComplete(context) { result in
             result.analysis(ifSuccess: { _ in }, ifFailure: callback)
         }
         return self
@@ -56,7 +56,7 @@ public extension AsyncType where Value: ResultType {
     public func recoverWith<E1: ErrorType>(context c: ExecutionContext = DefaultThreadingModel(), task: Value.Error -> Future<Value.Value, E1>) -> Future<Value.Value, E1> {
         let res = Future<Value.Value, E1>()
         
-        self.onComplete(context: c) { result in
+        self.onComplete(c) { result in
             result.analysis(
                 ifSuccess: { try! res.success($0) },
                 ifFailure: { res.completeWith(task($0)) })
@@ -77,7 +77,7 @@ public extension AsyncType where Value: ResultType {
     public func mapError<E1: ErrorType>(context c: ExecutionContext, f: Value.Error -> E1) -> Future<Value.Value, E1> {
         let res = Future<Value.Value, E1>()
         
-        self.onComplete(context:c) { result in
+        self.onComplete(c) { result in
             result.analysis(
                 ifSuccess: { try! res.success($0) } ,
                 ifFailure: { try! res.failure(f($0)) })
@@ -85,4 +85,23 @@ public extension AsyncType where Value: ResultType {
         
         return res
     }
+}
+
+public extension AsyncType where Self.Value: ResultType, Value.Value: AsyncType, Value.Value.Value: ResultType, Value.Error == Value.Value.Value.Error {
+    /// Returns a future that fails with the error from the outer or inner future or succeeds with the value from the inner future
+    /// if both futures succeed.
+    public func flatten() -> Future<Value.Value.Value.Value, Value.Error> {
+        let f = Future<Value.Value.Value.Value, Value.Error>()
+        
+        onComplete(ImmediateExecutionContext) { res in
+            res.analysis(ifSuccess: { innerFuture -> () in
+                innerFuture.onComplete(ImmediateExecutionContext) { (res:Value.Value.Value) in
+                    res.analysis(ifSuccess: { try! f.success($0) }, ifFailure: { err in try! f.failure(err) })
+                }
+                }, ifFailure: { try! f.failure($0) })
+        }
+        
+        return f
+    }
+    
 }

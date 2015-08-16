@@ -106,10 +106,10 @@ class InvalidationTokenTests: XCTestCase {
                 let sleep: NSTimeInterval = NSTimeInterval(arc4random() % 100) / 100000.0
                 NSThread.sleepForTimeInterval(sleep)
                 return true
-            }.onSuccess(context: Queue.global.context, token: token) { _ in
+            }.onSuccess(Queue.global.context, token: token) { _ in
                 XCTAssert(!token.isInvalid)
                 XCTAssertEqual(currentI, counter.i, "onSuccess should only get called if the counter did not increment")
-            }.onComplete(context: Queue.global.context) { _ in
+            }.onComplete(Queue.global.context) { _ in
                 NSThread.sleepForTimeInterval(0.0001);
                 e.fulfill()
             }

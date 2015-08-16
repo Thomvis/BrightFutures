@@ -35,10 +35,10 @@ public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T,
 
 /// Performs the fold operation over a sequence of futures. The folding is performed
 /// in the given context.
-public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R, E> {
+public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T, E>>(seq: S, context: ExecutionContext, zero: R, f: (R, T) -> R) -> Future<R, E> {
     return seq.reduce(Future<R, E>(value: zero)) { zero, elem in
         return zero.flatMap { zeroVal in
-            elem.map(context: c) { elemVal in
+            elem.map(context) { elemVal in
                 return f(zeroVal, elemVal)
             }
         }
@@ -47,8 +47,8 @@ public func fold<S: SequenceType, T, R, E where S.Generator.Element == Future<T,
 
 /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
 /// If no context is provided, the given closure is executed on `Queue.global`
-public func traverse<S: SequenceType, T, U, E where S.Generator.Element == T>(seq: S, context c: ExecutionContext = Queue.global.context, f: T -> Future<U, E>) -> Future<[U], E> {
-    return fold(seq.map(f), context: c, zero: [U]()) { (list: [U], elem: U) -> [U] in
+public func traverse<S: SequenceType, T, U, E where S.Generator.Element == T>(seq: S, context: ExecutionContext = Queue.global.context, f: T -> Future<U, E>) -> Future<[U], E> {
+    return fold(seq.map(f), context: context, zero: [U]()) { (list: [U], elem: U) -> [U] in
         return list + [elem]
     }
 }
@@ -72,10 +72,10 @@ public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == F
 /// If any of the futures in the given sequence fail, the returned future fails with the
 /// error of the first failed future in the sequence.
 /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
-public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == Future<T, E>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T, BrightFuturesError<E>> {
+public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == Future<T, E>>(seq: S, context: ExecutionContext, p: T -> Bool) -> Future<T, BrightFuturesError<E>> {
     return sequence(seq).mapError { error in
         return BrightFuturesError(external: error)
-    }.flatMap(context: c) { val -> Result<T, BrightFuturesError<E>> in
+    }.flatMap(context) { val -> Result<T, BrightFuturesError<E>> in
         for elem in val {
             if (p(elem)) {
                 return Result(value: elem)
@@ -91,7 +91,7 @@ public func firstCompletedOf<S: SequenceType, T, E where S.Generator.Element == 
     let p = Promise<T, E>()
     
     for fut in seq {
-        fut.onComplete(context: Queue.global.context) { res in
+        fut.onComplete(Queue.global.context) { res in
             p.tryComplete(res)
             return
         }
