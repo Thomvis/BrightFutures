@@ -68,16 +68,16 @@ public extension AsyncType where Value: ResultType {
     /// See `mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1>`
     /// The given closure is executed according to the default threading model (see README.md)
     public func mapError<E1: ErrorType>(f: Value.Error -> E1) -> Future<Value.Value, E1> {
-        return mapError(context: DefaultThreadingModel(), f: f)
+        return mapError(DefaultThreadingModel(), f: f)
     }
     
     /// Returns a future that fails with the error returned from the given closure when it is invoked with the error
     /// from this future. If this future succeeds, the returned future succeeds with the same value and the closure is not executed.
     /// The closure is executed on the given context.
-    public func mapError<E1: ErrorType>(context c: ExecutionContext, f: Value.Error -> E1) -> Future<Value.Value, E1> {
+    public func mapError<E1: ErrorType>(context: ExecutionContext, f: Value.Error -> E1) -> Future<Value.Value, E1> {
         let res = Future<Value.Value, E1>()
         
-        self.onComplete(c) { result in
+        self.onComplete(context) { result in
             result.analysis(
                 ifSuccess: { try! res.success($0) } ,
                 ifFailure: { try! res.failure(f($0)) })
@@ -87,7 +87,7 @@ public extension AsyncType where Value: ResultType {
     }
 }
 
-public extension AsyncType where Self.Value: ResultType, Value.Value: AsyncType, Value.Value.Value: ResultType, Value.Error == Value.Value.Value.Error {
+public extension AsyncType where Value: ResultType, Value.Value: AsyncType, Value.Value.Value: ResultType, Value.Error == Value.Value.Value.Error {
     /// Returns a future that fails with the error from the outer or inner future or succeeds with the value from the inner future
     /// if both futures succeed.
     public func flatten() -> Future<Value.Value.Value.Value, Value.Error> {
@@ -105,3 +105,36 @@ public extension AsyncType where Self.Value: ResultType, Value.Value: AsyncType,
     }
     
 }
+
+public extension AsyncType where Value: ResultType, Value.Error == NoError {
+    /// 'promotes' a `Future` with error type `NoError` to a `Future` with an error type of choice.
+    /// This allows the `Future` to be used more easily in combination with other futures
+    /// for operations such as `sequence` and `firstCompletedOf`
+    /// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
+    public func promoteError<E: ErrorType>() -> Future<Value.Value, E> {
+        return mapError(ImmediateExecutionContext) { $0 as! E } // future will never fail, so this map block will never get called
+    }
+}
+
+public extension AsyncType where Value: ResultType, Value.Error == BrightFuturesError<NoError> {
+    /// 'promotes' a `Future` with error type `BrightFuturesError<NoError>` to a `Future` with an
+    /// `BrightFuturesError<E>` error type where `E` can be any type conforming to `ErrorType`.
+    /// This allows the `Future` to be used more easily in combination with other futures
+    /// for operations such as `sequence` and `firstCompletedOf`
+    /// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
+    public func promoteError<E: ErrorType>() -> Future<Value.Value, BrightFuturesError<E>> {
+        return mapError(ImmediateExecutionContext) { err in
+            switch err {
+            case .NoSuchElement:
+                return BrightFuturesError<E>.NoSuchElement
+            case .InvalidationTokenInvalidated:
+                return BrightFuturesError<E>.InvalidationTokenInvalidated
+            case .IllegalState:
+                return BrightFuturesError<E>.IllegalState
+            case .External(_):
+                fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
+            }
+        }
+    }
+}
+

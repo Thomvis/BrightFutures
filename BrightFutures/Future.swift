@@ -110,7 +110,7 @@ public extension Future {
     public func forceType<U, E1>() -> Future<U, E1> {
         return self.map(ImmediateExecutionContext) {
             $0 as! U
-        }.mapError(context: ImmediateExecutionContext) {
+        }.mapError(ImmediateExecutionContext) {
             $0 as! E1
         }
     }
@@ -231,7 +231,7 @@ public extension Future {
             self.mapError {
                 BrightFuturesError(external: $0)
             },
-            promoteError(promoteValue(token.future))
+            promoteValue(token.future).promoteError()
             ]
         )
     }
@@ -292,34 +292,6 @@ public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> F
     return lhs.recoverWith(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })
-}
-
-/// 'promotes' a `Future` with error type `NoError` to a `Future` with an error type of choice.
-/// This allows the `Future` to be used more easily in combination with other futures 
-/// for operations such as `sequence` and `firstCompletedOf`
-/// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
-public func promoteError<T, E>(future: Future<T, NoError>) -> Future<T, E> {
-    return future.mapError(context: ImmediateExecutionContext) { $0 as! E } // future will never fail, so this map block will never get called
-}
-
-/// 'promotes' a `Future` with error type `BrightFuturesError<NoError>` to a `Future` with an 
-/// `BrightFuturesError<E>` error type where `E` can be any type conforming to `ErrorType`.
-/// This allows the `Future` to be used more easily in combination with other futures
-/// for operations such as `sequence` and `firstCompletedOf`
-/// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
-public func promoteError<T, E>(future: Future<T, BrightFuturesError<NoError>>) -> Future<T, BrightFuturesError<E>> {
-    return future.mapError(context: ImmediateExecutionContext) { err in
-        switch err {
-        case .NoSuchElement:
-            return BrightFuturesError<E>.NoSuchElement
-        case .InvalidationTokenInvalidated:
-            return BrightFuturesError<E>.InvalidationTokenInvalidated
-        case .IllegalState:
-            return BrightFuturesError<E>.IllegalState
-        case .External(_):
-            fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
-        }
-    }
 }
 
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never be a success.
