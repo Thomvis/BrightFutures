@@ -55,9 +55,17 @@ public struct Queue {
         }
     }
     
+    public init() {
+        self.init(queueLabel: "queue")
+    }
+    
+    public init(queueLabel: String) {
+        self.init(queue: dispatch_queue_create(queueLabel, DISPATCH_QUEUE_SERIAL))
+    }
+    
     /// Instantiates a new `Queue` with the given queue.
     /// If `queue` is omitted, a serial queue with identifier "queue" is used.
-    public init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
+    public init(queue: dispatch_queue_t) {
         self.underlyingQueue = queue
     }
     
