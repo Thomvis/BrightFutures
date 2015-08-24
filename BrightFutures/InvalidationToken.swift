@@ -52,13 +52,12 @@ public class InvalidationToken : ManualInvalidationTokenType {
 public extension Future {
     
     private func firstCompletedOfSelfAndToken(token: InvalidationTokenType) -> Future<T, BrightFuturesError<E>> {
-        return firstCompletedOf([
+        return [
             self.mapError {
                 BrightFuturesError(external: $0)
             },
             token.future.promoteError().promoteValue()
-            ]
-        )
+        ].firstCompleted()
     }
     
     /// See `onComplete(context c: ExecutionContext = DefaultThreadingModel(), callback: CompletionCallback) -> Future<T, E>`

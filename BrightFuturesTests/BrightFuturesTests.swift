@@ -896,7 +896,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        firstCompletedOf(futures).onSuccess { val in
+        futures.firstCompleted().onSuccess { val in
             XCTAssertEqual(val, 9)
             e.fulfill()
         }

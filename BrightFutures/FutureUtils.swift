@@ -85,19 +85,21 @@ public func find<S: SequenceType, T, E: ErrorType where S.Generator.Element == F
     }
 }
 
-/// Returns a future that returns with the first future from the given sequence that completes
-/// (regardless of whether that future succeeds or fails)
-public func firstCompletedOf<S: SequenceType, T, E where S.Generator.Element == Future<T, E>>(seq: S) -> Future<T, E> {
-    let p = Promise<T, E>()
-    
-    for fut in seq {
-        fut.onComplete(Queue.global.context) { res in
-            p.tryComplete(res)
-            return
+extension SequenceType where Generator.Element: AsyncType {
+    /// Returns a future that returns with the first future from the given sequence that completes
+    /// (regardless of whether that future succeeds or fails)
+    public func firstCompleted() -> Generator.Element {
+
+        return Generator.Element { complete in
+            for fut in self {
+                fut.onComplete(Queue.global.context) { res in
+                    do {
+                        try complete(res)
+                    } catch { }
+                }
+            }
         }
     }
-    
-    return p.future
 }
 
 
