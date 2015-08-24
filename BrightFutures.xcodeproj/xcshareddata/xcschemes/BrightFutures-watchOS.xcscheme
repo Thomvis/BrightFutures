@@ -14,23 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E9D45AFF1AF00659000F6CA7"
+               BlueprintIdentifier = "E9CBFD111B8268FB00702394"
                BuildableName = "BrightFutures.framework"
-               BlueprintName = "BrightFutures-Mac"
-               ReferencedContainer = "container:BrightFutures.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E9D45B091AF00659000F6CA7"
-               BuildableName = "BrightFutures-MacTests.xctest"
-               BlueprintName = "BrightFutures-MacTests"
+               BlueprintName = "BrightFutures-watchOS"
                ReferencedContainer = "container:BrightFutures.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -42,26 +28,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E9D45B091AF00659000F6CA7"
-               BuildableName = "BrightFutures-MacTests.xctest"
-               BlueprintName = "BrightFutures-MacTests"
-               ReferencedContainer = "container:BrightFutures.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E9D45AFF1AF00659000F6CA7"
-            BuildableName = "BrightFutures.framework"
-            BlueprintName = "BrightFutures-Mac"
-            ReferencedContainer = "container:BrightFutures.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -78,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E9D45AFF1AF00659000F6CA7"
+            BlueprintIdentifier = "E9CBFD111B8268FB00702394"
             BuildableName = "BrightFutures.framework"
-            BlueprintName = "BrightFutures-Mac"
+            BlueprintName = "BrightFutures-watchOS"
             ReferencedContainer = "container:BrightFutures.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -96,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E9D45AFF1AF00659000F6CA7"
+            BlueprintIdentifier = "E9CBFD111B8268FB00702394"
             BuildableName = "BrightFutures.framework"
-            BlueprintName = "BrightFutures-Mac"
+            BlueprintName = "BrightFutures-watchOS"
             ReferencedContainer = "container:BrightFutures.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
