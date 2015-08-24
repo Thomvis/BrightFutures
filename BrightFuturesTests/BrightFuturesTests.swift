@@ -733,7 +733,7 @@ extension BrightFuturesTests {
     func testUtilsTraverseSuccess() {
         let n = 10
         
-        let f = traverse(Array(1...n)) { i in
+        let f = (Array(1...n)).traverse { i in
             Future<Int, NoError>(value: fibonacci(i))
         }
         
@@ -753,7 +753,7 @@ extension BrightFuturesTests {
     
     func testUtilsTraverseEmpty() {
         let e = self.expectation()
-        traverse([Int]()) {Future<Int, NoError>(value: $0)}.onSuccess { res in
+        [Int]().traverse { Future<Int, NoError>(value: $0) }.onSuccess { res in
             XCTAssertEqual(res.count, 0);
             e.fulfill()
         }
@@ -774,7 +774,7 @@ extension BrightFuturesTests {
             }
         }
         
-        let f = traverse([2,4,6,8,9,10], context: Queue.global.context, f: evenFuture)
+        let f = [2,4,6,8,9,10].traverse(Queue.global.context, f: evenFuture)
             
             
         f.onFailure { err in
@@ -798,7 +798,7 @@ extension BrightFuturesTests {
             }
         }
         
-        traverse([20,22,23,26,27,30], f: evenFuture).onFailure { err in
+        [20,22,23,26,27,30].traverse(f: evenFuture).onFailure { err in
             XCTAssertEqual(err.code, 23)
             e.fulfill()
         }
@@ -809,7 +809,7 @@ extension BrightFuturesTests {
     func testUtilsTraverseWithExecutionContext() {
         let e = self.expectation()
         
-        traverse(Array(1...10), context: Queue.main.context) { _ -> Future<Int, NoError> in
+        Array(1...10).traverse(Queue.main.context) { _ -> Future<Int, NoError> in
             XCTAssert(NSThread.isMainThread())
             return Future(value: 1)
         }.onComplete { _ in
@@ -827,7 +827,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onSuccess { val in
+        fibonacciList.fold(0, f: { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, 143)
             e.fulfill()
         }
@@ -849,7 +849,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        fold(fibonacciList, zero: 0, f: { $0 + $1 }).onFailure { err in
+        fibonacciList.fold(0, f: { $0 + $1 }).onFailure { err in
             XCTAssertEqual(err, error)
             e.fulfill()
         }
@@ -860,7 +860,7 @@ extension BrightFuturesTests {
     func testUtilsFoldWithExecutionContext() {
         let e = self.expectation()
         
-        fold([Future<Int, NoError>(value: 1)], context: Queue.main.context, zero: 10) { remainder, elem -> Int in
+        [Future<Int, NoError>(value: 1)].fold(Queue.main.context, zero: 10) { remainder, elem -> Int in
             XCTAssert(NSThread.isMainThread())
             return remainder + elem
         }.onSuccess { val in
@@ -876,7 +876,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        fold([Future<String, NoError>](), zero: z, f: { $0 + $1 }).onSuccess { val in
+        [Future<String, NoError>]().fold(z, f: { $0 + $1 }).onSuccess { val in
             XCTAssertEqual(val, z)
             e.fulfill()
         }
@@ -909,7 +909,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        sequence(futures).onSuccess { fibs in
+        futures.sequence().onSuccess { fibs in
             for (index, num) in fibs.enumerate() {
                 XCTAssertEqual(fibonacci(index+1), num)
             }
@@ -923,7 +923,7 @@ extension BrightFuturesTests {
     func testUtilsSequenceEmpty() {
         let e = self.expectation()
         
-        sequence([Future<Int, NoError>]()).onSuccess { val in
+        [Future<Int, NoError>]().sequence().onSuccess { val in
             XCTAssertEqual(val.count, 0)
             
             e.fulfill()
@@ -942,7 +942,7 @@ extension BrightFuturesTests {
             Future(value: 9)
         ];
         
-        let f = find(futures, context: Queue.global.context) { val in
+        let f = futures.find(Queue.global.context) { val in
             return val % 2 == 0
         }
         
@@ -965,7 +965,7 @@ extension BrightFuturesTests {
             Future(value: 9, delay: 0.4),
         ];
         
-        let f = find(futures) { val in
+        let f = futures.find { val in
             return val % 2 == 0
         }
         
