@@ -224,7 +224,7 @@ public extension AsyncType where Value: ResultType, Value.Value: AsyncType, Valu
 public extension AsyncType where Value: ResultType, Value.Error == NoError {
     /// 'promotes' a `Future` with error type `NoError` to a `Future` with an error type of choice.
     /// This allows the `Future` to be used more easily in combination with other futures
-    /// for operations such as `sequence` and `firstCompletedOf`
+    /// for operations such as `sequence` and `firstCompleted`
     /// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
     public func promoteError<E: ErrorType>() -> Future<Value.Value, E> {
         return mapError(ImmediateExecutionContext) { $0 as! E } // future will never fail, so this map block will never get called
@@ -235,7 +235,7 @@ public extension AsyncType where Value: ResultType, Value.Error == BrightFutures
     /// 'promotes' a `Future` with error type `BrightFuturesError<NoError>` to a `Future` with an
     /// `BrightFuturesError<E>` error type where `E` can be any type conforming to `ErrorType`.
     /// This allows the `Future` to be used more easily in combination with other futures
-    /// for operations such as `sequence` and `firstCompletedOf`
+    /// for operations such as `sequence` and `firstCompleted`
     /// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
     public func promoteError<E: ErrorType>() -> Future<Value.Value, BrightFuturesError<E>> {
         return mapError(ImmediateExecutionContext) { err in
@@ -256,7 +256,7 @@ public extension AsyncType where Value: ResultType, Value.Error == BrightFutures
 public extension AsyncType where Value: ResultType, Value.Value == NoValue {
     /// 'promotes' a `Future` with value type `NoValue` to a `Future` with a value type of choice.
     /// This allows the `Future` to be used more easily in combination with other futures
-    /// for operations such as `sequence` and `firstCompletedOf`
+    /// for operations such as `sequence` and `firstCompleted`
     /// This is a safe operation, because a `Future` with value type `NoValue` is guaranteed never to succeed
     public func promoteValue<T>() -> Future<T, Value.Error> {
         return map(ImmediateExecutionContext) { $0 as! T } // future will never succeed, so this map block will never get called
