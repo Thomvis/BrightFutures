@@ -68,6 +68,8 @@
 		E9F69B9B1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
 		E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
 		E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
+		E9F69BA21B93384800713A91 /* SemaphoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69BA11B93384800713A91 /* SemaphoreTests.swift */; settings = {ASSET_TAGS = (); }; };
+		E9F69BA31B93384800713A91 /* SemaphoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69BA11B93384800713A91 /* SemaphoreTests.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +143,7 @@
 		E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContextTests.swift; sourceTree = "<group>"; };
 		E9F496EE1B052F1400F82839 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+BrightFutures.swift"; sourceTree = "<group>"; };
+		E9F69BA11B93384800713A91 /* SemaphoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemaphoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +286,7 @@
 				E9D923AD1A6CE69B00CADD9F /* InvalidationTokenTests.swift */,
 				E9E422C51B1FA28F0000558F /* ErrorsTests.swift */,
 				E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */,
+				E9F69BA11B93384800713A91 /* SemaphoreTests.swift */,
 			);
 			path = BrightFuturesTests;
 			sourceTree = "<group>";
@@ -538,6 +542,7 @@
 				E9D45B221AF00676000F6CA7 /* QueueTests.swift in Sources */,
 				E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9D45B231AF00676000F6CA7 /* ResultTests.swift in Sources */,
+				E9F69BA31B93384800713A91 /* SemaphoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,6 +577,7 @@
 				E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */,
 				E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */,
+				E9F69BA21B93384800713A91 /* SemaphoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
