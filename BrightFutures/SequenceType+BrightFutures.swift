@@ -97,13 +97,13 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     public func find(context: ExecutionContext, p: Generator.Element.Value.Value -> Bool) -> Future<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> {
         return sequence().mapError(ImmediateExecutionContext) { error in
             return BrightFuturesError(external: error)
-            }.flatMap(context) { val -> Result<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> in
-                for elem in val {
-                    if (p(elem)) {
-                        return Result(value: elem)
-                    }
+        }.flatMap(context) { val -> Result<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> in
+            for elem in val {
+                if (p(elem)) {
+                    return Result(value: elem)
                 }
-                return Result(error: .NoSuchElement)
+            }
+            return Result(error: .NoSuchElement)
         }
     }
 }
