@@ -127,6 +127,17 @@ extension BrightFuturesTests {
         XCTAssert(!f.isCompleted)
     }
     
+    func testFutureWithOther() {
+        let p = Promise<Int, NoError>()
+        let f = Future(other: p.future)
+        
+        XCTAssert(!f.isCompleted)
+        
+        try! p.success(1)
+        
+        XCTAssertEqual(f.value, 1);
+    }
+    
     func testForceTypeSuccess() {
         let f: Future<Double, NoError> = Future(value: NSTimeInterval(3.0))
         let f1: Future<NSTimeInterval, NoError> = f.forceType()
@@ -977,6 +988,11 @@ extension BrightFuturesTests {
         }
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testUtilsFindWithError() {
+        let f = [Future<Bool, TestError>(error: .JustAnError)].find(ImmediateExecutionContext) { $0 }
+        XCTAssert(f.error! == BrightFuturesError<TestError>.External(.JustAnError));
     }
  
 }
