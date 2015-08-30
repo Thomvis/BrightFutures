@@ -19,9 +19,15 @@ public protocol InvalidationTokenType {
     
     /// This context executes as long as the token is valid. If the token is invalid, the given blocks are discarded
     func context(parentContext: ExecutionContext) -> ExecutionContext
+
+}
+
+extension InvalidationTokenType {
     /// Alias of context(parentContext:task:) which uses the default threading model
     /// Due to a limitation of the Swift compiler, we cannot express this with a single method
-    var context: ExecutionContext { get }
+    public var context: ExecutionContext {
+        return context(DefaultThreadingModel())
+    }
 }
 
 /// The type that all invalidation tokens that can be manually invalidated conform to
@@ -37,10 +43,6 @@ public class InvalidationToken : ManualInvalidationTokenType {
     
     /// Creates a new valid token
     public init() { }
-    
-    public var context : ExecutionContext {
-        return context(DefaultThreadingModel())
-    }
     
     public func context(parentContext: ExecutionContext = DefaultThreadingModel()) -> ExecutionContext {
         return { task in
