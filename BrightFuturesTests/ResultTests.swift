@@ -107,7 +107,7 @@ class ResultTests: XCTestCase {
     }
 
     func testFlatMapFutureSuccess() {
-        let f = flatMap(divide(100, 10)) { i -> Future<Int, MathError> in
+        let f = divide(100, 10).flatMap { i -> Future<Int, MathError> in
             return future {
                 fibonacci(i)
             }.promoteError()
@@ -124,7 +124,7 @@ class ResultTests: XCTestCase {
     }
     
     func testFlatMapFutureFailure() {
-        let f = flatMap(divide(100, 0)) { i -> Future<Int, MathError> in
+        let f = divide(100, 0).flatMap { i -> Future<Int, MathError> in
             XCTAssert(false, "flatMap should not get called if the result failed")
             return future {
                 fibonacci(i)
@@ -146,7 +146,7 @@ class ResultTests: XCTestCase {
             return divide(123, i)
         }
         
-        let result: Result<[Int], MathError> = sequence(results)
+        let result: Result<[Int], MathError> = results.sequence()
         
         let outcome = [123, 61, 41, 30, 24, 20, 17, 15, 13, 12]
         XCTAssertEqual(result.value!, outcome)
@@ -157,7 +157,7 @@ class ResultTests: XCTestCase {
             return divide(123, i)
         }
         
-        let r = sequence(results)
+        let r = results.sequence()
         XCTAssert(r.isFailure)
         XCTAssertEqual(r.error!, MathError.DivisionByZero)
     }

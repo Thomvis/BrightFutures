@@ -108,44 +108,23 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     }
 }
 
-/// Enables the chaining of two failable operations where the second operation is asynchronous and
-/// represented by a future. 
-/// Like map, the given closure (that performs the second operation) is only executed
-/// if the first operation result is a .Success
-/// If a regular `map` was used, the result would be `Result<Future<U>>`.
-/// The implementation of this function uses `map`, but then flattens the result before returning it.
-public func flatMap<T,U, E>(result: Result<T,E>, @noescape f: T -> Future<U, E>) -> Future<U, E> {
-    return flatten(result.map(f))
-}
-
-/// Returns a .Failure with the error from the outer or inner result if either of the two failed
-/// or a .Success with the success value from the inner Result
-public func flatten<T, E>(result: Result<Result<T,E>,E>) -> Result<T,E> {
-    return result.analysis(ifSuccess: { $0 }, ifFailure: { Result(error: $0) })
-}
-
-/// Returns the inner future if the outer result succeeded or a failed future
-/// with the error from the outer result otherwise
-public func flatten<T, E>(result: Result<Future<T, E>,E>) -> Future<T, E> {
-    return result.analysis(ifSuccess: { $0 }, ifFailure: { Future(error: $0) })
-}
-
-/// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)
-/// If one of the results in the given sequence is a .Failure, the returned result is a .Failure with the
-/// error from the first failed result from the sequence.
-public func sequence<S: SequenceType, T, E where S.Generator.Element == Result<T, E>>(seq: S) -> Result<[T], E> {
-    return seq.reduce(Result(value: [])) { (res, elem) -> Result<[T], E> in
-        switch res {
-        case .Success(let resultSequence):
-            switch elem {
-            case .Success(let elemValue):
-                let newSeq = resultSequence + [elemValue]
-                return Result<[T], E>(value: newSeq)
-            case .Failure(let elemError):
-                return Result<[T], E>(error: elemError)
+extension SequenceType where Generator.Element: ResultType {
+    /// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)
+    /// If one of the results in the given sequence is a .Failure, the returned result is a .Failure with the
+    /// error from the first failed result from the sequence.
+    public func sequence() -> Result<[Generator.Element.Value], Generator.Element.Error> {
+        return reduce(Result(value: [])) { (res, elem) -> Result<[Generator.Element.Value], Generator.Element.Error> in
+            switch res {
+            case .Success(let resultSequence):
+                return elem.analysis(ifSuccess: {
+                    let newSeq = resultSequence + [$0]
+                    return Result(value: newSeq)
+                }, ifFailure: {
+                    return Result(error: $0)
+                })
+            case .Failure(_):
+                return res
             }
-        case .Failure(_):
-            return res
         }
     }
 }

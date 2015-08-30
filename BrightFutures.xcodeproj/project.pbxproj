@@ -65,6 +65,9 @@
 		E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496EF1B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 		E9F496F01B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
+		E9F69B9B1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
+		E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
+		E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +140,7 @@
 		E9E422C51B1FA28F0000558F /* ErrorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorsTests.swift; sourceTree = "<group>"; };
 		E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContextTests.swift; sourceTree = "<group>"; };
 		E9F496EE1B052F1400F82839 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+BrightFutures.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +259,7 @@
 				E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */,
 				E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */,
 				E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */,
+				E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFutures;
@@ -488,6 +493,7 @@
 				E9877CB71B826AA5009DB030 /* Queue.swift in Sources */,
 				E9877CB51B826AA5009DB030 /* Future.swift in Sources */,
 				E9877CB41B826AA5009DB030 /* ExecutionContext.swift in Sources */,
+				E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
 				E9877CB31B826AA5009DB030 /* InvalidationToken.swift in Sources */,
 				E9877CBA1B826AA5009DB030 /* Errors.swift in Sources */,
 				E9877CBD1B826AA5009DB030 /* AsyncType+ResultType.swift in Sources */,
@@ -508,6 +514,7 @@
 				E9F496F01B052F1400F82839 /* Errors.swift in Sources */,
 				E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */,
 				E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */,
+				E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
 				E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */,
 				E9DD4EF21B4F16C00070C2AF /* Async.swift in Sources */,
 				E9D45B1F1AF00670000F6CA7 /* FutureUtils.swift in Sources */,
@@ -541,6 +548,7 @@
 				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* FutureUtils.swift in Sources */,
 				E95507001B525D0B00359F73 /* Async.swift in Sources */,
+				E9F69B9B1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
 				E9DD4EEF1B4ED51A0070C2AF /* AsyncType.swift in Sources */,
