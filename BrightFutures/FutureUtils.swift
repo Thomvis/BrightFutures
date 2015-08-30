@@ -83,12 +83,12 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
             return $0 as! Future<Generator.Element.Value.Value, Generator.Element.Value.Error>
         }
     }
-
+    
     /// See `find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
     public func find(p: Generator.Element.Value.Value -> Bool) -> Future<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> {
         return find(Queue.global.context, p: p)
     }
-
+    
     /// Returns a future that succeeds with the value from the first future in the given
     /// sequence that passes the test `p`.
     /// If any of the futures in the given sequence fail, the returned future fails with the
@@ -97,13 +97,13 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     public func find(context: ExecutionContext, p: Generator.Element.Value.Value -> Bool) -> Future<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> {
         return sequence().mapError(ImmediateExecutionContext) { error in
             return BrightFuturesError(external: error)
-        }.flatMap(context) { val -> Result<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> in
-            for elem in val {
-                if (p(elem)) {
-                    return Result(value: elem)
+            }.flatMap(context) { val -> Result<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> in
+                for elem in val {
+                    if (p(elem)) {
+                        return Result(value: elem)
+                    }
                 }
-            }
-            return Result(error: .NoSuchElement)
+                return Result(error: .NoSuchElement)
         }
     }
 }

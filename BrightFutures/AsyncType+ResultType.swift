@@ -213,7 +213,7 @@ public extension AsyncType where Value: ResultType, Value.Value: AsyncType, Valu
                 innerFuture.onComplete(ImmediateExecutionContext) { (res:Value.Value.Value) in
                     res.analysis(ifSuccess: { try! f.success($0) }, ifFailure: { err in try! f.failure(err) })
                 }
-                }, ifFailure: { try! f.failure($0) })
+            }, ifFailure: { try! f.failure($0) })
         }
         
         return f
