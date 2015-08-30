@@ -66,7 +66,7 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// in the given context.
     public func fold<R>(context: ExecutionContext, zero: R, f: (R, Generator.Element.Value.Value) -> R) -> Future<R, Generator.Element.Value.Error> {
         return reduce(Future<R, Generator.Element.Value.Error>(value: zero)) { zero, elem in
-            return zero.flatMap { zeroVal in
+            return zero.flatMap(ImmediateExecutionContext) { zeroVal in
                 elem.map(context) { elemVal in
                     return f(zeroVal, elemVal)
                 }
@@ -78,7 +78,7 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// If one of the futures in the given sequence fails, the returned future will fail
     /// with the error of the first future that comes first in the list.
     public func sequence() -> Future<[Generator.Element.Value.Value], Generator.Element.Value.Error> {
-        return traverse {
+        return traverse(ImmediateExecutionContext) {
             // this is not nice at all, but I've been unable to solve it in a better way without crashing the compiler
             return $0 as! Future<Generator.Element.Value.Value, Generator.Element.Value.Error>
         }
@@ -95,7 +95,7 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// error of the first failed future in the sequence.
     /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
     public func find(context: ExecutionContext, p: Generator.Element.Value.Value -> Bool) -> Future<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> {
-        return sequence().mapError { error in
+        return sequence().mapError(ImmediateExecutionContext) { error in
             return BrightFuturesError(external: error)
         }.flatMap(context) { val -> Result<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> in
             for elem in val {
