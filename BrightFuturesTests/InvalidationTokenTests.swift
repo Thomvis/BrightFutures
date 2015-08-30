@@ -38,9 +38,9 @@ class InvalidationTokenTests: XCTestCase {
         
         let p = Promise<Int, NSError>()
         
-        p.future.onSuccess(token.context) { val in
+        p.future.onSuccess(token.validContext) { val in
             XCTAssert(false, "onSuccess should not get called")
-        }.onFailure(token.context) { error in
+        }.onFailure(token.validContext) { error in
             XCTAssert(false, "onSuccess should not get called")
         }
         
@@ -59,7 +59,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, NoError>(value: 3).onSuccess(token.context) { val in
+        Future<Int, NoError>(value: 3).onSuccess(token.validContext) { val in
             XCTAssertEqual(val, 3)
             e.fulfill()
         }
@@ -71,7 +71,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, NoError>(value: 3).onComplete(token.context) { res in
+        Future<Int, NoError>(value: 3).onComplete(token.validContext) { res in
             XCTAssertEqual(res.value!, 3)
             e.fulfill()
         }
@@ -83,7 +83,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, TestError>(error: TestError.JustAnError).onFailure(token.context) { err in
+        Future<Int, TestError>(error: TestError.JustAnError).onFailure(token.validContext) { err in
             XCTAssertEqual(err, TestError.JustAnError)
             e.fulfill()
         }
@@ -108,7 +108,7 @@ class InvalidationTokenTests: XCTestCase {
                 let sleep: NSTimeInterval = NSTimeInterval(arc4random() % 100) / 100000.0
                 NSThread.sleepForTimeInterval(sleep)
                 return true
-            }.onSuccess(token.context(q.context)) { _ in
+            }.onSuccess(token.validContext(q.context)) { _ in
                 XCTAssert(!token.isInvalid)
                 XCTAssertEqual(currentI, counter.i, "onSuccess should only get called if the counter did not increment")
             }.onComplete(Queue.global.context) { _ in
