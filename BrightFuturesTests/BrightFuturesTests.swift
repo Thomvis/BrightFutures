@@ -1118,6 +1118,21 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testRelease() {
+        weak var f: Future<Int, NoError>? = nil
+        
+        var f1: Future<Int, NoError>? = Future<Int, NoError>().map { $0 }.recover { _ in
+            0
+        }.onSuccess { _ in }.onComplete { _ in }
+        
+        f = f1
+        XCTAssertNotNil(f1);
+        XCTAssertNotNil(f);
+        f1 = nil
+        XCTAssertNil(f1)
+        XCTAssertNil(f)
+    }
 }
 
 /**
