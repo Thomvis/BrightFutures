@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Dispatch
+import Result
 
 /// Queue is a tiny wrapper around a Grand Central Dispatch queue.
 /// Queue provides a nice syntax for scheduling (async) execution of closures.
@@ -116,13 +117,11 @@ public struct Queue {
     /// Asynchronously executes the given closure on this queue and
     /// returns a future that will succeed with the result of the closure.
     public func async<T>(block: () -> T) -> Future<T, NoError> {
-        let p = Promise<T, NoError>()
-
-        async {
-            try! p.success(block())
+        return Future { complete in
+            async {
+                try! complete(.Success(block()))
+            }
         }
-        
-        return p.future
     }
     
     /// Asynchronously executes the given closure on the queue after a delay
@@ -135,12 +134,10 @@ public struct Queue {
     /// and returns a future that will succeed with the result of the closure.
     /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
     public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T, NoError> {
-        let p = Promise<T, NoError>()
-        
-        after(delay) {
-            try! p.success(block())
+        return Future { complete in
+            after(delay) {
+                try! complete(.Success(block()))
+            }
         }
-        
-        return p.future
     }
 }

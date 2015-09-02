@@ -100,6 +100,10 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         self.init(result: Result(error: error))
     }
     
+    public required init(@noescape resolver: (result: Value throws -> Void) -> Void) {
+        super.init(resolver: resolver)
+    }
+    
 }
 
 /// Short-hand for `lhs.recover(rhs())`
