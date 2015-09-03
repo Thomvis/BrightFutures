@@ -57,6 +57,32 @@ public extension AsyncType {
             return res
         }
     }
+    
+    /// Alias of delay(queue:interval:)
+    /// Will pass the main queue if we are currently on the main thread, or the
+    /// global queue otherwise
+    public func delay(interval: NSTimeInterval) -> Self {
+        if NSThread.isMainThread() {
+            return delay(Queue.main, interval: interval)
+        }
+        
+        return delay(Queue.global, interval: interval)
+    }
+
+    /// Returns an Async that will complete with the result that this Async completes with
+    /// after waiting for the given interval
+    /// The delay is implemented using dispatch_after. The given queue is passed to that function.
+    /// If you want a delay of 0 to mean 'delay until next runloop', you will want to pass the main
+    /// queue.
+    public func delay(queue: Queue, interval: NSTimeInterval) -> Self {
+        return Self { complete in
+            queue.after(.In(interval)) {
+                onComplete(ImmediateExecutionContext) {
+                    try! complete($0)
+                }
+            }
+        }
+    }
 }
 
 public extension AsyncType where Value: AsyncType {

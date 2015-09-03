@@ -700,6 +700,25 @@ extension BrightFuturesTests {
         XCTAssertEqual(f.forced()!.value!, 1)
     }
     
+    func testDelay() {
+        let t0 = CACurrentMediaTime()
+        let f = Future<Int, NoError>(value: 1).delay(0);
+        XCTAssertFalse(f.isCompleted)
+        var isAsync = false
+        
+        let e = self.expectation()
+        f.onComplete(ImmediateExecutionContext) { _ in
+            XCTAssert(isAsync)
+            XCTAssert(CACurrentMediaTime() - t0 >= 0)
+        }.delay(1).onComplete { _ in
+            XCTAssert(CACurrentMediaTime() - t0 >= 1)
+            e.fulfill()
+        }
+        isAsync = true
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
     func testFlatMap() {
         let e = self.expectation()
         
