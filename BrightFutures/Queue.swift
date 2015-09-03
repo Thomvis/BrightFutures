@@ -51,9 +51,7 @@ public struct Queue {
     
     /// Returns an execution context that asynchronously performs tasks on this queue
     public var context: ExecutionContext {
-        return { task in
-            self.async(task)
-        }
+        return self.async
     }
     
     public init() {
