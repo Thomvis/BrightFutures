@@ -175,6 +175,24 @@ class ResultTests: XCTestCase {
         
         XCTAssertEqual(divide(10, 3) ?? 10, 3)
     }
+    
+    func testFlattenInnerSuccess() {
+        let fr = Result<Result<Int, NoError>, NoError>.Success(.Success(3)).flatten()
+        XCTAssert(fr.isSuccess)
+        XCTAssertEqual(fr.value, 3)
+    }
+    
+    func testFlattenOuterFailure() {
+        let fr = Result<Result<Int, TestError>, TestError>.Failure(.JustAnError).flatten()
+        XCTAssert(fr.isFailure)
+        XCTAssertEqual(fr.error, .JustAnError)
+    }
+    
+    func testFlattenInnerFailure() {
+        let fr = Result<Result<Int, TestError>, TestError>.Success(.Failure(.JustAnotherError)).flatten()
+        XCTAssert(fr.isFailure)
+        XCTAssertEqual(fr.error, .JustAnotherError)
+    }
 }
 
 enum MathError: ErrorType {
