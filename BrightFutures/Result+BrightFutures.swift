@@ -34,17 +34,29 @@ extension ResultType where Value: ResultType, Error == Value.Error {
                 return Result(value: $0)
             }, ifFailure: {
                 return Result(error: $0)
-            });
+            })
         }, ifFailure: {
             return Result(error: $0)
         })
     }
 }
 
-extension ResultType where Value: AsyncType {
+extension ResultType where Value: AsyncType, Value.Value: ResultType, Error == Value.Value.Error {
     /// Returns the inner future if the outer result succeeded or a failed future
     /// with the error from the outer result otherwise
-    public func flatten<T, E>(result: Result<Future<T, E>,E>) -> Future<T, E> {
-        return result.analysis(ifSuccess: { $0 }, ifFailure: { Future(error: $0) })
+    public func flatten() -> Future<Value.Value.Value, Value.Value.Error> {
+        return Future { complete in
+            analysis(ifSuccess: { innerFuture in
+                innerFuture.onComplete(ImmediateExecutionContext) { res in
+                    try! complete(res.analysis(ifSuccess: {
+                        return Result(value: $0)
+                    }, ifFailure: {
+                        return Result(error: $0)
+                    }))
+                }
+            }, ifFailure: {
+                try! complete(Result(error: $0))
+            })
+        }
     }
 }

@@ -193,6 +193,24 @@ class ResultTests: XCTestCase {
         XCTAssert(fr.isFailure)
         XCTAssertEqual(fr.error, .JustAnotherError)
     }
+    
+    func testFlattenFutureInResultSuccess() {
+        let f = Result<Future<Int, NoError>, NoError>.Success(Future<Int, NoError>(value: 1)).flatten()
+        XCTAssert(f.isSuccess)
+        XCTAssertEqual(f.value, 1)
+    }
+    
+    func testFlattenFutureInResultFailed() {
+        let f = Result<Future<Int, TestError>, TestError>.Failure(.JustAnError)
+        XCTAssert(f.isFailure)
+        XCTAssertEqual(f.error, .JustAnError)
+    }
+    
+    func testFlattenFailedFutureInSucceededResult() {
+        let f = Result<Future<Int, TestError>, TestError>.Success(Future<Int, TestError>(error: .JustAnotherError)).flatten()
+        XCTAssert(f.isFailure)
+        XCTAssertEqual(f.error, .JustAnotherError)
+    }
 }
 
 enum MathError: ErrorType {
