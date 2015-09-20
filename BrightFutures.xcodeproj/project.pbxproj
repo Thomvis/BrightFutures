@@ -10,6 +10,9 @@
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
+		E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
+		E943D28E1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
+		E943D28F1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; settings = {ASSET_TAGS = (); }; };
 		E95507001B525D0B00359F73 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
 		E979E5F41975B1AA007FE914 /* SequenceType+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */; };
 		E9877CB31B826AA5009DB030 /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
@@ -28,6 +31,8 @@
 		E9877CC31B826ACF009DB030 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9877CC11B826ABB009DB030 /* Result.framework */; };
 		E992A95F1B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */; };
 		E992A9601B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */; };
+		E99397C41BAD49EC00A0B077 /* NSOperationQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */; settings = {ASSET_TAGS = (); }; };
+		E99397C51BAD49EC00A0B077 /* NSOperationQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */; settings = {ASSET_TAGS = (); }; };
 		E9B094681B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
 		E9B094691B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
 		E9CA7B411B555DB200102F87 /* MutableAsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */; };
@@ -116,9 +121,11 @@
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
+		E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOperationQueue+BrightFutures.swift"; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+BrightFutures.swift"; sourceTree = "<group>"; };
 		E9877CC11B826ABB009DB030 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/watchOS/Result.framework; sourceTree = "<group>"; };
 		E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType.swift"; sourceTree = "<group>"; };
+		E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSOperationQueueTests.swift; sourceTree = "<group>"; };
 		E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MutableAsyncType+ResultType.swift"; sourceTree = "<group>"; };
 		E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableAsyncType.swift; sourceTree = "<group>"; };
 		E9CBFD091B8264D800702394 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
@@ -263,6 +270,7 @@
 				E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */,
 				E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */,
 				E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */,
+				E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFutures;
@@ -287,6 +295,7 @@
 				E9E422C51B1FA28F0000558F /* ErrorsTests.swift */,
 				E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */,
 				E9F69BA11B93384800713A91 /* SemaphoreTests.swift */,
+				E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */,
 			);
 			path = BrightFuturesTests;
 			sourceTree = "<group>";
@@ -495,6 +504,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9877CB71B826AA5009DB030 /* Queue.swift in Sources */,
+				E943D28F1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E9877CB51B826AA5009DB030 /* Future.swift in Sources */,
 				E9877CB41B826AA5009DB030 /* ExecutionContext.swift in Sources */,
 				E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
@@ -516,6 +526,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9F496F01B052F1400F82839 /* Errors.swift in Sources */,
+				E943D28E1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */,
 				E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */,
 				E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
@@ -536,6 +547,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99397C51BAD49EC00A0B077 /* NSOperationQueueTests.swift in Sources */,
 				E9E422C71B1FA28F0000558F /* ErrorsTests.swift in Sources */,
 				E9D45B241AF00676000F6CA7 /* InvalidationTokenTests.swift in Sources */,
 				E9D45B211AF00676000F6CA7 /* BrightFuturesTests.swift in Sources */,
@@ -551,6 +563,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
+				E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* SequenceType+BrightFutures.swift in Sources */,
 				E95507001B525D0B00359F73 /* Async.swift in Sources */,
 				E9F69B9B1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
@@ -571,6 +584,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E99397C41BAD49EC00A0B077 /* NSOperationQueueTests.swift in Sources */,
 				E9E422C61B1FA28F0000558F /* ErrorsTests.swift in Sources */,
 				E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */,
 				E9D923AE1A6CE69B00CADD9F /* InvalidationTokenTests.swift in Sources */,
