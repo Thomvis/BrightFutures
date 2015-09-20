@@ -15,20 +15,6 @@ BrightFutures 2.0 is now available! It removes the direct dependency on `NSError
 
 A Swift 2.0 compatible version is in the works and will be released as BrightFutures 3.0. Pre-release builds are available.
 
-## Releases
-
-Latest releases:
-- 3.0.0-beta.3
-    - Built for Swift 2.0, Xcode 7 beta 5
-    - Runs on iOS 8 / OS X 10.10 and above
-- 2.0.1
-    - Built for Swift 1.2
-    - Runs on iOS 8 / OS X 10.10 and above
-- 1.0.1
-    - Superseded by 2.0.0, 1.x is in maintenance mode
-    - Built for Swift 1.2
-    - Runs on iOS 8 / OS X 10.10 and above
-
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
 Version 0.36 or higher is required. Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
