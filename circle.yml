@@ -4,6 +4,8 @@ machine:
 dependencies:
   pre:
     - git submodule update --init --recursive
+    - brew update
+    - brew upgrade xctool
 test:
   override:
     - xctool
