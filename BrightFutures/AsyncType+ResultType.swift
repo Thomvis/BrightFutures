@@ -177,7 +177,7 @@ public extension AsyncType where Value: ResultType {
     public func filter(p: Value.Value -> Bool) -> Future<Value.Value, BrightFuturesError<Value.Error>> {
         return self.mapError(ImmediateExecutionContext) { error -> BrightFuturesError<Value.Error> in
             return BrightFuturesError(external: error)
-        }.flatMap { value -> Result<Value.Value, BrightFuturesError<Value.Error>> in
+        }.flatMap(ImmediateExecutionContext) { value -> Result<Value.Value, BrightFuturesError<Value.Error>> in
             if p(value) {
                 return Result(value: value)
             } else {
