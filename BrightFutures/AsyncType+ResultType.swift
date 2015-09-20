@@ -94,8 +94,8 @@ public extension AsyncType where Value: ResultType {
         
         self.onComplete(context, callback: { (result: Value) in
             result.analysis(
-                ifSuccess: { try! res.success(f($0)) },
-                ifFailure: { try! res.failure($0) })
+                ifSuccess: { res.success(f($0)) },
+                ifFailure: { res.failure($0) })
         })
         
         return res
@@ -120,7 +120,7 @@ public extension AsyncType where Value: ResultType {
         
         self.onComplete(c) { result in
             result.analysis(
-                ifSuccess: { try! res.success($0) },
+                ifSuccess: { res.success($0) },
                 ifFailure: { res.completeWith(task($0)) })
         }
         
@@ -141,8 +141,8 @@ public extension AsyncType where Value: ResultType {
         
         self.onComplete(context) { result in
             result.analysis(
-                ifSuccess: { try! res.success($0) } ,
-                ifFailure: { try! res.failure(f($0)) })
+                ifSuccess: { res.success($0) } ,
+                ifFailure: { res.failure(f($0)) })
         }
         
         return res
@@ -155,7 +155,7 @@ public extension AsyncType where Value: ResultType {
         return Self { complete in
             onComplete(c) { result in
                 callback(result)
-                try! complete(result)
+                complete(result)
             }
         }
     }
@@ -211,9 +211,9 @@ public extension AsyncType where Value: ResultType, Value.Value: AsyncType, Valu
         onComplete(ImmediateExecutionContext) { res in
             res.analysis(ifSuccess: { innerFuture -> () in
                 innerFuture.onComplete(ImmediateExecutionContext) { (res:Value.Value.Value) in
-                    res.analysis(ifSuccess: { try! f.success($0) }, ifFailure: { err in try! f.failure(err) })
+                    res.analysis(ifSuccess: { f.success($0) }, ifFailure: { err in f.failure(err) })
                 }
-            }, ifFailure: { try! f.failure($0) })
+            }, ifFailure: { f.failure($0) })
         }
         
         return f

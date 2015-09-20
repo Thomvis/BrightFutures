@@ -43,7 +43,7 @@ extension InvalidationTokenType {
 /// The type that all invalidation tokens that can be manually invalidated conform to
 public protocol ManualInvalidationTokenType : InvalidationTokenType {
     /// Invalidates the token
-    func invalidate() throws
+    func invalidate()
 }
 
 /// A default invalidation token implementation
@@ -60,7 +60,7 @@ public class InvalidationToken : ManualInvalidationTokenType {
     }
     
     /// Invalidates the token
-    public func invalidate() throws {
-        try future.failure(.InvalidationTokenInvalidated)
+    public func invalidate() {
+        future.failure(.InvalidationTokenInvalidated)
     }
 }

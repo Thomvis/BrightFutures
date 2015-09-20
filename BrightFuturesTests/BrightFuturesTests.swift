@@ -133,7 +133,7 @@ extension BrightFuturesTests {
         
         XCTAssert(!f.isCompleted)
         
-        try! p.success(1)
+        p.success(1)
         
         XCTAssertEqual(f.value, 1);
     }
@@ -253,7 +253,7 @@ extension BrightFuturesTests {
         let p = Promise<Int, NoError>()
         
         Queue.global.async {
-            try! p.success(fibonacci(10))
+            p.success(fibonacci(10))
         }
         
         let e = self.expectationWithDescription("complete expectation")
@@ -1114,7 +1114,7 @@ extension BrightFuturesTests {
             }
         }
         
-        try! p.success()
+        p.success()
         
         self.waitForExpectationsWithTimeout(5, handler: nil)
     }

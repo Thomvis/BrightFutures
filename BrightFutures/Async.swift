@@ -19,7 +19,7 @@ public class Async<Value>: AsyncType {
         
         didSet {
             assert(result != nil)
-            try! runCallbacks()
+            runCallbacks()
         }
     }
     
@@ -45,7 +45,7 @@ public class Async<Value>: AsyncType {
     
     public required init(result: Value, delay: NSTimeInterval) {
         Queue.global.after(TimeInterval.In(delay)) {
-            try! self.complete(result)
+            self.complete(result)
         }
     }
     
@@ -53,15 +53,16 @@ public class Async<Value>: AsyncType {
         completeWith(other)
     }
     
-    public required init(@noescape resolver: (result: Value throws -> Void) -> Void) {
+    public required init(@noescape resolver: (result: Value -> Void) -> Void) {
         resolver { val in
-            try self.complete(val)
+            self.complete(val)
         }
     }
     
-    private func runCallbacks() throws {
+    private func runCallbacks() {
         guard let result = self.result else {
-            throw BrightFuturesError<NoError>.IllegalState
+            assert(false, "can only run callbacks on a completed future")
+            return
         }
         
         for callback in self.callbacks {
@@ -101,13 +102,14 @@ public class Async<Value>: AsyncType {
 }
 
 extension Async: MutableAsyncType {
-    func complete(value: Value) throws {
-        try queue.sync {
+    func tryComplete(value: Value) -> Bool{
+        return queue.sync {
             guard self.result == nil else {
-                throw BrightFuturesError<NoError>.IllegalState
+                return false
             }
             
             self.result = value
+            return true
         }
     }
 }

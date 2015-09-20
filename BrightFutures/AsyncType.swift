@@ -17,7 +17,7 @@ public protocol AsyncType {
     init(result: Value)
     init(result: Value, delay: NSTimeInterval)
     init<A: AsyncType where A.Value == Value>(other: A)
-    init(@noescape resolver: (result: Value throws -> Void) -> Void)
+    init(@noescape resolver: (result: Value -> Void) -> Void)
     
     func onComplete(context: ExecutionContext, callback: Value -> Void) -> Self
 }
@@ -77,9 +77,7 @@ public extension AsyncType {
     public func delay(queue: Queue, interval: NSTimeInterval) -> Self {
         return Self { complete in
             queue.after(.In(interval)) {
-                onComplete(ImmediateExecutionContext) {
-                    try! complete($0)
-                }
+                onComplete(ImmediateExecutionContext, callback: complete)
             }
         }
     }
@@ -89,9 +87,7 @@ public extension AsyncType where Value: AsyncType {
     public func flatten() -> Self.Value {
         return Self.Value { complete in
             self.onComplete(ImmediateExecutionContext) { value in
-                value.onComplete(ImmediateExecutionContext) { innerValue in
-                    try! complete(innerValue)
-                }
+                value.onComplete(ImmediateExecutionContext, callback: complete)
             }
         }
     }

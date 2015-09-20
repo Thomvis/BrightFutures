@@ -48,14 +48,14 @@ extension ResultType where Value: AsyncType, Value.Value: ResultType, Error == V
         return Future { complete in
             analysis(ifSuccess: { innerFuture in
                 innerFuture.onComplete(ImmediateExecutionContext) { res in
-                    try! complete(res.analysis(ifSuccess: {
+                    complete(res.analysis(ifSuccess: {
                         return Result(value: $0)
                     }, ifFailure: {
                         return Result(error: $0)
                     }))
                 }
             }, ifFailure: {
-                try! complete(Result(error: $0))
+                complete(Result(error: $0))
             })
         }
     }

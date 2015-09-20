@@ -9,28 +9,28 @@
 import Foundation
 
 internal protocol MutableAsyncType: AsyncType {
-    /// Completes the Async with the given result
-    /// If the Async is already completed, this function throws an error
-    func complete(value: Value) throws
+    /// Complete the Async with the given value
+    /// If the Async is already completed, nothing happens and `false` is returned
+    /// otherwise the future is completed and `true` is returned
+    func tryComplete(result: Value) -> Bool
 }
 
 extension MutableAsyncType {
     
-    /// Tries to complete the Async with the given value
-    /// If the Async is already completed, nothing happens and `false` is returned
-    /// otherwise the future is completed and `true` is returned
-    func tryComplete(result: Value) -> Bool {
-        do {
-            try complete(result)
-            return true
-        } catch {
-            return false
+    /// Completes the Async with the given result
+    /// If the Async is already completed, this function throws an error
+    func complete(result: Value) {
+        if !tryComplete(result) {
+            print(result)
+            let error = "Attempted to completed an Async that is already completed. This could become a fatalError."
+            assert(false, error)
+            print(error)
         }
     }
     
     func completeWith<A: AsyncType where A.Value == Value>(other: A) {
         other.onComplete(ImmediateExecutionContext) {
-            try! self.complete($0)
+            self.complete($0)
         }
     }
 }

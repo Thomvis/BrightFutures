@@ -13,8 +13,8 @@ internal extension MutableAsyncType where Value: ResultType {
     /// Completes the future with the given success value
     /// If the future is already completed, this function does nothing
     /// and an assert will be raised (if enabled)
-    func success(value: Value.Value) throws {
-        try complete(Value(value: value))
+    func success(value: Value.Value) {
+        complete(Value(value: value))
     }
     
     /// Tries to complete the future with the given success value
@@ -27,8 +27,8 @@ internal extension MutableAsyncType where Value: ResultType {
     /// Completes the future with the given error
     /// If the future is already completed, this function does nothing
     /// and an assert will be raised (if enabled)
-    func failure(error: Value.Error) throws {
-        try complete(Value(error: error))
+    func failure(error: Value.Error) {
+        complete(Value(error: error))
     }
     
     /// Tries to complete the future with the given error

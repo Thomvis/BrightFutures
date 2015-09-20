@@ -46,8 +46,8 @@ public class Promise<T, E: ErrorType> {
     
     /// Completes the promise's future with the given success value
     /// See `Future.success(value: T)`
-    public func success(value: T) throws {
-        try! future.success(value)
+    public func success(value: T) {
+        future.success(value)
     }
     
     /// Attempts to complete the promise's future with the given success value
@@ -58,8 +58,8 @@ public class Promise<T, E: ErrorType> {
     
     /// Completes the promise's future with the given error
     /// See `future.failure(error: E)`
-    public func failure(error: E) throws {
-        try future.failure(error)
+    public func failure(error: E) {
+        future.failure(error)
     }
 
     /// Attempts to complete the promise's future with the given error
@@ -70,8 +70,8 @@ public class Promise<T, E: ErrorType> {
 
     /// Completes the promise's future with the given result
     /// See `future.complete(result: Result<T, E>)`
-    public func complete(result: Result<T, E>) throws {
-        try future.complete(result)
+    public func complete(result: Result<T, E>) {
+        future.complete(result)
     }
     
     /// Attempts to complete the promise's future with the given result

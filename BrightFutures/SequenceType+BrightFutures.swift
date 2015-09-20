@@ -37,16 +37,13 @@ extension SequenceType where Generator.Element: AsyncType {
     /// Returns a future that returns with the first future from the given sequence that completes
     /// (regardless of whether that future succeeds or fails)
     public func firstCompleted() -> Generator.Element {
-        
-        return Generator.Element { complete in
-            for fut in self {
-                fut.onComplete(Queue.global.context) { res in
-                    do {
-                        try complete(res)
-                    } catch { }
-                }
+        let res = Async<Generator.Element.Value>()
+        for fut in self {
+            fut.onComplete(Queue.global.context) {
+                res.tryComplete($0)
             }
         }
+        return Generator.Element(other: res)
     }
 }
 

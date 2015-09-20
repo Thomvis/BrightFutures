@@ -55,8 +55,7 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
     let future = Future<T, E>();
     
     c {
-        let result = task()
-        try! future.complete(result)
+        future.complete(task())
     }
     
     return future
@@ -100,7 +99,7 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         self.init(result: Result(error: error))
     }
     
-    public required init(@noescape resolver: (result: Value throws -> Void) -> Void) {
+    public required init(@noescape resolver: (result: Value -> Void) -> Void) {
         super.init(resolver: resolver)
     }
     

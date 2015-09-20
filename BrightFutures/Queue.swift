@@ -117,7 +117,7 @@ public struct Queue {
     public func async<T>(block: () -> T) -> Future<T, NoError> {
         return Future { complete in
             async {
-                try! complete(.Success(block()))
+                complete(.Success(block()))
             }
         }
     }
@@ -134,7 +134,7 @@ public struct Queue {
     public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T, NoError> {
         return Future { complete in
             after(delay) {
-                try! complete(.Success(block()))
+                complete(.Success(block()))
             }
         }
     }
