@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'BrightFutures'
-  s.version = '3.0.0-beta.3'
+  s.version = '3.0.0-beta.4'
   s.license = 'MIT'
   s.summary = 'A simple Futures & Promises library for iOS and OS X written in Swift'
   s.homepage = 'https://github.com/Thomvis/BrightFutures'
