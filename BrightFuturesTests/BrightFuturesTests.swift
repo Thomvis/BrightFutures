@@ -327,7 +327,7 @@ extension BrightFuturesTests {
 
     
     func testCustomExecutionContext() {
-        let f = future(context: ImmediateExecutionContext) {
+        let f = future(ImmediateExecutionContext) {
             fibonacci(10)
         }
         
