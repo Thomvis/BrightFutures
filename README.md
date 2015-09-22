@@ -132,15 +132,15 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 var answer = 10
 
-let f = Future<Int, NoError>.succeeded(4).andThen { result in
+let f = Future<Int, NoError>(value: 4).andThen { result in
     switch result {
     case .Success(let val):
-        answer *= val.value
+        answer *= val
     case .Failure(_):
         break
     }
 }.andThen { result in
-    if let val = result.value {
+    if case .Success(_) = result {
         answer += 2
     }
 }
@@ -175,7 +175,7 @@ future {
 let f = future(1)
 let f1 = future(2)
 
-f.zip(f1).onSuccess { (let a, let b) in
+f.zip(f1).onSuccess { a, b in
     // a is 1, b is 2
 }
 ```
@@ -197,7 +197,7 @@ If a `Future` fails, use `recover` to offer a default or alternative value and c
 ```swift
 let f = future {
     // imagine a request failed
-    return Result<Int, ReadmeError>(error: ReadmeError.RequestFailed)
+    return Result<Int, ReadmeError>(error: .RequestFailed)
 }.recover { _ in // provide an offline default
     return 5
 }.onSuccess { value in
@@ -219,7 +219,7 @@ Folding a list of Futures is not very convenient with the built-in `fold` functi
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ...,  future(fibonacci(10))]
 
 // 1+1+2+3+5+8+13+21+34+55
-fold(fibonacciSequence, 0, { $0 + $1 }).onSuccess { sum in
+fibonacciSequence.fold(0, f: { $0 + $1 }).onSuccess { sum in
     // sum is 143
 }
 ```
@@ -230,7 +230,7 @@ With `sequence`, you can turn a list of Futures into a single Future that contai
 ```swift
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ..., future(fibonacci(10))]
     
-sequence(fibonacciSequence).onSuccess { fibNumbers in
+fibonacciSequence.sequence().onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
 ```
@@ -239,7 +239,7 @@ sequence(fibonacciSequence).onSuccess { fibNumbers in
 `traverse` combines `map` and `fold` in one convenient function. `traverse` takes a list of values and a closure that takes a single value from that list and turns it into a Future. The result of `traverse` is a single Future containing an array of the values from the Futures returned by the given closure.
 
 ```swift
-traverse(1...10) {
+(1...10).traverse {
     i in future(fibonacci(i))
 }.onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
@@ -262,11 +262,11 @@ If you want to have custom threading behavior, skip do do not the section. next 
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
 
 ```swift
-let f = future(context: ImmediateExecutionContext) {
+let f = future(ImmediateExecutionContext) {
     fibonacci(10)
 }
     
-f.onComplete(context: Queue.main.context) { value in
+f.onComplete(Queue.main.context) { value in
     // update the UI, we're on the main thread
 }
 ```
@@ -287,7 +287,7 @@ class MyCell : UICollectionViewCell {
     }
 
     public func setModel(model: Model) {
-        ImageLoader.loadImage(model.image).onSuccess(token: token) { [weak self] UIImage in
+        ImageLoader.loadImage(model.image).onSuccess(token.validContext) { [weak self] UIImage in
             self.imageView.image = UIImage
         }
     }
@@ -296,7 +296,7 @@ class MyCell : UICollectionViewCell {
 
 By invalidating the token on every reuse, we prevent that the image of the previous model is set after the next model has been set.
 
-Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. The callbacks are invoked as soon as the token is invalidated, which is typically before the original future is completed, or if the original future is completed. Invalidating a token after the original future completed does nothing.
+Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. Invalidating a token after the original future completed does nothing.
 
 If you are looking for a way to cancel a running task, you should look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html) (or [https://github.com/Thomvis/GoodProgress](https://github.com/Thomvis/GoodProgress) if you're looking for a nice Swift wrapper).
 
