@@ -21,7 +21,7 @@ Version 0.36 or higher is required. Add the following to your [Podfile](http://g
 
 ```rb
 pod 'BrightFutures'
-pod 'Result', '0.6-beta.1'
+pod 'Result', '0.6-beta.3'
 ```
 
 Make sure that you are integrating your dependencies using frameworks: add `use_frameworks!` to your Podfile. Then run `pod install`.
