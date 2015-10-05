@@ -58,7 +58,7 @@ public struct Queue {
         self.init(queueLabel: "queue")
     }
     
-    public init(queueLabel: String, attributes: dispatch_queue_attr_t = DISPATCH_QUEUE_SERIAL) {
+    public init(queueLabel: String, attributes: dispatch_queue_attr_t! = DISPATCH_QUEUE_SERIAL) {
         self.init(queue: dispatch_queue_create(queueLabel, attributes))
     }
     
