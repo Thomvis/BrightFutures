@@ -44,18 +44,18 @@ public extension AsyncType {
     public func forced(timeout: TimeInterval) -> Value? {
         if let result = result {
             return result
-        } else {
-            let sema = Semaphore(value: 0)
-            var res: Value? = nil
-            onComplete(Queue.global.context) {
-                res = $0
-                sema.signal()
-            }
-            
-            sema.wait(timeout)
-            
-            return res
         }
+        
+        let sema = Semaphore(value: 0)
+        var res: Value? = nil
+        onComplete(Queue.global.context) {
+            res = $0
+            sema.signal()
+        }
+        
+        sema.wait(timeout)
+        
+        return res
     }
     
     /// Alias of delay(queue:interval:)

@@ -201,7 +201,7 @@ class ResultTests: XCTestCase {
     }
     
     func testFlattenFutureInResultFailed() {
-        let f = Result<Future<Int, TestError>, TestError>.Failure(.JustAnError)
+        let f = Result<Future<Int, TestError>, TestError>.Failure(.JustAnError).flatten()
         XCTAssert(f.isFailure)
         XCTAssertEqual(f.error, .JustAnError)
     }

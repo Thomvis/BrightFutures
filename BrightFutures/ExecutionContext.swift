@@ -50,12 +50,6 @@ public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
     return Queue(queue: queue).context
 }
 
-/// Creates a synchronous context that is guarded by the given semaphore
-func toContext(sema: Semaphore) -> ExecutionContext {
-    return sema.execute
-}
-
-
 typealias ThreadingModel = () -> ExecutionContext
 
 var DefaultThreadingModel: ThreadingModel = defaultContext

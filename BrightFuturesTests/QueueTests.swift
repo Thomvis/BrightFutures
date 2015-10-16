@@ -54,6 +54,28 @@ class QueueTests: XCTestCase {
         XCTAssertEqual(input, output, "sync should return the return value of the block")
     }
     
+    func testSyncThrowsNone() {
+        let t: () throws -> Void = { }
+        do {
+            try Queue.global.sync(t)
+            XCTAssert(true)
+        } catch _ {
+            XCTFail()
+        }
+    }
+    
+    func testSyncThrowsError() {
+        let t: () throws -> Void = { throw TestError.JustAnError }
+        do {
+            try Queue.global.sync(t)
+            XCTFail()
+        } catch TestError.JustAnError {
+            XCTAssert(true)
+        } catch _ {
+            XCTFail()
+        }
+    }
+    
     func testAsync() {
         var res = 2
         let e = self.expectationWithDescription("")
