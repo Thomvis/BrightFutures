@@ -22,3 +22,4 @@ profile
 DerivedData
 .idea/
 Podfile.lock
+*.xcscmblueprint

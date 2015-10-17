@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import Dispatch
+import Result
 
 /// Queue is a tiny wrapper around a Grand Central Dispatch queue.
 /// Queue provides a nice syntax for scheduling (async) execution of closures.
@@ -50,21 +51,47 @@ public struct Queue {
     
     /// Returns an execution context that asynchronously performs tasks on this queue
     public var context: ExecutionContext {
-        return { task in
-            self.async(task)
-        }
+        return self.async
+    }
+    
+    public init() {
+        self.init(queueLabel: "queue")
+    }
+    
+    public init(queueLabel: String, attributes: dispatch_queue_attr_t! = DISPATCH_QUEUE_SERIAL) {
+        self.init(queue: dispatch_queue_create(queueLabel, attributes))
     }
     
     /// Instantiates a new `Queue` with the given queue.
     /// If `queue` is omitted, a serial queue with identifier "queue" is used.
-    public init(queue: dispatch_queue_t = dispatch_queue_create("queue", DISPATCH_QUEUE_SERIAL)) {
+    public init(queue: dispatch_queue_t) {
         self.underlyingQueue = queue
     }
     
     /// Synchronously executes the given closure on this queue.
     /// Analogous to dispatch_sync(self.underlyingQueue, block)
-    public func sync(block: () -> ()) {
+    public func sync(block: () -> Void) {
         dispatch_sync(underlyingQueue, block)
+    }
+    
+    /// Synchronously executes the given closure on this queue
+    /// If the closure throws an error, the error is rethrown to the caller.
+    /// Note: we cannot use the rethrows key here because we are not
+    /// directly executing the closure. (It is passed to `dispatch_sync`)
+    public func sync(block: () throws -> Void) throws {
+        var error: ErrorType?
+        
+        sync {
+            do {
+                try block()
+            } catch let e {
+                error = e
+            }
+        }
+        
+        if let error = error {
+            throw error
+        }
     }
     
     /// Synchronously executes the given closure on this queue and returns
@@ -81,25 +108,23 @@ public struct Queue {
     
     /// Asynchronously executes the given closure on this queue.
     /// Analogous to dispatch_async(self.underlyingQueue, block)
-    public func async(block: () -> ()) {
+    public func async(block: () -> Void) {
         dispatch_async(underlyingQueue, block)
     }
     
     /// Asynchronously executes the given closure on this queue and
     /// returns a future that will succeed with the result of the closure.
     public func async<T>(block: () -> T) -> Future<T, NoError> {
-        let p = Promise<T, NoError>()
-
-        async {
-            p.success(block())
+        return Future { complete in
+            async {
+                complete(.Success(block()))
+            }
         }
-        
-        return p.future
     }
     
     /// Asynchronously executes the given closure on the queue after a delay
     /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
-    public func after(delay: TimeInterval, block: () -> ()) {
+    public func after(delay: TimeInterval, block: () -> Void) {
         dispatch_after(delay.dispatchTime, underlyingQueue, block)
     }
     
@@ -107,12 +132,10 @@ public struct Queue {
     /// and returns a future that will succeed with the result of the closure.
     /// Identical to dispatch_after(dispatch_time, self.underlyingQueue, block)
     public func after<T>(delay: TimeInterval, block: () -> T) -> Future<T, NoError> {
-        let p = Promise<T, NoError>()
-        
-        after(delay) {
-            p.success(block())
+        return Future { complete in
+            after(delay) {
+                complete(.Success(block()))
+            }
         }
-        
-        return p.future
     }
 }

@@ -8,20 +8,36 @@
 
 import Foundation
 
-/// The error code that a token's future will fail with when the token is invalidated
-public let InvalidationTokenInvalid = 1
-
 /// The type that all invalidation tokens conform to
 public protocol InvalidationTokenType {
     
     /// Indicates if the token is invalid
     var isInvalid : Bool { get }
     
-    /// The future will fail with an error with .InvalidationTokenInvalidated when the token invalidates
+    /// The future will fail with .InvalidationTokenInvalidated when the token invalidates
     var future: Future<NoValue, BrightFuturesError<NoError>> { get }
     
-    /// The synchronous context on which the invalidation and callbacks are executed
-    var context: ExecutionContext { get }
+    /// This context executes as long as the token is valid. If the token is invalid, the given blocks are discarded
+    func validContext(parentContext: ExecutionContext) -> ExecutionContext
+
+}
+
+extension InvalidationTokenType {
+    /// Alias of context(parentContext:task:) which uses the default threading model
+    /// Due to a limitation of the Swift compiler, we cannot express this with a single method
+    public var validContext: ExecutionContext {
+        return validContext(DefaultThreadingModel())
+    }
+    
+    public func validContext(parentContext: ExecutionContext = DefaultThreadingModel()) -> ExecutionContext {
+        return { task in
+            parentContext {
+                if !self.isInvalid {
+                    task()
+                }
+            }
+        }
+    }
 }
 
 /// The type that all invalidation tokens that can be manually invalidated conform to
@@ -33,26 +49,18 @@ public protocol ManualInvalidationTokenType : InvalidationTokenType {
 /// A default invalidation token implementation
 public class InvalidationToken : ManualInvalidationTokenType {
    
-    let promise = Promise<NoValue, BrightFuturesError<NoError>>()
-    
-    /// The synchronous context on which the invalidation and callbacks are executed
-    public let context = toContext(Semaphore(value: 1))
+    public let future = Future<NoValue, BrightFuturesError<NoError>>()
     
     /// Creates a new valid token
     public init() { }
     
     /// Indicates if the token is invalid
     public var isInvalid: Bool {
-        return promise.future.isCompleted
-    }
-    
-    /// The future will fail with an error with .InvalidationTokenInvalidated when the token invalidates
-    public var future: Future<NoValue, BrightFuturesError<NoError>> {
-        return self.promise.future
+        return future.isCompleted
     }
     
     /// Invalidates the token
     public func invalidate() {
-        self.promise.failure(.InvalidationTokenInvalidated)
+        future.failure(.InvalidationTokenInvalidated)
     }
 }

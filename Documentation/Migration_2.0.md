@@ -1,3 +1,5 @@
+# Migrating from 1.0.1 to 2.0.0
+
 Please read the [changelog](../CHANGELOG.md) for 2.0 first.
 
 BrightFutures 2.0 has two new dependencies: Result and Box. If you're using CocoaPods, `pod update` should automatically integrate it into your project. If you're using Carthage, after running `carthage update`, you need to add `Result.framework` and `Box.framework` to your target like you have also done for `BrightFutures.framework`. 

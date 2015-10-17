@@ -40,46 +40,44 @@ public class Promise<T, E: ErrorType> {
     }
     
     /// Completes the promise's future with the given future
-    public func completeWith(future: Future<T, E>) {
-        future.onComplete { result in
-            result.analysis(ifSuccess: self.success, ifFailure: self.failure)
-        }
+    public func completeWith(other: Future<T, E>) {
+        future.completeWith(other)
     }
     
     /// Completes the promise's future with the given success value
     /// See `Future.success(value: T)`
     public func success(value: T) {
-        self.future.success(value)
+        future.success(value)
     }
     
     /// Attempts to complete the promise's future with the given success value
     /// See `future.trySuccess(value: T)`
     public func trySuccess(value: T) -> Bool {
-        return self.future.trySuccess(value)
+        return future.trySuccess(value)
     }
     
     /// Completes the promise's future with the given error
     /// See `future.failure(error: E)`
     public func failure(error: E) {
-        self.future.failure(error)
+        future.failure(error)
     }
 
     /// Attempts to complete the promise's future with the given error
     /// See `future.tryFailure(error: E)`
     public func tryFailure(error: E) -> Bool {
-        return self.future.tryFailure(error)
+        return future.tryFailure(error)
     }
 
     /// Completes the promise's future with the given result
     /// See `future.complete(result: Result<T, E>)`
     public func complete(result: Result<T, E>) {
-        return self.future.complete(result)
+        future.complete(result)
     }
     
     /// Attempts to complete the promise's future with the given result
     /// See `future.tryComplete(result: Result<T, E>)`
     public func tryComplete(result: Result<T,E>) -> Bool {
-        return self.future.tryComplete(result)
+        return future.tryComplete(result)
     }
     
 }

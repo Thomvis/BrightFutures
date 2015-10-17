@@ -3,7 +3,7 @@ BrightFutures
 
 How do you leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
-BrightFutures implements proven functional concepts (i.e. [futures and promises](http://en.wikipedia.org/wiki/Futures_and_promises)) to provide a powerful alternative to completion blocks and `NSErrorPointer`s.
+BrightFutures implements proven [functional concepts](http://en.wikipedia.org/wiki/Futures_and_promises) to provide a powerful alternative to completion blocks and typesafe error handling in asynchronous code.
 
 The goal of BrightFutures is to be *the* idiomatic Swift implementation of futures and promises.
 Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard library.
@@ -11,24 +11,11 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 ## Latest news
 [![CircleCI build status badge](https://img.shields.io/circleci/project/Thomvis/BrightFutures/master.svg)](https://circleci.com/gh/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests (97% coverage) and documentation (100% coverage) have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
-
-A Swift 2.0 compatible version is in the works. Check out the [swift-2.0](https://github.com/Thomvis/BrightFutures/tree/swift-2.0) branch.
-
-## Releases
-
-Latest releases:
-- 2.0.1
-    - Built for Swift 1.2
-    - Runs on iOS 8 / OS X 10.10 and above
-- 1.0.1
-    - Superseded by 2.0.0, 1.x is in maintenance mode
-    - Built for Swift 1.2
-    - Runs on iOS 8 / OS X 10.10 and above
+BrightFutures 3.0 is now available! Major parts of the framework have been rewritten for Swift 2 in order to leverage its power and provide the best compatibility. Please check the [Migration guide](Documentation/Migration_3.0.md) for help on how to migrate your project to BrightFutures 3.0.
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
-Version 0.36 or higher is required. Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
+Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
 
 ```rb
 pod 'BrightFutures'
@@ -143,15 +130,15 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 var answer = 10
 
-let f = Future<Int, NoError>.succeeded(4).andThen { result in
+let f = Future<Int, NoError>(value: 4).andThen { result in
     switch result {
     case .Success(let val):
-        answer *= val.value
+        answer *= val
     case .Failure(_):
         break
     }
 }.andThen { result in
-    if let val = result.value {
+    if case .Success(_) = result {
         answer += 2
     }
 }
@@ -186,7 +173,7 @@ future {
 let f = future(1)
 let f1 = future(2)
 
-f.zip(f1).onSuccess { (let a, let b) in
+f.zip(f1).onSuccess { a, b in
     // a is 1, b is 2
 }
 ```
@@ -208,7 +195,7 @@ If a `Future` fails, use `recover` to offer a default or alternative value and c
 ```swift
 let f = future {
     // imagine a request failed
-    return Result<Int, ReadmeError>(error: ReadmeError.RequestFailed)
+    return Result<Int, ReadmeError>(error: .RequestFailed)
 }.recover { _ in // provide an offline default
     return 5
 }.onSuccess { value in
@@ -230,7 +217,7 @@ Folding a list of Futures is not very convenient with the built-in `fold` functi
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ...,  future(fibonacci(10))]
 
 // 1+1+2+3+5+8+13+21+34+55
-fold(fibonacciSequence, 0, { $0 + $1 }).onSuccess { sum in
+fibonacciSequence.fold(0, f: { $0 + $1 }).onSuccess { sum in
     // sum is 143
 }
 ```
@@ -241,7 +228,7 @@ With `sequence`, you can turn a list of Futures into a single Future that contai
 ```swift
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ..., future(fibonacci(10))]
     
-sequence(fibonacciSequence).onSuccess { fibNumbers in
+fibonacciSequence.sequence().onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
 ```
@@ -250,7 +237,7 @@ sequence(fibonacciSequence).onSuccess { fibNumbers in
 `traverse` combines `map` and `fold` in one convenient function. `traverse` takes a list of values and a closure that takes a single value from that list and turns it into a Future. The result of `traverse` is a single Future containing an array of the values from the Futures returned by the given closure.
 
 ```swift
-traverse(1...10) {
+(1...10).traverse {
     i in future(fibonacci(i))
 }.onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
@@ -267,17 +254,17 @@ A lot of the methods on `Future` accept an optional _execution context_ and a bl
 
 The `future` keyword uses a much simpler threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
 
-If you want to have custom threading behavior, skip do do not the section. next
+If you want to have custom threading behavior, skip do do not the section. next [:wink:](https://twitter.com/nedbat/status/194452404794691584)
 
 ## Custom execution contexts
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
 
 ```swift
-let f = future(context: ImmediateExecutionContext) {
+let f = future(ImmediateExecutionContext) {
     fibonacci(10)
 }
     
-f.onComplete(context: Queue.main.context) { value in
+f.onComplete(Queue.main.context) { value in
     // update the UI, we're on the main thread
 }
 ```
@@ -298,7 +285,7 @@ class MyCell : UICollectionViewCell {
     }
 
     public func setModel(model: Model) {
-        ImageLoader.loadImage(model.image).onSuccess(token: token) { [weak self] UIImage in
+        ImageLoader.loadImage(model.image).onSuccess(token.validContext) { [weak self] UIImage in
             self.imageView.image = UIImage
         }
     }
@@ -307,9 +294,9 @@ class MyCell : UICollectionViewCell {
 
 By invalidating the token on every reuse, we prevent that the image of the previous model is set after the next model has been set.
 
-Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. The callbacks are invoked as soon as the token is invalidated, which is typically before the original future is completed, or if the original future is completed. Invalidating a token after the original future completed does nothing.
+Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. Invalidating a token after the original future completed does nothing.
 
-If you are looking for a way to cancel a running task, you should look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html) (or [https://github.com/Thomvis/GoodProgress](https://github.com/Thomvis/GoodProgress) if you're looking for a nice Swift wrapper).
+If you are looking for a way to cancel a running task, you could look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html).
 
 ## Credits
 

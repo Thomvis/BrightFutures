@@ -1,5 +1,20 @@
+# 3.0.0-beta.4
+- The implementation of `mapError` now explicitly uses `ImmediateExecutionContext`, fixing unnecessary asynchronicity
+- Adds `delay(interval: NSTimeInterval)` on `Async`, which produces a new `Async` that completes with the original Async after the given delay
+- All FutureUtils free functions are now functions in extensions of the appropriate types (e.g. SequenceType)
+- `InvalidationToken` instances now have a `validContext` property which is an `ExecutionContext` that can be passed to any function that accepts an `ExecutionContext` to make the effect of that function depend on the validity of the token.
+- Added support for `NSOperationQueue` as an `ExecutionContext`
+
 # 2.0.1
 - Adds an implementation of `flatMap` that allows a function to be passed in immediately. Thanks @nghialv!
+
+# 3.0.0-beta.1
+This release is compatible with Swift 2. It is a direct port of 2.0, meaning it makes no use of new Swift 2 features yet.
+
+- Removed our homegrown 'ErrorType' with Swift 2's native one
+- The 'Box' dependency is gone. Swift 2 removed the need for boxing associated values in enums!
+
+Because antitypical/Result has not yet released a Swift 2 compatible release on CocoaPods, this version of BrightFutures can not yet be built using CocoaPods.
 
 # 2.0.0
 - Replaced homegrown `Result` and `Box` types with Rob Rix' excellent types.
