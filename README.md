@@ -11,13 +11,11 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 ## Latest news
 [![CircleCI build status badge](https://img.shields.io/circleci/project/Thomvis/BrightFutures/master.svg)](https://circleci.com/gh/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-BrightFutures 2.0 is now available! It removes the direct dependency on `NSError` and takes a Swiftier approach. The tests (97% coverage) and documentation (100% coverage) have been improved as well. Please check the [Migration guide](Documentation/Migration_2.0.md) for help on how to migrate your project to BrightFutures 2.0.
-
-A Swift 2.0 compatible version is in the works and will be released as BrightFutures 3.0. Pre-release builds are available.
+BrightFutures 3.0 is now available! Major parts of the framework have been rewritten for Swift 2 in order to leverage its power and provide the best compatibility. Please check the [Migration guide](Documentation/Migration_3.0.md) for help on how to migrate your project to BrightFutures 3.0.
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
-Version 0.36 or higher is required. Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
+Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
 
 ```rb
 pod 'BrightFutures'
@@ -298,7 +296,7 @@ By invalidating the token on every reuse, we prevent that the image of the previ
 
 Invalidation tokens _do not_ cancel the task that the future represents. That is a different problem. With invalidation tokens, the result is merely ignored. Invalidating a token after the original future completed does nothing.
 
-If you are looking for a way to cancel a running task, you should look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html) (or [https://github.com/Thomvis/GoodProgress](https://github.com/Thomvis/GoodProgress) if you're looking for a nice Swift wrapper).
+If you are looking for a way to cancel a running task, you could look into using [NSProgress](https://developer.apple.com/library/ios/documentation/Foundation/Reference/NSProgress_Class/Reference/Reference.html).
 
 ## Credits
 
