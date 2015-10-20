@@ -33,7 +33,7 @@ github "Thomvis/BrightFutures"
 Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ## Documentation
-- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures) (100% documentation coverage)
+- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
 - This README covers almost all features of BrightFutures
 - The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature (97% test coverage)
 - The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
