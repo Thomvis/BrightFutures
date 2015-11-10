@@ -4,16 +4,3 @@ machine:
 dependencies:
   pre:
     - git submodule update --init --recursive
-test:
-  override:
-    - xctool
-      -reporter pretty
-      -reporter junit:$CIRCLE_TEST_REPORTS/xcode/results-mac.xml
-      -reporter plain:$CIRCLE_ARTIFACTS/xctool-mac.log
-      CODE_SIGNING_REQUIRED=NO
-      CODE_SIGN_IDENTITY=
-      PROVISIONING_PROFILE=
-      -sdk macosx
-      -workspace BrightFutures.xcworkspace
-      -scheme BrightFutures-Mac
-      build build-tests run-tests
