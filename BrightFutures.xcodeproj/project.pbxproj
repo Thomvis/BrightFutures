@@ -15,6 +15,32 @@
 		E943D28F1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; };
 		E95507001B525D0B00359F73 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
 		E979E5F41975B1AA007FE914 /* SequenceType+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */; };
+		E98647A71BF327E400B6BEEE /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E986479D1BF327E400B6BEEE /* BrightFutures.framework */; };
+		E98647B41BF3288400B6BEEE /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
+		E98647B51BF3288400B6BEEE /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
+		E98647B61BF3288400B6BEEE /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
+		E98647B71BF3288400B6BEEE /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
+		E98647B81BF3288400B6BEEE /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
+		E98647B91BF3288400B6BEEE /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
+		E98647BA1BF3288400B6BEEE /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
+		E98647BB1BF3288400B6BEEE /* AsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */; };
+		E98647BC1BF3288400B6BEEE /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
+		E98647BD1BF3288400B6BEEE /* AsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */; };
+		E98647BE1BF3288400B6BEEE /* MutableAsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */; };
+		E98647BF1BF3288400B6BEEE /* MutableAsyncType+ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */; };
+		E98647C01BF3288400B6BEEE /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; };
+		E98647C11BF3288400B6BEEE /* SequenceType+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */; };
+		E98647C21BF3288400B6BEEE /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; };
+		E98647C31BF3288D00B6BEEE /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */; };
+		E98647C41BF3288D00B6BEEE /* PromiseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9B377311BD19457007170ED /* PromiseTests.swift */; };
+		E98647C51BF3288D00B6BEEE /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
+		E98647C61BF3288D00B6BEEE /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
+		E98647C71BF3288D00B6BEEE /* InvalidationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AD1A6CE69B00CADD9F /* InvalidationTokenTests.swift */; };
+		E98647C81BF3288D00B6BEEE /* ErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C51B1FA28F0000558F /* ErrorsTests.swift */; };
+		E98647C91BF3288D00B6BEEE /* ExecutionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */; };
+		E98647CA1BF3288D00B6BEEE /* SemaphoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69BA11B93384800713A91 /* SemaphoreTests.swift */; };
+		E98647CB1BF3288D00B6BEEE /* NSOperationQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */; };
+		E98647CE1BF328B400B6BEEE /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98647CD1BF328B400B6BEEE /* Result.framework */; };
 		E9877CB31B826AA5009DB030 /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
 		E9877CB41B826AA5009DB030 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E9877CB51B826AA5009DB030 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
@@ -80,6 +106,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		E98647A81BF327E400B6BEEE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E9DF080C194470060083F7F2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E986479C1BF327E400B6BEEE;
+			remoteInfo = "BrightFutures-tvOS";
+		};
 		E9D45B0C1AF00659000F6CA7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E9DF080C194470060083F7F2 /* Project object */;
@@ -125,6 +158,9 @@
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOperationQueue+BrightFutures.swift"; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+BrightFutures.swift"; sourceTree = "<group>"; };
+		E986479D1BF327E400B6BEEE /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E98647A61BF327E400B6BEEE /* BrightFutures-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E98647CD1BF328B400B6BEEE /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/tvOS/Result.framework; sourceTree = "<group>"; };
 		E9877CC11B826ABB009DB030 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/watchOS/Result.framework; sourceTree = "<group>"; };
 		E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType.swift"; sourceTree = "<group>"; };
 		E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSOperationQueueTests.swift; sourceTree = "<group>"; };
@@ -157,6 +193,22 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E98647991BF327E400B6BEEE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98647CE1BF328B400B6BEEE /* Result.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E98647A31BF327E400B6BEEE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98647A71BF327E400B6BEEE /* BrightFutures.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E9CBFD0E1B8268FB00702394 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -203,6 +255,7 @@
 		E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E98647CC1BF328A000B6BEEE /* tvOS */,
 				E9877CC01B826AAC009DB030 /* watchOS */,
 				E90E9D5D1B1B8A5B00A8F9F3 /* Mac */,
 				E90E9D5C1B1B8A5400A8F9F3 /* iOS */,
@@ -224,6 +277,14 @@
 				E9CBFD0B1B8264E500702394 /* Result.framework */,
 			);
 			name = Mac;
+			sourceTree = "<group>";
+		};
+		E98647CC1BF328A000B6BEEE /* tvOS */ = {
+			isa = PBXGroup;
+			children = (
+				E98647CD1BF328B400B6BEEE /* Result.framework */,
+			);
+			name = tvOS;
 			sourceTree = "<group>";
 		};
 		E9877CC01B826AAC009DB030 /* watchOS */ = {
@@ -252,6 +313,8 @@
 				E9D45B001AF00659000F6CA7 /* BrightFutures.framework */,
 				E9D45B0A1AF00659000F6CA7 /* BrightFutures-MacTests.xctest */,
 				E9CBFD121B8268FB00702394 /* BrightFutures.framework */,
+				E986479D1BF327E400B6BEEE /* BrightFutures.framework */,
+				E98647A61BF327E400B6BEEE /* BrightFutures-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -315,6 +378,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		E986479A1BF327E400B6BEEE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E9CBFD0F1B8268FB00702394 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -339,6 +409,42 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		E986479C1BF327E400B6BEEE /* BrightFutures-tvOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E98647B21BF327E400B6BEEE /* Build configuration list for PBXNativeTarget "BrightFutures-tvOS" */;
+			buildPhases = (
+				E98647981BF327E400B6BEEE /* Sources */,
+				E98647991BF327E400B6BEEE /* Frameworks */,
+				E986479A1BF327E400B6BEEE /* Headers */,
+				E986479B1BF327E400B6BEEE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "BrightFutures-tvOS";
+			productName = "BrightFutures-tvOS";
+			productReference = E986479D1BF327E400B6BEEE /* BrightFutures.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		E98647A51BF327E400B6BEEE /* BrightFutures-tvOSTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E98647B31BF327E400B6BEEE /* Build configuration list for PBXNativeTarget "BrightFutures-tvOSTests" */;
+			buildPhases = (
+				E98647A21BF327E400B6BEEE /* Sources */,
+				E98647A31BF327E400B6BEEE /* Frameworks */,
+				E98647A41BF327E400B6BEEE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E98647A91BF327E400B6BEEE /* PBXTargetDependency */,
+			);
+			name = "BrightFutures-tvOSTests";
+			productName = "BrightFutures-tvOSTests";
+			productReference = E98647A61BF327E400B6BEEE /* BrightFutures-tvOSTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E9CBFD111B8268FB00702394 /* BrightFutures-watchOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E9CBFD171B8268FB00702394 /* Build configuration list for PBXNativeTarget "BrightFutures-watchOS" */;
@@ -435,10 +541,16 @@
 		E9DF080C194470060083F7F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Thomas Visser";
 				TargetAttributes = {
+					E986479C1BF327E400B6BEEE = {
+						CreatedOnToolsVersion = 7.1;
+					};
+					E98647A51BF327E400B6BEEE = {
+						CreatedOnToolsVersion = 7.1;
+					};
 					E9CBFD111B8268FB00702394 = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -474,11 +586,27 @@
 				E9D45AFF1AF00659000F6CA7 /* BrightFutures-Mac */,
 				E9D45B091AF00659000F6CA7 /* BrightFutures-MacTests */,
 				E9CBFD111B8268FB00702394 /* BrightFutures-watchOS */,
+				E986479C1BF327E400B6BEEE /* BrightFutures-tvOS */,
+				E98647A51BF327E400B6BEEE /* BrightFutures-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E986479B1BF327E400B6BEEE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E98647A41BF327E400B6BEEE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E9CBFD101B8268FB00702394 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -503,6 +631,44 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E98647981BF327E400B6BEEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98647B81BF3288400B6BEEE /* Queue.swift in Sources */,
+				E98647C21BF3288400B6BEEE /* NSOperationQueue+BrightFutures.swift in Sources */,
+				E98647BD1BF3288400B6BEEE /* AsyncType+ResultType.swift in Sources */,
+				E98647B61BF3288400B6BEEE /* Future.swift in Sources */,
+				E98647BB1BF3288400B6BEEE /* AsyncType.swift in Sources */,
+				E98647B51BF3288400B6BEEE /* ExecutionContext.swift in Sources */,
+				E98647BC1BF3288400B6BEEE /* Async.swift in Sources */,
+				E98647B41BF3288400B6BEEE /* InvalidationToken.swift in Sources */,
+				E98647B91BF3288400B6BEEE /* Semaphore.swift in Sources */,
+				E98647B71BF3288400B6BEEE /* Promise.swift in Sources */,
+				E98647BE1BF3288400B6BEEE /* MutableAsyncType.swift in Sources */,
+				E98647C01BF3288400B6BEEE /* Result+BrightFutures.swift in Sources */,
+				E98647BF1BF3288400B6BEEE /* MutableAsyncType+ResultType.swift in Sources */,
+				E98647C11BF3288400B6BEEE /* SequenceType+BrightFutures.swift in Sources */,
+				E98647BA1BF3288400B6BEEE /* Errors.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E98647A21BF327E400B6BEEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E98647C71BF3288D00B6BEEE /* InvalidationTokenTests.swift in Sources */,
+				E98647C31BF3288D00B6BEEE /* BrightFuturesTests.swift in Sources */,
+				E98647C81BF3288D00B6BEEE /* ErrorsTests.swift in Sources */,
+				E98647CB1BF3288D00B6BEEE /* NSOperationQueueTests.swift in Sources */,
+				E98647C91BF3288D00B6BEEE /* ExecutionContextTests.swift in Sources */,
+				E98647C51BF3288D00B6BEEE /* QueueTests.swift in Sources */,
+				E98647C61BF3288D00B6BEEE /* ResultTests.swift in Sources */,
+				E98647CA1BF3288D00B6BEEE /* SemaphoreTests.swift in Sources */,
+				E98647C41BF3288D00B6BEEE /* PromiseTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E9CBFD0D1B8268FB00702394 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -604,6 +770,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		E98647A91BF327E400B6BEEE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E986479C1BF327E400B6BEEE /* BrightFutures-tvOS */;
+			targetProxy = E98647A81BF327E400B6BEEE /* PBXContainerItemProxy */;
+		};
 		E9D45B0D1AF00659000F6CA7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E9D45AFF1AF00659000F6CA7 /* BrightFutures-Mac */;
@@ -617,6 +788,90 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		E98647AE1BF327E400B6BEEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = BrightFutures/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.thomvis.BrightFutures;
+				PRODUCT_NAME = BrightFutures;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		E98647AF1BF327E400B6BEEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = BrightFutures/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = nl.thomvis.BrightFutures;
+				PRODUCT_NAME = BrightFutures;
+				SDKROOT = appletvos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
+		E98647B01BF327E400B6BEEE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.BrightFutures-tvOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		E98647B11BF327E400B6BEEE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.BrightFutures-tvOSTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Release;
+		};
 		E9CBFD181B8268FB00702394 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -950,6 +1205,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E98647B21BF327E400B6BEEE /* Build configuration list for PBXNativeTarget "BrightFutures-tvOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E98647AE1BF327E400B6BEEE /* Debug */,
+				E98647AF1BF327E400B6BEEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		E98647B31BF327E400B6BEEE /* Build configuration list for PBXNativeTarget "BrightFutures-tvOSTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E98647B01BF327E400B6BEEE /* Debug */,
+				E98647B11BF327E400B6BEEE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		E9CBFD171B8268FB00702394 /* Build configuration list for PBXNativeTarget "BrightFutures-watchOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
