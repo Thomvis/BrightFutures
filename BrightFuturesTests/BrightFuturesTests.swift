@@ -634,7 +634,7 @@ extension BrightFuturesTests {
     
     func testForcingCompletedFuture() {
         let f = Future<Int, NoError>(value: 1)
-        XCTAssertEqual(f.forced()!.value!, 1)
+        XCTAssertEqual(f.forced().value!, 1)
     }
     
     func testDelay() {

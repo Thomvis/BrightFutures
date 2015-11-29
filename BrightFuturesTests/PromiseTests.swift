@@ -70,7 +70,7 @@ class PromiseTests: XCTestCase {
         p.tryComplete(Result(value: 2))
         
         XCTAssert(p.future.isSuccess)
-        XCTAssert(p.future.forced()! == Result<Int, TestError>(value:2))
+        XCTAssert(p.future.forced() == Result<Int, TestError>(value:2))
     }
     
     func testPromiseCompleteWithFailure() {
@@ -78,21 +78,21 @@ class PromiseTests: XCTestCase {
         p.tryComplete(Result(error: TestError.JustAnError))
         
         XCTAssert(p.future.isFailure)
-        XCTAssert(p.future.forced()! == Result<Int, TestError>(error:TestError.JustAnError))
+        XCTAssert(p.future.forced() == Result<Int, TestError>(error:TestError.JustAnError))
     }
     
     func testPromiseTrySuccessTwice() {
         let p = Promise<Int, NoError>()
         XCTAssert(p.trySuccess(1))
         XCTAssertFalse(p.trySuccess(2))
-        XCTAssertEqual(p.future.forced()!.value!, 1)
+        XCTAssertEqual(p.future.forced().value!, 1)
     }
     
     func testPromiseTryFailureTwice() {
         let p = Promise<Int, TestError>()
         XCTAssert(p.tryFailure(TestError.JustAnError))
         XCTAssertFalse(p.tryFailure(TestError.JustAnotherError))
-        XCTAssertEqual(p.future.forced()!.error!, TestError.JustAnError)
+        XCTAssertEqual(p.future.forced().error!, TestError.JustAnError)
     }
     
     func testPromiseCompleteWithSucceedingFuture() {
