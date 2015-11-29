@@ -29,10 +29,9 @@ public extension AsyncType {
     }
     
     /// Blocks the current thread until the future is completed and then returns the result
-    public func forced() -> Value? {
-        return forced(TimeInterval.Forever)
+    public func forced() -> Value {
+        return forced(TimeInterval.Forever)!
     }
-    
     
     /// See `forced(timeout: TimeInterval) -> Value?`
     public func forced(timeout: NSTimeInterval) -> Value? {
