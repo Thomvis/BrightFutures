@@ -2,10 +2,10 @@ language: objective-c
 osx_image: xcode7.1
 
 script:
-  - xcodebuild test -scheme BrightFutures-Mac
-  - xcodebuild test -scheme BrightFutures-iOS -sdk iphonesimulator
-  - xcodebuild test -scheme BrightFutures-tvOS -sdk appletvsimulator
-  - xcodebuild build -scheme BrightFutures-watchOS -sdk watchsimulator
+  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-Mac
+  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-iOS -sdk iphonesimulator
+  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-tvOS -sdk appletvsimulator
+  - xcodebuild build -workspace BrightFutures.xcworkspace -scheme BrightFutures-watchOS -sdk watchsimulator
   - pod lib lint
 
 notifications:
