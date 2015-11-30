@@ -6,7 +6,7 @@ script:
   - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-iOS -sdk iphonesimulator
   - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-tvOS -sdk appletvsimulator
   - xcodebuild build -workspace BrightFutures.xcworkspace -scheme BrightFutures-watchOS -sdk watchsimulator
-  - pod lib lint
+  - pod lib lint --verbose
 
 notifications:
   email: true
