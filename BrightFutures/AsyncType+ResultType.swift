@@ -15,7 +15,7 @@ public extension AsyncType where Value: ResultType {
     
     /// `true` if the future failed, or `false` otherwise
     public var isFailure: Bool {
-        return !isSuccess
+        return result?.analysis(ifSuccess: { _ in return false }, ifFailure: { _ in return true }) ?? false
     }
     
     public var value: Value.Value? {
