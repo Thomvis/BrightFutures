@@ -121,6 +121,8 @@ extension BrightFuturesTests {
     func testNeverCompletingFuture() {
         let f = Future<Int, NoError>()
         XCTAssert(!f.isCompleted)
+        XCTAssert(!f.isSuccess)
+        XCTAssert(!f.isFailure)
         
         sleep(UInt32(Double(arc4random_uniform(100))/100.0))
         
