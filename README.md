@@ -215,7 +215,7 @@ Folding a list of Futures is not very convenient with the built-in `fold` functi
 
 ```swift
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ...,  future(fibonacci(10))]
-    
+
 // 1+1+2+3+5+8+13+21+34+55
 fibonacciSequence.fold(0, f: { $0 + $1 }).onSuccess { sum in
     // sum is 143
@@ -227,7 +227,7 @@ With `sequence`, you can turn a list of Futures into a single Future that contai
 
 ```swift
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ..., future(fibonacci(10))]
-
+    
 fibonacciSequence.sequence().onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
