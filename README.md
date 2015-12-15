@@ -91,7 +91,7 @@ let f = future { () -> Result<NSDate, ReadmeError> in
     if let now = now {
         return Result(value: now)
     }
-
+    
     return Result(error: ReadmeError.TimeServiceError)
 }
 
@@ -108,12 +108,12 @@ Now let's assume the role of an API author who wants to use BrightFutures. The '
 ```swift
 func asyncCalculation() -> Future<String, NoError> {
     let promise = Promise<String, NoError>()
-
+    
     Queue.global.async {
         // do a complicated task and then hand the result to the promise:
         promise.success("forty-two")
     }
-
+    
     return promise.future
 }
 ```
@@ -215,7 +215,7 @@ Folding a list of Futures is not very convenient with the built-in `fold` functi
 
 ```swift
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ...,  future(fibonacci(10))]
-
+    
 // 1+1+2+3+5+8+13+21+34+55
 fibonacciSequence.fold(0, f: { $0 + $1 }).onSuccess { sum in
     // sum is 143
