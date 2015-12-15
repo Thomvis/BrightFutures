@@ -91,7 +91,7 @@ let f = future { () -> Result<NSDate, ReadmeError> in
     if let now = now {
         return Result(value: now)
     }
-    
+
     return Result(error: ReadmeError.TimeServiceError)
 }
 
@@ -108,12 +108,12 @@ Now let's assume the role of an API author who wants to use BrightFutures. The '
 ```swift
 func asyncCalculation() -> Future<String, NoError> {
     let promise = Promise<String, NoError>()
-    
+
     Queue.global.async {
         // do a complicated task and then hand the result to the promise:
         promise.success("forty-two")
     }
-    
+
     return promise.future
 }
 ```
@@ -227,7 +227,7 @@ With `sequence`, you can turn a list of Futures into a single Future that contai
 
 ```swift
 let fibonacciSequence = [future(fibonacci(1)), future(fibonacci(2)), ..., future(fibonacci(10))]
-    
+
 fibonacciSequence.sequence().onSuccess { fibNumbers in
     // fibNumbers is an array of Ints: [1, 1, 2, 3, etc.]
 }
@@ -260,10 +260,10 @@ If you want to have custom threading behavior, skip do do not the section. next 
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
 
 ```swift
-let f = future(ImmediateExecutionContext) {
+let f = future(context: ImmediateExecutionContext) {
     fibonacci(10)
 }
-    
+
 f.onComplete(Queue.main.context) { value in
     // update the UI, we're on the main thread
 }
