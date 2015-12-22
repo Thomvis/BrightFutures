@@ -82,6 +82,22 @@ public extension AsyncType where Value: ResultType, Value.Error == AnyError {
     
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
+    /// If the given closure throws, returns an error
+    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
+    public func recover(context c: ExecutionContext = DefaultThreadingModel(), task: ErrorType throws -> Value.Value) -> Future<Value.Value, AnyError> {
+        return self.recoverWith(context: c) { error -> Future<Value.Value, AnyError> in
+            do {
+                return Future<Value.Value, AnyError>(value: try task(error))
+            } catch let e as AnyError {
+                return Future<Value.Value, AnyError>(error: e)
+            } catch let e {
+                return Future<Value.Value, AnyError>(error: AnyError(cause: e))
+            }
+        }
+    }
+    
+    /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
+    /// when it is invoked with the error that this future failed with.
     /// This function should be used in cases where there are two asynchronous operations where the second operation (returned from the given closure)
     /// should only be executed if the first (this future) fails.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
@@ -113,7 +129,6 @@ public extension AsyncType where Value: ResultType {
     /// See `map<U>(context c: ExecutionContext, f: (T) -> U) -> Future<U>`
     ///
     /// If the given closure throws, returns an error
-    /// For now method name is temporary tryMap, because swift compiler can not recognise throwing closures sometimes (temporary solution)
     /// The given closure is executed according to the default threading model (see README.md)
     public func map<U>(f: Value.Value throws -> U) -> Future<U, AnyError> {
         return self.map(DefaultThreadingModel(), f: f)
@@ -122,7 +137,6 @@ public extension AsyncType where Value: ResultType {
     /// Returns a future that succeeds with the value returned from the given closure when it is invoked with the success value
     /// from this future. If this future fails, the returned future fails with the same error.
     /// If the given closure throws, returns an error
-    /// For now method name is temporary tryMap, because swift compiler can not recognise throwing closures sometimes (temporary solution)
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func map<U>(context: ExecutionContext, f: Value.Value throws -> U) -> Future<U, AnyError> {
         return self.mapError(context) { e in
@@ -132,7 +146,7 @@ public extension AsyncType where Value: ResultType {
     
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
-    /// For now method name is temporary tryRecover, because swift compiler can not recognise throwing closures sometimes (temporary solution)
+    /// If the given closure throws, returns an error
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     public func recover(context c: ExecutionContext = DefaultThreadingModel(), task: Value.Error throws -> Value.Value) -> Future<Value.Value, AnyError> {
         return self.recoverWith(context: c) { error -> Future<Value.Value, AnyError> in

@@ -11,6 +11,9 @@
 		651586991C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
 		6515869A1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
 		6515869B1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
+		65DF1DC91C29D7730030785A /* BrightFuturesAnyErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DF1DC81C29D7730030785A /* BrightFuturesAnyErrorTests.swift */; };
+		65DF1DCA1C29D7730030785A /* BrightFuturesAnyErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DF1DC81C29D7730030785A /* BrightFuturesAnyErrorTests.swift */; };
+		65DF1DCB1C29D7730030785A /* BrightFuturesAnyErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DF1DC81C29D7730030785A /* BrightFuturesAnyErrorTests.swift */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
@@ -158,6 +161,7 @@
 
 /* Begin PBXFileReference section */
 		651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType+AnyError.swift"; sourceTree = "<group>"; };
+		65DF1DC81C29D7730030785A /* BrightFuturesAnyErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFuturesAnyErrorTests.swift; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
@@ -360,6 +364,7 @@
 			isa = PBXGroup;
 			children = (
 				E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */,
+				65DF1DC81C29D7730030785A /* BrightFuturesAnyErrorTests.swift */,
 				E9B377311BD19457007170ED /* PromiseTests.swift */,
 				E9319EA31A397D2C00A0604A /* QueueTests.swift */,
 				E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */,
@@ -664,6 +669,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65DF1DCB1C29D7730030785A /* BrightFuturesAnyErrorTests.swift in Sources */,
 				E98647C71BF3288D00B6BEEE /* InvalidationTokenTests.swift in Sources */,
 				E98647C31BF3288D00B6BEEE /* BrightFuturesTests.swift in Sources */,
 				E98647C81BF3288D00B6BEEE /* ErrorsTests.swift in Sources */,
@@ -726,6 +732,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65DF1DCA1C29D7730030785A /* BrightFuturesAnyErrorTests.swift in Sources */,
 				E9B377331BD19457007170ED /* PromiseTests.swift in Sources */,
 				E99397C51BAD49EC00A0B077 /* NSOperationQueueTests.swift in Sources */,
 				E9E422C71B1FA28F0000558F /* ErrorsTests.swift in Sources */,
@@ -765,6 +772,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65DF1DC91C29D7730030785A /* BrightFuturesAnyErrorTests.swift in Sources */,
 				E9B377321BD19457007170ED /* PromiseTests.swift in Sources */,
 				E99397C41BAD49EC00A0B077 /* NSOperationQueueTests.swift in Sources */,
 				E9E422C61B1FA28F0000558F /* ErrorsTests.swift in Sources */,
