@@ -75,7 +75,7 @@ public class Async<Value>: AsyncType {
     /// Adds the given closure as a callback for when the Async completes. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onComplete(context: ExecutionContext = DefaultThreadingModel(), callback: Value -> Void) -> Self {
+    public func onComplete(context: ExecutionContext = DefaultThreadingModel.context, callback: Value -> Void) -> Self {
         let wrappedCallback : Value -> Void = { [weak self] value in
             let a = self // this is a workaround for a compiler segfault
             
