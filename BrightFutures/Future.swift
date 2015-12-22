@@ -108,7 +108,7 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) -> Future<T, NoError> {
-    return lhs.recover(context: DefaultThreadingModel(), task: { _ in
+    return lhs.recover(context: DefaultThreadingModel.context, task: { _ in
         return rhs()
     })
 }
@@ -116,7 +116,7 @@ public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) ->
 /// Short-hand for `lhs.recoverWith(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> Future<T, E1>) -> Future<T, E1> {
-    return lhs.recoverWith(context: DefaultThreadingModel(), task: { _ in
+    return lhs.recoverWith(context: DefaultThreadingModel.context, task: { _ in
         return rhs()
     })
 }

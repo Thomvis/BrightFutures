@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		346151721C2A063800C5E9F8 /* DefaultThreadingModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346151711C2A063800C5E9F8 /* DefaultThreadingModelTests.swift */; };
+		346151731C2A063800C5E9F8 /* DefaultThreadingModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346151711C2A063800C5E9F8 /* DefaultThreadingModelTests.swift */; };
+		346151741C2A063800C5E9F8 /* DefaultThreadingModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346151711C2A063800C5E9F8 /* DefaultThreadingModelTests.swift */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
@@ -153,6 +156,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		346151711C2A063800C5E9F8 /* DefaultThreadingModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultThreadingModelTests.swift; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
@@ -363,6 +367,7 @@
 				E9F69BA11B93384800713A91 /* SemaphoreTests.swift */,
 				E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */,
 				E9DF0825194470060083F7F2 /* Supporting Files */,
+				346151711C2A063800C5E9F8 /* DefaultThreadingModelTests.swift */,
 			);
 			path = BrightFuturesTests;
 			sourceTree = "<group>";
@@ -665,6 +670,7 @@
 				E98647C51BF3288D00B6BEEE /* QueueTests.swift in Sources */,
 				E98647C61BF3288D00B6BEEE /* ResultTests.swift in Sources */,
 				E98647CA1BF3288D00B6BEEE /* SemaphoreTests.swift in Sources */,
+				346151741C2A063800C5E9F8 /* DefaultThreadingModelTests.swift in Sources */,
 				E98647C41BF3288D00B6BEEE /* PromiseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -725,6 +731,7 @@
 				E9D45B221AF00676000F6CA7 /* QueueTests.swift in Sources */,
 				E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9D45B231AF00676000F6CA7 /* ResultTests.swift in Sources */,
+				346151731C2A063800C5E9F8 /* DefaultThreadingModelTests.swift in Sources */,
 				E9F69BA31B93384800713A91 /* SemaphoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -763,6 +770,7 @@
 				E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */,
 				E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */,
+				346151721C2A063800C5E9F8 /* DefaultThreadingModelTests.swift in Sources */,
 				E9F69BA21B93384800713A91 /* SemaphoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1212,6 +1220,7 @@
 				E98647AF1BF327E400B6BEEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E98647B31BF327E400B6BEEE /* Build configuration list for PBXNativeTarget "BrightFutures-tvOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1220,6 +1229,7 @@
 				E98647B11BF327E400B6BEEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9CBFD171B8268FB00702394 /* Build configuration list for PBXNativeTarget "BrightFutures-watchOS" */ = {
 			isa = XCConfigurationList;

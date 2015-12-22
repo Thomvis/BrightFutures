@@ -50,9 +50,22 @@ public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
     return Queue(queue: queue).context
 }
 
-typealias ThreadingModel = () -> ExecutionContext
+/// Defines BrightFutures' default threading behaviour, by default this is
+/// set to `StandardThreadingModel.AsynchronousOnCurrentThread`
+public var DefaultThreadingModel: StandardThreadingModel = .AsynchronousOnCurrentThread
 
-var DefaultThreadingModel: ThreadingModel = defaultContext
+/// Defines the possibilities for setting the `DefaultThreadingModel`.
+public enum StandardThreadingModel {
+    case AsynchronousOnCurrentThread
+    case Synchronous
+    
+    internal var context: ExecutionContext {
+        switch self {
+        case .AsynchronousOnCurrentThread: return defaultContext()
+        case .Synchronous: return { task in task() }
+        }
+    }
+}
 
 /// Defines BrightFutures' default threading behavior:
 /// - if on the main thread, `Queue.main.context` is returned
