@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		651586981C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
+		651586991C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
+		6515869A1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
+		6515869B1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
@@ -153,6 +157,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType+AnyError.swift"; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
@@ -332,6 +337,7 @@
 				E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */,
 				E9DD4EF01B4ED6850070C2AF /* Async.swift */,
 				E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */,
+				651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */,
 				E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */,
 				E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */,
 				E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */,
@@ -650,6 +656,7 @@
 				E98647BF1BF3288400B6BEEE /* MutableAsyncType+ResultType.swift in Sources */,
 				E98647C11BF3288400B6BEEE /* SequenceType+BrightFutures.swift in Sources */,
 				E98647BA1BF3288400B6BEEE /* Errors.swift in Sources */,
+				6515869B1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,6 +695,7 @@
 				E9877CB91B826AA5009DB030 /* Semaphore.swift in Sources */,
 				E9877CBC1B826AA5009DB030 /* Async.swift in Sources */,
 				E9877CB61B826AA5009DB030 /* Promise.swift in Sources */,
+				6515869A1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +718,7 @@
 				E992A9601B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */,
 				E9D45B201AF00670000F6CA7 /* Semaphore.swift in Sources */,
 				E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */,
+				651586991C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -748,6 +757,7 @@
 				E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */,
 				E992A95F1B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */,
 				E9DF0838194470190083F7F2 /* Queue.swift in Sources */,
+				651586981C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1212,6 +1222,7 @@
 				E98647AF1BF327E400B6BEEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E98647B31BF327E400B6BEEE /* Build configuration list for PBXNativeTarget "BrightFutures-tvOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1220,6 +1231,7 @@
 				E98647B11BF327E400B6BEEE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9CBFD171B8268FB00702394 /* Build configuration list for PBXNativeTarget "BrightFutures-watchOS" */ = {
 			isa = XCConfigurationList;

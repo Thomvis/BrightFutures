@@ -35,6 +35,20 @@ public func ==(lhs: NoError, rhs: NoError) -> Bool {
 /// Extends `NoError` to conform to `ErrorType`
 extension NoError: ErrorType {}
 
+
+/// Represents a wrapper over any error that can happen. Can be nested
+public struct AnyError {
+    public let cause:ErrorType
+    
+    public init(cause:ErrorType) {
+        self.cause = cause
+    }
+}
+
+/// Extends `AnyError` to conform to `ErrorType`
+extension AnyError : ErrorType {
+}
+
 /// An enum representing every possible error for errors returned by BrightFutures
 /// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
 /// in its `External` case. `BrightFuturesError` has the type of the external error as its generic parameter.
