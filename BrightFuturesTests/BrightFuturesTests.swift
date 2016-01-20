@@ -1148,6 +1148,130 @@ extension BrightFuturesTests {
     
 }
 
+// MARK: Functional Composition
+/**
+* This extension contains all tests related to completionHandler()
+*/
+extension BrightFuturesTests {
+
+    func testCompletionHandlerWithValue() {
+        let e = self.expectation()
+        
+        let future = Future<Int, BrightFuturesError<NSError>>()
+        
+        let handler = future.completionHandler()
+        handler(5, nil)
+        future.onSuccess { value in
+            e.fulfill()
+        }
+        future.onFailure { err in
+            XCTFail("Must not failed")
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testCompletionHandlerWithError() {
+        let e = self.expectation()
+        
+        let future = Future<Int, BrightFuturesError<NSError>>()
+        
+        let handler = future.completionHandler()
+        
+        let error = NSError(domain: "test", code: 0, userInfo: nil)
+        handler(nil, error)
+        future.onSuccess { value in
+            XCTFail("Must not succeed")
+        }
+        future.onFailure { (err: BrightFuturesError) in
+            switch err {
+            case .External(let e):
+                XCTAssertEqual(error, e)
+            default:
+                XCTFail("Wrong error type \(err)")
+            }
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testCompletionHandlerNilNilError() {
+        let e = self.expectation()
+        
+        let future = Future<Int, BrightFuturesError<NSError>>()
+        
+        let handler = future.completionHandler()
+        handler(nil, nil)
+        future.onSuccess { value in
+            XCTFail("Must not succeed")
+        }
+        future.onFailure { err in
+              e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testCompletionHandlerInitWithValue() {
+        let e = self.expectation()
+
+        let future = Future<Int, BrightFuturesError<NSError>>{
+            self.methodWithCompletionHandler(1, error: nil, completionHandler: $0)
+        }
+        future.onSuccess { value in
+            e.fulfill()
+        }
+        future.onFailure { err in
+            XCTFail("Must not failed")
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testCompletionHandlerInitWithError() {
+        let e = self.expectation()
+        
+        let error = NSError(domain: "test", code: 0, userInfo: nil)
+      
+        let future = Future<Int, BrightFuturesError<NSError>>{
+            self.methodWithCompletionHandler(nil, error: error, completionHandler: $0)
+        }
+        
+        future.onSuccess { value in
+            XCTFail("Must not succeed")
+        }
+        future.onFailure { (err: BrightFuturesError) in
+            switch err {
+            case .External(let e):
+                XCTAssertEqual(error, e)
+            default:
+                XCTFail("Wrong error type \(err)")
+            }
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testCompletionHandlerInitNilNilError() {
+        let e = self.expectation()
+        
+        let future = Future<Int, BrightFuturesError<NSError>>{
+            self.methodWithCompletionHandler(nil, error: nil, completionHandler: $0)
+        }
+        future.onSuccess { value in
+            XCTFail("Must not succeed")
+        }
+        future.onFailure { err in
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+}
+
 /**
  * This extension contains utility methods used in the tests above
  */
@@ -1168,6 +1292,11 @@ extension XCTestCase {
             usleep(arc4random_uniform(100))
             return Result(value: val)
         }
+    }
+    
+    
+    func methodWithCompletionHandler(value: Int?, error: NSError?, completionHandler: (value: Int?, error: NSError?) -> Void) {
+        completionHandler(value: value, error: error)
     }
 }
 
