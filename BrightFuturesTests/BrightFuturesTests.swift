@@ -1148,6 +1148,69 @@ extension BrightFuturesTests {
     
 }
 
+// MARK: Functional Composition
+/**
+* This extension contains all tests related to completionHandler()
+*/
+extension BrightFuturesTests {
+    
+    
+    func testCompletionHandlerWithValue() {
+        let e = self.expectation()
+        
+        let promise = Promise<Int, NSError>()
+        
+        let handler = promise.completionHandler()
+        handler(5, nil)
+        promise.future.onSuccess { value in
+            e.fulfill()
+        }
+        promise.future.onFailure { err in
+            XCTFail("Must not failed")
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testCompletionHandlerWithError() {
+        let e = self.expectation()
+        
+        let promise = Promise<Int, NSError>()
+        
+        let handler = promise.completionHandler()
+        
+        let error = NSError(domain: "test", code: 0, userInfo: nil)
+        handler(nil, error)
+        promise.future.onSuccess { value in
+            XCTFail("Must not succeed")
+        }
+        promise.future.onFailure { err in
+            XCTAssertEqual(error, err)
+            e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+    func testCompletionHandlerNilNilError() {
+        let e = self.expectation()
+        
+        let promise = Promise<Int, NSError>()
+        
+        let handler = promise.completionHandler()
+        handler(nil, nil)
+        promise.future.onSuccess { value in
+            XCTFail("Must not succeed")
+        }
+        promise.future.onFailure { err in
+              e.fulfill()
+        }
+        
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+    
+}
+
 /**
  * This extension contains utility methods used in the tests above
  */

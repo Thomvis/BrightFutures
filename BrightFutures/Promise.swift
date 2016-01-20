@@ -81,3 +81,29 @@ public class Promise<T, E: ErrorType> {
     }
     
 }
+
+extension Promise where E: NSError {
+
+    /// Creates a new promise with a pending future,
+    /// and pass a closure convenient to wrap with asynchronous systems.
+    public convenience init(completionHandled: (((T?, E?) -> Void)) -> Void) {
+        self.init()
+        completionHandled(self.completionHandler())
+    }
+
+    /// Return a closure convenient for asynchronous systems.
+    public func completionHandler() -> ((T?, E?) -> Void) {
+        return { (obj, err) in
+            if let obj = obj {
+                self.success(obj)
+            } else if let err = err {
+                self.failure(err)
+            } else {
+                // closure was called with (nil, nil), assume invalid
+                let userInfo = [NSLocalizedDescriptionKey: "Invalid call of complention closure with (nil, nil)"]
+                self.failure(E(domain: BrightFuturesErrorDomain, code: 1, userInfo: userInfo))
+            }
+        }
+    }
+
+}

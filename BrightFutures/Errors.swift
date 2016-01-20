@@ -22,6 +22,8 @@
 
 import Foundation
 
+public let BrightFuturesErrorDomain: String = "thomvis.brightfutures"
+
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
 public enum NoError {}
