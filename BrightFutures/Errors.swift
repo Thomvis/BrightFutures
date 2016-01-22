@@ -22,8 +22,6 @@
 
 import Foundation
 
-public let BrightFuturesErrorDomain: String = "thomvis.brightfutures"
-
 /// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
 /// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
 public enum NoError {}
@@ -60,5 +58,26 @@ public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError
     case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
     case (.External(let lhs), .External(let rhs)): return lhs == rhs
     default: return false
+    }
+}
+
+// Error type that can be used to create a completion handler, useful to adapt to 
+// future to asynchronous code
+public protocol CompletionHandlerErrorType: ErrorType {
+    typealias ExternalErrorType = ErrorType
+    
+    static var IllegalStateType: Self {get}
+    static func ExternalType(error: ExternalErrorType) -> Self
+}
+
+extension BrightFuturesError: CompletionHandlerErrorType {
+    public typealias ExternalErrorType = E
+
+    public static var IllegalStateType: BrightFuturesError {
+        return .IllegalState
+    }
+
+    public static func ExternalType(error: ExternalErrorType) -> BrightFuturesError {
+        return .External(error)
     }
 }
