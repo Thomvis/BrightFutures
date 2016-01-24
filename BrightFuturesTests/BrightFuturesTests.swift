@@ -316,6 +316,54 @@ extension BrightFuturesTests {
         
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
+    
+    func testWrapCompletionHandlerValueError() {
+        func testCall(val: Int, completionHandler: (Int?, TestError?) -> Void) {
+            if val == 0 {
+                completionHandler(nil, TestError.JustAnError)
+            } else {
+                completionHandler(val, nil)
+            }
+        }
+        
+        let f = future { testCall(2, completionHandler: $0) }
+        XCTAssertEqual(f.value!, 2)
+        
+        let f2 = future { testCall(0, completionHandler: $0) }
+        XCTAssert(f2.error! == .External(TestError.JustAnError))
+    }
+    
+    func testWrapCompletionHandlerValue() {
+        func testCall(val: Int, completionHandler: Int -> Void) {
+            completionHandler(val)
+        }
+        
+        func testCall2(val: Int, completionHandler: Int? -> Void) {
+            completionHandler(nil)
+        }
+        
+        let f = future { testCall(3, completionHandler: $0) }
+        XCTAssertEqual(f.value!, 3)
+        
+        let f2 = future { testCall2(4, completionHandler:  $0) }
+        XCTAssert(f2.value! == nil)
+    }
+    
+    func testWrapCompletionHandlerError() {
+        func testCall(val: Int, completionHandler: TestError? -> Void) {
+            if val == 0 {
+                completionHandler(nil)
+            } else {
+                completionHandler(TestError.JustAnError)
+            }
+        }
+        
+        let f = future { testCall(0, completionHandler: $0) }
+        XCTAssert(f.error == nil)
+        
+        let f2 = future { testCall(2, completionHandler: $0) }
+        XCTAssert(f2.error == TestError.JustAnError)
+    }
 }
 
 // MARK: Functional Composition
