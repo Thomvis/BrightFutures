@@ -142,7 +142,16 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
     public required init(@noescape resolver: (result: Value -> Void) -> Void) {
         super.init(resolver: resolver)
     }
-    
+
+}
+
+public extension Future where E: CompletionHandlerErrorType {
+
+    public convenience init(@noescape resolver: (CompletionHandler) -> Void) {
+        self.init()
+        resolver(self.completionHandler())
+    }
+
 }
 
 /// Short-hand for `lhs.recover(rhs())`

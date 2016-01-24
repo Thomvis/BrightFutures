@@ -6,6 +6,7 @@
 //  Copyright © 2015 Thomas Visser. All rights reserved.
 //
 import Result
+import Foundation
 
 public extension AsyncType where Value: ResultType {
     /// `true` if the future completed with success, or `false` otherwise
@@ -263,3 +264,22 @@ public extension AsyncType where Value: ResultType, Value.Value == NoValue {
     }
 }
 
+public extension Async where Value: ResultType, Value.Error: CompletionHandlerErrorType {
+ 
+    public typealias CompletionHandler = (Value.Value?, Value.Error.ExternalErrorType?) -> Void
+    
+    /// Return a closure convenient for asynchronous systems.
+    public func completionHandler() -> CompletionHandler {
+        return { (obj, err) in
+            if let obj = obj {
+                self.success(obj)
+            } else if let err = err {
+                self.failure(Value.Error.ExternalType(err))
+            } else {
+                // closure was called with (nil, nil), assume invalid
+                self.failure(Value.Error.IllegalStateType)
+            }
+        }
+    }
+
+}

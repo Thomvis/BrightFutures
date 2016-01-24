@@ -60,3 +60,24 @@ public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError
     default: return false
     }
 }
+
+// Error type that can be used to create a completion handler, useful to adapt to 
+// future to asynchronous code
+public protocol CompletionHandlerErrorType: ErrorType {
+    typealias ExternalErrorType = ErrorType
+    
+    static var IllegalStateType: Self {get}
+    static func ExternalType(error: ExternalErrorType) -> Self
+}
+
+extension BrightFuturesError: CompletionHandlerErrorType {
+    public typealias ExternalErrorType = E
+
+    public static var IllegalStateType: BrightFuturesError {
+        return .IllegalState
+    }
+
+    public static func ExternalType(error: ExternalErrorType) -> BrightFuturesError {
+        return .External(error)
+    }
+}
