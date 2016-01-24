@@ -26,7 +26,7 @@ import Result
 /// The source of a future. Create a `Promise` when you are
 /// performing an asynchronous task and want to return a future.
 /// Return the future and keep the promise around to complete it
-/// when the asynchronous operation is completion. Completing a 
+/// when the asynchronous operation is completed. Completing a 
 /// promise is thread safe and is typically performed from the 
 /// (background) thread where the operation itself is also performed.
 public class Promise<T, E: ErrorType> {
