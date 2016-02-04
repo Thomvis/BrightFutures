@@ -256,7 +256,7 @@ A lot of the methods on `Future` accept an optional _execution context_ and a bl
 
 The `future` keyword uses a much simpler threading model. The block (or expression) given to `future` is always executed on the global queue. You can however provide an explicit execution context to override the default behavior.
 
-If you want to have custom threading behavior, skip do do not the section. next [:wink:](https://twitter.com/nedbat/status/194452404794691584)
+If you want to have custom threading behavior, do not skip the next section. [:wink:](https://twitter.com/nedbat/status/194452404794691584)
 
 ## Custom execution contexts
 The default threading behavior can be overridden by providing explicit execution contexts. By default, BrightFutures comes with three contexts: `Queue.main`, `Queue.global`, and `ImmediateExecutionContext`. You can also create your own by implementing the `ExecutionContext` protocol.
