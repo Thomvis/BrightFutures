@@ -101,6 +101,16 @@ public func future<T>(method: (T -> Void) -> Void) -> Future<T, NoError> {
     })
 }
 
+/// Can be used to wrap a typical Result-based API
+/// The completionHandler should have one parameter: A Result Type
+public func future<T, E>(method: ((Result<T, E>) -> Void) -> Void) -> Future<T, E> {
+    return Future(resolver: { completion -> Void in
+        method { result in
+            completion(result)
+        }
+    })
+}
+
 /// A Future represents the outcome of an asynchronous operation
 /// The outcome will be represented as an instance of the `Result` enum and will be stored
 /// in the `result` property. As long as the operation is not yet completed, `result` will be nil.
