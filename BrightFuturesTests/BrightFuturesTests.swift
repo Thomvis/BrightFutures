@@ -364,6 +364,22 @@ extension BrightFuturesTests {
         let f2 = future { testCall(2, completionHandler: $0) }
         XCTAssert(f2.error == TestError.JustAnError)
     }
+    
+    func testWrapResultCompletionHandlerValue() {
+        func testCall(val: Int, completionHandler: Result<Int,NSError> -> Void) {
+            completionHandler(.Success(val))
+        }
+        
+        func testCall2(val: Int, completionHandler: Result<Int,TestError> -> Void) {
+            completionHandler(.Failure(.JustAnError))
+        }
+        
+        let f = future { testCall(3, completionHandler: $0) }
+        XCTAssertEqual(f.value!, 3)
+        
+        let f2 = future { testCall2(4, completionHandler:  $0) }
+        XCTAssert(f2.error! == .JustAnError)
+    }
 }
 
 // MARK: Functional Composition
