@@ -21,19 +21,13 @@
 // SOFTWARE.
 
 import Foundation
-
-/// Can be used as the value type of a `Future` or `Result` to indicate it can never fail.
-/// This is guaranteed by the type system, because `NoError` has no possible values and thus cannot be created.
-public enum NoError {}
+import Result
 
 extension NoError: Equatable { }
 
 public func ==(lhs: NoError, rhs: NoError) -> Bool {
     return true
 }
-
-/// Extends `NoError` to conform to `ErrorType`
-extension NoError: ErrorType {}
 
 /// An enum representing every possible error for errors returned by BrightFutures
 /// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
