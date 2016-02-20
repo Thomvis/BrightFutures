@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		659E80AE1C7831D100DE85B1 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9CBFD0B1B8264E500702394 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		659E80B61C78958800DE85B1 /* Result.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9CBFD091B8264D800702394 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		659E80B81C78961E00DE85B1 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98647CD1BF328B400B6BEEE /* Result.framework */; };
+		659E80BA1C78969A00DE85B1 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = E98647CD1BF328B400B6BEEE /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		651586981C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
 		651586991C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
 		6515869A1C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651586971C29B8830041C5A4 /* AsyncType+ResultType+AnyError.swift */; };
@@ -138,6 +141,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		659E80B91C78968100DE85B1 /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				659E80BA1C78969A00DE85B1 /* Result.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E9F496E21B0397D200F82839 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -145,6 +159,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */,
+				659E80B61C78958800DE85B1 /* Result.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +232,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E98647A71BF327E400B6BEEE /* BrightFutures.framework in Frameworks */,
+				659E80B81C78961E00DE85B1 /* Result.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,6 +463,7 @@
 				E98647A21BF327E400B6BEEE /* Sources */,
 				E98647A31BF327E400B6BEEE /* Frameworks */,
 				E98647A41BF327E400B6BEEE /* Resources */,
+				659E80B91C78968100DE85B1 /* Copy Frameworks */,
 			);
 			buildRules = (
 			);
@@ -865,6 +882,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -881,6 +902,10 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Build/tvOS",
+				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = BrightFuturesTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
