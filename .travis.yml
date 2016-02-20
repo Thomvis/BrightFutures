@@ -11,10 +11,10 @@ before_script:
   # you can remove if you don't have dependencies
   - carthage bootstrap
 script:
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-Mac
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-iOS -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6'
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-tvOS -sdk appletvsimulator -destination 'platform=tvOS Simulator,name=Apple TV 1080p'
-  - xcodebuild build -workspace BrightFutures.xcworkspace -scheme BrightFutures-watchOS -sdk watchsimulator -destination 'platform=watchOS Simulator,name=Apple Watch - 42mm'
+  - xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-Mac
+  - xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-iOS -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6'
+  - xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-tvOS -sdk appletvsimulator -destination 'platform=tvOS Simulator,name=Apple TV 1080p'
+  - xcodebuild build -project BrightFutures.xcodeproj -scheme BrightFutures-watchOS -sdk watchsimulator -destination 'platform=watchOS Simulator,name=Apple Watch - 42mm'
 
 notifications:
   email: true
