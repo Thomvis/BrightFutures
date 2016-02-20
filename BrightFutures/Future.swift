@@ -61,6 +61,46 @@ public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) 
     return future
 }
 
+/// Can be used to wrap a completionHandler-based Cocoa API
+/// The completionHandler should have two parameters: a value and an error.
+public func future<T, E>(method: ((T?, E?) -> Void) -> Void) -> Future<T, BrightFuturesError<E>> {
+    return Future(resolver: { completion -> Void in
+        method { value, error in
+            if let value = value {
+                completion(.Success(value))
+            } else if let error = error {
+                completion(.Failure(.External(error)))
+            } else {
+                completion(.Failure(.IllegalState))
+            }
+        }
+    })
+}
+
+/// Can be used to wrap a typical completionHandler-based Cocoa API
+/// The completionHandler should have one parameter: the error
+public func future<E>(method: ((E?) -> Void) -> Void) -> Future<Void, E> {
+    return Future(resolver: { completion -> Void in
+        method { error in
+            if let error = error {
+                completion(.Failure(error))
+            } else {
+                completion(.Success())
+            }
+        }
+    })
+}
+
+/// Can be used to wrap a typical completionHandler-based Cocoa API
+/// The completionHandler should have one parameter: the value
+public func future<T>(method: (T -> Void) -> Void) -> Future<T, NoError> {
+    return Future(resolver: { completion -> Void in
+        method { value in
+            completion(.Success(value))
+        }
+    })
+}
+
 /// A Future represents the outcome of an asynchronous operation
 /// The outcome will be represented as an instance of the `Result` enum and will be stored
 /// in the `result` property. As long as the operation is not yet completed, `result` will be nil.

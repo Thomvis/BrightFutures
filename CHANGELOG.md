@@ -1,3 +1,8 @@
+# 3.3.0
+- Added three new variants of the `future` free function that enables easy wrapping of completionHandler-based API. Thanks @phimage!
+
+Note: some versions are missing here
+
 # 3.0.0-beta.4
 - The implementation of `mapError` now explicitly uses `ImmediateExecutionContext`, fixing unnecessary asynchronicity
 - Adds `delay(interval: NSTimeInterval)` on `Async`, which produces a new `Async` that completes with the original Async after the given delay
