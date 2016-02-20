@@ -1,6 +1,15 @@
 language: objective-c
 osx_image: xcode7.2
 
+before_install:
+  - brew update
+  - brew unlink carthage
+  - brew install carthage
+  - brew link carthage
+before_script:
+  # bootstrap the dependencies for the project
+  # you can remove if you don't have dependencies
+  - carthage bootstrap
 script:
   - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-Mac
   - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-iOS -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6'
