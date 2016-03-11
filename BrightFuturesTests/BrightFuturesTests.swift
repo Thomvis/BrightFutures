@@ -662,6 +662,43 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
 
+    func testFilterOrElseNoSuchElement() {
+        let e = self.expectation()
+        Future<Int, TestError>(value: 3).filter({ $0 > 5 }, orElse: TestError.JustAnError).onComplete { result in
+            if let err = result.error {
+                XCTAssert(err == TestError.JustAnError, "filter should yield the orElse error")
+            }
+
+            e.fulfill()
+        }
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testFilterOrElsePasses() {
+        let e = self.expectation()
+        Future<String, TestError>(value: "Thomas").filter({ $0.hasPrefix("Th") }, orElse: TestError.JustAnError).onComplete { result in
+            if let val = result.value {
+                XCTAssert(val == "Thomas", "Filter should pass")
+            }
+
+            e.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
+    func testFilterOrElseFailedFuture() {
+        let f = Future<Int, TestError>(error: TestError.JustAnError)
+
+        let e = self.expectation()
+        f.filter({ _ in false }, orElse: TestError.JustAnotherError).onFailure { error in
+            XCTAssert(error == TestError.JustAnError)
+            e.fulfill()
+        }
+
+        self.waitForExpectationsWithTimeout(2, handler: nil)
+    }
+
     func testForcedFuture() {
         var x = 10
         let f: Future<Void, NoError> = future { () -> Void in
