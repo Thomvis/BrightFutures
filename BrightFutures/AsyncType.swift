@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol AsyncType {
-    typealias Value
+    associatedtype Value
     
     var result: Value? { get }
     
