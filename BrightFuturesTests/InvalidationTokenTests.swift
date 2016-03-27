@@ -8,6 +8,7 @@
 
 import XCTest
 import BrightFutures
+import Result
 
 class InvalidationTokenTests: XCTestCase {
 
@@ -120,7 +121,7 @@ class InvalidationTokenTests: XCTestCase {
             
             q.sync {
                 token.invalidate()
-                counter.i++
+                counter.i += 1
             }
         }
         
