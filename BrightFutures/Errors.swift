@@ -23,12 +23,6 @@
 import Foundation
 import Result
 
-extension NoError: Equatable { }
-
-public func ==(lhs: NoError, rhs: NoError) -> Bool {
-    return true
-}
-
 /// An enum representing every possible error for errors returned by BrightFutures
 /// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
 /// in its `External` case. `BrightFuturesError` has the type of the external error as its generic parameter.
@@ -53,4 +47,8 @@ public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError
     case (.External(let lhs), .External(let rhs)): return lhs == rhs
     default: return false
     }
+}
+
+public func ==(lhs: BrightFuturesError<NoError>, rhs: BrightFuturesError<NoError>) -> Bool {
+    return true
 }
