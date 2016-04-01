@@ -105,7 +105,7 @@ f.onSuccess { value in
 }
 ```
 
-The future block needs an explict type because the Swift compiler is not able to deduce the type of multi-statement blocks. `ReadmeError` is an enum consisting of all errors that can happen in this readme.
+The future block needs an explicit type because the Swift compiler is not able to deduce the type of multi-statement blocks. `ReadmeError` is an enum consisting of all errors that can happen in this readme.
 
 ## Providing Futures
 Now let's assume the role of an API author who wants to use BrightFutures. The 'producer' of a future is called a `Promise`. A promise contains a future that you can immediately hand to the client. The promise is kept around while performing the asynchronous operation, until calling `Promise.success(result)` or `Promise.failure(error)` when the operation ended. Futures can only be completed through a Promise.
