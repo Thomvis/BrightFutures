@@ -17,22 +17,25 @@ BrightFutures 3.0 is now available! Major parts of the framework have been rewri
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
-Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
 
-```rb
-pod 'BrightFutures'
-```
+1. Add the following to your [Podfile](http://guides.cocoapods.org/using/the-podfile.html):
 
-Make sure that you are integrating your dependencies using frameworks: add `use_frameworks!` to your Podfile. Then run `pod install`.
+    ```rb
+    pod 'BrightFutures'
+    ```
+
+2. Integrate your dependencies using frameworks: add `use_frameworks!` to your Podfile. 
+3. Run `pod install`.
 
 ### [Carthage](https://github.com/Carthage/Carthage)
-Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
 
-```
-github "Thomvis/BrightFutures"
-```
+1. Add the following to your [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#cartfile):
 
-Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
+    ```
+    github "Thomvis/BrightFutures"
+    ```
+
+2. Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ## Documentation
 - API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
