@@ -152,7 +152,7 @@ let f = Future<Int, NoError>(value: 4).andThen { result in
 
 ### map
 
-`map` returns a new Future that contains the error from this Future if this Future failed, or the return value from the given closure that was applied to the value of this Future. There's also a `flatMap` function that can be used to map the result of a future to the value of a new Future.
+`map` returns a new Future that contains the error from this Future if this Future failed, or the return value from the given closure that was applied to the value of this Future.
 
 ```swift
 future {
@@ -166,6 +166,22 @@ future {
     sizeString == "large"
 }.onSuccess { numberIsLarge in
     // numberIsLarge is true
+}
+```
+
+### flatMap
+
+`flatMap` is used to map the result of a future to the value of a new Future.
+
+```swift
+future {
+    fibonacci(10)
+}.flatMap { number in
+    future {
+        fibonacci(number)
+    }
+}.onSuccess { largeNumber in
+    // largeNumber is 139583862445
 }
 ```
 
