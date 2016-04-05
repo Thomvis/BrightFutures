@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Result
 
 /// The type that all invalidation tokens conform to
 public protocol InvalidationTokenType {

@@ -8,6 +8,7 @@
 
 import XCTest
 import BrightFutures
+import Result
 
 class InvalidationTokenTests: XCTestCase {
 
