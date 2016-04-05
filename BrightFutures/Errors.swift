@@ -49,6 +49,12 @@ public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError
     }
 }
 
+/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
 public func ==(lhs: BrightFuturesError<NoError>, rhs: BrightFuturesError<NoError>) -> Bool {
-    return true
+    switch (lhs, rhs) {
+    case (.NoSuchElement, .NoSuchElement): return true
+    case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
+    case (.External(_), .External(_)): return true // this cannot happen because NoError cannot be instantiated
+    default: return false
+    }
 }
