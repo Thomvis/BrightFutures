@@ -92,9 +92,7 @@ While this is really short and simple, it is equally limited. In many cases, you
 
 ```swift
 enum ReadmeError: ErrorType {
-    case
-    RequestFailed,
-    TimeServiceError
+    case RequestFailed, TimeServiceError
 }
 
 let f = future { () -> Result<NSDate, ReadmeError> in
