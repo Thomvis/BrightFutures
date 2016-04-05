@@ -425,14 +425,22 @@ extension BrightFuturesTests {
     func testMapSuccess() {
         let e = self.expectation()
         
-        future {
+        // Had to split here to lets. It feels like swift compiler has a bug and can not do this chain in full
+        // Hopefully they will resolve the issue in the next versions and soon enough
+        // No details (like particular types) were added on top though
+        // Actually it still is quite a rare case when you map a just created future
+        let f = future {
             fibonacci(10)
-        }.map { value -> String in
+        }
+            
+        let mapped = f.map { value -> String in
             if value > 5 {
                 return "large"
             }
             return "small"
-        }.map { sizeString -> Bool in
+        }
+            
+        mapped.map { sizeString -> Bool in
             return sizeString == "large"
         }.onSuccess { numberIsLarge in
             XCTAssert(numberIsLarge)
@@ -452,7 +460,7 @@ extension BrightFuturesTests {
             XCTAssert(false, "map should not be evaluated because of failure above")
         }.map { number in
             XCTAssert(false, "this map should also not be evaluated because of failure above")
-        }.onFailure { error in
+        }.onFailure { (error:NSError) -> Void in
             XCTAssert(error.domain == "Tests")
             e.fulfill()
         }
@@ -485,9 +493,15 @@ extension BrightFuturesTests {
     func testSkippedRecover() {
         let e = self.expectation()
         
-        future { _ in
+        // Had to split here to let. It feels like swift compiler has a bug and can not do this chain in full
+        // Hopefully they will resolve the issue in the next versions and soon enough
+        // No details (like particular types) were added on top though
+        // Actually it still is quite a rare case when you recover a just created future
+        let f = future {
             3
-        }.recover { _ in
+        }
+        
+        f.recover { _ in
             XCTFail("recover task should not be executed")
             return 5
         }.onSuccess { value in
