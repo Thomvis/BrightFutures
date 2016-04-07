@@ -22,6 +22,7 @@
 
 import XCTest
 import BrightFutures
+import Result
 
 class QueueTests: XCTestCase {
 
@@ -40,7 +41,7 @@ class QueueTests: XCTestCase {
     func testSync() {
         var i = 1
         Queue.global.sync {
-            i++
+            i += 1
         }
         XCTAssert(i == 2, "sync should execute the block synchronously")
     }

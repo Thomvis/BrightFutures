@@ -786,7 +786,7 @@ extension BrightFuturesTests {
         f.onSuccess { fibSeq in
             XCTAssertEqual(fibSeq.count, n)
             
-            for var i = 0; i < fibSeq.count; i++ {
+            for i in 0 ..< fibSeq.count {
                 XCTAssertEqual(fibSeq[i], fibonacci(i+1))
             }
             e.fulfill()
@@ -1124,12 +1124,12 @@ extension BrightFuturesTests {
             p.future.onComplete(Queue.global.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
-                executingCallbacks++
+                executingCallbacks += 1
                 
                 // sleep a bit to increase the chances of other callback blocks executing
                 NSThread.sleepForTimeInterval(0.06)
                 
-                executingCallbacks--
+                executingCallbacks -= 1
                 
                 e.fulfill()
             }
@@ -1138,12 +1138,12 @@ extension BrightFuturesTests {
             p.future.onComplete(Queue.main.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
-                executingCallbacks++
+                executingCallbacks += 1
                 
                 // sleep a bit to increase the chances of other callback blocks executing
                 NSThread.sleepForTimeInterval(0.06)
                 
-                executingCallbacks--
+                executingCallbacks -= 1
                 
                 e1.fulfill()
             }
