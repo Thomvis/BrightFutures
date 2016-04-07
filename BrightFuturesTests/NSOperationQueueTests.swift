@@ -22,12 +22,12 @@ class NSOperationQueueTests: XCTestCase {
             let e = self.expectation()
             queue.context {
                 sem.execute {
-                    i++
+                    i += 1
                 }
                 XCTAssert(i <= queue.maxConcurrentOperationCount)
                 
                 sem.execute {
-                    i--
+                    i -= 1
                 }
                 XCTAssert(i >= 0)
                 
