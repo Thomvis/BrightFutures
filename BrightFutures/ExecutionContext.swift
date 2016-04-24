@@ -40,6 +40,32 @@ public let ImmediateOnMainExecutionContext: ExecutionContext = { task in
     }
 }
 
+/// From https://github.com/BoltsFramework/Bolts-Swift/blob/5fe4df7acb384a93ad93e8595d42e2b431fdc266/Sources/BoltsSwift/Executor.swift#L56
+public let MaxStackDepthExecutionContext: ExecutionContext = { task in
+    struct Static {
+        static let taskDepthKey = "com.bolts.TaskDepthKey"
+        static let maxTaskDepth = 20
+    }
+    
+    let localThreadDictionary = NSThread.currentThread().threadDictionary
+    
+    var previousDepth: Int
+    if let depth = localThreadDictionary[Static.taskDepthKey] as? Int {
+        previousDepth = depth
+    } else {
+        previousDepth = 0
+    }
+    
+    if previousDepth > 20 {
+        Queue.global.async(task)
+    } else {
+        localThreadDictionary[Static.taskDepthKey] = previousDepth + 1
+        task()
+        localThreadDictionary[Static.taskDepthKey] = previousDepth
+    }
+}
+
+
 /// Creates an asynchronous ExecutionContext bound to the given queue
 public func toContext(queue: Queue) -> ExecutionContext {
     return queue.context

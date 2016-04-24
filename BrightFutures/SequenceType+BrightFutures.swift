@@ -63,7 +63,7 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// in the given context.
     public func fold<R>(context: ExecutionContext, zero: R, f: (R, Generator.Element.Value.Value) -> R) -> Future<R, Generator.Element.Value.Error> {
         return reduce(Future<R, Generator.Element.Value.Error>(value: zero)) { zero, elem in
-            return zero.flatMap(ImmediateExecutionContext) { zeroVal in
+            return zero.flatMap(MaxStackDepthExecutionContext) { zeroVal in
                 elem.map(context) { elemVal in
                     return f(zeroVal, elemVal)
                 }

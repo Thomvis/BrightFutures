@@ -863,6 +863,30 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testUtilsLargeSequence() {
+        let promises = (1...500).map { _ in Promise<Int,NoError>() }
+        let futures = promises.map { $0.future }
+        
+        let e = self.expectation()
+        
+        
+        futures.sequence().onSuccess { nums in
+            for (index, num) in nums.enumerate() {
+                XCTAssertEqual(index, num)
+            }
+            
+            e.fulfill()
+        }
+        
+        for (i, promise) in promises.enumerate() {
+            Queue.global.async {
+                promise.success(i)
+            }
+        }
+        
+        self.waitForExpectationsWithTimeout(10, handler: nil)
+    }
+    
     func testUtilsFold() {
         // create a list of Futures containing the Fibonacci sequence
         let fibonacciList = (1...10).map { val in
