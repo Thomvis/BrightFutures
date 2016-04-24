@@ -1,3 +1,7 @@
+# 4.0.0-beta.2
+- Breaking: `SequenceType.fold(_:zero:f:)` and methods that use it (such as `SequenceType.traverse(_:f:)` and `SequenceType.sequence()`) are now slightly more asynchronous: to prevent stack overflows, after a certain number of items, it will perform an asynchronous call.
+- Fixed stack overflow when using `sequence()` or `traverse()` on large sequences.
+
 # 3.3.0
 - Added three new variants of the `future` free function that enables easy wrapping of completionHandler-based API. Thanks @phimage!
 
