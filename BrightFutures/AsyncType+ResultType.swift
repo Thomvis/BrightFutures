@@ -173,7 +173,7 @@ public extension AsyncType where Value: ResultType {
     /// Returns a future that succeeds with the value that this future succeeds with if it passes the test
     /// (i.e. the given closure returns `true` when invoked with the success value) or an error with code
     /// `ErrorCode.NoSuchElement` if the test failed.
-    /// If this future fails, the returned future fails with the same error.
+    /// If this future fails, the returned future fails with a `BrightFuturesError` wrapping the original error.
     public func filter(p: Value.Value -> Bool) -> Future<Value.Value, BrightFuturesError<Value.Error>> {
         return self.mapError(ImmediateExecutionContext) { error -> BrightFuturesError<Value.Error> in
             return BrightFuturesError(external: error)
@@ -185,7 +185,20 @@ public extension AsyncType where Value: ResultType {
             }
         }
     }
-    
+
+    /// Returns a future that succeeds with the value that this future succeeds with if it passes the test
+    /// (i.e. the given closure returns `true` when invoked with the success value) or the error passed in the test failed.
+    /// If this future fails, the returned future fails with the original error.
+    public func filter(p: Value.Value -> Bool, orElse error: Value.Error) -> Future<Value.Value, Value.Error> {
+        return self.flatMap(ImmediateExecutionContext) { value -> Result<Value.Value, Value.Error> in
+            if p(value) {
+                return Result(value)
+            } else {
+                return Result(error: error)
+            }
+        }
+    }
+
     /// Returns a new future with the new type.
     /// The value or error will be casted using `as!` and may cause a runtime error
     public func forceType<U, E1>() -> Future<U, E1> {
