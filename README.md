@@ -13,7 +13,7 @@ The stability of BrightFutures has been proven through extensive use in producti
 ## Latest news
 [![Travis CI build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
-BrightFutures 3.0 is now available! Major parts of the framework have been rewritten for Swift 2 in order to leverage its power and provide the best compatibility. Please check the [Migration guide](Documentation/Migration_3.0.md) for help on how to migrate your project to BrightFutures 3.0.
+BrightFutures 4.0 is now available! This update adds Swift 2.2 compatibility and contains a few minor breaking changes that should require only a little bit of work in projects upgrading from BrightFutures 3.x. Please check the [Migration guide](Documentation/Migration_4.0.md) for help on how to migrate your project to BrightFutures 4.0.
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
