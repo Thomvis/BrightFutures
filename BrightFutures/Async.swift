@@ -8,10 +8,22 @@
 
 import Foundation
 
+/// Implementation of the `AsyncType` protocol
+/// `Async` represents the result of an asynchronous operation
+/// and is typically returned from a method that initiates that
+/// asynchronous operation.
+/// Clients of that method receive the `Async` and can use it
+/// to register a callback for when the result of the asynchronous
+/// operation comes in.
+/// 
+/// This class is often not used directly. Instead, its subclass
+/// `Future` is used.
 public class Async<Value>: AsyncType {
 
     typealias CompletionCallback = Value -> Void
     
+    /// The actual result of the operation that the receiver represents or
+    /// `.None` if the operation is not yet completed.
     public private(set) var result: Value? {
         willSet {
             assert(result == nil)
@@ -35,24 +47,38 @@ public class Async<Value>: AsyncType {
     private let callbackExecutionSemaphore = Semaphore(value: 1);
     private var callbacks = [CompletionCallback]()
     
+    /// Creates an uncompleted `Async`
     public required init() {
         
     }
     
+    /// Creates an `Async` that is completed with the given result
     public required init(result: Value) {
         self.result = result
     }
     
+    /// Creates an `Async` that will be completed with the given result after the specified delay
     public required init(result: Value, delay: NSTimeInterval) {
         Queue.global.after(TimeInterval.In(delay)) {
             self.complete(result)
         }
     }
     
+    /// Creates an `Async` that is completed when the given other `Async` is completed
     public required init<A: AsyncType where A.Value == Value>(other: A) {
         completeWith(other)
     }
     
+    /// Creates an `Async` that can be completed by calling the `result` closure passed to
+    /// the `resolver`. Example:
+    ///
+    ///     Async { res in
+    ///         Queue.async {
+    ///             // do some work
+    ///             res(42) // complete the async with result '42'
+    ///         }
+    ///     }
+    ///
     public required init(@noescape resolver: (result: Value -> Void) -> Void) {
         resolver { val in
             self.complete(val)

@@ -28,9 +28,16 @@ import Result
 /// in its `External` case. `BrightFuturesError` has the type of the external error as its generic parameter.
 public enum BrightFuturesError<E: ErrorType>: ErrorType {
     
+    /// Indicates that a matching element could not be found, e.g. while filtering or finding
     case NoSuchElement
+    
+    /// Used in the implementation of InvalidationToken
     case InvalidationTokenInvalidated
+    
+    /// Indicates that an invalid / unexpected state was reached. This error is used in places that should not be executed
     case IllegalState
+    
+    /// Wraps a different ErrorType instance
     case External(E)
 
     /// Constructs a BrightFutures.External with the given external error
@@ -39,7 +46,7 @@ public enum BrightFuturesError<E: ErrorType>: ErrorType {
     }
 }
 
-/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
+/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value 
 public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
     switch (lhs, rhs) {
     case (.NoSuchElement, .NoSuchElement): return true
