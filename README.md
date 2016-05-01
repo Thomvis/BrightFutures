@@ -1,8 +1,6 @@
 BrightFutures
 =============
 
-[![Join the chat at https://gitter.im/Thomvis/BrightFutures](https://badges.gitter.im/Thomvis/BrightFutures.svg)](https://gitter.im/Thomvis/BrightFutures?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 How do you leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
 BrightFutures implements proven [functional concepts](http://en.wikipedia.org/wiki/Futures_and_promises) in Swift to provide a powerful alternative to completion blocks and support typesafe error handling in asynchronous code.
@@ -13,7 +11,7 @@ Our Big Hairy Audacious Goal (BHAG) is to be copy-pasted into the Swift standard
 The stability of BrightFutures has been proven through extensive use in production. It is currently being used in several apps, with a combined total of almost 500k monthly active users. If you use BrightFutures in production, we'd love to hear about it!
 
 ## Latest news
-[![Travis CI build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
+[![Join the chat at https://gitter.im/Thomvis/BrightFutures](https://badges.gitter.im/Thomvis/BrightFutures.svg)](https://gitter.im/Thomvis/BrightFutures?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis CI build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![MIT License](https://img.shields.io/cocoapods/l/BrightFutures.svg)](LICENSE) ![Platform iOS OS X](https://img.shields.io/cocoapods/p/BrightFutures.svg)
 
 BrightFutures 4.0 is now available! This update adds Swift 2.2 compatibility and contains a few minor breaking changes that should require only a little bit of work in projects upgrading from BrightFutures 3.x. Please check the [Migration guide](Documentation/Migration_4.0.md) for help on how to migrate your project to BrightFutures 4.0.
 
