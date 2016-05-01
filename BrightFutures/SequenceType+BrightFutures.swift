@@ -26,7 +26,7 @@ import Result
 extension SequenceType {
     /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
     /// If no context is provided, the given closure is executed on `Queue.global`
-    public func traverse<U, E>(context: ExecutionContext = Queue.global.context, f: Generator.Element -> Future<U, E>) -> Future<[U], E> {
+    public func traverse<U, E, A: AsyncType where A.Value: ResultType, A.Value.Value == U, A.Value.Error == E>(context: ExecutionContext = Queue.global.context, f: Generator.Element -> A) -> Future<[U], E> {
         return map(f).fold(context, zero: [U]()) { (list: [U], elem: U) -> [U] in
             return list + [elem]
         }
@@ -76,8 +76,7 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// with the error of the first future that comes first in the list.
     public func sequence() -> Future<[Generator.Element.Value.Value], Generator.Element.Value.Error> {
         return traverse(ImmediateExecutionContext) {
-            // this is not nice at all, but I've been unable to solve it in a better way without crashing the compiler
-            return $0 as! Future<Generator.Element.Value.Value, Generator.Element.Value.Error>
+            return $0
         }
     }
     
