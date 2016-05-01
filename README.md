@@ -1,6 +1,8 @@
 BrightFutures
 =============
 
+[![Join the chat at https://gitter.im/Thomvis/BrightFutures](https://badges.gitter.im/Thomvis/BrightFutures.svg)](https://gitter.im/Thomvis/BrightFutures?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 How do you leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
 BrightFutures implements proven [functional concepts](http://en.wikipedia.org/wiki/Futures_and_promises) in Swift to provide a powerful alternative to completion blocks and support typesafe error handling in asynchronous code.
