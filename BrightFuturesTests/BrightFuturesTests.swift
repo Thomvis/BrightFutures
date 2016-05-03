@@ -720,6 +720,21 @@ extension BrightFuturesTests {
         self.waitForExpectationsWithTimeout(2, handler: nil)
     }
     
+    func testDelayChaining() {
+        let e = self.expectation()
+        let t0 = CACurrentMediaTime()
+        future { return }
+            .delay(1)
+            .andThen { _ in XCTAssert(CACurrentMediaTime() - t0 >= 1) }
+            .delay(1)
+            .andThen { _ in
+                XCTAssert(CACurrentMediaTime() - t0 >= 2)
+                e.fulfill()
+            }
+
+        self.waitForExpectationsWithTimeout(3, handler: nil)
+    }
+
     func testFlatMap() {
         let e = self.expectation()
         

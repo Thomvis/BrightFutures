@@ -75,8 +75,10 @@ public extension AsyncType {
     /// queue.
     public func delay(queue: Queue, interval: NSTimeInterval) -> Self {
         return Self { complete in
-            queue.after(.In(interval)) {
-                self.onComplete(ImmediateExecutionContext, callback: complete)
+            onComplete(ImmediateExecutionContext) { result in
+                queue.after(.In(interval)) {
+                    complete(result)
+                }
             }
         }
     }
