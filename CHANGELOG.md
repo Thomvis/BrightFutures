@@ -1,3 +1,6 @@
+# 4.1.0
+- [FIX] `AsyncType.delay()` now correctly starts the delay after the AsyncType has completed, which was the intended behavior. This fix can be breaking if you depended on the faulty behavior. ([https://github.com/Thomvis/BrightFutures/pull/139](#139), thanks [peyton](https://github.com/peyton)!)
+
 # 4.0.0
 BrightFutures 4.0.0 is compatible with Swift 2.2 and Xcode 7.3.
 
