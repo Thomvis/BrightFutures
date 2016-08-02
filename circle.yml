@@ -1,6 +1,0 @@
-machine:
-  xcode:
-    version: "7.0"
-dependencies:
-  pre:
-    - git submodule update --init --recursive
