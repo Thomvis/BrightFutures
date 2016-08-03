@@ -1,3 +1,6 @@
+# 4.1.1
+Adds support for Swift 2.3 and Xcode 8 (tested with beta 4)
+
 # 4.1.0
 - [FIX] `AsyncType.delay()` now correctly starts the delay after the AsyncType has completed, which was the intended behavior. This fix can be breaking if you depended on the faulty behavior. ([https://github.com/Thomvis/BrightFutures/pull/139](#139), thanks [peyton](https://github.com/peyton)!)
 
