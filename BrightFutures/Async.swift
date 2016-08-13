@@ -20,7 +20,7 @@ import Foundation
 /// `Future` is used.
 public class Async<Value>: AsyncType {
 
-    typealias CompletionCallback = Value -> Void
+    typealias CompletionCallback = (Value) -> Void
     
     /// The actual result of the operation that the receiver represents or
     /// `.None` if the operation is not yet completed.
@@ -58,8 +58,8 @@ public class Async<Value>: AsyncType {
     }
     
     /// Creates an `Async` that will be completed with the given result after the specified delay
-    public required init(result: Value, delay: NSTimeInterval) {
-        Queue.global.after(TimeInterval.In(delay)) {
+    public required init(result: Value, delay: Foundation.TimeInterval) {
+        Queue.global.after(TimeInterval.in(delay)) {
             self.complete(result)
         }
     }
@@ -79,7 +79,7 @@ public class Async<Value>: AsyncType {
     ///         }
     ///     }
     ///
-    public required init(@noescape resolver: (result: Value -> Void) -> Void) {
+    public required init(resolver: @noescape (result: (Value) -> Void) -> Void) {
         resolver { val in
             self.complete(val)
         }
@@ -101,8 +101,9 @@ public class Async<Value>: AsyncType {
     /// Adds the given closure as a callback for when the Async completes. The closure is executed on the given context.
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
-    public func onComplete(context: ExecutionContext = DefaultThreadingModel(), callback: Value -> Void) -> Self {
-        let wrappedCallback : Value -> Void = { [weak self] value in
+    @discardableResult
+    public func onComplete(_ context: ExecutionContext = DefaultThreadingModel(), callback: (Value) -> Void) -> Self {
+        let wrappedCallback : (Value) -> Void = { [weak self] value in
             let a = self // this is a workaround for a compiler segfault
             
             context {
@@ -128,7 +129,8 @@ public class Async<Value>: AsyncType {
 }
 
 extension Async: MutableAsyncType {
-    func tryComplete(value: Value) -> Bool{
+    @discardableResult
+    func tryComplete(_ value: Value) -> Bool{
         return queue.sync {
             guard self.result == nil else {
                 return false

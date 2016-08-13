@@ -15,11 +15,12 @@ public protocol AsyncType {
     
     init()
     init(result: Value)
-    init(result: Value, delay: NSTimeInterval)
+    init(result: Value, delay: Foundation.TimeInterval)
     init<A: AsyncType where A.Value == Value>(other: A)
-    init(@noescape resolver: (result: Value -> Void) -> Void)
+    init(resolver: @noescape (result: (Value) -> Void) -> Void)
     
-    func onComplete(context: ExecutionContext, callback: Value -> Void) -> Self
+    @discardableResult
+    func onComplete(_ context: ExecutionContext, callback: (Value) -> Void) -> Self
 }
 
 public extension AsyncType {
@@ -30,17 +31,17 @@ public extension AsyncType {
     
     /// Blocks the current thread until the future is completed and then returns the result
     public func forced() -> Value {
-        return forced(TimeInterval.Forever)!
+        return forced(TimeInterval.forever)!
     }
     
     /// See `forced(timeout: TimeInterval) -> Value?`
-    public func forced(timeout: NSTimeInterval) -> Value? {
-        return forced(.In(timeout))
+    public func forced(_ timeout: Foundation.TimeInterval) -> Value? {
+        return forced(.in(timeout))
     }
     
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
-    public func forced(timeout: TimeInterval) -> Value? {
+    public func forced(_ timeout: TimeInterval) -> Value? {
         if let result = result {
             return result
         }
@@ -60,8 +61,8 @@ public extension AsyncType {
     /// Alias of delay(queue:interval:)
     /// Will pass the main queue if we are currently on the main thread, or the
     /// global queue otherwise
-    public func delay(interval: NSTimeInterval) -> Self {
-        if NSThread.isMainThread() {
+    public func delay(_ interval: Foundation.TimeInterval) -> Self {
+        if Thread.isMainThread {
             return delay(Queue.main, interval: interval)
         }
         
@@ -73,10 +74,10 @@ public extension AsyncType {
     /// The delay is implemented using dispatch_after. The given queue is passed to that function.
     /// If you want a delay of 0 to mean 'delay until next runloop', you will want to pass the main
     /// queue.
-    public func delay(queue: Queue, interval: NSTimeInterval) -> Self {
+    public func delay(_ queue: Queue, interval: Foundation.TimeInterval) -> Self {
         return Self { complete in
             onComplete(ImmediateExecutionContext) { result in
-                queue.after(.In(interval)) {
+                queue.after(.in(interval)) {
                     complete(result)
                 }
             }

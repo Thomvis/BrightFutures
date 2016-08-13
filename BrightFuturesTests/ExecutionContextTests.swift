@@ -35,7 +35,7 @@ class ExecutionContextTests: XCTestCase {
         counter.i = 1
         
         ImmediateOnMainExecutionContext {
-            XCTAssert(NSThread.isMainThread())
+            XCTAssert(Thread.isMainThread)
             counter.i = 2
         }
         
@@ -46,43 +46,39 @@ class ExecutionContextTests: XCTestCase {
         let e = self.expectation()
         Queue.global.async {
             ImmediateOnMainExecutionContext {
-                XCTAssert(NSThread.isMainThread())
+                XCTAssert(Thread.isMainThread)
                 e.fulfill()
             }
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testDispatchQueueToContext() {
-        var key = "key"
-        let value1 = getMutablePointer("queue1")
+        let key = DispatchSpecificKey<String>()
+        let value1 = "abc"
         
-        let queue1 = dispatch_queue_create("test1", DISPATCH_QUEUE_SERIAL)
-        dispatch_queue_set_specific(queue1, &key, value1, nil)
+        let queue1 = DispatchQueue(label: "test1", qos: DispatchQoS.default, attributes: [], autoreleaseFrequency: .inherit, target: nil)
+        queue1.setSpecific(key: key, value: value1)
         
         let e1 = self.expectation()
         (toContext(queue1)) {
-            XCTAssertEqual(dispatch_get_specific(&key), value1)
+            XCTAssertEqual(DispatchQueue.getSpecific(key: key), value1)
             e1.fulfill()
         }
         
-        let value2 = getMutablePointer("queue2")
+        let value2 = "def"
         
-        let queue2 = dispatch_queue_create("test2", DISPATCH_QUEUE_CONCURRENT)
-        dispatch_queue_set_specific(queue2, &key, value2, nil)
+        let queue2 = DispatchQueue(label: "test2", qos: DispatchQoS.default, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        queue2.setSpecific(key: key, value: value2)
         
         let e2 = self.expectation()
         (toContext(queue2)) {
-            XCTAssertEqual(dispatch_get_specific(&key), value2)
+            XCTAssertEqual(DispatchQueue.getSpecific(key: key), value2)
             e2.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
-    }
-    
-    func getMutablePointer (object: AnyObject) -> UnsafeMutablePointer<Void> {
-        return UnsafeMutablePointer<Void>(bitPattern: Int(ObjectIdentifier(object).uintValue))
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
 }

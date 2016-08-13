@@ -33,7 +33,7 @@ public let ImmediateExecutionContext: ExecutionContext = { task in
 
 /// Runs immediately if on the main thread, otherwise asynchronously on the main thread
 public let ImmediateOnMainExecutionContext: ExecutionContext = { task in
-    if NSThread.isMainThread() {
+    if Thread.isMainThread {
         task()
     } else {
         Queue.main.async(task)
@@ -47,7 +47,7 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
         static let maxTaskDepth = 20
     }
     
-    let localThreadDictionary = NSThread.currentThread().threadDictionary
+    let localThreadDictionary = Thread.current.threadDictionary
     
     var previousDepth: Int
     if let depth = localThreadDictionary[Static.taskDepthKey] as? Int {
@@ -67,12 +67,12 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
 
 
 /// Creates an asynchronous ExecutionContext bound to the given queue
-public func toContext(queue: Queue) -> ExecutionContext {
+public func toContext(_ queue: Queue) -> ExecutionContext {
     return queue.context
 }
 
 /// Creates an asynchronous ExecutionContext bound to the given queue
-public func toContext(queue: dispatch_queue_t) -> ExecutionContext {
+public func toContext(_ queue: DispatchQueue) -> ExecutionContext {
     return Queue(queue: queue).context
 }
 
@@ -84,5 +84,5 @@ var DefaultThreadingModel: ThreadingModel = defaultContext
 /// - if on the main thread, `Queue.main.context` is returned
 /// - if off the main thread, `Queue.global.context` is returned
 func defaultContext() -> ExecutionContext {
-    return toContext(NSThread.isMainThread() ? Queue.main : Queue.global)
+    return toContext(Thread.isMainThread ? Queue.main : Queue.global)
 }

@@ -30,7 +30,7 @@ class InvalidationTokenTests: XCTestCase {
         token.invalidate()
         XCTAssert(token.future.result?.error != nil, "future should have an error")
         if let error = token.future.result?.error {
-            XCTAssert(error == BrightFuturesError<NoError>.InvalidationTokenInvalidated)
+            XCTAssert(error == BrightFuturesError<NoError>.invalidationTokenInvalidated)
         }
     }
     
@@ -49,11 +49,11 @@ class InvalidationTokenTests: XCTestCase {
         Queue.global.async {
             token.invalidate()
             p.success(2)
-            NSThread.sleepForTimeInterval(0.2); // make sure onSuccess is not called
+            Thread.sleep(forTimeInterval: 0.2); // make sure onSuccess is not called
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testNonInvalidatedSucceededFutureOnSuccess() {
@@ -65,7 +65,7 @@ class InvalidationTokenTests: XCTestCase {
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testNonInvalidatedSucceededFutureOnComplete() {
@@ -77,19 +77,19 @@ class InvalidationTokenTests: XCTestCase {
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testNonInvalidatedFailedFutureOnFailure() {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, TestError>(error: TestError.JustAnError).onFailure(token.validContext) { err in
-            XCTAssertEqual(err, TestError.JustAnError)
+        Future<Int, TestError>(error: TestError.justAnError).onFailure(token.validContext) { err in
+            XCTAssertEqual(err, TestError.justAnError)
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testStress() {
@@ -105,19 +105,19 @@ class InvalidationTokenTests: XCTestCase {
             token = InvalidationToken()
             let currentI = counter.i
             let e = self.expectation()
-            future { () -> Bool in
-                let sleep: NSTimeInterval = NSTimeInterval(arc4random() % 100) / 100000.0
-                NSThread.sleepForTimeInterval(sleep)
+            Queue.global.asyncValue { () -> Bool in
+                let sleep: Foundation.TimeInterval = TimeInterval(arc4random() % 100) / 100000.0
+                Thread.sleep(forTimeInterval: sleep)
                 return true
             }.onSuccess(token.validContext(q.context)) { _ in
                 XCTAssert(!token.isInvalid)
                 XCTAssertEqual(currentI, counter.i, "onSuccess should only get called if the counter did not increment")
             }.onComplete(Queue.global.context) { _ in
-                NSThread.sleepForTimeInterval(0.0001);
+                Thread.sleep(forTimeInterval: 0.0001);
                 e.fulfill()
             }
             
-            NSThread.sleepForTimeInterval(0.0005)
+            Thread.sleep(forTimeInterval: 0.0005)
             
             q.sync {
                 token.invalidate()
@@ -125,7 +125,7 @@ class InvalidationTokenTests: XCTestCase {
             }
         }
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
     }
     
 }

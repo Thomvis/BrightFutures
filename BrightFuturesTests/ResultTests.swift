@@ -103,12 +103,12 @@ class ResultTests: XCTestCase {
         }
         
         XCTAssert(r.isFailure)
-        XCTAssertEqual(r.error!, MathError.DivisionByZero)
+        XCTAssertEqual(r.error!, MathError.divisionByZero)
     }
 
     func testFlatMapFutureSuccess() {
         let f = divide(100, 10).flatMap { i -> Future<Int, MathError> in
-            return future {
+            return Queue.global.asyncValue {
                 fibonacci(i)
             }.promoteError()
         }
@@ -120,13 +120,13 @@ class ResultTests: XCTestCase {
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testFlatMapFutureFailure() {
         let f = divide(100, 0).flatMap { i -> Future<Int, MathError> in
             XCTAssert(false, "flatMap should not get called if the result failed")
-            return future {
+            return Queue.global.asyncValue {
                 fibonacci(i)
             }.promoteError()
         }
@@ -134,11 +134,11 @@ class ResultTests: XCTestCase {
         let e = self.expectation()
         
         f.onFailure { err in
-            XCTAssertEqual(err, MathError.DivisionByZero)
+            XCTAssertEqual(err, MathError.divisionByZero)
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testSequenceSuccess() {
@@ -159,7 +159,7 @@ class ResultTests: XCTestCase {
         
         let r = results.sequence()
         XCTAssert(r.isFailure)
-        XCTAssertEqual(r.error!, MathError.DivisionByZero)
+        XCTAssertEqual(r.error!, MathError.divisionByZero)
     }
 
     func testRecoverNeeded() {
@@ -177,49 +177,49 @@ class ResultTests: XCTestCase {
     }
     
     func testFlattenInnerSuccess() {
-        let fr = Result<Result<Int, NoError>, NoError>.Success(.Success(3)).flatten()
+        let fr = Result<Result<Int, NoError>, NoError>.success(.success(3)).flatten()
         XCTAssert(fr.isSuccess)
         XCTAssertEqual(fr.value, 3)
     }
     
     func testFlattenOuterFailure() {
-        let fr = Result<Result<Int, TestError>, TestError>.Failure(.JustAnError).flatten()
+        let fr = Result<Result<Int, TestError>, TestError>.failure(.justAnError).flatten()
         XCTAssert(fr.isFailure)
-        XCTAssertEqual(fr.error, .JustAnError)
+        XCTAssertEqual(fr.error, .justAnError)
     }
     
     func testFlattenInnerFailure() {
-        let fr = Result<Result<Int, TestError>, TestError>.Success(.Failure(.JustAnotherError)).flatten()
+        let fr = Result<Result<Int, TestError>, TestError>.success(.failure(.justAnotherError)).flatten()
         XCTAssert(fr.isFailure)
-        XCTAssertEqual(fr.error, .JustAnotherError)
+        XCTAssertEqual(fr.error, .justAnotherError)
     }
     
     func testFlattenFutureInResultSuccess() {
-        let f = Result<Future<Int, NoError>, NoError>.Success(Future<Int, NoError>(value: 1)).flatten()
+        let f = Result<Future<Int, NoError>, NoError>.success(Future<Int, NoError>(value: 1)).flatten()
         XCTAssert(f.isSuccess)
         XCTAssertEqual(f.value, 1)
     }
     
     func testFlattenFutureInResultFailed() {
-        let f = Result<Future<Int, TestError>, TestError>.Failure(.JustAnError).flatten()
+        let f = Result<Future<Int, TestError>, TestError>.failure(.justAnError).flatten()
         XCTAssert(f.isFailure)
-        XCTAssertEqual(f.error, .JustAnError)
+        XCTAssertEqual(f.error, .justAnError)
     }
     
     func testFlattenFailedFutureInSucceededResult() {
-        let f = Result<Future<Int, TestError>, TestError>.Success(Future<Int, TestError>(error: .JustAnotherError)).flatten()
+        let f = Result<Future<Int, TestError>, TestError>.success(Future<Int, TestError>(error: .justAnotherError)).flatten()
         XCTAssert(f.isFailure)
-        XCTAssertEqual(f.error, .JustAnotherError)
+        XCTAssertEqual(f.error, .justAnotherError)
     }
 }
 
-enum MathError: ErrorType {
-    case DivisionByZero
+enum MathError: Error {
+    case divisionByZero
 }
 
-func divide(a: Int, _ b: Int) -> Result<Int, MathError> {
+func divide(_ a: Int, _ b: Int) -> Result<Int, MathError> {
     if (b == 0) {
-        return Result(error: .DivisionByZero)
+        return Result(error: .divisionByZero)
     }
     
     return Result(value: a / b)

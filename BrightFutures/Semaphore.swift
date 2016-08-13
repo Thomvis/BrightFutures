@@ -23,19 +23,19 @@
 import Foundation
 
 /// Represents a TimeInterval. The interval is either ending 
-/// (e.g. `.In(2)` means 2 seconds)
+/// (e.g. `.in(2)` means 2 seconds)
 /// or never ending (e.g. `.Forever`)
 public enum TimeInterval {
-    case Forever
-    case In(NSTimeInterval)
+    case forever
+    case `in`(Foundation.TimeInterval)
     
     /// Returns the `dispatch_time_t` representation of this interval
-    public var dispatchTime: dispatch_time_t {
+    public var dispatchTime: DispatchTime {
         switch self {
-        case .Forever:
-            return DISPATCH_TIME_FOREVER
-        case .In(let interval):
-            return dispatch_time(DISPATCH_TIME_NOW, Int64(interval * NSTimeInterval(NSEC_PER_SEC)))
+        case .forever:
+            return DispatchTime.distantFuture
+        case .in(let interval):
+            return DispatchTime.now() + Double(Int64(interval * Foundation.TimeInterval(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         }
     }
 }
@@ -44,12 +44,12 @@ public enum TimeInterval {
 public class Semaphore {
 
     /// The underlying `dispatch_semaphore_t`
-    private(set) public var underlyingSemaphore: dispatch_semaphore_t
+    private(set) public var underlyingSemaphore: DispatchSemaphore
     
     /// Creates a new semaphore with the given initial value
     /// See `dispatch_semaphore_create(value: Int) -> dispatch_semaphore_t!`
     public init(value: Int) {
-        self.underlyingSemaphore = dispatch_semaphore_create(value)
+        self.underlyingSemaphore = DispatchSemaphore(value: value)
     }
     
     /// Creates a new semaphore with initial value 1
@@ -60,23 +60,25 @@ public class Semaphore {
     
     /// Performs the wait operation on this semaphore
     public func wait() {
-        self.wait(.Forever)
+        self.wait(.forever)
     }
     
     /// Performs the wait operation on this semaphore until the timeout
     /// Returns 0 if the semaphore was signalled before the timeout occurred
     /// or non-zero if the timeout occurred.
-    public func wait(timeout: TimeInterval) -> Int {
-        return dispatch_semaphore_wait(self.underlyingSemaphore, timeout.dispatchTime)
+    @discardableResult
+    public func wait(_ timeout: TimeInterval) -> DispatchTimeoutResult {
+        return self.underlyingSemaphore.wait(timeout: timeout.dispatchTime)
     }
     
     /// Performs the signal operation on this semaphore
+    @discardableResult
     public func signal() -> Int {
-        return dispatch_semaphore_signal(self.underlyingSemaphore)
+        return self.underlyingSemaphore.signal()
     }
 
     /// Executes the given closure between a `self.wait()` and `self.signal()`
-    public func execute(@noescape task: () -> Void) {
+    public func execute(_ task: @noescape () -> Void) {
         self.wait()
         task()
         self.signal()

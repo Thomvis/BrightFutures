@@ -12,7 +12,7 @@ import BrightFutures
 class NSOperationQueueTests: XCTestCase {
 
     func testMaxConcurrentOperationCount() {
-        let queue = NSOperationQueue()
+        let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 12
         var i = 0
         
@@ -35,7 +35,7 @@ class NSOperationQueueTests: XCTestCase {
             }
         }
         
-        self.waitForExpectationsWithTimeout(5, handler: nil)
+        self.waitForExpectations(timeout: 5, handler: nil)
         XCTAssertEqual(i, 0)
     }
     

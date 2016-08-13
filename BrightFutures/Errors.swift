@@ -26,32 +26,32 @@ import Result
 /// An enum representing every possible error for errors returned by BrightFutures
 /// A `BrightFuturesError` can also wrap an external error (e.g. coming from a user defined future)
 /// in its `External` case. `BrightFuturesError` has the type of the external error as its generic parameter.
-public enum BrightFuturesError<E: ErrorType>: ErrorType {
+public enum BrightFuturesError<E: Error>: Error {
     
     /// Indicates that a matching element could not be found, e.g. while filtering or finding
-    case NoSuchElement
+    case noSuchElement
     
     /// Used in the implementation of InvalidationToken
-    case InvalidationTokenInvalidated
+    case invalidationTokenInvalidated
     
     /// Indicates that an invalid / unexpected state was reached. This error is used in places that should not be executed
-    case IllegalState
+    case illegalState
     
     /// Wraps a different ErrorType instance
-    case External(E)
+    case external(E)
 
     /// Constructs a BrightFutures.External with the given external error
     public init(external: E) {
-        self = .External(external)
+        self = .external(external)
     }
 }
 
 /// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value 
 public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
     switch (lhs, rhs) {
-    case (.NoSuchElement, .NoSuchElement): return true
-    case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
-    case (.External(let lhs), .External(let rhs)): return lhs == rhs
+    case (.noSuchElement, .noSuchElement): return true
+    case (.invalidationTokenInvalidated, .invalidationTokenInvalidated): return true
+    case (.external(let lhs), .external(let rhs)): return lhs == rhs
     default: return false
     }
 }
@@ -59,9 +59,9 @@ public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError
 /// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
 public func ==(lhs: BrightFuturesError<NoError>, rhs: BrightFuturesError<NoError>) -> Bool {
     switch (lhs, rhs) {
-    case (.NoSuchElement, .NoSuchElement): return true
-    case (.InvalidationTokenInvalidated, .InvalidationTokenInvalidated): return true
-    case (.External(_), .External(_)): return true // this cannot happen because NoError cannot be instantiated
+    case (.noSuchElement, .noSuchElement): return true
+    case (.invalidationTokenInvalidated, .invalidationTokenInvalidated): return true
+    case (.external(_), .external(_)): return true // this cannot happen because NoError cannot be instantiated
     default: return false
     }
 }

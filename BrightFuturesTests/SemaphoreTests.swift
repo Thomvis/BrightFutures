@@ -14,9 +14,9 @@ class SemaphoreTests: XCTestCase {
     
     func testInit() {
         let s = Semaphore(value: 2)
-        XCTAssert(s.wait(.In(0)) == 0)
-        XCTAssert(s.wait(.In(0)) == 0)
-        XCTAssert(s.wait(.In(0)) != 0)
+        XCTAssertEqual(s.wait(.in(0)), .success)
+        XCTAssertEqual(s.wait(.in(0)), .success)
+        XCTAssertEqual(s.wait(.in(0)), .timedOut)
         s.signal()
         s.signal()
     }

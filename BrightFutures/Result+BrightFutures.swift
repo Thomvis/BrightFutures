@@ -8,14 +8,14 @@
 
 import Result
 
-extension ResultType {
+extension ResultProtocol {
     /// Enables the chaining of two failable operations where the second operation is asynchronous and
     /// represented by a future.
     /// Like map, the given closure (that performs the second operation) is only executed
-    /// if the first operation result is a .Success
+    /// if the first operation result is a .success
     /// If a regular `map` was used, the result would be `Result<Future<U>>`.
     /// The implementation of this function uses `map`, but then flattens the result before returning it.
-    public func flatMap<U>(@noescape f: Value -> Future<U, Error>) -> Future<U, Error> {
+    public func flatMap<U>(_ f: @noescape (Value) -> Future<U, Error>) -> Future<U, Error> {
         return analysis(ifSuccess: {
             return f($0)
         }, ifFailure: {
@@ -24,10 +24,10 @@ extension ResultType {
     }
 }
 
-extension ResultType where Value: ResultType, Error == Value.Error {
+extension ResultProtocol where Value: ResultProtocol, Error == Value.Error {
     
-    /// Returns a .Failure with the error from the outer or inner result if either of the two failed
-    /// or a .Success with the success value from the inner Result
+    /// Returns a .failure with the error from the outer or inner result if either of the two failed
+    /// or a .success with the success value from the inner Result
     public func flatten() -> Result<Value.Value,Value.Error> {
         return analysis(ifSuccess: { innerRes in
             return innerRes.analysis(ifSuccess: {
@@ -41,7 +41,7 @@ extension ResultType where Value: ResultType, Error == Value.Error {
     }
 }
 
-extension ResultType where Value: AsyncType, Value.Value: ResultType, Error == Value.Value.Error {
+extension ResultProtocol where Value: AsyncType, Value.Value: ResultProtocol, Error == Value.Value.Error {
     /// Returns the inner future if the outer result succeeded or a failed future
     /// with the error from the outer result otherwise
     public func flatten() -> Future<Value.Value.Value, Value.Value.Error> {
