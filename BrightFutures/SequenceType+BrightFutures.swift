@@ -26,7 +26,7 @@ import Result
 extension Sequence {
     /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
     /// If no context is provided, the given closure is executed on `Queue.global`
-    public func traverse<U, E, A: AsyncType where A.Value: ResultProtocol, A.Value.Value == U, A.Value.Error == E>(_ context: ExecutionContext = Queue.global.context, f: (Iterator.Element) -> A) -> Future<[U], E> {
+    public func traverse<U, E, A: AsyncType where A.Value: ResultProtocol, A.Value.Value == U, A.Value.Error == E>(_ context: ExecutionContext = DispatchQueue.global().context, f: (Iterator.Element) -> A) -> Future<[U], E> {
         return map(f).fold(context, zero: [U]()) { (list: [U], elem: U) -> [U] in
             return list + [elem]
         }
@@ -39,7 +39,7 @@ extension Sequence where Iterator.Element: AsyncType {
     public func firstCompleted() -> Iterator.Element {
         let res = Async<Iterator.Element.Value>()
         for fut in self {
-            fut.onComplete(Queue.global.context) {
+            fut.onComplete(DispatchQueue.global().context) {
                 res.tryComplete($0)
             }
         }
@@ -56,7 +56,7 @@ extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: Re
     /// (The Swift compiler does not allow a context parameter with a default value
     /// so we define some functions twice)
     public func fold<R>(_ zero: R, f: (R, Iterator.Element.Value.Value) -> R) -> Future<R, Iterator.Element.Value.Error> {
-        return fold(Queue.global.context, zero: zero, f: f)
+        return fold(DispatchQueue.global().context, zero: zero, f: f)
     }
     
     /// Performs the fold operation over a sequence of futures. The folding is performed
@@ -82,7 +82,7 @@ extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: Re
     
     /// See `find<S: SequenceType, T where S.Iterator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
     public func find(_ p: (Iterator.Element.Value.Value) -> Bool) -> Future<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> {
-        return find(Queue.global.context, p: p)
+        return find(DispatchQueue.global().context, p: p)
     }
     
     /// Returns a future that succeeds with the value from the first future in the given

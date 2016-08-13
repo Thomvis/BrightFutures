@@ -29,7 +29,7 @@ class QueueTests: XCTestCase {
     func testMain() {
         let e = self.expectation(description: "")
         DispatchQueue.global().async {
-            Queue.main.sync {
+            DispatchQueue.main.sync {
                 XCTAssert(Thread.isMainThread, "executing on the main queue should happen on the main thread")
             }
             e.fulfill()
@@ -40,7 +40,7 @@ class QueueTests: XCTestCase {
     
     func testSync() {
         var i = 1
-        Queue.global.sync {
+        DispatchQueue.global().sync {
             i += 1
         }
         XCTAssert(i == 2, "sync should execute the block synchronously")
@@ -48,7 +48,7 @@ class QueueTests: XCTestCase {
     
     func testSyncWithResult() {
         let input = "42"
-        let output: String = Queue.global.sync {
+        let output: String = DispatchQueue.global().sync {
             input
         }
         
@@ -58,7 +58,7 @@ class QueueTests: XCTestCase {
     func testSyncThrowsNone() {
         let t: () throws -> Void = { }
         do {
-            try Queue.global.sync(t)
+            try DispatchQueue.global().sync(execute: t)
             XCTAssert(true)
         } catch _ {
             XCTFail()
@@ -68,7 +68,7 @@ class QueueTests: XCTestCase {
     func testSyncThrowsError() {
         let t: () throws -> Void = { throw TestError.justAnError }
         do {
-            try Queue.global.sync(t)
+            try DispatchQueue.global().sync(execute: t)
             XCTFail()
         } catch TestError.justAnError {
             XCTAssert(true)
@@ -80,7 +80,7 @@ class QueueTests: XCTestCase {
     func testAsync() {
         var res = 2
         let e = self.expectation(description: "")
-        Queue.global.async {
+        DispatchQueue.global().async {
             Thread.sleep(forTimeInterval: 1.0)
             res *= 2
             e.fulfill()
@@ -91,7 +91,7 @@ class QueueTests: XCTestCase {
     }
     
     func testAsyncFuture() {
-        let f = Queue.global.asyncValue { () -> String in
+        let f = DispatchQueue.global().asyncValue { () -> String in
             Thread.sleep(forTimeInterval: 1.0)
             return "fibonacci"
         }
@@ -108,7 +108,7 @@ class QueueTests: XCTestCase {
     func testAfter() {
         var res = 2
         let e = self.expectation(description: "")
-        Queue.global.after(.in(1.0)) {
+        DispatchQueue.global().asyncAfter(deadline: 1.second.fromNow) {
             res *= 2
             e.fulfill()
         }
@@ -120,7 +120,7 @@ class QueueTests: XCTestCase {
     func testAfterFuture() {
         // unfortunately, the compiler is not able to figure out that we want the
         // future-returning async method
-        let f: Future<String, NoError> = Queue.global.after(.in(1.0)) {
+        let f: Future<String, NoError> = DispatchQueue.global().asyncValueAfter(deadline: 1.second.fromNow) {
             return "fibonacci"
         }
         

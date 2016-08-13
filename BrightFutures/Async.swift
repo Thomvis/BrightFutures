@@ -38,13 +38,13 @@ public class Async<Value>: AsyncType {
     /// This queue is used for all callback related administrative tasks
     /// to prevent that a callback is added to a completed future and never
     /// executed or perhaps excecuted twice.
-    private let queue = Queue()
+    private let queue = DispatchQueue(label: "Internal Async Queue")
 
     /// Upon completion of the future, all callbacks are asynchronously scheduled to their
     /// respective execution contexts (which is either given by the client or returned from
     /// DefaultThreadingModel). Inside the context, this semaphore will be used
     /// to make sure that all callbacks are executed serially.
-    private let callbackExecutionSemaphore = Semaphore(value: 1);
+    private let callbackExecutionSemaphore = DispatchSemaphore(value: 1);
     private var callbacks = [CompletionCallback]()
     
     /// Creates an uncompleted `Async`
@@ -58,8 +58,8 @@ public class Async<Value>: AsyncType {
     }
     
     /// Creates an `Async` that will be completed with the given result after the specified delay
-    public required init(result: Value, delay: Foundation.TimeInterval) {
-        Queue.global.after(TimeInterval.in(delay)) {
+    public required init(result: Value, delay: DispatchTimeInterval) {
+        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + delay) {
             self.complete(result)
         }
     }
@@ -107,7 +107,7 @@ public class Async<Value>: AsyncType {
             let a = self // this is a workaround for a compiler segfault
             
             context {
-                a?.callbackExecutionSemaphore.execute {
+                a?.callbackExecutionSemaphore.context {
                     callback(value)
                 }
                 return

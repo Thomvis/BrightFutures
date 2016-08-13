@@ -44,7 +44,7 @@ class ExecutionContextTests: XCTestCase {
     
     func testImmediateOnMainThreadContextOnBackgroundThread() {
         let e = self.expectation()
-        Queue.global.async {
+        DispatchQueue.global().async {
             ImmediateOnMainExecutionContext {
                 XCTAssert(Thread.isMainThread)
                 e.fulfill()
@@ -62,7 +62,7 @@ class ExecutionContextTests: XCTestCase {
         queue1.setSpecific(key: key, value: value1)
         
         let e1 = self.expectation()
-        (toContext(queue1)) {
+        queue1.context {
             XCTAssertEqual(DispatchQueue.getSpecific(key: key), value1)
             e1.fulfill()
         }
@@ -73,7 +73,7 @@ class ExecutionContextTests: XCTestCase {
         queue2.setSpecific(key: key, value: value2)
         
         let e2 = self.expectation()
-        (toContext(queue2)) {
+        queue2.context {
             XCTAssertEqual(DispatchQueue.getSpecific(key: key), value2)
             e2.fulfill()
         }

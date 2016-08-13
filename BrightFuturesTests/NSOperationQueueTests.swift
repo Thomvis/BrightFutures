@@ -16,17 +16,17 @@ class NSOperationQueueTests: XCTestCase {
         queue.maxConcurrentOperationCount = 12
         var i = 0
         
-        let sem = Semaphore()
+        let sem = DispatchSemaphore(value: 1)
         
         (0...100).forEach { n in
             let e = self.expectation()
             queue.context {
-                sem.execute {
+                sem.context {
                     i += 1
                 }
                 XCTAssert(i <= queue.maxConcurrentOperationCount)
                 
-                sem.execute {
+                sem.context {
                     i -= 1
                 }
                 XCTAssert(i >= 0)

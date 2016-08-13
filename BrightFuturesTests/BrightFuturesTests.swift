@@ -100,7 +100,7 @@ extension BrightFuturesTests {
     }
     
     func testCompleteAfterFuture() {
-        let f = Future<Int, NoError>(value: 3, delay: 1)
+        let f = Future<Int, NoError>(value: 3, delay: 1.second)
         
         XCTAssertFalse(f.isCompleted)
         
@@ -320,7 +320,7 @@ extension BrightFuturesTests {
     func testMapSuccess() {
         let e = self.expectation()
         
-        Queue.global.asyncValue {
+        DispatchQueue.global().asyncValue {
             fibonacci(10)
         }.map { value -> String in
             if value > 5 {
@@ -341,7 +341,7 @@ extension BrightFuturesTests {
         
         let e = self.expectation()
         
-        Queue.global.asyncResult { () -> Result <Int,NSError> in
+        DispatchQueue.global().asyncResult { () -> Result <Int,NSError> in
             Result(error: NSError(domain: "Tests", code: 123, userInfo: nil))
         }.map { number in
             XCTAssert(false, "map should not be evaluated because of failure above")
@@ -380,7 +380,7 @@ extension BrightFuturesTests {
     func testSkippedRecover() {
         let e = self.expectation()
         
-        Queue.global.asyncValue { _ in
+        DispatchQueue.global().asyncValue { _ in
             3
         }.recover { _ in
             XCTFail("recover task should not be executed")
@@ -409,10 +409,10 @@ extension BrightFuturesTests {
     func testRecoverWith() {
         let e = self.expectation()
         
-        Queue.global.asyncResult {
+        DispatchQueue.global().asyncResult {
             Result(error: NSError(domain: "NaN", code: 0, userInfo: nil))
         }.recoverWith { _ in
-            return Queue.global.asyncValue { _ in
+            return DispatchQueue.global().asyncValue { _ in
                 fibonacci(5)
             }
         }.onSuccess { value in
@@ -461,7 +461,7 @@ extension BrightFuturesTests {
     }
     
     func testZipThisFails() {
-        let f: Future<Bool, NSError> = Queue.global.asyncResult { () -> Result<Bool,NSError> in
+        let f: Future<Bool, NSError> = DispatchQueue.global().asyncResult { () -> Result<Bool,NSError> in
             sleep(1)
             return Result(error: NSError(domain: "test", code: 2, userInfo: nil))
         }
@@ -480,7 +480,7 @@ extension BrightFuturesTests {
     }
     
     func testZipThatFails() {
-        let f = Queue.global.asyncResult { () -> Result<Int,NSError> in
+        let f = DispatchQueue.global().asyncResult { () -> Result<Int,NSError> in
             sleep(1)
             return Result(error: NSError(domain: "tester", code: 3, userInfo: nil))
         }
@@ -499,12 +499,12 @@ extension BrightFuturesTests {
     }
     
     func testZipBothFail() {
-        let f = Queue.global.asyncResult { () -> Result<Int,NSError> in
+        let f = DispatchQueue.global().asyncResult { () -> Result<Int,NSError> in
             sleep(1)
             return Result(error: NSError(domain: "f-error", code: 3, userInfo: nil))
         }
         
-        let f1 = Queue.global.asyncResult { () -> Result<Int,NSError> in
+        let f1 = DispatchQueue.global().asyncResult { () -> Result<Int,NSError> in
             sleep(1)
             return Result(error: NSError(domain: "f1-error", code: 4, userInfo: nil))
         }
@@ -559,7 +559,7 @@ extension BrightFuturesTests {
 
     func testForcedFuture() {
         var x = 10
-        let f: Future<Void, NoError> = Queue.global.asyncValue { () -> Void in
+        let f: Future<Void, NoError> = DispatchQueue.global().asyncValue { () -> Void in
             Thread.sleep(forTimeInterval: 0.5)
             x = 3
         }
@@ -568,13 +568,13 @@ extension BrightFuturesTests {
     }
     
     func testForcedFutureWithTimeout() {
-        let f: Future<Void, NoError> = Queue.global.asyncValue {
+        let f: Future<Void, NoError> = DispatchQueue.global().asyncValue {
             Thread.sleep(forTimeInterval: 0.5)
         }
         
-        XCTAssert(f.forced(0.1) == nil)
+        XCTAssert(f.forced(timeout: 100.milliseconds.fromNow) == nil)
         
-        XCTAssert(f.forced(0.5) != nil)
+        XCTAssert(f.forced(timeout: 500.milliseconds.fromNow) != nil)
     }
     
     func testForcingCompletedFuture() {
@@ -584,7 +584,7 @@ extension BrightFuturesTests {
     
     func testDelay() {
         let t0 = CACurrentMediaTime()
-        let f = Future<Int, NoError>(value: 1).delay(0);
+        let f = Future<Int, NoError>(value: 1).delay(0.seconds);
         XCTAssertFalse(f.isCompleted)
         var isAsync = false
         
@@ -593,7 +593,7 @@ extension BrightFuturesTests {
             XCTAssert(Thread.isMainThread)
             XCTAssert(isAsync)
             XCTAssert(CACurrentMediaTime() - t0 >= 0)
-        }.delay(1).onComplete { _ in
+        }.delay(1.second).onComplete { _ in
             XCTAssert(Thread.isMainThread)
             XCTAssert(CACurrentMediaTime() - t0 >= 1)
             e.fulfill()
@@ -605,8 +605,8 @@ extension BrightFuturesTests {
     
     func testDelayOnGlobalQueue() {
         let e = self.expectation()
-        Queue.global.async {
-            Future<Int, NoError>(value: 1).delay(0).onComplete(ImmediateExecutionContext) { _ in
+        DispatchQueue.global().async {
+            Future<Int, NoError>(value: 1).delay(0.seconds).onComplete(ImmediateExecutionContext) { _ in
                 XCTAssert(!Thread.isMainThread)
                 e.fulfill()
             }
@@ -619,9 +619,9 @@ extension BrightFuturesTests {
         let e = self.expectation()
         let t0 = CACurrentMediaTime()
         let _ = Future<Void, NoError>(value: ())
-            .delay(1)
+            .delay(1.second)
             .andThen { _ in XCTAssert(CACurrentMediaTime() - t0 >= 1) }
-            .delay(1)
+            .delay(1.second)
             .andThen { _ in
                 XCTAssert(CACurrentMediaTime() - t0 >= 2)
                 e.fulfill()
@@ -719,7 +719,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         let evenFuture: (Int) -> Future<Bool, NSError> = { i in
-            return Queue.global.asyncResult {
+            return DispatchQueue.global().asyncResult {
                 if i % 2 == 0 {
                     return Result(value: true)
                 } else {
@@ -728,7 +728,7 @@ extension BrightFuturesTests {
             }
         }
         
-        let f = [2,4,6,8,9,10].traverse(Queue.global.context, f: evenFuture)
+        let f = [2,4,6,8,9,10].traverse(DispatchQueue.global().context, f: evenFuture)
             
             
         f.onFailure { err in
@@ -743,7 +743,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         let evenFuture: (Int) -> Future<Bool, NSError> = { i in
-            return Queue.global.asyncResult { err in
+            return DispatchQueue.global().asyncResult { err in
                 if i % 2 == 0 {
                     return Result(value: true)
                 } else {
@@ -763,7 +763,7 @@ extension BrightFuturesTests {
     func testUtilsTraverseWithExecutionContext() {
         let e = self.expectation()
         
-        Array(1...10).traverse(Queue.main.context) { _ -> Future<Int, NoError> in
+        Array(1...10).traverse(DispatchQueue.main.context) { _ -> Future<Int, NoError> in
             XCTAssert(Thread.isMainThread)
             return Future(value: 1)
         }.onComplete { _ in
@@ -789,7 +789,7 @@ extension BrightFuturesTests {
         }
         
         for (i, promise) in promises.enumerated() {
-            Queue.global.async {
+            DispatchQueue.global().async {
                 promise.success(i)
             }
         }
@@ -838,7 +838,7 @@ extension BrightFuturesTests {
     func testUtilsFoldWithExecutionContext() {
         let e = self.expectation()
         
-        [Future<Int, NoError>(value: 1)].fold(Queue.main.context, zero: 10) { remainder, elem -> Int in
+        [Future<Int, NoError>(value: 1)].fold(DispatchQueue.main.context, zero: 10) { remainder, elem -> Int in
             XCTAssert(Thread.isMainThread)
             return remainder + elem
         }.onSuccess { val in
@@ -864,12 +864,12 @@ extension BrightFuturesTests {
     
     func testUtilsFirstCompleted() {
         let futures: [Future<Int, NoError>] = [
-            Future(value: 3, delay: 0.2),
-            Future(value: 13, delay: 0.3),
-            Future(value: 23, delay: 0.4),
-            Future(value: 4, delay: 0.3),
-            Future(value: 9, delay: 0.1),
-            Future(value: 83, delay: 0.4),
+            Future(value: 3, delay: 200.milliseconds),
+            Future(value: 13, delay: 300.milliseconds),
+            Future(value: 23, delay: 400.milliseconds),
+            Future(value: 4, delay: 300.milliseconds),
+            Future(value: 9, delay: 100.milliseconds),
+            Future(value: 83, delay: 400.milliseconds),
         ]
         
         let e = self.expectation()
@@ -913,14 +913,14 @@ extension BrightFuturesTests {
     func testUtilsFindSuccess() {
         let futures: [Future<Int, NoError>] = [
             Future(value: 1),
-            Future(value: 3, delay: 0.2),
+            Future(value: 3, delay: 200.milliseconds),
             Future(value: 5),
             Future(value: 7),
-            Future(value: 8, delay: 0.3),
+            Future(value: 8, delay: 300.milliseconds),
             Future(value: 9)
         ];
         
-        let f = futures.find(Queue.global.context) { val in
+        let f = futures.find(DispatchQueue.global().context) { val in
             return val % 2 == 0
         }
         
@@ -937,10 +937,10 @@ extension BrightFuturesTests {
     func testUtilsFindNoSuchElement() {
         let futures: [Future<Int, NoError>] = [
             Future(value: 1),
-            Future(value: 3, delay: 0.2),
+            Future(value: 3, delay: 200.milliseconds),
             Future(value: 5),
             Future(value: 7),
-            Future(value: 9, delay: 0.4),
+            Future(value: 9, delay: 400.milliseconds),
         ];
         
         let f = futures.find { val in
@@ -995,7 +995,7 @@ extension BrightFuturesTests {
             let instances = 100;
             var successfulFutures = [Future<Int, NSError>]()
             var failingFutures = [Future<Int, NSError>]()
-            let contexts: [ExecutionContext] = [ImmediateExecutionContext, Queue.main.context, Queue.global.context]
+            let contexts: [ExecutionContext] = [ImmediateExecutionContext, DispatchQueue.main.context, DispatchQueue.global().context]
             
             let randomContext: () -> ExecutionContext = { contexts[Int(arc4random_uniform(UInt32(contexts.count)))] }
             let randomFuture: () -> Future<Int, NSError> = {
@@ -1055,7 +1055,7 @@ extension BrightFuturesTests {
         var executingCallbacks = 0
         for _ in 0..<10 {
             let e = self.expectation()
-            p.future.onComplete(Queue.global.context) { _ in
+            p.future.onComplete(DispatchQueue.global().context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
                 executingCallbacks += 1
@@ -1069,7 +1069,7 @@ extension BrightFuturesTests {
             }
             
             let e1 = self.expectation()
-            p.future.onComplete(Queue.main.context) { _ in
+            p.future.onComplete(DispatchQueue.main.context) { _ in
                 XCTAssert(executingCallbacks == 0, "This should be the only executing callback")
                 
                 executingCallbacks += 1
@@ -1098,7 +1098,7 @@ extension BrightFuturesTests {
         XCTAssertEqual(DispatchQueue.getSpecific(key: key), value, "value should have been set on the main (i.e. current) queue")
         
         let e = self.expectation()
-        Future<Int, NoError>(value: 1).onSuccess(Queue.main.context) { val in
+        Future<Int, NoError>(value: 1).onSuccess(DispatchQueue.main.context) { val in
             XCTAssertEqual(DispatchQueue.getSpecific(key: key), value, "we should now too be on the main queue")
             e.fulfill()
         }
@@ -1138,14 +1138,14 @@ extension XCTestCase {
     }
     
     func failingFuture<U>() -> Future<U, NSError> {
-        return Queue.global.asyncResult { error in
+        return DispatchQueue.global().asyncResult { error in
             usleep(arc4random_uniform(100))
             return Result(error: NSError(domain: "failedFuture", code: 0, userInfo: nil))
         }
     }
     
     func succeedingFuture<U>(_ val: U) -> Future<U, NSError> {
-        return Queue.global.asyncResult { _ in
+        return DispatchQueue.global().asyncResult { _ in
             usleep(arc4random_uniform(100))
             return Result(value: val)
         }

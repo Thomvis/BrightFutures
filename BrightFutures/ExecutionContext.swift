@@ -36,7 +36,7 @@ public let ImmediateOnMainExecutionContext: ExecutionContext = { task in
     if Thread.isMainThread {
         task()
     } else {
-        Queue.main.async(task)
+        DispatchQueue.main.async(execute: task)
     }
 }
 
@@ -57,7 +57,7 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
     }
     
     if previousDepth > 20 {
-        Queue.global.async(task)
+        DispatchQueue.global().async(execute: task)
     } else {
         localThreadDictionary[Static.taskDepthKey] = previousDepth + 1
         task()
@@ -65,24 +65,13 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
     }
 }
 
-
-/// Creates an asynchronous ExecutionContext bound to the given queue
-public func toContext(_ queue: Queue) -> ExecutionContext {
-    return queue.context
-}
-
-/// Creates an asynchronous ExecutionContext bound to the given queue
-public func toContext(_ queue: DispatchQueue) -> ExecutionContext {
-    return Queue(queue: queue).context
-}
-
 typealias ThreadingModel = () -> ExecutionContext
 
 var DefaultThreadingModel: ThreadingModel = defaultContext
 
 /// Defines BrightFutures' default threading behavior:
-/// - if on the main thread, `Queue.main.context` is returned
-/// - if off the main thread, `Queue.global.context` is returned
+/// - if on the main thread, `DispatchQueue.main.context` is returned
+/// - if off the main thread, `DispatchQueue.global().context` is returned
 func defaultContext() -> ExecutionContext {
-    return toContext(Thread.isMainThread ? Queue.main : Queue.global)
+    return (Thread.isMainThread ? DispatchQueue.main : DispatchQueue.global()).context
 }

@@ -15,7 +15,7 @@ class PromiseTests: XCTestCase {
     func testSuccessPromise() {
         let p = Promise<Int, NoError>()
         
-        Queue.global.async {
+        DispatchQueue.global().async {
             p.success(fibonacci(10))
         }
         
@@ -38,7 +38,7 @@ class PromiseTests: XCTestCase {
     func testFailurePromise() {
         let p = Promise<Int, TestError>()
         
-        Queue.global.async {
+        DispatchQueue.global().async {
             p.tryFailure(TestError.justAnError)
         }
         

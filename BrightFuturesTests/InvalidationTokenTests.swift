@@ -46,7 +46,7 @@ class InvalidationTokenTests: XCTestCase {
         }
         
         let e = self.expectation()
-        Queue.global.async {
+        DispatchQueue.global().async {
             token.invalidate()
             p.success(2)
             Thread.sleep(forTimeInterval: 0.2); // make sure onSuccess is not called
@@ -97,7 +97,7 @@ class InvalidationTokenTests: XCTestCase {
             var i = 0
         }
         
-        let q = Queue()
+        let q = DispatchQueue(label: "stress queue")
         
         var token: InvalidationToken!
         let counter = Counter()
@@ -105,14 +105,14 @@ class InvalidationTokenTests: XCTestCase {
             token = InvalidationToken()
             let currentI = counter.i
             let e = self.expectation()
-            Queue.global.asyncValue { () -> Bool in
+            DispatchQueue.global().asyncValue { () -> Bool in
                 let sleep: Foundation.TimeInterval = TimeInterval(arc4random() % 100) / 100000.0
                 Thread.sleep(forTimeInterval: sleep)
                 return true
             }.onSuccess(token.validContext(q.context)) { _ in
                 XCTAssert(!token.isInvalid)
                 XCTAssertEqual(currentI, counter.i, "onSuccess should only get called if the counter did not increment")
-            }.onComplete(Queue.global.context) { _ in
+            }.onComplete(DispatchQueue.global().context) { _ in
                 Thread.sleep(forTimeInterval: 0.0001);
                 e.fulfill()
             }

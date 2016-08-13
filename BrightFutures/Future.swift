@@ -45,7 +45,7 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
         super.init(result: result)
     }
     
-    public init(value: T, delay: Foundation.TimeInterval) {
+    public init(value: T, delay: DispatchTimeInterval) {
         super.init(result: Result<T, E>(value: value), delay: delay)
     }
     
@@ -53,7 +53,7 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
         super.init(other: other)
     }
     
-    public required init(result: Value, delay: Foundation.TimeInterval) {
+    public required init(result: Value, delay: DispatchTimeInterval) {
         super.init(result: result, delay: delay)
     }
     
