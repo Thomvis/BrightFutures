@@ -33,7 +33,7 @@ import Result
 /// For more info, see the project README.md
 public final class Future<T, E: Error>: Async<Result<T, E>> {
     
-    public typealias CompletionCallback = (result: Result<T,E>) -> Void
+    public typealias CompletionCallback = (_ result: Result<T,E>) -> Void
     public typealias SuccessCallback = (T) -> Void
     public typealias FailureCallback = (E) -> Void
     
@@ -49,7 +49,7 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
         super.init(result: Result<T, E>(value: value), delay: delay)
     }
     
-    public required init<A: AsyncType where A.Value == Value>(other: A) {
+    public required init<A: AsyncType>(other: A) where A.Value == Value {
         super.init(other: other)
     }
     
@@ -65,13 +65,13 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
         self.init(result: Result(error: error))
     }
     
-    public required init(resolver: @noescape (result: (Value) -> Void) -> Void) {
+    public required init(resolver: (_ result: @escaping (Value) -> Void) -> Void) {
         super.init(resolver: resolver)
     }
     
 }
 
-public func materialize<T, E: Error>(_ scope: @noescape ((T?, E?) -> Void) -> Void) -> Future<T, E> {
+public func materialize<T, E: Error>(_ scope: ((T?, E?) -> Void) -> Void) -> Future<T, E> {
     return Future { complete in
         scope { val, err in
             if let val = val {
@@ -83,7 +83,7 @@ public func materialize<T, E: Error>(_ scope: @noescape ((T?, E?) -> Void) -> Vo
     }
 }
 
-public func materialize<T>(_ scope: @noescape ((T) -> Void) -> Void) -> Future<T, NoError> {
+public func materialize<T>(_ scope: ((T) -> Void) -> Void) -> Future<T, NoError> {
     return Future { complete in
         scope { val in
             complete(.success(val))
@@ -91,7 +91,7 @@ public func materialize<T>(_ scope: @noescape ((T) -> Void) -> Void) -> Future<T
     }
 }
 
-public func materialize<E: Error>(_ scope: @noescape ((E?) -> Void) -> Void) -> Future<Void, E> {
+public func materialize<E: Error>(_ scope: ((E?) -> Void) -> Void) -> Future<Void, E> {
     return Future { complete in
         scope { err in
             if let err = err {
@@ -129,7 +129,7 @@ public func materialize<E: Error>(_ scope: @noescape ((E?) -> Void) -> Void) -> 
 
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E>(lhs: Future<T, E>, rhs: @autoclosure(escaping) () -> T) -> Future<T, NoError> {
+public func ?? <T, E>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping  () -> T) -> Future<T, NoError> {
     return lhs.recover(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })
@@ -137,7 +137,7 @@ public func ?? <T, E>(lhs: Future<T, E>, rhs: @autoclosure(escaping) () -> T) ->
 
 /// Short-hand for `lhs.recoverWith(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E, E1>(lhs: Future<T, E>, rhs: @autoclosure(escaping) () -> Future<T, E1>) -> Future<T, E1> {
+public func ?? <T, E, E1>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping () -> Future<T, E1>) -> Future<T, E1> {
     return lhs.recoverWith(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })

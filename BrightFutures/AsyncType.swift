@@ -16,11 +16,11 @@ public protocol AsyncType {
     init()
     init(result: Value)
     init(result: Value, delay: DispatchTimeInterval)
-    init<A: AsyncType where A.Value == Value>(other: A)
-    init(resolver: @noescape (result: (Value) -> Void) -> Void)
+    init<A: AsyncType>(other: A) where A.Value == Value
+    init(resolver: (_ result: @escaping (Value) -> Void) -> Void)
     
     @discardableResult
-    func onComplete(_ context: ExecutionContext, callback: (Value) -> Void) -> Self
+    func onComplete(_ context: ExecutionContext, callback: @escaping (Value) -> Void) -> Self
 }
 
 public extension AsyncType {
@@ -31,12 +31,12 @@ public extension AsyncType {
     
     /// Blocks the current thread until the future is completed and then returns the result
     public func forced() -> Value {
-        return forced(timeout: DispatchTime.distantFuture)!
+        return forced(DispatchTime.distantFuture)!
     }
     
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
-    public func forced(timeout: DispatchTime) -> Value? {
+    public func forced(_ timeout: DispatchTime) -> Value? {
         if let result = result {
             return result
         }

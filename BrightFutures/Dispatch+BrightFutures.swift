@@ -16,7 +16,7 @@ public extension DispatchQueue {
         }
     }
     
-    public func asyncValue<T>(execute: () -> T) -> Future<T, NoError> {
+    public func asyncValue<T>(_ execute: @escaping () -> T) -> Future<T, NoError> {
         return Future { completion in
             async {
                 completion(.success(execute()))
@@ -24,7 +24,7 @@ public extension DispatchQueue {
         }
     }
     
-    public func asyncResult<T, E: Error>(execute: () -> Result<T, E>) -> Future<T, E> {
+    public func asyncResult<T, E: Error>(_ execute: @escaping () -> Result<T, E>) -> Future<T, E> {
         return Future { completion in
             async {
                 completion(execute())
@@ -32,7 +32,7 @@ public extension DispatchQueue {
         }
     }
     
-    public func asyncValueAfter<T>(deadline: DispatchTime, execute: () -> T) -> Future<T, NoError> {
+    public func asyncValueAfter<T>(_ deadline: DispatchTime, execute: @escaping () -> T) -> Future<T, NoError> {
         return Future { completion in
             asyncAfter(deadline: deadline) {
                 completion(.success(execute()))
