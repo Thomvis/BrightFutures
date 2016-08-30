@@ -15,11 +15,12 @@ public protocol AsyncType {
     
     init()
     init(result: Value)
-    init(result: Value, delay: NSTimeInterval)
-    init<A: AsyncType where A.Value == Value>(other: A)
-    init(@noescape resolver: (result: Value -> Void) -> Void)
+    init(result: Value, delay: DispatchTimeInterval)
+    init<A: AsyncType>(other: A) where A.Value == Value
+    init(resolver: (_ result: @escaping (Value) -> Void) -> Void)
     
-    func onComplete(context: ExecutionContext, callback: Value -> Void) -> Self
+    @discardableResult
+    func onComplete(_ context: ExecutionContext, callback: @escaping (Value) -> Void) -> Self
 }
 
 public extension AsyncType {
@@ -30,29 +31,24 @@ public extension AsyncType {
     
     /// Blocks the current thread until the future is completed and then returns the result
     public func forced() -> Value {
-        return forced(TimeInterval.Forever)!
-    }
-    
-    /// See `forced(timeout: TimeInterval) -> Value?`
-    public func forced(timeout: NSTimeInterval) -> Value? {
-        return forced(.In(timeout))
+        return forced(DispatchTime.distantFuture)!
     }
     
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
-    public func forced(timeout: TimeInterval) -> Value? {
+    public func forced(_ timeout: DispatchTime) -> Value? {
         if let result = result {
             return result
         }
         
-        let sema = Semaphore(value: 0)
+        let sema = DispatchSemaphore(value: 0)
         var res: Value? = nil
-        onComplete(Queue.global.context) {
+        onComplete(DispatchQueue.global().context) {
             res = $0
             sema.signal()
         }
         
-        sema.wait(timeout)
+        let _ = sema.wait(timeout: timeout)
         
         return res
     }
@@ -60,12 +56,12 @@ public extension AsyncType {
     /// Alias of delay(queue:interval:)
     /// Will pass the main queue if we are currently on the main thread, or the
     /// global queue otherwise
-    public func delay(interval: NSTimeInterval) -> Self {
-        if NSThread.isMainThread() {
-            return delay(Queue.main, interval: interval)
+    public func delay(_ interval: DispatchTimeInterval) -> Self {
+        if Thread.isMainThread {
+            return delay(DispatchQueue.main, interval: interval)
         }
         
-        return delay(Queue.global, interval: interval)
+        return delay(DispatchQueue.global(), interval: interval)
     }
 
     /// Returns an Async that will complete with the result that this Async completes with
@@ -73,10 +69,10 @@ public extension AsyncType {
     /// The delay is implemented using dispatch_after. The given queue is passed to that function.
     /// If you want a delay of 0 to mean 'delay until next runloop', you will want to pass the main
     /// queue.
-    public func delay(queue: Queue, interval: NSTimeInterval) -> Self {
+    public func delay(_ queue: DispatchQueue, interval: DispatchTimeInterval) -> Self {
         return Self { complete in
             onComplete(ImmediateExecutionContext) { result in
-                queue.after(.In(interval)) {
+                queue.asyncAfter(deadline: DispatchTime.now() + interval) {
                     complete(result)
                 }
             }
