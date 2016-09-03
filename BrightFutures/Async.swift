@@ -24,7 +24,7 @@ open class Async<Value>: AsyncType {
     
     /// The actual result of the operation that the receiver represents or
     /// `.None` if the operation is not yet completed.
-    open fileprivate(set) var result: Value? {
+    public fileprivate(set) var result: Value? {
         willSet {
             assert(result == nil)
         }
@@ -85,7 +85,7 @@ open class Async<Value>: AsyncType {
         }
     }
     
-    fileprivate func runCallbacks() {
+    private func runCallbacks() {
         guard let result = self.result else {
             assert(false, "can only run callbacks on a completed future")
             return
