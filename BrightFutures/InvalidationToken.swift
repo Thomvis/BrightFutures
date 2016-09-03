@@ -48,20 +48,20 @@ public protocol ManualInvalidationTokenType : InvalidationTokenType {
 }
 
 /// A default invalidation token implementation
-open class InvalidationToken : ManualInvalidationTokenType {
+public class InvalidationToken : ManualInvalidationTokenType {
    
-    open let future = Future<NoValue, BrightFuturesError<NoError>>()
+    public let future = Future<NoValue, BrightFuturesError<NoError>>()
     
     /// Creates a new valid token
     public init() { }
     
     /// Indicates if the token is invalid
-    open var isInvalid: Bool {
+    public var isInvalid: Bool {
         return future.isCompleted
     }
     
     /// Invalidates the token
-    open func invalidate() {
+    public func invalidate() {
         future.failure(.invalidationTokenInvalidated)
     }
 }
