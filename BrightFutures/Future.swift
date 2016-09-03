@@ -103,30 +103,6 @@ public func materialize<E: Error>(_ scope: ((E?) -> Void) -> Void) -> Future<Voi
     }
 }
 
-//extension AsyncType where Value: ResultProtocol, Value.Value == Void {
-//    public init(resolver: @noescape (result: (Value.Error?) -> Void) -> Void) {
-//        self.init { (complete: (Value) -> Void) in
-//            resolver { err in
-//                if let err = err {
-//                    complete(Value(error: err))
-//                } else {
-//                    complete(Value(value: ()))
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//extension AsyncType where Value: ResultProtocol, Value.Error == NoError {
-//    public init(resolver: @noescape (result: (Value.Value) -> Void) -> Void) {
-//        self.init { (complete: (Value) -> Void) in
-//            resolver { val in
-//                complete(Value(value: val))
-//            }
-//        }
-//    }
-//}
-
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
 public func ?? <T, E>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping  () -> T) -> Future<T, NoError> {
