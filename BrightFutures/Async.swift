@@ -18,13 +18,13 @@ import Foundation
 /// 
 /// This class is often not used directly. Instead, its subclass
 /// `Future` is used.
-public class Async<Value>: AsyncType {
+open class Async<Value>: AsyncType {
 
     typealias CompletionCallback = (Value) -> Void
     
     /// The actual result of the operation that the receiver represents or
     /// `.None` if the operation is not yet completed.
-    public private(set) var result: Value? {
+    open fileprivate(set) var result: Value? {
         willSet {
             assert(result == nil)
         }
@@ -38,14 +38,14 @@ public class Async<Value>: AsyncType {
     /// This queue is used for all callback related administrative tasks
     /// to prevent that a callback is added to a completed future and never
     /// executed or perhaps excecuted twice.
-    private let queue = DispatchQueue(label: "Internal Async Queue")
+    fileprivate let queue = DispatchQueue(label: "Internal Async Queue")
 
     /// Upon completion of the future, all callbacks are asynchronously scheduled to their
     /// respective execution contexts (which is either given by the client or returned from
     /// DefaultThreadingModel). Inside the context, this semaphore will be used
     /// to make sure that all callbacks are executed serially.
-    private let callbackExecutionSemaphore = DispatchSemaphore(value: 1);
-    private var callbacks = [CompletionCallback]()
+    fileprivate let callbackExecutionSemaphore = DispatchSemaphore(value: 1);
+    fileprivate var callbacks = [CompletionCallback]()
     
     /// Creates an uncompleted `Async`
     public required init() {
@@ -65,7 +65,7 @@ public class Async<Value>: AsyncType {
     }
     
     /// Creates an `Async` that is completed when the given other `Async` is completed
-    public required init<A: AsyncType where A.Value == Value>(other: A) {
+    public required init<A: AsyncType>(other: A) where A.Value == Value {
         completeWith(other)
     }
     
@@ -79,13 +79,13 @@ public class Async<Value>: AsyncType {
     ///         }
     ///     }
     ///
-    public required init(resolver: @noescape (result: (Value) -> Void) -> Void) {
+    public required init(resolver: (_ result: @escaping (Value) -> Void) -> Void) {
         resolver { val in
             self.complete(val)
         }
     }
     
-    private func runCallbacks() {
+    fileprivate func runCallbacks() {
         guard let result = self.result else {
             assert(false, "can only run callbacks on a completed future")
             return
@@ -102,7 +102,7 @@ public class Async<Value>: AsyncType {
     /// If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns self
     @discardableResult
-    public func onComplete(_ context: ExecutionContext = DefaultThreadingModel(), callback: (Value) -> Void) -> Self {
+    open func onComplete(_ context: ExecutionContext = DefaultThreadingModel(), callback: @escaping (Value) -> Void) -> Self {
         let wrappedCallback : (Value) -> Void = { [weak self] value in
             let a = self // this is a workaround for a compiler segfault
             

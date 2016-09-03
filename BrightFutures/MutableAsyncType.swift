@@ -28,7 +28,7 @@ extension MutableAsyncType {
         }
     }
     
-    func completeWith<A: AsyncType where A.Value == Value>(_ other: A) {
+    func completeWith<A: AsyncType>(_ other: A) where A.Value == Value {
         other.onComplete(ImmediateExecutionContext, callback: self.complete)
     }
 }

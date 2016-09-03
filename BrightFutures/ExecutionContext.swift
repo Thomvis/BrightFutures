@@ -24,7 +24,7 @@ import Foundation
 
 /// The context in which something can be executed
 /// By default, an execution context can be assumed to be asynchronous unless stated otherwise
-public typealias ExecutionContext = (() -> Void) -> Void
+public typealias ExecutionContext = (@escaping () -> Void) -> Void
 
 /// Immediately executes the given task. No threading, no semaphores.
 public let ImmediateExecutionContext: ExecutionContext = { task in

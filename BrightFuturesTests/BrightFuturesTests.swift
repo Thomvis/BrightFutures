@@ -253,11 +253,11 @@ extension BrightFuturesTests {
             }
         }
         
-        let f = materialize { testCall(0, completionHandler: $0) }
+        let f = BrightFutures.materialize { testCall(0, completionHandler: $0) }
         XCTAssert(f.error == nil)
         
-        let f2 = materialize { testCall(2, completionHandler: $0) }
-        XCTAssert(f2.error == TestError.justAnError)
+        let f2 = BrightFutures.materialize { testCall(2, completionHandler: $0) }
+        XCTAssert(f2.error! == TestError.justAnError)
     }
 }
 
@@ -572,9 +572,9 @@ extension BrightFuturesTests {
             Thread.sleep(forTimeInterval: 0.5)
         }
         
-        XCTAssert(f.forced(timeout: 100.milliseconds.fromNow) == nil)
+        XCTAssert(f.forced(100.milliseconds.fromNow) == nil)
         
-        XCTAssert(f.forced(timeout: 500.milliseconds.fromNow) != nil)
+        XCTAssert(f.forced(500.milliseconds.fromNow) != nil)
     }
     
     func testForcingCompletedFuture() {
@@ -1165,6 +1165,6 @@ func fibonacciFuture(_ n: Int) -> Future<Int, NoError> {
     return Future<Int, NoError>(value: fibonacci(n))
 }
 
-func getMutablePointer (_ object: AnyObject) -> UnsafeMutablePointer<Void> {
-    return UnsafeMutablePointer<Void>(bitPattern: Int(UInt(ObjectIdentifier(object))))!
+func getMutablePointer (_ object: AnyObject) -> UnsafeMutableRawPointer {
+    return UnsafeMutableRawPointer(bitPattern: Int(UInt(bitPattern: ObjectIdentifier(object))))!
 }
