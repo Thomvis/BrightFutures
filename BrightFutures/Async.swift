@@ -104,10 +104,9 @@ open class Async<Value>: AsyncType {
     @discardableResult
     open func onComplete(_ context: ExecutionContext = DefaultThreadingModel(), callback: @escaping (Value) -> Void) -> Self {
         let wrappedCallback : (Value) -> Void = { [weak self] value in
-            let a = self // this is a workaround for a compiler segfault
             
             context {
-                a?.callbackExecutionSemaphore.context {
+                self?.callbackExecutionSemaphore.context {
                     callback(value)
                 }
                 return
