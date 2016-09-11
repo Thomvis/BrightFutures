@@ -20,7 +20,7 @@ public protocol AsyncType {
     init(resolver: (_ result: @escaping (Value) -> Void) -> Void)
     
     @discardableResult
-    func onComplete(_ context: ExecutionContext, callback: @escaping (Value) -> Void) -> Self
+    func onComplete(_ context: @escaping ExecutionContext, callback: @escaping (Value) -> Void) -> Self
 }
 
 public extension AsyncType {
