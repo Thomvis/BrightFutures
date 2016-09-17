@@ -23,31 +23,31 @@
 import Foundation
 import Result
 
-extension SequenceType {
+extension Sequence {
     /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
     /// If no context is provided, the given closure is executed on `Queue.global`
-    public func traverse<U, E, A: AsyncType where A.Value: ResultType, A.Value.Value == U, A.Value.Error == E>(context: ExecutionContext = Queue.global.context, f: Generator.Element -> A) -> Future<[U], E> {
+    public func traverse<U, E, A: AsyncType>(_ context: @escaping ExecutionContext = DispatchQueue.global().context, f: (Iterator.Element) -> A) -> Future<[U], E> where A.Value: ResultProtocol, A.Value.Value == U, A.Value.Error == E {
         return map(f).fold(context, zero: [U]()) { (list: [U], elem: U) -> [U] in
             return list + [elem]
         }
     }
 }
 
-extension SequenceType where Generator.Element: AsyncType {
+extension Sequence where Iterator.Element: AsyncType {
     /// Returns a future that returns with the first future from the given sequence that completes
     /// (regardless of whether that future succeeds or fails)
-    public func firstCompleted() -> Generator.Element {
-        let res = Async<Generator.Element.Value>()
+    public func firstCompleted() -> Iterator.Element {
+        let res = Async<Iterator.Element.Value>()
         for fut in self {
-            fut.onComplete(Queue.global.context) {
+            fut.onComplete(DispatchQueue.global().context) {
                 res.tryComplete($0)
             }
         }
-        return Generator.Element(other: res)
+        return Iterator.Element(other: res)
     }
 }
 
-extension SequenceType where Generator.Element: AsyncType, Generator.Element.Value: ResultType {
+extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: ResultProtocol {
     
     //// The free functions in this file operate on sequences of Futures
     
@@ -55,14 +55,14 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// on `Queue.global`.
     /// (The Swift compiler does not allow a context parameter with a default value
     /// so we define some functions twice)
-    public func fold<R>(zero: R, f: (R, Generator.Element.Value.Value) -> R) -> Future<R, Generator.Element.Value.Error> {
-        return fold(Queue.global.context, zero: zero, f: f)
+    public func fold<R>(_ zero: R, f: @escaping (R, Iterator.Element.Value.Value) -> R) -> Future<R, Iterator.Element.Value.Error> {
+        return fold(DispatchQueue.global().context, zero: zero, f: f)
     }
     
     /// Performs the fold operation over a sequence of futures. The folding is performed
     /// in the given context.
-    public func fold<R>(context: ExecutionContext, zero: R, f: (R, Generator.Element.Value.Value) -> R) -> Future<R, Generator.Element.Value.Error> {
-        return reduce(Future<R, Generator.Element.Value.Error>(value: zero)) { zero, elem in
+    public func fold<R>(_ context: @escaping ExecutionContext, zero: R, f: @escaping (R, Iterator.Element.Value.Value) -> R) -> Future<R, Iterator.Element.Value.Error> {
+        return reduce(Future<R, Iterator.Element.Value.Error>(value: zero)) { zero, elem in
             return zero.flatMap(MaxStackDepthExecutionContext) { zeroVal in
                 elem.map(context) { elemVal in
                     return f(zeroVal, elemVal)
@@ -74,15 +74,15 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// Turns a sequence of `Future<T>`'s into a future with an array of T's (Future<[T]>)
     /// If one of the futures in the given sequence fails, the returned future will fail
     /// with the error of the first future that comes first in the list.
-    public func sequence() -> Future<[Generator.Element.Value.Value], Generator.Element.Value.Error> {
+    public func sequence() -> Future<[Iterator.Element.Value.Value], Iterator.Element.Value.Error> {
         return traverse(ImmediateExecutionContext) {
             return $0
         }
     }
     
-    /// See `find<S: SequenceType, T where S.Generator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
-    public func find(p: Generator.Element.Value.Value -> Bool) -> Future<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> {
-        return find(Queue.global.context, p: p)
+    /// See `find<S: SequenceType, T where S.Iterator.Element == Future<T>>(seq: S, context c: ExecutionContext, p: T -> Bool) -> Future<T>`
+    public func find(_ p: @escaping (Iterator.Element.Value.Value) -> Bool) -> Future<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> {
+        return find(DispatchQueue.global().context, p: p)
     }
     
     /// Returns a future that succeeds with the value from the first future in the given
@@ -90,35 +90,35 @@ extension SequenceType where Generator.Element: AsyncType, Generator.Element.Val
     /// If any of the futures in the given sequence fail, the returned future fails with the
     /// error of the first failed future in the sequence.
     /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
-    public func find(context: ExecutionContext, p: Generator.Element.Value.Value -> Bool) -> Future<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> {
+    public func find(_ context: @escaping ExecutionContext, p: @escaping (Iterator.Element.Value.Value) -> Bool) -> Future<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> {
         return sequence().mapError(ImmediateExecutionContext) { error in
             return BrightFuturesError(external: error)
-        }.flatMap(context) { val -> Result<Generator.Element.Value.Value, BrightFuturesError<Generator.Element.Value.Error>> in
+        }.flatMap(context) { val -> Result<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> in
             for elem in val {
                 if (p(elem)) {
                     return Result(value: elem)
                 }
             }
-            return Result(error: .NoSuchElement)
+            return Result(error: .noSuchElement)
         }
     }
 }
 
-extension SequenceType where Generator.Element: ResultType {
+extension Sequence where Iterator.Element: ResultProtocol {
     /// Turns a sequence of `Result<T>`'s into a Result with an array of T's (`Result<[T]>`)
-    /// If one of the results in the given sequence is a .Failure, the returned result is a .Failure with the
+    /// If one of the results in the given sequence is a .failure, the returned result is a .failure with the
     /// error from the first failed result from the sequence.
-    public func sequence() -> Result<[Generator.Element.Value], Generator.Element.Error> {
-        return reduce(Result(value: [])) { (res, elem) -> Result<[Generator.Element.Value], Generator.Element.Error> in
+    public func sequence() -> Result<[Iterator.Element.Value], Iterator.Element.Error> {
+        return reduce(Result(value: [])) { (res, elem) -> Result<[Iterator.Element.Value], Iterator.Element.Error> in
             switch res {
-            case .Success(let resultSequence):
+            case .success(let resultSequence):
                 return elem.analysis(ifSuccess: {
                     let newSeq = resultSequence + [$0]
                     return Result(value: newSeq)
                 }, ifFailure: {
                     return Result(error: $0)
                 })
-            case .Failure(_):
+            case .failure(_):
                 return res
             }
         }

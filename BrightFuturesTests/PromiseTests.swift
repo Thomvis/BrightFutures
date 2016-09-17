@@ -15,47 +15,47 @@ class PromiseTests: XCTestCase {
     func testSuccessPromise() {
         let p = Promise<Int, NoError>()
         
-        Queue.global.async {
+        DispatchQueue.global().async {
             p.success(fibonacci(10))
         }
         
-        let e = self.expectationWithDescription("complete expectation")
+        let e = self.expectation(description: "complete expectation")
         
         p.future.onComplete { result in
             switch result {
-            case .Success(let val):
+            case .success(let val):
                 XCTAssert(Int(55) == val)
-            case .Failure(_):
+            case .failure(_):
                 XCTAssert(false)
             }
             
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testFailurePromise() {
         let p = Promise<Int, TestError>()
         
-        Queue.global.async {
-            p.tryFailure(TestError.JustAnError)
+        DispatchQueue.global().async {
+            p.tryFailure(TestError.justAnError)
         }
         
-        let e = self.expectationWithDescription("complete expectation")
+        let e = self.expectation(description: "complete expectation")
         
         p.future.onComplete { result in
             switch result {
-            case .Success(_):
+            case .success(_):
                 XCTFail("should not be success")
-            case .Failure(let err):
-                XCTAssertEqual(err, TestError.JustAnError)
+            case .failure(let err):
+                XCTAssertEqual(err, TestError.justAnError)
             }
             
             e.fulfill()
         }
         
-        self.waitForExpectationsWithTimeout(2, handler: nil)
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testCompletePromise() {
@@ -75,10 +75,10 @@ class PromiseTests: XCTestCase {
     
     func testPromiseCompleteWithFailure() {
         let p = Promise<Int, TestError>()
-        p.tryComplete(Result(error: TestError.JustAnError))
+        p.tryComplete(Result(error: TestError.justAnError))
         
         XCTAssert(p.future.isFailure)
-        XCTAssert(p.future.forced() == Result<Int, TestError>(error:TestError.JustAnError))
+        XCTAssert(p.future.forced() == Result<Int, TestError>(error:TestError.justAnError))
     }
     
     func testPromiseTrySuccessTwice() {
@@ -90,9 +90,9 @@ class PromiseTests: XCTestCase {
     
     func testPromiseTryFailureTwice() {
         let p = Promise<Int, TestError>()
-        XCTAssert(p.tryFailure(TestError.JustAnError))
-        XCTAssertFalse(p.tryFailure(TestError.JustAnotherError))
-        XCTAssertEqual(p.future.forced().error!, TestError.JustAnError)
+        XCTAssert(p.tryFailure(TestError.justAnError))
+        XCTAssertFalse(p.tryFailure(TestError.justAnotherError))
+        XCTAssertEqual(p.future.forced().error!, TestError.justAnError)
     }
     
     func testPromiseCompleteWithSucceedingFuture() {
@@ -113,7 +113,7 @@ class PromiseTests: XCTestCase {
         p.completeWith(q.future)
         
         XCTAssert(!p.future.isCompleted)
-        q.failure(.JustAnError)
-        XCTAssertEqual(p.future.error, .JustAnError)
+        q.failure(.justAnError)
+        XCTAssertEqual(p.future.error, .justAnError)
     }
 }

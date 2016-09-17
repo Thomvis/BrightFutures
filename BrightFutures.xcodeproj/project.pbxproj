@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
-		E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; };
 		E943D28E1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; };
@@ -20,8 +19,6 @@
 		E98647B51BF3288400B6BEEE /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E98647B61BF3288400B6BEEE /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
 		E98647B71BF3288400B6BEEE /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
-		E98647B81BF3288400B6BEEE /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
-		E98647B91BF3288400B6BEEE /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E98647BA1BF3288400B6BEEE /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 		E98647BB1BF3288400B6BEEE /* AsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */; };
 		E98647BC1BF3288400B6BEEE /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
@@ -38,16 +35,13 @@
 		E98647C71BF3288D00B6BEEE /* InvalidationTokenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AD1A6CE69B00CADD9F /* InvalidationTokenTests.swift */; };
 		E98647C81BF3288D00B6BEEE /* ErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C51B1FA28F0000558F /* ErrorsTests.swift */; };
 		E98647C91BF3288D00B6BEEE /* ExecutionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */; };
-		E98647CA1BF3288D00B6BEEE /* SemaphoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69BA11B93384800713A91 /* SemaphoreTests.swift */; };
 		E98647CB1BF3288D00B6BEEE /* NSOperationQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */; };
 		E98647CE1BF328B400B6BEEE /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98647CD1BF328B400B6BEEE /* Result.framework */; };
 		E9877CB31B826AA5009DB030 /* InvalidationToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D923AB1A6CE29A00CADD9F /* InvalidationToken.swift */; };
 		E9877CB41B826AA5009DB030 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E9877CB51B826AA5009DB030 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
 		E9877CB61B826AA5009DB030 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
-		E9877CB71B826AA5009DB030 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 		E9877CB81B826AA5009DB030 /* SequenceType+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */; };
-		E9877CB91B826AA5009DB030 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9877CBA1B826AA5009DB030 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
 		E9877CBB1B826AA5009DB030 /* AsyncType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */; };
 		E9877CBC1B826AA5009DB030 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DD4EF01B4ED6850070C2AF /* Async.swift */; };
@@ -72,9 +66,7 @@
 		E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
 		E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
-		E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 		E9D45B1F1AF00670000F6CA7 /* SequenceType+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */; };
-		E9D45B201AF00670000F6CA7 /* Semaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */; };
 		E9D45B211AF00676000F6CA7 /* BrightFuturesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0827194470060083F7F2 /* BrightFuturesTests.swift */; };
 		E9D45B221AF00676000F6CA7 /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E9D45B231AF00676000F6CA7 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
@@ -89,11 +81,18 @@
 		E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0831194470190083F7F2 /* ExecutionContext.swift */; };
 		E9DF0836194470190083F7F2 /* Future.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0832194470190083F7F2 /* Future.swift */; };
 		E9DF0837194470190083F7F2 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0833194470190083F7F2 /* Promise.swift */; };
-		E9DF0838194470190083F7F2 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DF0834194470190083F7F2 /* Queue.swift */; };
 		E9E422C61B1FA28F0000558F /* ErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C51B1FA28F0000558F /* ErrorsTests.swift */; };
 		E9E422C71B1FA28F0000558F /* ErrorsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C51B1FA28F0000558F /* ErrorsTests.swift */; };
 		E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */; };
 		E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */; };
+		E9E8925D1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E8925C1D5F24AE00C1859D /* Dispatch+BrightFutures.swift */; };
+		E9E8925E1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E8925C1D5F24AE00C1859D /* Dispatch+BrightFutures.swift */; };
+		E9E8925F1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E8925C1D5F24AE00C1859D /* Dispatch+BrightFutures.swift */; };
+		E9E892601D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E8925C1D5F24AE00C1859D /* Dispatch+BrightFutures.swift */; };
+		E9E892621D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E892611D5F2C6500C1859D /* Number+BrightFutures.swift */; };
+		E9E892631D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E892611D5F2C6500C1859D /* Number+BrightFutures.swift */; };
+		E9E892641D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E892611D5F2C6500C1859D /* Number+BrightFutures.swift */; };
+		E9E892651D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E892611D5F2C6500C1859D /* Number+BrightFutures.swift */; };
 		E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496E51B03981100F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E9F496EF1B052F1400F82839 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F496EE1B052F1400F82839 /* Errors.swift */; };
@@ -101,8 +100,6 @@
 		E9F69B9B1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; };
 		E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; };
 		E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */; };
-		E9F69BA21B93384800713A91 /* SemaphoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69BA11B93384800713A91 /* SemaphoreTests.swift */; };
-		E9F69BA31B93384800713A91 /* SemaphoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9F69BA11B93384800713A91 /* SemaphoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -154,7 +151,6 @@
 
 /* Begin PBXFileReference section */
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
-		E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Semaphore.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOperationQueue+BrightFutures.swift"; sourceTree = "<group>"; };
 		E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+BrightFutures.swift"; sourceTree = "<group>"; };
@@ -184,12 +180,12 @@
 		E9DF0831194470190083F7F2 /* ExecutionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContext.swift; sourceTree = "<group>"; };
 		E9DF0832194470190083F7F2 /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
 		E9DF0833194470190083F7F2 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
-		E9DF0834194470190083F7F2 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		E9E422C51B1FA28F0000558F /* ErrorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorsTests.swift; sourceTree = "<group>"; };
 		E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContextTests.swift; sourceTree = "<group>"; };
+		E9E8925C1D5F24AE00C1859D /* Dispatch+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dispatch+BrightFutures.swift"; sourceTree = "<group>"; };
+		E9E892611D5F2C6500C1859D /* Number+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Number+BrightFutures.swift"; sourceTree = "<group>"; };
 		E9F496EE1B052F1400F82839 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+BrightFutures.swift"; sourceTree = "<group>"; };
-		E9F69BA11B93384800713A91 /* SemaphoreTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SemaphoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -326,8 +322,6 @@
 				E9DF0831194470190083F7F2 /* ExecutionContext.swift */,
 				E9DF0832194470190083F7F2 /* Future.swift */,
 				E9DF0833194470190083F7F2 /* Promise.swift */,
-				E9DF0834194470190083F7F2 /* Queue.swift */,
-				E907D1DD1A6AE4A000AB8075 /* Semaphore.swift */,
 				E9F496EE1B052F1400F82839 /* Errors.swift */,
 				E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */,
 				E9DD4EF01B4ED6850070C2AF /* Async.swift */,
@@ -338,6 +332,8 @@
 				E979E5F31975B1AA007FE914 /* SequenceType+BrightFutures.swift */,
 				E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
+				E9E8925C1D5F24AE00C1859D /* Dispatch+BrightFutures.swift */,
+				E9E892611D5F2C6500C1859D /* Number+BrightFutures.swift */,
 			);
 			path = BrightFutures;
 			sourceTree = "<group>";
@@ -360,7 +356,6 @@
 				E9D923AD1A6CE69B00CADD9F /* InvalidationTokenTests.swift */,
 				E9E422C51B1FA28F0000558F /* ErrorsTests.swift */,
 				E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */,
-				E9F69BA11B93384800713A91 /* SemaphoreTests.swift */,
 				E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */,
 				E9DF0825194470060083F7F2 /* Supporting Files */,
 			);
@@ -637,15 +632,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E98647B81BF3288400B6BEEE /* Queue.swift in Sources */,
 				E98647C21BF3288400B6BEEE /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E98647BD1BF3288400B6BEEE /* AsyncType+ResultType.swift in Sources */,
+				E9E892601D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E98647B61BF3288400B6BEEE /* Future.swift in Sources */,
 				E98647BB1BF3288400B6BEEE /* AsyncType.swift in Sources */,
+				E9E892651D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */,
 				E98647B51BF3288400B6BEEE /* ExecutionContext.swift in Sources */,
 				E98647BC1BF3288400B6BEEE /* Async.swift in Sources */,
 				E98647B41BF3288400B6BEEE /* InvalidationToken.swift in Sources */,
-				E98647B91BF3288400B6BEEE /* Semaphore.swift in Sources */,
 				E98647B71BF3288400B6BEEE /* Promise.swift in Sources */,
 				E98647BE1BF3288400B6BEEE /* MutableAsyncType.swift in Sources */,
 				E98647C01BF3288400B6BEEE /* Result+BrightFutures.swift in Sources */,
@@ -666,7 +661,6 @@
 				E98647C91BF3288D00B6BEEE /* ExecutionContextTests.swift in Sources */,
 				E98647C51BF3288D00B6BEEE /* QueueTests.swift in Sources */,
 				E98647C61BF3288D00B6BEEE /* ResultTests.swift in Sources */,
-				E98647CA1BF3288D00B6BEEE /* SemaphoreTests.swift in Sources */,
 				E98647C41BF3288D00B6BEEE /* PromiseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -675,11 +669,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E9877CB71B826AA5009DB030 /* Queue.swift in Sources */,
 				E943D28F1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E9877CB51B826AA5009DB030 /* Future.swift in Sources */,
+				E9E8925F1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E9877CB41B826AA5009DB030 /* ExecutionContext.swift in Sources */,
 				E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
+				E9E892641D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */,
 				E9877CB31B826AA5009DB030 /* InvalidationToken.swift in Sources */,
 				E9877CBA1B826AA5009DB030 /* Errors.swift in Sources */,
 				E9877CBD1B826AA5009DB030 /* AsyncType+ResultType.swift in Sources */,
@@ -687,7 +682,6 @@
 				E9877CBE1B826AA5009DB030 /* MutableAsyncType.swift in Sources */,
 				E9877CBF1B826AA5009DB030 /* MutableAsyncType+ResultType.swift in Sources */,
 				E9877CB81B826AA5009DB030 /* SequenceType+BrightFutures.swift in Sources */,
-				E9877CB91B826AA5009DB030 /* Semaphore.swift in Sources */,
 				E9877CBC1B826AA5009DB030 /* Async.swift in Sources */,
 				E9877CB61B826AA5009DB030 /* Promise.swift in Sources */,
 			);
@@ -699,9 +693,10 @@
 			files = (
 				E9F496F01B052F1400F82839 /* Errors.swift in Sources */,
 				E943D28E1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
+				E9E8925E1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */,
-				E9D45B1E1AF00668000F6CA7 /* Queue.swift in Sources */,
 				E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
+				E9E892631D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */,
 				E9D45B1A1AF00668000F6CA7 /* ExecutionContext.swift in Sources */,
 				E9DD4EF21B4F16C00070C2AF /* Async.swift in Sources */,
 				E9D45B1F1AF00670000F6CA7 /* SequenceType+BrightFutures.swift in Sources */,
@@ -710,7 +705,6 @@
 				E9B094691B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */,
 				E9D45B1D1AF00668000F6CA7 /* Promise.swift in Sources */,
 				E992A9601B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */,
-				E9D45B201AF00670000F6CA7 /* Semaphore.swift in Sources */,
 				E9D45B191AF00668000F6CA7 /* InvalidationToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -727,7 +721,6 @@
 				E9D45B221AF00676000F6CA7 /* QueueTests.swift in Sources */,
 				E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9D45B231AF00676000F6CA7 /* ResultTests.swift in Sources */,
-				E9F69BA31B93384800713A91 /* SemaphoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -737,8 +730,10 @@
 			files = (
 				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
 				E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
+				E9E8925D1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* SequenceType+BrightFutures.swift in Sources */,
 				E95507001B525D0B00359F73 /* Async.swift in Sources */,
+				E9E892621D5F2C6500C1859D /* Number+BrightFutures.swift in Sources */,
 				E9F69B9B1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
 				E9DF0836194470190083F7F2 /* Future.swift in Sources */,
 				E9DF0835194470190083F7F2 /* ExecutionContext.swift in Sources */,
@@ -747,9 +742,7 @@
 				E9CA7B411B555DB200102F87 /* MutableAsyncType.swift in Sources */,
 				E9B094681B5FE086003AC209 /* MutableAsyncType+ResultType.swift in Sources */,
 				E9D923AC1A6CE29A00CADD9F /* InvalidationToken.swift in Sources */,
-				E907D1DE1A6AE4A000AB8075 /* Semaphore.swift in Sources */,
 				E992A95F1B501AC800A9FC4F /* AsyncType+ResultType.swift in Sources */,
-				E9DF0838194470190083F7F2 /* Queue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -765,7 +758,6 @@
 				E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */,
 				E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */,
-				E9F69BA21B93384800713A91 /* SemaphoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1085,7 +1077,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1126,7 +1118,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 2.3;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1155,6 +1147,7 @@
 				PRODUCT_NAME = BrightFutures;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1179,6 +1172,7 @@
 				PRODUCT_NAME = BrightFutures;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -1199,6 +1193,7 @@
 				METAL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1216,6 +1211,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

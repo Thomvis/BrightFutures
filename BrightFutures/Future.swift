@@ -23,84 +23,6 @@
 import Foundation
 import Result
 
-/// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T>(@autoclosure(escaping) task: () -> T) -> Future<T, NoError> {
-    return future(Queue.global.context, task: task)
-}
-
-/// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T>(task: () -> T) -> Future<T, NoError> {
-    return future(Queue.global.context, task: task)
-}
-
-/// Executes the given task on the given context and wraps the result of the task in a Future
-public func future<T>(context: ExecutionContext, task: () -> T) -> Future<T, NoError> {
-    return future(context: context) { () -> Result<T, NoError> in
-        return Result(value: task())
-    }
-}
-
-/// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T, E>(@autoclosure(escaping) task: () -> Result<T, E>) -> Future<T, E> {
-    return future(context: Queue.global.context, task: task)
-}
-
-/// Executes the given task on `Queue.global` and wraps the result of the task in a Future
-public func future<T, E>(task: () -> Result<T, E>) -> Future<T, E> {
-    return future(context: Queue.global.context, task: task)
-}
-
-/// Executes the given task on the given context and wraps the result of the task in a Future
-public func future<T, E>(context c: ExecutionContext, task: () -> Result<T, E>) -> Future<T, E> {
-    let future = Future<T, E>();
-    
-    c {
-        future.complete(task())
-    }
-    
-    return future
-}
-
-/// Can be used to wrap a completionHandler-based Cocoa API
-/// The completionHandler should have two parameters: a value and an error.
-public func future<T, E>(method: ((T?, E?) -> Void) -> Void) -> Future<T, BrightFuturesError<E>> {
-    return Future(resolver: { completion -> Void in
-        method { value, error in
-            if let value = value {
-                completion(.Success(value))
-            } else if let error = error {
-                completion(.Failure(.External(error)))
-            } else {
-                completion(.Failure(.IllegalState))
-            }
-        }
-    })
-}
-
-/// Can be used to wrap a typical completionHandler-based Cocoa API
-/// The completionHandler should have one parameter: the error
-public func future<E>(method: ((E?) -> Void) -> Void) -> Future<Void, E> {
-    return Future(resolver: { completion -> Void in
-        method { error in
-            if let error = error {
-                completion(.Failure(error))
-            } else {
-                completion(.Success())
-            }
-        }
-    })
-}
-
-/// Can be used to wrap a typical completionHandler-based Cocoa API
-/// The completionHandler should have one parameter: the value
-public func future<T>(method: (T -> Void) -> Void) -> Future<T, NoError> {
-    return Future(resolver: { completion -> Void in
-        method { value in
-            completion(.Success(value))
-        }
-    })
-}
-
 /// A Future represents the outcome of an asynchronous operation
 /// The outcome will be represented as an instance of the `Result` enum and will be stored
 /// in the `result` property. As long as the operation is not yet completed, `result` will be nil.
@@ -109,11 +31,11 @@ public func future<T>(method: (T -> Void) -> Void) -> Future<T, NoError> {
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
-public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
+public final class Future<T, E: Error>: Async<Result<T, E>> {
     
-    public typealias CompletionCallback = (result: Result<T,E>) -> Void
-    public typealias SuccessCallback = T -> Void
-    public typealias FailureCallback = E -> Void
+    public typealias CompletionCallback = (_ result: Result<T,E>) -> Void
+    public typealias SuccessCallback = (T) -> Void
+    public typealias FailureCallback = (E) -> Void
     
     public required init() {
         super.init()
@@ -123,12 +45,16 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         super.init(result: result)
     }
     
-    public init(value: T, delay: NSTimeInterval) {
+    public init(value: T, delay: DispatchTimeInterval) {
         super.init(result: Result<T, E>(value: value), delay: delay)
     }
     
-    public required init<A: AsyncType where A.Value == Value>(other: A) {
+    public required init<A: AsyncType>(other: A) where A.Value == Value {
         super.init(other: other)
+    }
+    
+    public required init(result: Value, delay: DispatchTimeInterval) {
+        super.init(result: result, delay: delay)
     }
     
     public convenience init(value: T) {
@@ -139,15 +65,47 @@ public final class Future<T, E: ErrorType>: Async<Result<T, E>> {
         self.init(result: Result(error: error))
     }
     
-    public required init(@noescape resolver: (result: Value -> Void) -> Void) {
+    public required init(resolver: (_ result: @escaping (Value) -> Void) -> Void) {
         super.init(resolver: resolver)
     }
     
 }
 
+public func materialize<T, E: Error>(_ scope: ((T?, E?) -> Void) -> Void) -> Future<T, E> {
+    return Future { complete in
+        scope { val, err in
+            if let val = val {
+                complete(.success(val))
+            } else if let err = err {
+                complete(.failure(err))
+            }
+        }
+    }
+}
+
+public func materialize<T>(_ scope: ((T) -> Void) -> Void) -> Future<T, NoError> {
+    return Future { complete in
+        scope { val in
+            complete(.success(val))
+        }
+    }
+}
+
+public func materialize<E: Error>(_ scope: ((E?) -> Void) -> Void) -> Future<Void, E> {
+    return Future { complete in
+        scope { err in
+            if let err = err {
+                complete(.failure(err))
+            } else {
+                complete(.success())
+            }
+        }
+    }
+}
+
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) -> Future<T, NoError> {
+public func ?? <T, E>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping  () -> T) -> Future<T, NoError> {
     return lhs.recover(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })
@@ -155,7 +113,7 @@ public func ?? <T, E>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> T) ->
 
 /// Short-hand for `lhs.recoverWith(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E, E1>(lhs: Future<T, E>, @autoclosure(escaping) rhs: () -> Future<T, E1>) -> Future<T, E1> {
+public func ?? <T, E, E1>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping () -> Future<T, E1>) -> Future<T, E1> {
     return lhs.recoverWith(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })

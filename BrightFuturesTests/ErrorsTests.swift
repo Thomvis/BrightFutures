@@ -23,9 +23,9 @@
 import XCTest
 import BrightFutures
 
-enum TestError: ErrorType {
-    case JustAnError
-    case JustAnotherError
+enum TestError: Error {
+    case justAnError
+    case justAnotherError
 }
 
 extension TestError: Equatable {}
@@ -33,12 +33,12 @@ extension TestError: Equatable {}
 class ErrorsTests: XCTestCase {
     
     func testExternalError() {
-        let externalError = TestError.JustAnError
+        let externalError = TestError.justAnError
         let error = BrightFuturesError(external: externalError)
         
         switch error {
-        case .External(let err):
-            XCTAssertEqual(err, TestError.JustAnError, "Should be same error")
+        case .external(let err):
+            XCTAssertEqual(err, TestError.justAnError, "Should be same error")
         default:
             XCTFail("Should match with the external case")
         }

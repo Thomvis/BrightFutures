@@ -1,3 +1,6 @@
+# 5.0.0
+Adds support for Swift 3 and Xcode 8
+
 # 4.1.1
 Adds support for Swift 2.3 and Xcode 8 (tested with beta 4)
 
