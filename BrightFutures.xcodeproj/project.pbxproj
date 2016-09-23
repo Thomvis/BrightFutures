@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE1FE85B1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
+		CE1FE85C1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
+		CE1FE85D1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
+		CE1FE85E1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; };
@@ -150,6 +154,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+Debug.swift"; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOperationQueue+BrightFutures.swift"; sourceTree = "<group>"; };
@@ -326,6 +331,7 @@
 				E9DD4EEE1B4ED51A0070C2AF /* AsyncType.swift */,
 				E9DD4EF01B4ED6850070C2AF /* Async.swift */,
 				E992A95E1B501AC800A9FC4F /* AsyncType+ResultType.swift */,
+				CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */,
 				E9CA7B401B555DB200102F87 /* MutableAsyncType.swift */,
 				E9B094671B5FE086003AC209 /* MutableAsyncType+ResultType.swift */,
 				E9F69B9A1B93347200713A91 /* Result+BrightFutures.swift */,
@@ -634,6 +640,7 @@
 			files = (
 				E98647C21BF3288400B6BEEE /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E98647BD1BF3288400B6BEEE /* AsyncType+ResultType.swift in Sources */,
+				CE1FE85E1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */,
 				E9E892601D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E98647B61BF3288400B6BEEE /* Future.swift in Sources */,
 				E98647BB1BF3288400B6BEEE /* AsyncType.swift in Sources */,
@@ -671,6 +678,7 @@
 			files = (
 				E943D28F1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
 				E9877CB51B826AA5009DB030 /* Future.swift in Sources */,
+				CE1FE85D1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */,
 				E9E8925F1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E9877CB41B826AA5009DB030 /* ExecutionContext.swift in Sources */,
 				E9F69B9D1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
@@ -693,6 +701,7 @@
 			files = (
 				E9F496F01B052F1400F82839 /* Errors.swift in Sources */,
 				E943D28E1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
+				CE1FE85C1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */,
 				E9E8925E1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E9D45B1B1AF00668000F6CA7 /* Future.swift in Sources */,
 				E9F69B9C1B93347200713A91 /* Result+BrightFutures.swift in Sources */,
@@ -730,6 +739,7 @@
 			files = (
 				E9F496EF1B052F1400F82839 /* Errors.swift in Sources */,
 				E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */,
+				CE1FE85B1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */,
 				E9E8925D1D5F24AE00C1859D /* Dispatch+BrightFutures.swift in Sources */,
 				E979E5F41975B1AA007FE914 /* SequenceType+BrightFutures.swift in Sources */,
 				E95507001B525D0B00359F73 /* Async.swift in Sources */,
