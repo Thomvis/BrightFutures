@@ -47,6 +47,20 @@ class FutureDebugTests: XCTestCase {
         self.waitForExpectations(timeout: 2, handler: nil)
     }
     
+    func testDebugFutureFailure() {
+        let logger = TestLogger()
+        let f = Future<Void, NSError>(error: error).debug(logger: logger, file: file, line: line, function: function)
+        let debugExpectation = self.expectation(description: "debugLogged")
+        let expectedMessage = "\(file.lastPathComponent) at line \(line), func: \(function) - future failed"
+        
+        f.onFailure { _ in
+            XCTAssertEqual(logger.lastLoggedMessage, expectedMessage)
+            debugExpectation.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+    
     func testDebugFutureSuccessWithIdentifier() {
         let logger = TestLogger()
         
