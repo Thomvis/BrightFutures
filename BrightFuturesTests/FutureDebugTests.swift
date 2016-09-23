@@ -21,6 +21,9 @@ class TestLogger: LoggerType {
 class FutureDebugTests: XCTestCase {
     let testIdentifier = "testFutureIdentifier"
     let error = NSError(domain: "test", code: 0, userInfo: nil)
+    let file = #file
+    let line: UInt = #line
+    let function = #function
     
     func testStringLastPathComponent() {
         XCTAssertEqual("/tmp/scratch.tiff".lastPathComponent, "scratch.tiff")
@@ -28,6 +31,20 @@ class FutureDebugTests: XCTestCase {
         XCTAssertEqual("/tmp/".lastPathComponent, "tmp")
         XCTAssertEqual("scratch///".lastPathComponent, "scratch")
         XCTAssertEqual("/".lastPathComponent, "/")
+    }
+    
+    func testDebugFutureSuccess() {
+        let logger = TestLogger()
+        let f = Future<Void, NoError>(value: ()).debug(logger: logger, file: file, line: line, function: function)
+        let expectedMessage = "\(file.lastPathComponent) at line \(line), func: \(function) - future succeeded"
+        let debugExpectation = self.expectation(description: "debugLogged")
+        
+        f.onSuccess {
+            XCTAssertEqual(logger.lastLoggedMessage, expectedMessage)
+            debugExpectation.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: 2, handler: nil)
     }
     
     func testDebugFutureSuccessWithIdentifier() {
