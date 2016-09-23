@@ -12,7 +12,7 @@ public protocol LoggerType {
     func log(message: String)
 }
 
-struct Logger: LoggerType {
+fileprivate struct Logger: LoggerType {
     func log(message: String) {
         print(message)
     }
