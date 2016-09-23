@@ -24,6 +24,21 @@ public extension AsyncType where Value: ResultProtocol {
             logger.log(message: messageBlock(result))
         })
     }
+    
+    public func debug(_ identifer: String? = nil, logger: LoggerType = Logger(), file: String = #file, line: UInt = #line, function: String = #function, context c: @escaping ExecutionContext = DefaultThreadingModel()) -> Self {
+        return debug(logger: logger, context: c, messageBlock: { result -> String in
+            let messageBody: String
+            let resultString = result.analysis(ifSuccess: { _ in "succeeded" } , ifFailure: { _ in "failed" })
+            
+            if let identifer = identifer {
+                messageBody = "Future \(identifer)"
+            } else {
+                messageBody = "\(file.lastPathComponent) at line \(line), func: \(function) - future"
+            }
+            
+            return "\(messageBody) \(resultString)"
+        })
+    }
 }
 
 extension String {
