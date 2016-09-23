@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Result
 @testable import BrightFutures
 
 class TestLogger: LoggerType {
@@ -18,6 +19,7 @@ class TestLogger: LoggerType {
 }
 
 class FutureDebugTests: XCTestCase {
+    let testIdentifier = "testFutureIdentifier"
     
     func testStringLastPathComponent() {
         XCTAssertEqual("/tmp/scratch.tiff".lastPathComponent, "scratch.tiff")
@@ -27,4 +29,17 @@ class FutureDebugTests: XCTestCase {
         XCTAssertEqual("/".lastPathComponent, "/")
     }
     
+    func testDebugFutureSuccessWithIdentifier() {
+        let logger = TestLogger()
+        
+        let f = Future<Void, NoError>(value: ()).debug(testIdentifier, logger: logger)
+        let debugExpectation = self.expectation(description: "debugLogged")
+        
+        f.onSuccess {
+            XCTAssertEqual(logger.lastLoggedMessage, "Future \(self.testIdentifier) succeeded")
+            debugExpectation.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
 }
