@@ -25,3 +25,9 @@ public extension AsyncType where Value: ResultProtocol {
         })
     }
 }
+
+extension String {
+    var lastPathComponent: String {
+        return characters.split(separator: "/").lazy.last.flatMap({ String($0) }) ?? self
+    }
+}
