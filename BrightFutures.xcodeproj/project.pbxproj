@@ -11,6 +11,9 @@
 		CE1FE85C1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
 		CE1FE85D1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
 		CE1FE85E1D951F1400B2BB9F /* AsyncType+Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */; };
+		CE1FE8601D952C3D00B2BB9F /* FutureDebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85F1D952C3D00B2BB9F /* FutureDebugTests.swift */; };
+		CE1FE8611D952C3D00B2BB9F /* FutureDebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85F1D952C3D00B2BB9F /* FutureDebugTests.swift */; };
+		CE1FE8621D952C3D00B2BB9F /* FutureDebugTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1FE85F1D952C3D00B2BB9F /* FutureDebugTests.swift */; };
 		E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */; };
 		E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9319EA31A397D2C00A0604A /* QueueTests.swift */; };
 		E943D28D1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */; };
@@ -155,6 +158,7 @@
 
 /* Begin PBXFileReference section */
 		CE1FE85A1D951F1400B2BB9F /* AsyncType+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+Debug.swift"; sourceTree = "<group>"; };
+		CE1FE85F1D952C3D00B2BB9F /* FutureDebugTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureDebugTests.swift; sourceTree = "<group>"; };
 		E9039ADC1A45DF8D000DD6F1 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
 		E9319EA31A397D2C00A0604A /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
 		E943D28C1BAC0FFD00E9EFB3 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOperationQueue+BrightFutures.swift"; sourceTree = "<group>"; };
@@ -363,6 +367,7 @@
 				E9E422C51B1FA28F0000558F /* ErrorsTests.swift */,
 				E9E422C81B1FA5300000558F /* ExecutionContextTests.swift */,
 				E99397C31BAD49EC00A0B077 /* NSOperationQueueTests.swift */,
+				CE1FE85F1D952C3D00B2BB9F /* FutureDebugTests.swift */,
 				E9DF0825194470060083F7F2 /* Supporting Files */,
 			);
 			path = BrightFuturesTests;
@@ -667,6 +672,7 @@
 				E98647CB1BF3288D00B6BEEE /* NSOperationQueueTests.swift in Sources */,
 				E98647C91BF3288D00B6BEEE /* ExecutionContextTests.swift in Sources */,
 				E98647C51BF3288D00B6BEEE /* QueueTests.swift in Sources */,
+				CE1FE8621D952C3D00B2BB9F /* FutureDebugTests.swift in Sources */,
 				E98647C61BF3288D00B6BEEE /* ResultTests.swift in Sources */,
 				E98647C41BF3288D00B6BEEE /* PromiseTests.swift in Sources */,
 			);
@@ -728,6 +734,7 @@
 				E9D45B241AF00676000F6CA7 /* InvalidationTokenTests.swift in Sources */,
 				E9D45B211AF00676000F6CA7 /* BrightFuturesTests.swift in Sources */,
 				E9D45B221AF00676000F6CA7 /* QueueTests.swift in Sources */,
+				CE1FE8611D952C3D00B2BB9F /* FutureDebugTests.swift in Sources */,
 				E9E422CA1B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9D45B231AF00676000F6CA7 /* ResultTests.swift in Sources */,
 			);
@@ -766,6 +773,7 @@
 				E9039ADD1A45DF8D000DD6F1 /* ResultTests.swift in Sources */,
 				E9D923AE1A6CE69B00CADD9F /* InvalidationTokenTests.swift in Sources */,
 				E9DF0828194470060083F7F2 /* BrightFuturesTests.swift in Sources */,
+				CE1FE8601D952C3D00B2BB9F /* FutureDebugTests.swift in Sources */,
 				E9E422C91B1FA5300000558F /* ExecutionContextTests.swift in Sources */,
 				E9319EA41A397D2C00A0604A /* QueueTests.swift in Sources */,
 			);
