@@ -17,3 +17,11 @@ struct Logger: LoggerType {
         print(message)
     }
 }
+
+public extension AsyncType where Value: ResultProtocol {
+    public func debug(logger: LoggerType = Logger(), context c: @escaping ExecutionContext = DefaultThreadingModel(), messageBlock: @escaping (Self.Value) -> String) -> Self {
+        return andThen(context: c, callback: { result in
+            logger.log(message: messageBlock(result))
+        })
+    }
+}
