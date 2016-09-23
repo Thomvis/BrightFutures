@@ -6,4 +6,9 @@
 //  Copyright © 2016 Thomas Visser. All rights reserved.
 //
 
-import Foundation
+import Result
+
+public protocol LoggerType {
+    func log(message: String)
+}
+
