@@ -9,6 +9,14 @@
 import XCTest
 @testable import BrightFutures
 
+class TestLogger: LoggerType {
+    var lastLoggedMessage: String?
+    
+    func log(message: String) {
+        lastLoggedMessage = message
+    }
+}
+
 class FutureDebugTests: XCTestCase {
     
     func testStringLastPathComponent() {
