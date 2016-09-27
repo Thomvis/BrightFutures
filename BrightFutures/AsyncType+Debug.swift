@@ -6,6 +6,7 @@
 //  Copyright © 2016 Thomas Visser. All rights reserved.
 //
 
+import Foundation
 import Result
 
 public protocol LoggerType {
@@ -33,16 +34,11 @@ public extension AsyncType where Value: ResultProtocol {
             if let identifer = identifer {
                 messageBody = "Future \(identifer)"
             } else {
-                messageBody = "\(file.lastPathComponent) at line \(line), func: \(function) - future"
+                let fileName = (file as NSString).lastPathComponent
+                messageBody = "\(fileName) at line \(line), func: \(function) - future"
             }
             
             return "\(messageBody) \(resultString)"
         })
-    }
-}
-
-extension String {
-    var lastPathComponent: String {
-        return characters.split(separator: "/").lazy.last.flatMap({ String($0) }) ?? self
     }
 }
