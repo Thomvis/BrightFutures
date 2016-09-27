@@ -8,7 +8,7 @@
 
 import XCTest
 import Result
-@testable import BrightFutures
+import BrightFutures
 
 class TestLogger: LoggerType {
     var lastLoggedMessage: String?
@@ -22,21 +22,14 @@ class FutureDebugTests: XCTestCase {
     let testIdentifier = "testFutureIdentifier"
     let error = NSError(domain: "test", code: 0, userInfo: nil)
     let file = #file
+    let fileName = (#file as NSString).lastPathComponent
     let line: UInt = #line
     let function = #function
-    
-    func testStringLastPathComponent() {
-        XCTAssertEqual("/tmp/scratch.tiff".lastPathComponent, "scratch.tiff")
-        XCTAssertEqual("/tmp/scratch".lastPathComponent, "scratch")
-        XCTAssertEqual("/tmp/".lastPathComponent, "tmp")
-        XCTAssertEqual("scratch///".lastPathComponent, "scratch")
-        XCTAssertEqual("/".lastPathComponent, "/")
-    }
     
     func testDebugFutureSuccess() {
         let logger = TestLogger()
         let f = Future<Void, NoError>(value: ()).debug(logger: logger, file: file, line: line, function: function)
-        let expectedMessage = "\(file.lastPathComponent) at line \(line), func: \(function) - future succeeded"
+        let expectedMessage = "\(fileName) at line \(line), func: \(function) - future succeeded"
         let debugExpectation = self.expectation(description: "debugLogged")
         
         f.onSuccess {
@@ -51,7 +44,7 @@ class FutureDebugTests: XCTestCase {
         let logger = TestLogger()
         let f = Future<Void, NSError>(error: error).debug(logger: logger, file: file, line: line, function: function)
         let debugExpectation = self.expectation(description: "debugLogged")
-        let expectedMessage = "\(file.lastPathComponent) at line \(line), func: \(function) - future failed"
+        let expectedMessage = "\(fileName) at line \(line), func: \(function) - future failed"
         
         f.onFailure { _ in
             XCTAssertEqual(logger.lastLoggedMessage, expectedMessage)
