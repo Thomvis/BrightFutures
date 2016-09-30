@@ -11,6 +11,22 @@ import Result
 
 public protocol LoggerType {
     func log(message: String)
+    func message<Value>(for value: Value, with identifier: String?, file: String, line: UInt, function: String) -> String
+}
+
+public extension LoggerType {
+    func message<Value>(for value: Value, with identifier: String?, file: String, line: UInt, function: String) -> String {
+        let messageBody: String
+        
+        if let identifier = identifier {
+            messageBody = "Future \(identifier)"
+        } else {
+            let fileName = (file as NSString).lastPathComponent
+            messageBody = "\(fileName) at line \(line), func: \(function) - future"
+        }
+        
+        return "\(messageBody) completed"
+    }
 }
 
 fileprivate struct Logger: LoggerType {
@@ -19,26 +35,16 @@ fileprivate struct Logger: LoggerType {
     }
 }
 
-public extension AsyncType where Value: ResultProtocol {
+public extension AsyncType {
     public func debug(logger: LoggerType = Logger(), context c: @escaping ExecutionContext = DefaultThreadingModel(), messageBlock: @escaping (Self.Value) -> String) -> Self {
         return andThen(context: c, callback: { result in
             logger.log(message: messageBlock(result))
         })
     }
     
-    public func debug(_ identifer: String? = nil, logger: LoggerType = Logger(), file: String = #file, line: UInt = #line, function: String = #function, context c: @escaping ExecutionContext = DefaultThreadingModel()) -> Self {
+    public func debug(_ identifier: String? = nil, logger: LoggerType = Logger(), file: String = #file, line: UInt = #line, function: String = #function, context c: @escaping ExecutionContext = DefaultThreadingModel()) -> Self {
         return debug(logger: logger, context: c, messageBlock: { result -> String in
-            let messageBody: String
-            let resultString = result.analysis(ifSuccess: { _ in "succeeded" } , ifFailure: { _ in "failed" })
-            
-            if let identifer = identifer {
-                messageBody = "Future \(identifer)"
-            } else {
-                let fileName = (file as NSString).lastPathComponent
-                messageBody = "\(fileName) at line \(line), func: \(function) - future"
-            }
-            
-            return "\(messageBody) \(resultString)"
+            return logger.message(for: result, with: identifier, file: file, line: line, function: function)
         })
     }
 }
