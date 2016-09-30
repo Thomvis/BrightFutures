@@ -26,10 +26,10 @@ class FutureDebugTests: XCTestCase {
     let line: UInt = #line
     let function = #function
     
-    func testDebugFutureSuccess() {
+    func testDebugFuture() {
         let logger = TestLogger()
         let f = Future<Void, NoError>(value: ()).debug(logger: logger, file: file, line: line, function: function)
-        let expectedMessage = "\(fileName) at line \(line), func: \(function) - future succeeded"
+        let expectedMessage = "\(fileName) at line \(line), func: \(function) - future completed"
         let debugExpectation = self.expectation(description: "debugLogged")
         
         f.onSuccess {
@@ -40,41 +40,14 @@ class FutureDebugTests: XCTestCase {
         self.waitForExpectations(timeout: 2, handler: nil)
     }
     
-    func testDebugFutureFailure() {
-        let logger = TestLogger()
-        let f = Future<Void, NSError>(error: error).debug(logger: logger, file: file, line: line, function: function)
-        let debugExpectation = self.expectation(description: "debugLogged")
-        let expectedMessage = "\(fileName) at line \(line), func: \(function) - future failed"
-        
-        f.onFailure { _ in
-            XCTAssertEqual(logger.lastLoggedMessage, expectedMessage)
-            debugExpectation.fulfill()
-        }
-        
-        self.waitForExpectations(timeout: 2, handler: nil)
-    }
-    
-    func testDebugFutureSuccessWithIdentifier() {
+    func testDebugFutureWithIdentifier() {
         let logger = TestLogger()
         
         let f = Future<Void, NoError>(value: ()).debug(testIdentifier, logger: logger)
         let debugExpectation = self.expectation(description: "debugLogged")
         
         f.onSuccess {
-            XCTAssertEqual(logger.lastLoggedMessage, "Future \(self.testIdentifier) succeeded")
-            debugExpectation.fulfill()
-        }
-        
-        self.waitForExpectations(timeout: 2, handler: nil)
-    }
-    
-    func testDebugFutureFailureWithIdentifier() {
-        let logger = TestLogger()
-        let f = Future<Void, NSError>(error: error).debug(testIdentifier, logger: logger)
-        let debugExpectation = self.expectation(description: "debugLogged")
-        
-        f.onFailure { _ in
-            XCTAssertEqual(logger.lastLoggedMessage, "Future \(self.testIdentifier) failed")
+            XCTAssertEqual(logger.lastLoggedMessage, "Future \(self.testIdentifier) completed")
             debugExpectation.fulfill()
         }
         
