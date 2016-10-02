@@ -36,15 +36,10 @@ fileprivate struct Logger: LoggerType {
 }
 
 public extension AsyncType {
-    public func debug(logger: LoggerType = Logger(), context c: @escaping ExecutionContext = DefaultThreadingModel(), messageBlock: @escaping (Self.Value) -> String) -> Self {
-        return andThen(context: c, callback: { result in
-            logger.log(message: messageBlock(result))
-        })
-    }
-    
     public func debug(_ identifier: String? = nil, logger: LoggerType = Logger(), file: String = #file, line: UInt = #line, function: String = #function, context c: @escaping ExecutionContext = DefaultThreadingModel()) -> Self {
-        return debug(logger: logger, context: c, messageBlock: { result -> String in
-            return logger.message(for: result, with: identifier, file: file, line: line, function: function)
+        return andThen(context: c, callback: { result in
+            let message = logger.message(for: result, with: identifier, file: file, line: line, function: function)
+            logger.log(message: message)
         })
     }
 }
