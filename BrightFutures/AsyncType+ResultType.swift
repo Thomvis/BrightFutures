@@ -150,18 +150,6 @@ public extension AsyncType where Value: ResultProtocol {
         return res
     }
     
-    /// Adds the given closure as a callback for when this future completes.
-    /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: @escaping ExecutionContext = DefaultThreadingModel(), callback: @escaping (Self.Value) -> Void) -> Self {
-        return Self { complete in
-            onComplete(c) { result in
-                callback(result)
-                complete(result)
-            }
-        }
-    }
-    
     /// Returns a future that succeeds with a tuple consisting of the success value of this future and the success value of the given future
     /// If either of the two futures fail, the returned future fails with the failure of this future or that future (in this order)
     public func zip<U>(_ that: Future<U, Value.Error>) -> Future<(Value.Value,U), Value.Error> {
