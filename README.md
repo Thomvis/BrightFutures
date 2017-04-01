@@ -275,7 +275,7 @@ A lot of the methods on `Future` accept an optional _execution context_ and a bl
 - if the method is called from the main thread, the block is executed on the main queue
 - if the method is not called from the main thread, the block is executed on a global queue
 
-If you want to have custom threading behavior, skip do do not the section. next [:wink:](https://twitter.com/nedbat/status/194452404794691584)
+If you want to have custom threading behavior, do not skip the next section. [:wink:](https://twitter.com/nedbat/status/194452404794691584)
 
 ## Custom execution contexts
 The default threading behavior can be overridden by providing explicit execution contexts. You can choose from any of the built-in contexts or easily create your own. Default contexts include: any dispatch queue, any `NSOperationQueue` and the `ImmediateExecutionContext` for when you don't want to switch threads/queues.
