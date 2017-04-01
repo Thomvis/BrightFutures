@@ -863,7 +863,7 @@ extension BrightFuturesTests {
     
     func testUtilsFirstCompleted() {
         let futures: [Future<Int, NoError>] = [
-            Future(value: 3, delay: 200.milliseconds),
+            Future(value: 3, delay: 500.milliseconds),
             Future(value: 13, delay: 300.milliseconds),
             Future(value: 23, delay: 400.milliseconds),
             Future(value: 4, delay: 300.milliseconds),

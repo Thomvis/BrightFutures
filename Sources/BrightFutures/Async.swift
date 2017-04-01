@@ -143,7 +143,7 @@ extension Async: MutableAsyncType {
 
 extension Async: CustomStringConvertible, CustomDebugStringConvertible {
     public var description: String {
-        return "Async<\(Value.self)>(\(self.result))"
+        return "Async<\(Value.self)>(\(String(describing: self.result)))"
     }
     
     public var debugDescription: String {
