@@ -56,7 +56,7 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
         previousDepth = 0
     }
     
-    if previousDepth > 20 {
+    if previousDepth > Static.maxTaskDepth {
         DispatchQueue.global().async(execute: task)
     } else {
         localThreadDictionary[Static.taskDepthKey] = previousDepth + 1
