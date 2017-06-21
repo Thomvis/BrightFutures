@@ -96,9 +96,9 @@ public func materialize<E>(_ scope: ((E?) -> Void) -> Void) -> Future<Void, E> {
         scope { err in
             if let err = err {
                 complete(.failure(err))
-            }/* else {
-                complete(.success())
-            }*/ // this is worrisome that this won't get called. 
+            } else {
+                complete(.success(()))
+            }
         }
     }
 }
