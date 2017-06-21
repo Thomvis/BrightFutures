@@ -110,55 +110,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		D5B5AC571EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D45480571A9572F5009D7229;
-			remoteInfo = "Result-Mac";
-		};
-		D5B5AC591EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D45480671A9572F5009D7229;
-			remoteInfo = "Result-MacTests";
-		};
-		D5B5AC5B1EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D454807D1A957361009D7229;
-			remoteInfo = "Result-iOS";
-		};
-		D5B5AC5D1EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D45480871A957362009D7229;
-			remoteInfo = "Result-iOSTests";
-		};
-		D5B5AC5F1EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57FCDE471BA280DC00130C48;
-			remoteInfo = "Result-tvOS";
-		};
-		D5B5AC611EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 57FCDE541BA280E000130C48;
-			remoteInfo = "Result-tvOSTests";
-		};
-		D5B5AC631EFB150900F18CFA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D03579A31B2B788F005D26AE;
-			remoteInfo = "Result-watchOS";
-		};
 		E98647A81BF327E400B6BEEE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E9DF080C194470060083F7F2 /* Project object */;
@@ -206,7 +157,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Result.xcodeproj; path = "Result.git-8684547452332391156/Result.xcodeproj"; sourceTree = "<group>"; };
 		E986479D1BF327E400B6BEEE /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E98647A61BF327E400B6BEEE /* BrightFutures-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E98647CD1BF328B400B6BEEE /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/tvOS/Result.framework; sourceTree = "<group>"; };
@@ -307,20 +257,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		D5B5AC4E1EFB150900F18CFA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D5B5AC581EFB150900F18CFA /* Result.framework */,
-				D5B5AC5A1EFB150900F18CFA /* Result-MacTests.xctest */,
-				D5B5AC5C1EFB150900F18CFA /* Result.framework */,
-				D5B5AC5E1EFB150900F18CFA /* Result-iOSTests.xctest */,
-				D5B5AC601EFB150900F18CFA /* Result.framework */,
-				D5B5AC621EFB150900F18CFA /* Result-tvOSTests.xctest */,
-				D5B5AC641EFB150900F18CFA /* Result.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -367,7 +303,6 @@
 		E9DF080B194470060083F7F2 = {
 			isa = PBXGroup;
 			children = (
-				D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */,
 				E90E9D5B1B1B8A4F00A8F9F3 /* Frameworks */,
 				E9DF0817194470060083F7F2 /* BrightFutures */,
 				E9DF0824194470060083F7F2 /* BrightFuturesTests */,
@@ -655,12 +590,6 @@
 			mainGroup = E9DF080B194470060083F7F2;
 			productRefGroup = E9DF0816194470060083F7F2 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = D5B5AC4E1EFB150900F18CFA /* Products */;
-					ProjectRef = D5B5AC4D1EFB150900F18CFA /* Result.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				E9DF0814194470060083F7F2 /* BrightFutures-iOS */,
@@ -673,58 +602,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		D5B5AC581EFB150900F18CFA /* Result.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Result.framework;
-			remoteRef = D5B5AC571EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D5B5AC5A1EFB150900F18CFA /* Result-MacTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Result-MacTests.xctest";
-			remoteRef = D5B5AC591EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D5B5AC5C1EFB150900F18CFA /* Result.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Result.framework;
-			remoteRef = D5B5AC5B1EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D5B5AC5E1EFB150900F18CFA /* Result-iOSTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Result-iOSTests.xctest";
-			remoteRef = D5B5AC5D1EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D5B5AC601EFB150900F18CFA /* Result.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Result.framework;
-			remoteRef = D5B5AC5F1EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D5B5AC621EFB150900F18CFA /* Result-tvOSTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "Result-tvOSTests.xctest";
-			remoteRef = D5B5AC611EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D5B5AC641EFB150900F18CFA /* Result.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Result.framework;
-			remoteRef = D5B5AC631EFB150900F18CFA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		E986479B1BF327E400B6BEEE /* Resources */ = {
