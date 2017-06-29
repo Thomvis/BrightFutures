@@ -30,6 +30,9 @@ public extension LoggerType {
 }
 
 public struct Logger: LoggerType {
+    public init() {
+    }
+    
     public func log(message: String) {
         print(message)
     }
