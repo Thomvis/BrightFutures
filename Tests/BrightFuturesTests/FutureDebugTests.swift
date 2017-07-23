@@ -32,7 +32,7 @@ class FutureDebugTests: XCTestCase {
         let expectedMessage = "\(fileName) at line \(line), func: \(function) - future completed"
         let debugExpectation = self.expectation(description: "debugLogged")
         
-        f.onSuccess {
+        f.onSuccess { _ in
             XCTAssertEqual(logger.lastLoggedMessage, expectedMessage)
             debugExpectation.fulfill()
         }
@@ -46,7 +46,7 @@ class FutureDebugTests: XCTestCase {
         let f = Future<Void, NoError>(value: ()).debug(testIdentifier, logger: logger)
         let debugExpectation = self.expectation(description: "debugLogged")
         
-        f.onSuccess {
+        f.onSuccess { _ in
             XCTAssertEqual(logger.lastLoggedMessage, "Future \(self.testIdentifier) completed")
             debugExpectation.fulfill()
         }

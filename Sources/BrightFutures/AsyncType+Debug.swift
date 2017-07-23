@@ -29,8 +29,11 @@ public extension LoggerType {
     }
 }
 
-fileprivate struct Logger: LoggerType {
-    func log(message: String) {
+public struct Logger: LoggerType {
+    public init() {
+    }
+    
+    public func log(message: String) {
         print(message)
     }
 }

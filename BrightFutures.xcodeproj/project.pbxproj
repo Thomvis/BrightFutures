@@ -161,39 +161,39 @@
 		E98647A61BF327E400B6BEEE /* BrightFutures-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E98647CD1BF328B400B6BEEE /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/tvOS/Result.framework; sourceTree = "<group>"; };
 		E9877CC11B826ABB009DB030 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/watchOS/Result.framework; sourceTree = "<group>"; };
-		E98FD6E61DC3D81600DCD9C9 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = Sources/BrightFutures/Async.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6E71DC3D81600DCD9C9 /* AsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsyncType.swift; path = Sources/BrightFutures/AsyncType.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6E81DC3D81600DCD9C9 /* AsyncType+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AsyncType+Debug.swift"; path = "Sources/BrightFutures/AsyncType+Debug.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6E91DC3D81600DCD9C9 /* AsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "AsyncType+ResultType.swift"; path = "Sources/BrightFutures/AsyncType+ResultType.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6EA1DC3D81600DCD9C9 /* Dispatch+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Dispatch+BrightFutures.swift"; path = "Sources/BrightFutures/Dispatch+BrightFutures.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6EB1DC3D81600DCD9C9 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Errors.swift; path = Sources/BrightFutures/Errors.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6EC1DC3D81600DCD9C9 /* ExecutionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExecutionContext.swift; path = Sources/BrightFutures/ExecutionContext.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6ED1DC3D81600DCD9C9 /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Future.swift; path = Sources/BrightFutures/Future.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6EE1DC3D81600DCD9C9 /* InvalidationToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InvalidationToken.swift; path = Sources/BrightFutures/InvalidationToken.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6EF1DC3D81600DCD9C9 /* MutableAsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MutableAsyncType.swift; path = Sources/BrightFutures/MutableAsyncType.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6F01DC3D81600DCD9C9 /* MutableAsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "MutableAsyncType+ResultType.swift"; path = "Sources/BrightFutures/MutableAsyncType+ResultType.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6F11DC3D81600DCD9C9 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NSOperationQueue+BrightFutures.swift"; path = "Sources/BrightFutures/NSOperationQueue+BrightFutures.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Number+BrightFutures.swift"; path = "Sources/BrightFutures/Number+BrightFutures.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6F31DC3D81600DCD9C9 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Promise.swift; path = Sources/BrightFutures/Promise.swift; sourceTree = SOURCE_ROOT; };
-		E98FD6F41DC3D81600DCD9C9 /* Result+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Result+BrightFutures.swift"; path = "Sources/BrightFutures/Result+BrightFutures.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD6F51DC3D81600DCD9C9 /* SequenceType+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "SequenceType+BrightFutures.swift"; path = "Sources/BrightFutures/SequenceType+BrightFutures.swift"; sourceTree = SOURCE_ROOT; };
-		E98FD7361DC3D82400DCD9C9 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BrightFuturesTests.swift; path = Tests/BrightFuturesTests/BrightFuturesTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD7371DC3D82400DCD9C9 /* ErrorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ErrorsTests.swift; path = Tests/BrightFuturesTests/ErrorsTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD7381DC3D82400DCD9C9 /* ExecutionContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExecutionContextTests.swift; path = Tests/BrightFuturesTests/ExecutionContextTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD7391DC3D82400DCD9C9 /* FutureDebugTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FutureDebugTests.swift; path = Tests/BrightFuturesTests/FutureDebugTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD73A1DC3D82400DCD9C9 /* InvalidationTokenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InvalidationTokenTests.swift; path = Tests/BrightFuturesTests/InvalidationTokenTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD73B1DC3D82400DCD9C9 /* NSOperationQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NSOperationQueueTests.swift; path = Tests/BrightFuturesTests/NSOperationQueueTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD73C1DC3D82400DCD9C9 /* PromiseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PromiseTests.swift; path = Tests/BrightFuturesTests/PromiseTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD73D1DC3D82400DCD9C9 /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = QueueTests.swift; path = Tests/BrightFuturesTests/QueueTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD73E1DC3D82400DCD9C9 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResultTests.swift; path = Tests/BrightFuturesTests/ResultTests.swift; sourceTree = SOURCE_ROOT; };
-		E98FD7631DC3D87900DCD9C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Tests/BrightFuturesTests/Info.plist; sourceTree = SOURCE_ROOT; };
+		E98FD6E61DC3D81600DCD9C9 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Async.swift; sourceTree = "<group>"; };
+		E98FD6E71DC3D81600DCD9C9 /* AsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncType.swift; sourceTree = "<group>"; };
+		E98FD6E81DC3D81600DCD9C9 /* AsyncType+Debug.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+Debug.swift"; sourceTree = "<group>"; };
+		E98FD6E91DC3D81600DCD9C9 /* AsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AsyncType+ResultType.swift"; sourceTree = "<group>"; };
+		E98FD6EA1DC3D81600DCD9C9 /* Dispatch+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Dispatch+BrightFutures.swift"; sourceTree = "<group>"; };
+		E98FD6EB1DC3D81600DCD9C9 /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		E98FD6EC1DC3D81600DCD9C9 /* ExecutionContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContext.swift; sourceTree = "<group>"; };
+		E98FD6ED1DC3D81600DCD9C9 /* Future.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Future.swift; sourceTree = "<group>"; };
+		E98FD6EE1DC3D81600DCD9C9 /* InvalidationToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvalidationToken.swift; sourceTree = "<group>"; };
+		E98FD6EF1DC3D81600DCD9C9 /* MutableAsyncType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MutableAsyncType.swift; sourceTree = "<group>"; };
+		E98FD6F01DC3D81600DCD9C9 /* MutableAsyncType+ResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MutableAsyncType+ResultType.swift"; sourceTree = "<group>"; };
+		E98FD6F11DC3D81600DCD9C9 /* NSOperationQueue+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSOperationQueue+BrightFutures.swift"; sourceTree = "<group>"; };
+		E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Number+BrightFutures.swift"; sourceTree = "<group>"; };
+		E98FD6F31DC3D81600DCD9C9 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
+		E98FD6F41DC3D81600DCD9C9 /* Result+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Result+BrightFutures.swift"; sourceTree = "<group>"; };
+		E98FD6F51DC3D81600DCD9C9 /* SequenceType+BrightFutures.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SequenceType+BrightFutures.swift"; sourceTree = "<group>"; };
+		E98FD7361DC3D82400DCD9C9 /* BrightFuturesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrightFuturesTests.swift; sourceTree = "<group>"; };
+		E98FD7371DC3D82400DCD9C9 /* ErrorsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorsTests.swift; sourceTree = "<group>"; };
+		E98FD7381DC3D82400DCD9C9 /* ExecutionContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExecutionContextTests.swift; sourceTree = "<group>"; };
+		E98FD7391DC3D82400DCD9C9 /* FutureDebugTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FutureDebugTests.swift; sourceTree = "<group>"; };
+		E98FD73A1DC3D82400DCD9C9 /* InvalidationTokenTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvalidationTokenTests.swift; sourceTree = "<group>"; };
+		E98FD73B1DC3D82400DCD9C9 /* NSOperationQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSOperationQueueTests.swift; sourceTree = "<group>"; };
+		E98FD73C1DC3D82400DCD9C9 /* PromiseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromiseTests.swift; sourceTree = "<group>"; };
+		E98FD73D1DC3D82400DCD9C9 /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
+		E98FD73E1DC3D82400DCD9C9 /* ResultTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTests.swift; sourceTree = "<group>"; };
+		E98FD7631DC3D87900DCD9C9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9CBFD091B8264D800702394 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		E9CBFD0B1B8264E500702394 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
 		E9CBFD121B8268FB00702394 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D45B0A1AF00659000F6CA7 /* BrightFutures-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF0815194470060083F7F2 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E9DF0819194470060083F7F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = Info.plist; path = Sources/BrightFutures/Info.plist; sourceTree = "<group>"; };
+		E9DF0819194470060083F7F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E9DF0820194470060083F7F2 /* BrightFutures-iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-iOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -345,7 +345,8 @@
 				E98FD6F51DC3D81600DCD9C9 /* SequenceType+BrightFutures.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
-			path = BrightFutures;
+			name = BrightFutures;
+			path = Sources/BrightFutures;
 			sourceTree = "<group>";
 		};
 		E9DF0818194470060083F7F2 /* Supporting Files */ = {
@@ -370,7 +371,8 @@
 				E98FD73E1DC3D82400DCD9C9 /* ResultTests.swift */,
 				E9DF0825194470060083F7F2 /* Supporting Files */,
 			);
-			path = BrightFuturesTests;
+			name = BrightFuturesTests;
+			path = Tests/BrightFuturesTests;
 			sourceTree = "<group>";
 		};
 		E9DF0825194470060083F7F2 /* Supporting Files */ = {
@@ -548,7 +550,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Thomas Visser";
 				TargetAttributes = {
 					E986479C1BF327E400B6BEEE = {
@@ -564,18 +566,19 @@
 					};
 					E9D45AFF1AF00659000F6CA7 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					E9D45B091AF00659000F6CA7 = {
 						CreatedOnToolsVersion = 6.3.1;
+						LastSwiftMigration = 0900;
 					};
 					E9DF0814194470060083F7F2 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 					};
 					E9DF081F194470060083F7F2 = {
 						CreatedOnToolsVersion = 6.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 0900;
 						TestTargetID = E9DF0814194470060083F7F2;
 					};
 				};
@@ -992,7 +995,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1024,7 +1027,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -1051,6 +1054,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1075,6 +1079,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -1086,14 +1091,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1136,14 +1147,20 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1192,7 +1209,7 @@
 				PRODUCT_NAME = BrightFutures;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1218,7 +1235,7 @@
 				PRODUCT_NAME = BrightFutures;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
@@ -1240,7 +1257,7 @@
 				METAL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -1259,7 +1276,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};

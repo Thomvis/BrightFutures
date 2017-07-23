@@ -24,7 +24,7 @@ public extension DispatchQueue {
         }
     }
     
-    public func asyncResult<T, E: Error>(_ execute: @escaping () -> Result<T, E>) -> Future<T, E> {
+    public func asyncResult<T, E>(_ execute: @escaping () -> Result<T, E>) -> Future<T, E> {
         return Future { completion in
             async {
                 completion(execute())

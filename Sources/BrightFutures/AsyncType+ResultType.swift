@@ -117,7 +117,7 @@ public extension AsyncType where Value: ResultProtocol {
     /// This function should be used in cases where there are two asynchronous operations where the second operation (returned from the given closure)
     /// should only be executed if the first (this future) fails.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    public func recoverWith<E1: Error>(context c: @escaping ExecutionContext = DefaultThreadingModel(), task: @escaping (Value.Error) -> Future<Value.Value, E1>) -> Future<Value.Value, E1> {
+    public func recoverWith<E1>(context c: @escaping ExecutionContext = DefaultThreadingModel(), task: @escaping (Value.Error) -> Future<Value.Value, E1>) -> Future<Value.Value, E1> {
         let res = Future<Value.Value, E1>()
         
         self.onComplete(c) { result in
@@ -131,14 +131,14 @@ public extension AsyncType where Value: ResultProtocol {
     
     /// See `mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1>`
     /// The given closure is executed according to the default threading model (see README.md)
-    public func mapError<E1: Error>(_ f: @escaping (Value.Error) -> E1) -> Future<Value.Value, E1> {
+    public func mapError<E1>(_ f: @escaping (Value.Error) -> E1) -> Future<Value.Value, E1> {
         return mapError(DefaultThreadingModel(), f: f)
     }
     
     /// Returns a future that fails with the error returned from the given closure when it is invoked with the error
     /// from this future. If this future succeeds, the returned future succeeds with the same value and the closure is not executed.
     /// The closure is executed on the given context.
-    public func mapError<E1: Error>(_ context: @escaping ExecutionContext, f: @escaping (Value.Error) -> E1) -> Future<Value.Value, E1> {
+    public func mapError<E1>(_ context: @escaping ExecutionContext, f: @escaping (Value.Error) -> E1) -> Future<Value.Value, E1> {
         let res = Future<Value.Value, E1>()
         
         self.onComplete(context) { result in
@@ -216,7 +216,7 @@ public extension AsyncType where Value: ResultProtocol, Value.Error == NoError {
     /// This allows the `Future` to be used more easily in combination with other futures
     /// for operations such as `sequence` and `firstCompleted`
     /// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
-    public func promoteError<E: Error>() -> Future<Value.Value, E> {
+    public func promoteError<E>() -> Future<Value.Value, E> {
         return mapError(ImmediateExecutionContext) { $0 as! E } // future will never fail, so this map block will never get called
     }
 }
@@ -227,7 +227,7 @@ public extension AsyncType where Value: ResultProtocol, Value.Error == BrightFut
     /// This allows the `Future` to be used more easily in combination with other futures
     /// for operations such as `sequence` and `firstCompleted`
     /// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
-    public func promoteError<E: Error>() -> Future<Value.Value, BrightFuturesError<E>> {
+    public func promoteError<E>() -> Future<Value.Value, BrightFuturesError<E>> {
         return mapError(ImmediateExecutionContext) { err in
             switch err {
             case .noSuchElement:

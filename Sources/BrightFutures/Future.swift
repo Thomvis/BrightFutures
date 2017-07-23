@@ -71,7 +71,7 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
     
 }
 
-public func materialize<T, E: Error>(_ scope: ((T?, E?) -> Void) -> Void) -> Future<T, E> {
+public func materialize<T, E>(_ scope: ((T?, E?) -> Void) -> Void) -> Future<T, E> {
     return Future { complete in
         scope { val, err in
             if let val = val {
@@ -91,13 +91,13 @@ public func materialize<T>(_ scope: ((T) -> Void) -> Void) -> Future<T, NoError>
     }
 }
 
-public func materialize<E: Error>(_ scope: ((E?) -> Void) -> Void) -> Future<Void, E> {
+public func materialize<E>(_ scope: ((E?) -> Void) -> Void) -> Future<Void, E> {
     return Future { complete in
         scope { err in
             if let err = err {
                 complete(.failure(err))
             } else {
-                complete(.success())
+                complete(.success(()))
             }
         }
     }

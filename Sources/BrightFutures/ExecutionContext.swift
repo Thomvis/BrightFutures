@@ -65,13 +65,13 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
     }
 }
 
-typealias ThreadingModel = () -> ExecutionContext
+public typealias ThreadingModel = () -> ExecutionContext
 
-var DefaultThreadingModel: ThreadingModel = defaultContext
+public var DefaultThreadingModel: ThreadingModel = defaultContext
 
 /// Defines BrightFutures' default threading behavior:
 /// - if on the main thread, `DispatchQueue.main.context` is returned
 /// - if off the main thread, `DispatchQueue.global().context` is returned
-func defaultContext() -> ExecutionContext {
+public func defaultContext() -> ExecutionContext {
     return (Thread.isMainThread ? DispatchQueue.main : DispatchQueue.global()).context
 }
