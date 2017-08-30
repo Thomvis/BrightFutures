@@ -444,6 +444,47 @@ extension BrightFuturesTests {
         self.waitForExpectations(timeout: 2, handler: nil)
     }
     
+    func testBimapValue() {
+        let e = self.expectation()
+        
+        DispatchQueue.global()
+            .asyncValue {
+                return fibonacci(10)
+            }
+            .bimap(
+                success: { value -> String in
+                    return "value" as String
+            } , failure: { error in
+                return TestError.justAnError
+            }
+            )
+            .onSuccess { value in
+                XCTAssertEqual("value", value)
+                e.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+    
+    func testBimapError() {
+        let e = self.expectation()
+        
+        Future<Int, TestError>(error: .justAnError)
+            .bimap(
+                success: { value -> String in
+                    return "value"
+            }
+                , failure: { error in
+                    return TestError.justAnotherError
+            }
+            ).onFailure { error in
+                XCTAssertEqual(error, TestError.justAnotherError)
+                e.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+ 
     func testZip() {
         let f = Future<Int, NoError>(value: 1)
         let f1 = Future<Int, NoError>(value: 2)

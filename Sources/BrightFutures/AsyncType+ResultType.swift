@@ -102,7 +102,7 @@ public extension AsyncType where Value: ResultProtocol {
         
         return res
     }
-    
+
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
@@ -128,7 +128,7 @@ public extension AsyncType where Value: ResultProtocol {
         
         return res
     }
-    
+
     /// See `mapError<E1>(context c: ExecutionContext, f: E -> E1) -> Future<T, E1>`
     /// The given closure is executed according to the default threading model (see README.md)
     public func mapError<E1>(_ f: @escaping (Value.Error) -> E1) -> Future<Value.Value, E1> {
@@ -149,7 +149,31 @@ public extension AsyncType where Value: ResultProtocol {
         
         return res
     }
-    
+
+    /// Returns a future that succeeds with the value returned from the `success` closure when it is invoked with the success value
+    /// from this future and fails with the error returned from the `failure` closure when it is invoked with the error
+    /// from this future
+    public func bimap<U, Error2>(success: @escaping (Value.Value) -> U, failure: @escaping (Value.Error) -> Error2) -> Future<U, Error2> {
+        return bimap(DefaultThreadingModel(), success: success, failure: failure)
+    }
+
+    /// Returns a future that succeeds with the value returned from the `success` closure when it is invoked with the success value
+    /// from this future and fails with the error returned from the `failure` closure when it is invoked with the error
+    /// from this future
+    /// Thes closures are executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
+    public func bimap<U, Error2>(_ context: @escaping ExecutionContext, success: @escaping (Value.Value) -> U, failure: @escaping (Value.Error) -> Error2) -> Future<U, Error2> {
+        
+        let res = Future<U, Error2>()
+
+        self.onComplete(context, callback: { (result: Value) in
+            result.analysis(
+                ifSuccess: { res.success(success($0)) },
+                ifFailure: { res.failure(failure($0)) })
+        })
+
+        return res
+    }
+
     /// Returns a future that succeeds with a tuple consisting of the success value of this future and the success value of the given future
     /// If either of the two futures fail, the returned future fails with the failure of this future or that future (in this order)
     public func zip<U>(_ that: Future<U, Value.Error>) -> Future<(Value.Value,U), Value.Error> {
