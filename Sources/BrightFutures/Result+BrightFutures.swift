@@ -47,7 +47,7 @@ extension ResultProtocol where Value: AsyncType, Value.Value: ResultProtocol, Er
     public func flatten() -> Future<Value.Value.Value, Value.Value.Error> {
         return Future { complete in
             analysis(ifSuccess: { innerFuture in
-                innerFuture.onComplete(ImmediateExecutionContext) { res in
+                innerFuture.onComplete(immediateExecutionContext) { res in
                     complete(res.analysis(ifSuccess: {
                         return Result(value: $0)
                     }, ifFailure: {

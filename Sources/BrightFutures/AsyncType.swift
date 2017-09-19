@@ -71,7 +71,7 @@ public extension AsyncType {
     /// queue.
     public func delay(_ queue: DispatchQueue, interval: DispatchTimeInterval) -> Self {
         return Self { complete in
-            onComplete(ImmediateExecutionContext) { result in
+            onComplete(immediateExecutionContext) { result in
                 queue.asyncAfter(deadline: DispatchTime.now() + interval) {
                     complete(result)
                 }
@@ -82,7 +82,7 @@ public extension AsyncType {
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: @escaping ExecutionContext = DefaultThreadingModel(), callback: @escaping (Self.Value) -> Void) -> Self {
+    public func andThen(context c: @escaping ExecutionContext = defaultContext(), callback: @escaping (Self.Value) -> Void) -> Self {
         return Self { complete in
             onComplete(c) { result in
                 callback(result)
@@ -95,8 +95,8 @@ public extension AsyncType {
 public extension AsyncType where Value: AsyncType {
     public func flatten() -> Self.Value {
         return Self.Value { complete in
-            self.onComplete(ImmediateExecutionContext) { value in
-                value.onComplete(ImmediateExecutionContext, callback: complete)
+            self.onComplete(immediateExecutionContext) { value in
+                value.onComplete(immediateExecutionContext, callback: complete)
             }
         }
     }

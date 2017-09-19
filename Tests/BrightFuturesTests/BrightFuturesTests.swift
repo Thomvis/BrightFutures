@@ -589,7 +589,7 @@ extension BrightFuturesTests {
         var isAsync = false
         
         let e = self.expectation()
-        f.onComplete(ImmediateExecutionContext) { _ in
+        f.onComplete(immediateExecutionContext) { _ in
             XCTAssert(Thread.isMainThread)
             XCTAssert(isAsync)
             XCTAssert(CACurrentMediaTime() - t0 >= 0)
@@ -606,7 +606,7 @@ extension BrightFuturesTests {
     func testDelayOnGlobalQueue() {
         let e = self.expectation()
         DispatchQueue.global().async {
-            Future<Int, NoError>(value: 1).delay(0.seconds).onComplete(ImmediateExecutionContext) { _ in
+            Future<Int, NoError>(value: 1).delay(0.seconds).onComplete(immediateExecutionContext) { _ in
                 XCTAssert(!Thread.isMainThread)
                 e.fulfill()
             }
@@ -958,7 +958,7 @@ extension BrightFuturesTests {
     }
     
     func testUtilsFindWithError() {
-        let f = [Future<Bool, TestError>(error: .justAnError)].find(ImmediateExecutionContext) { $0 }
+        let f = [Future<Bool, TestError>(error: .justAnError)].find(immediateExecutionContext) { $0 }
         XCTAssert(f.error! == BrightFuturesError<TestError>.external(.justAnError));
     }
 
@@ -978,7 +978,7 @@ extension BrightFuturesTests {
  
     func testFlatten() {
         let a: Async<Int> = Async(result: Async(result: 2)).flatten()
-        a.onComplete(ImmediateExecutionContext) { val in
+        a.onComplete(immediateExecutionContext) { val in
             XCTAssertEqual(val, 2)
         }
     }
@@ -995,7 +995,7 @@ extension BrightFuturesTests {
             let instances = 100;
             var successfulFutures = [Future<Int, NSError>]()
             var failingFutures = [Future<Int, NSError>]()
-            let contexts: [ExecutionContext] = [ImmediateExecutionContext, DispatchQueue.main.context, DispatchQueue.global().context]
+            let contexts: [ExecutionContext] = [immediateExecutionContext, DispatchQueue.main.context, DispatchQueue.global().context]
             
             let randomContext: () -> ExecutionContext = { contexts[Int(arc4random_uniform(UInt32(contexts.count)))] }
             let randomFuture: () -> Future<Int, NSError> = {
