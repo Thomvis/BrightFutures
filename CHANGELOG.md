@@ -1,3 +1,6 @@
+# 6.0.0
+Adds support for Swift 4 and Xcode 9
+
 # 5.2.0
 Adds support for Swift 3.1 and Xcode 8.3
 
