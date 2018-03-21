@@ -1,3 +1,8 @@
+# 6.0.1
+Adds support for Swift 4.1 and Xcode 9.3 (tested with beta 4).
+
+- Workaround for [SR-7059](https://bugs.swift.org/browse/SR-7059)
+
 # 6.0.0
 Adds support for Swift 4 and Xcode 9
 
