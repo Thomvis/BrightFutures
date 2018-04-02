@@ -46,22 +46,14 @@ public enum BrightFuturesError<E: Error>: Error {
     }
 }
 
-/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value 
-public func ==<E: Equatable>(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
-    switch (lhs, rhs) {
-    case (.noSuchElement, .noSuchElement): return true
-    case (.invalidationTokenInvalidated, .invalidationTokenInvalidated): return true
-    case (.external(let lhs), .external(let rhs)): return lhs == rhs
-    default: return false
-    }
-}
-
-/// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
-public func ==(lhs: BrightFuturesError<NoError>, rhs: BrightFuturesError<NoError>) -> Bool {
-    switch (lhs, rhs) {
-    case (.noSuchElement, .noSuchElement): return true
-    case (.invalidationTokenInvalidated, .invalidationTokenInvalidated): return true
-    case (.external(_), .external(_)): return true // this cannot happen because NoError cannot be instantiated
-    default: return false
+extension BrightFuturesError: Equatable where E: Equatable {
+    /// Returns `true` if `left` and `right` are both of the same case ignoring .External associated value
+    public static func ==(lhs: BrightFuturesError<E>, rhs: BrightFuturesError<E>) -> Bool {
+        switch (lhs, rhs) {
+        case (.noSuchElement, .noSuchElement): return true
+        case (.invalidationTokenInvalidated, .invalidationTokenInvalidated): return true
+        case (.external(let lhs), .external(let rhs)): return lhs == rhs
+        default: return false
+        }
     }
 }
