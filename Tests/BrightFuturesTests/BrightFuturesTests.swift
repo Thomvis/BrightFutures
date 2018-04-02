@@ -220,10 +220,14 @@ extension BrightFuturesTests {
             }
         }
         
-        let f = BrightFutures.materialize { testCall(2, completionHandler: $0) }
+        let f = BrightFutures.materialize { (handler: (Int?, TestError?) -> Void) -> Void in
+            testCall(2, completionHandler: handler)
+        }
         XCTAssertEqual(f.value!, 2)
         
-        let f2 = BrightFutures.materialize { testCall(0, completionHandler: $0) }
+        let f2 = BrightFutures.materialize { (handler: (Int?, TestError?) -> Void) -> Void in
+            testCall(0, completionHandler: handler)
+        }
         XCTAssert(f2.error! == TestError.justAnError)
     }
     
