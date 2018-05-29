@@ -19,11 +19,11 @@ public extension AsyncType where Value: ResultProtocol {
     }
     
     public var value: Value.Value? {
-        return result?.value
+        return result?.result.value
     }
     
     public var error: Value.Error? {
-        return result?.error
+        return result?.result.error
     }
     
     /// Adds the given closure as a callback for when the future succeeds. The closure is executed on the given context.
