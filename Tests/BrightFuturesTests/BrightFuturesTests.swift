@@ -287,12 +287,12 @@ extension BrightFuturesTests {
             answer += 2
         }
         
-        f1.onSuccess { fval in
+        f.onSuccess { fval in
             f1.onSuccess { f1val in
                 f2.onSuccess { f2val in
                     
                     XCTAssertEqual(fval, f1val, "future value should be passed transparently")
-                    XCTAssertEqual(f1val, f2val, "future value should be passed transparantly")
+                    XCTAssertEqual(f1val, f2val, "future value should be passed transparently")
                     
                     e.fulfill()
                 }
