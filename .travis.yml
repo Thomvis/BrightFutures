@@ -4,7 +4,7 @@ osx_image: xcode10
 script:
   - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-Mac
   - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-iOS -sdk iphonesimulator -destination "platform=iOS Simulator,OS=12.0,name=iPhone 6s"
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=12.0,name=Apple TV 1080p"
+  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=12.0,name=Apple TV"
   - xcodebuild build -workspace BrightFutures.xcworkspace -scheme BrightFutures-watchOS -sdk watchsimulator
 
 notifications:
