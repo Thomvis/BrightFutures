@@ -1,3 +1,9 @@
+# 7.0.0
+Adds support for Swift 4.2 and Xcode 10.
+
+- Upgrade Result dependency to 4.0.
+- [FIX] Fixed a typo and incorrect reference in the `andThen` test ([https://github.com/Thomvis/BrightFutures/pull/197](#197), thanks [https://github.com/robertoaceves](robertoaceves)!)
+
 # 6.0.1
 Adds support for Swift 4.1 and Xcode 9.3 (tested with beta 4).
 
