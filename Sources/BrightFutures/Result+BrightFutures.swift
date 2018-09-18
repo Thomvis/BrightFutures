@@ -9,6 +9,17 @@
 import Result
 
 extension ResultProtocol {
+
+    /// Case analysis for Result.
+    ///
+    /// Returns the value produced by applying `ifFailure` to `failure` Results, or `ifSuccess` to `success` Results.
+    func analysis<Result>(ifSuccess: (Value) -> Result, ifFailure: (Error) -> Result) -> Result {
+        return self.result.analysis(ifSuccess: ifSuccess, ifFailure: ifFailure)
+    }
+
+}
+
+extension ResultProtocol {
     /// Enables the chaining of two failable operations where the second operation is asynchronous and
     /// represented by a future.
     /// Like map, the given closure (that performs the second operation) is only executed
