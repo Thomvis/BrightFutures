@@ -13,7 +13,7 @@ The stability of BrightFutures has been proven through extensive use in producti
 ## Latest news
 [![Join the chat at https://gitter.im/Thomvis/BrightFutures](https://badges.gitter.im/Thomvis/BrightFutures.svg)](https://gitter.im/Thomvis/BrightFutures?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis CI build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![CocoaPods](https://img.shields.io/cocoapods/metrics/doc-percent/BrightFutures.svg?maxAge=2592000)](http://cocoadocs.org/docsets/BrightFutures)
 
-BrightFutures 6.0 is now available! This update adds Swift 4 compatibility and contains breaking changes that are in line with the syntax changes between Swift 3 and 4.
+BrightFutures 7.0 is now available! This update adds Swift 4.2 compatibility.
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
