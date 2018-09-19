@@ -40,7 +40,7 @@ BrightFutures 7.0 is now available! This update adds Swift 4.2 compatibility.
 ## Documentation
 - API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
 - This README covers almost all features of BrightFutures
-- The [tests](BrightFuturesTests) contain (trivial) usage examples for every feature (97% test coverage)
+- The [tests](Tests/BrightFuturesTests) contain (trivial) usage examples for every feature (97% test coverage)
 - The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
 - The [Highstreet Watch App](https://github.com/GetHighstreet/HighstreetWatchApp) is an Open Source WatchKit app that makes extensive use of BrightFutures
 
