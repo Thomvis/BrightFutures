@@ -115,6 +115,24 @@ extension BrightFuturesTests {
             XCTAssertEqual(val, 3);
         }
     }
+
+    func testCompleteAfterDeadline() {
+        let f = Future<Int, NoError>(value: 3, earliest: 1.second.fromNow)
+
+        XCTAssertFalse(f.isCompleted)
+
+        Thread.sleep(forTimeInterval: 0.2)
+
+        XCTAssertFalse(f.isCompleted)
+
+        Thread.sleep(forTimeInterval: 1.0)
+
+        XCTAssert(f.isCompleted)
+
+        if let val = f.value {
+            XCTAssertEqual(val, 3);
+        }
+    }
     
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
@@ -630,6 +648,69 @@ extension BrightFuturesTests {
                 XCTAssert(CACurrentMediaTime() - t0 >= 2)
                 e.fulfill()
             }
+
+        self.waitForExpectations(timeout: 3, handler: nil)
+    }
+
+    func testEarliestDeadline() {
+        let t0 = CACurrentMediaTime()
+        let f = Future<Int, NoError>(value: 1).earliest(at: 0.seconds.fromNow);
+        XCTAssertFalse(f.isCompleted)
+        var isAsync = false
+
+        let e = self.expectation()
+        f.onComplete(ImmediateExecutionContext) { _ in
+            XCTAssert(Thread.isMainThread)
+            XCTAssert(isAsync)
+            XCTAssert(CACurrentMediaTime() - t0 >= 0)
+        }.earliest(at: 1.second.fromNow).onComplete { _ in
+            XCTAssert(Thread.isMainThread)
+            XCTAssert(CACurrentMediaTime() - t0 >= 1)
+            e.fulfill()
+        }
+        isAsync = true
+
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+
+    func testEarliestDeadlineOnGlobalQueue() {
+        let e = self.expectation()
+        DispatchQueue.global().async {
+            Future<Int, NoError>(value: 1).earliest(at: 0.seconds.fromNow).onComplete(ImmediateExecutionContext) { _ in
+                XCTAssert(!Thread.isMainThread)
+                e.fulfill()
+            }
+        }
+
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+
+    func testEarliestDeadlineChaining() {
+        let e = self.expectation()
+        let t0 = CACurrentMediaTime()
+        let _ = Future<Void, NoError>(value: ())
+            .earliest(at: 1.second.fromNow)
+            .andThen { _ in XCTAssert(CACurrentMediaTime() - t0 >= 1) }
+            .earliest(at: 1.second.fromNow)
+            .andThen { _ in
+                XCTAssert(CACurrentMediaTime() - t0 >= 1)
+                e.fulfill()
+        }
+
+        self.waitForExpectations(timeout: 3, handler: nil)
+    }
+
+    func testEarliestDeadlineChaining2() {
+        let e = self.expectation()
+        let t0 = CACurrentMediaTime()
+        let _ = Future<Void, NoError>(value: ())
+            .earliest(at: 1.second.fromNow)
+            .andThen { _ in XCTAssert(CACurrentMediaTime() - t0 >= 1) }
+            .earliest(at: 2.second.fromNow)
+            .andThen { _ in
+                XCTAssert(CACurrentMediaTime() - t0 >= 2)
+                e.fulfill()
+        }
 
         self.waitForExpectations(timeout: 3, handler: nil)
     }

@@ -78,6 +78,30 @@ public extension AsyncType {
             }
         }
     }
+
+    /// Alias of earliest(queue:interval:)
+    /// Will pass the main queue if we are currently on the main thread, or the
+    /// global queue otherwise
+    public func earliest(at deadline: DispatchTime) -> Self {
+        if Thread.isMainThread {
+            return earliest(DispatchQueue.main, at: deadline)
+        }
+
+        return earliest(DispatchQueue.global(), at: deadline)
+    }
+
+    /// Returns an Async that will complete with the result that this Async completes with
+    /// after waiting for the given deadline
+    /// The delay is implemented using dispatch_after. The given queue is passed to that function.
+    public func earliest(_ queue: DispatchQueue, at deadline: DispatchTime) -> Self {
+        return Self { complete in
+            onComplete(ImmediateExecutionContext) { result in
+                queue.asyncAfter(deadline: deadline) {
+                    complete(result)
+                }
+            }
+        }
+    }
     
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)

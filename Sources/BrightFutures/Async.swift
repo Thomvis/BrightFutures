@@ -63,6 +63,13 @@ open class Async<Value>: AsyncType {
             self.complete(result)
         }
     }
+
+    /// Creates an `Async` that will be completed with the given result after the specified deadline
+    public required init(result: Value, earliest: DispatchTime) {
+        DispatchQueue.global().asyncAfter(deadline: earliest) {
+            self.complete(result)
+        }
+    }
     
     /// Creates an `Async` that is completed when the given other `Async` is completed
     public required init<A: AsyncType>(other: A) where A.Value == Value {

@@ -48,6 +48,10 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
     public init(value: T, delay: DispatchTimeInterval) {
         super.init(result: Result<T, E>(value: value), delay: delay)
     }
+
+    public init(value: T, earliest deadline: DispatchTime) {
+        super.init(result: Result<T, E>(value: value), earliest: deadline)
+    }
     
     public required init<A: AsyncType>(other: A) where A.Value == Value {
         super.init(other: other)
@@ -55,6 +59,10 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
     
     public required init(result: Value, delay: DispatchTimeInterval) {
         super.init(result: result, delay: delay)
+    }
+
+    public required init(result: Value, earliest deadline: DispatchTime) {
+        super.init(result: result, earliest: deadline)
     }
     
     public convenience init(value: T) {
