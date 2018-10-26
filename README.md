@@ -265,6 +265,16 @@ fibonacciSequence.sequence().onSuccess { fibNumbers in
 }
 ```
 
+## Delay
+`delay` returns a new Future that will complete after waiting for the given interval with the result of the previous Future.
+To simplify working with `DispatchTime` and `DispatchTimeInterval`, we recommend to use this [extension](https://gist.github.com/Thomvis/b378f926b6e1a48973f694419ed73aca).
+
+```swift
+Future<Int, NoError>(value: 3).delay(2.seconds).andThen { result in
+    // execute after two additional seconds
+}
+```
+
 ## Default Threading Model
 BrightFutures tries its best to provide a simple and sensible default threading model. In theory, all threads are created equally and BrightFutures shouldn't care about which thread it is on. In practice however, the main thread is _more equal than others_, because it has a special place in our hearts and because you'll often want to be on it to do UI updates.
 
