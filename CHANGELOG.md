@@ -1,6 +1,3 @@
-# 7.1.0
-Upgrade Result dependency to 4+.
-
 # 7.0.0
 Adds support for Swift 4.2 and Xcode 10.
 
