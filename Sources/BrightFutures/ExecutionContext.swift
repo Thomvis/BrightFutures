@@ -47,7 +47,7 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
         static let maxTaskDepth = 20
     }
     
-    let localThreadDictionary = Thread.current.threadDictionary
+    var localThreadDictionary = Thread.current.threadDictionary
     
     var previousDepth: Int
     if let depth = localThreadDictionary[Static.taskDepthKey] as? Int {
