@@ -59,14 +59,14 @@ class PromiseTests: XCTestCase {
     
     func testCompletePromise() {
         let p = Promise<Int, TestError>()
-        p.complete(Result(value: 2))
+        p.complete(.success(2))
         
         XCTAssertEqual(p.future.value, 2)
     }
     
     func testPromiseCompleteWithSuccess() {
         let p = Promise<Int, TestError>()
-        p.tryComplete(Result(value: 2))
+        p.tryComplete(.success(2))
         
         XCTAssert(p.future.isSuccess)
         XCTAssert(p.future.forced() == Result<Int, TestError>(value:2))
@@ -74,7 +74,7 @@ class PromiseTests: XCTestCase {
     
     func testPromiseCompleteWithFailure() {
         let p = Promise<Int, TestError>()
-        p.tryComplete(Result(error: TestError.justAnError))
+        p.tryComplete(.failure(.justAnError))
         
         XCTAssert(p.future.isFailure)
         XCTAssert(p.future.forced() == Result<Int, TestError>(error:TestError.justAnError))

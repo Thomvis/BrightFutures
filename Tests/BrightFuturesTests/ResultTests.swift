@@ -218,8 +218,8 @@ enum MathError: Error {
 
 func divide(_ a: Int, _ b: Int) -> Result<Int, MathError> {
     if (b == 0) {
-        return Result(error: .divisionByZero)
+        return .failure(.divisionByZero)
     }
     
-    return Result(value: a / b)
+    return .success(a / b)
 }

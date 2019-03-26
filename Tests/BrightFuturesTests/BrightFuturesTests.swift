@@ -344,7 +344,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         DispatchQueue.global().asyncResult { () -> Result <Int,NSError> in
-            Result(error: NSError(domain: "Tests", code: 123, userInfo: nil))
+            .failure(NSError(domain: "Tests", code: 123, userInfo: nil))
         }.map { number in
             XCTAssert(false, "map should not be evaluated because of failure above")
         }.map { number in
@@ -412,7 +412,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         DispatchQueue.global().asyncResult {
-            Result(error: NSError(domain: "NaN", code: 0, userInfo: nil))
+            .failure(NSError(domain: "NaN", code: 0, userInfo: nil))
         }.recoverWith { _ in
             return DispatchQueue.global().asyncValue {
                 fibonacci(5)
@@ -466,7 +466,7 @@ extension BrightFuturesTests {
     func testZipThisFails() {
         let f: Future<Bool, NSError> = DispatchQueue.global().asyncResult { () -> Result<Bool,NSError> in
             sleep(1)
-            return Result(error: NSError(domain: "test", code: 2, userInfo: nil))
+            return .failure(NSError(domain: "test", code: 2, userInfo: nil))
         }
         
         let f1 = Future<Int, NSError>(value: 2)
@@ -485,7 +485,7 @@ extension BrightFuturesTests {
     func testZipThatFails() {
         let f = DispatchQueue.global().asyncResult { () -> Result<Int,NSError> in
             sleep(1)
-            return Result(error: NSError(domain: "tester", code: 3, userInfo: nil))
+            return .failure(NSError(domain: "tester", code: 3, userInfo: nil))
         }
         
         let f1 = Future<Int, NSError>(value: 2)
@@ -504,12 +504,12 @@ extension BrightFuturesTests {
     func testZipBothFail() {
         let f = DispatchQueue.global().asyncResult { () -> Result<Int,NSError> in
             sleep(1)
-            return Result(error: NSError(domain: "f-error", code: 3, userInfo: nil))
+            return .failure(NSError(domain: "f-error", code: 3, userInfo: nil))
         }
         
         let f1 = DispatchQueue.global().asyncResult { () -> Result<Int,NSError> in
             sleep(1)
-            return Result(error: NSError(domain: "f1-error", code: 4, userInfo: nil))
+            return .failure(NSError(domain: "f1-error", code: 4, userInfo: nil))
         }
         
         let e = self.expectation()
@@ -672,7 +672,7 @@ extension BrightFuturesTests {
         let e = self.expectation()
         
         Future<Int, NoError>(value: 3).flatMap { _ in
-            Result(value: 22)
+             Result.success(22)
         }.onSuccess { val in
             XCTAssertEqual(val, 22)
             e.fulfill()
@@ -724,9 +724,9 @@ extension BrightFuturesTests {
         let evenFuture: (Int) -> Future<Bool, NSError> = { i in
             return DispatchQueue.global().asyncResult {
                 if i % 2 == 0 {
-                    return Result(value: true)
+                    return .success(true)
                 } else {
-                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
+                    return .failure(NSError(domain: "traverse-single-error", code: i, userInfo: nil))
                 }
             }
         }
@@ -748,9 +748,9 @@ extension BrightFuturesTests {
         let evenFuture: (Int) -> Future<Bool, NSError> = { i in
             return DispatchQueue.global().asyncResult {
                 if i % 2 == 0 {
-                    return Result(value: true)
+                    return .success(true)
                 } else {
-                    return Result(error: NSError(domain: "traverse-single-error", code: i, userInfo: nil))
+                    return .failure(NSError(domain: "traverse-single-error", code: i, userInfo: nil))
                 }
             }
         }
@@ -1143,14 +1143,14 @@ extension XCTestCase {
     func failingFuture<U>() -> Future<U, NSError> {
         return DispatchQueue.global().asyncResult {
             usleep(arc4random_uniform(100))
-            return Result(error: NSError(domain: "failedFuture", code: 0, userInfo: nil))
+            return .failure(NSError(domain: "failedFuture", code: 0, userInfo: nil))
         }
     }
     
     func succeedingFuture<U>(_ val: U) -> Future<U, NSError> {
         return DispatchQueue.global().asyncResult {
             usleep(arc4random_uniform(100))
-            return Result(value: val)
+            return .success(val)
         }
     }
 }

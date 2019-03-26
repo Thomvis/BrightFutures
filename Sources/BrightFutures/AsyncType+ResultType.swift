@@ -168,9 +168,9 @@ public extension AsyncType where Value: ResultProtocol {
             return BrightFuturesError(external: error)
         }.flatMap(ImmediateExecutionContext) { value -> Result<Value.Value, BrightFuturesError<Value.Error>> in
             if p(value) {
-                return Result(value: value)
+                return .success(value)
             } else {
-                return Result(error: .noSuchElement)
+                return .failure(.noSuchElement)
             }
         }
     }
