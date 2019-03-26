@@ -541,7 +541,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0710;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Thomas Visser";
 				TargetAttributes = {
 					E986479C1BF327E400B6BEEE = {
@@ -576,10 +576,11 @@
 			};
 			buildConfigurationList = E9DF080F194470060083F7F2 /* Build configuration list for PBXProject "BrightFutures" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = E9DF080B194470060083F7F2;
 			productRefGroup = E9DF0816194470060083F7F2 /* Products */;
@@ -1212,6 +1213,7 @@
 				PRODUCT_NAME = BrightFutures;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1238,6 +1240,7 @@
 				PRODUCT_NAME = BrightFutures;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
