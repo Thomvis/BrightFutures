@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Result
 
 internal extension MutableAsyncType where Value: ResultProtocol {
     /// Completes the future with the given success value

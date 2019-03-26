@@ -8,7 +8,6 @@
 
 import XCTest
 import BrightFutures
-import Result
 
 class PromiseTests: XCTestCase {
 

@@ -6,8 +6,6 @@
 //  Copyright © 2015 Thomas Visser. All rights reserved.
 //
 
-import Result
-
 extension ResultProtocol {
 
     /// Case analysis for Result.

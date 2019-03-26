@@ -5,7 +5,6 @@
 //  Created by Thomas Visser on 10/07/15.
 //  Copyright © 2015 Thomas Visser. All rights reserved.
 //
-import Result
 
 public extension AsyncType where Value: ResultProtocol {
     /// `true` if the future completed with success, or `false` otherwise

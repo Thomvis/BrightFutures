@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import Foundation
-import Result
 
 /// A Future represents the outcome of an asynchronous operation
 /// The outcome will be represented as an instance of the `Result` enum and will be stored

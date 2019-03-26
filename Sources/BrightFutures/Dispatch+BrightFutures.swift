@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Result
 
 public extension DispatchQueue {
     public var context: ExecutionContext {

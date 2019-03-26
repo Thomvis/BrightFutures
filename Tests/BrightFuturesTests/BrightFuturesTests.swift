@@ -22,7 +22,6 @@
 
 import XCTest
 import BrightFutures
-import Result
 
 class BrightFuturesTests: XCTestCase {
     

@@ -7,7 +7,6 @@
 //
 
 import XCTest
-import Result
 import BrightFutures
 
 class TestLogger: LoggerType {

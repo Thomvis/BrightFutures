@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import XCTest
-import Result
 import BrightFutures
 
 extension Result {
