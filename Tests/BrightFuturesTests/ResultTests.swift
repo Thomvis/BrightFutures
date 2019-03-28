@@ -160,20 +160,6 @@ class ResultTests: XCTestCase {
         XCTAssert(r.isFailure)
         XCTAssertEqual(r.error!, MathError.divisionByZero)
     }
-
-    func testRecoverNeeded() {
-        let r = divide(10, 0).recover(2)
-        XCTAssertEqual(r, 2)
-        
-        XCTAssertEqual(divide(10, 0) ?? 2, 2)
-    }
-
-    func testRecoverUnneeded() {
-        let r = divide(10, 3).recover(10)
-        XCTAssertEqual(r, 3)
-        
-        XCTAssertEqual(divide(10, 3) ?? 10, 3)
-    }
     
     func testFlattenInnerSuccess() {
         let fr = Result<Result<Int, Never>, Never>.success(.success(3)).flatten()
