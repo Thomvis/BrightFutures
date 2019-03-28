@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import BrightFutures
+@testable import BrightFutures
 
 class InvalidationTokenTests: XCTestCase {
 

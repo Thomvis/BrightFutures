@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import XCTest
-import BrightFutures
+@testable import BrightFutures
 
 enum TestError: Error {
     case justAnError
