@@ -10,6 +10,9 @@
 		5045199A216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */; };
 		5045199B216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */; };
 		5045199C216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */; };
+		C3106A58224D3FAC00350B65 /* ResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */; };
+		C3106A59224D3FAD00350B65 /* ResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */; };
+		C3106A5A224D3FAD00350B65 /* ResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */; };
 		C34BB4B6224A9E3600921D21 /* ResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */; };
 		E98647A71BF327E400B6BEEE /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E986479D1BF327E400B6BEEE /* BrightFutures.framework */; };
 		E98FD6F61DC3D81600DCD9C9 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6E61DC3D81600DCD9C9 /* Async.swift */; };
@@ -549,22 +552,23 @@
 				TargetAttributes = {
 					E986479C1BF327E400B6BEEE = {
 						CreatedOnToolsVersion = 7.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1020;
 					};
 					E98647A51BF327E400B6BEEE = {
 						CreatedOnToolsVersion = 7.1;
+						LastSwiftMigration = 1020;
 					};
 					E9CBFD111B8268FB00702394 = {
 						CreatedOnToolsVersion = 7.0;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1020;
 					};
 					E9D45AFF1AF00659000F6CA7 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1020;
 					};
 					E9D45B091AF00659000F6CA7 = {
 						CreatedOnToolsVersion = 6.3.1;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1020;
 					};
 					E9DF0814194470060083F7F2 = {
 						CreatedOnToolsVersion = 6.0;
@@ -644,6 +648,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3106A5A224D3FAD00350B65 /* ResultProtocol.swift in Sources */,
 				E98FD7311DC3D81600DCD9C9 /* Result+BrightFutures.swift in Sources */,
 				E98FD6FD1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7051DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
@@ -683,6 +688,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3106A59224D3FAD00350B65 /* ResultProtocol.swift in Sources */,
 				E98FD7301DC3D81600DCD9C9 /* Result+BrightFutures.swift in Sources */,
 				E98FD6FC1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7041DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
@@ -705,6 +711,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3106A58224D3FAC00350B65 /* ResultProtocol.swift in Sources */,
 				E98FD72F1DC3D81600DCD9C9 /* Result+BrightFutures.swift in Sources */,
 				E98FD6FB1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7031DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
@@ -823,7 +830,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
@@ -852,7 +859,7 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
@@ -870,7 +877,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.BrightFutures-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
@@ -889,7 +896,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;
@@ -917,7 +924,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -947,7 +954,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
@@ -982,7 +989,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1012,7 +1019,7 @@
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1038,7 +1045,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "nl.thomvis.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1062,7 +1069,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
