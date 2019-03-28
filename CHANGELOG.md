@@ -1,3 +1,7 @@
+# 7.0.1
+- Updates Result dependency to 4.1 compatible versions. ([https://github.com/Thomvis/BrightFutures/pull/203](#203), thanks [https://github.com/Jeroenbb94](Jeroenbb94)!)
+- Fixes an issue related to the threadDictionary on Linux ([https://github.com/Thomvis/BrightFutures/pull/204](#204), thanks [https://github.com/jgh-](jgh-)!)
+
 # 7.0.0
 Adds support for Swift 4.2 and Xcode 10.
 
