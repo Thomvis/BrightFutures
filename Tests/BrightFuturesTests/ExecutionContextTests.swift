@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import XCTest
-@testable import BrightFutures
+import BrightFutures
 
 class Counter {
     var i: Int = 0

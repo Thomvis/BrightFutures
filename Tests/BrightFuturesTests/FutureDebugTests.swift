@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import BrightFutures
+import BrightFutures
 
 class TestLogger: LoggerType {
     var lastLoggedMessage: String?

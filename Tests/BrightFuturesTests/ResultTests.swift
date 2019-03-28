@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 import XCTest
-@testable import BrightFutures
+import BrightFutures
 
 extension Result {
     var isSuccess: Bool {
