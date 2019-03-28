@@ -2,10 +2,10 @@ language: objective-c
 osx_image: xcode10.2
 
 script:
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-Mac
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-iOS -sdk iphonesimulator -destination "platform=iOS Simulator,OS=12.2,name=iPhone 6s"
-  - xcodebuild test -workspace BrightFutures.xcworkspace -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=12.2,name=Apple TV"
-  - xcodebuild build -workspace BrightFutures.xcworkspace -scheme BrightFutures-watchOS -sdk watchsimulator
+  - xcodebuild test -workspace BrightFutures.xcodeproj -scheme BrightFutures-Mac
+  - xcodebuild test -workspace BrightFutures.xcodeproj -scheme BrightFutures-iOS -sdk iphonesimulator -destination "platform=iOS Simulator,OS=12.2,name=iPhone 6s"
+  - xcodebuild test -workspace BrightFutures.xcodeproj -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=12.2,name=Apple TV"
+  - xcodebuild build -workspace BrightFutures.xcodeproj -scheme BrightFutures-watchOS -sdk watchsimulator
 
 notifications:
   email: true
