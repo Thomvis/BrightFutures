@@ -12,7 +12,12 @@ extension ResultProtocol {
     ///
     /// Returns the value produced by applying `ifFailure` to `failure` Results, or `ifSuccess` to `success` Results.
     func analysis<Result>(ifSuccess: (Value) -> Result, ifFailure: (Error) -> Result) -> Result {
-        return self.result.analysis(ifSuccess: ifSuccess, ifFailure: ifFailure)
+        switch self.result {
+        case .success(let value):
+            return ifSuccess(value)
+        case .failure(let error):
+            return ifFailure(error)
+        }
     }
 
 }
