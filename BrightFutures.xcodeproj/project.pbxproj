@@ -10,7 +10,6 @@
 		5045199A216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */; };
 		5045199B216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */; };
 		5045199C216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6F21DC3D81600DCD9C9 /* Number+BrightFutures.swift */; };
-		C34BB4B4224A6D3C00921D21 /* NoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34BB4B3224A6D3C00921D21 /* NoError.swift */; };
 		C34BB4B6224A9E3600921D21 /* ResultProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */; };
 		E98647A71BF327E400B6BEEE /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E986479D1BF327E400B6BEEE /* BrightFutures.framework */; };
 		E98FD6F61DC3D81600DCD9C9 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD6E61DC3D81600DCD9C9 /* Async.swift */; };
@@ -154,7 +153,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		C34BB4B3224A6D3C00921D21 /* NoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoError.swift; sourceTree = "<group>"; };
 		C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultProtocol.swift; sourceTree = "<group>"; };
 		E986479D1BF327E400B6BEEE /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E98647A61BF327E400B6BEEE /* BrightFutures-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -333,7 +331,6 @@
 				E98FD6EE1DC3D81600DCD9C9 /* InvalidationToken.swift */,
 				E98FD6EF1DC3D81600DCD9C9 /* MutableAsyncType.swift */,
 				E98FD6F01DC3D81600DCD9C9 /* MutableAsyncType+ResultType.swift */,
-				C34BB4B3224A6D3C00921D21 /* NoError.swift */,
 				E98FD6F11DC3D81600DCD9C9 /* NSOperationQueue+BrightFutures.swift */,
 				E98FD6F31DC3D81600DCD9C9 /* Promise.swift */,
 				E98FD6F41DC3D81600DCD9C9 /* Result+BrightFutures.swift */,
@@ -763,7 +760,6 @@
 				E98FD70E1DC3D81600DCD9C9 /* ExecutionContext.swift in Sources */,
 				E98FD7321DC3D81600DCD9C9 /* SequenceType+BrightFutures.swift in Sources */,
 				E98FD6F61DC3D81600DCD9C9 /* Async.swift in Sources */,
-				C34BB4B4224A6D3C00921D21 /* NoError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

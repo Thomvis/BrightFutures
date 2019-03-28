@@ -12,7 +12,7 @@ import BrightFutures
 class PromiseTests: XCTestCase {
 
     func testSuccessPromise() {
-        let p = Promise<Int, NoError>()
+        let p = Promise<Int, Never>()
         
         DispatchQueue.global().async {
             p.success(fibonacci(10))
@@ -81,7 +81,7 @@ class PromiseTests: XCTestCase {
     }
     
     func testPromiseTrySuccessTwice() {
-        let p = Promise<Int, NoError>()
+        let p = Promise<Int, Never>()
         XCTAssert(p.trySuccess(1))
         XCTAssertFalse(p.trySuccess(2))
         XCTAssertEqual(p.future.forced().value!, 1)
@@ -95,8 +95,8 @@ class PromiseTests: XCTestCase {
     }
     
     func testPromiseCompleteWithSucceedingFuture() {
-        let p = Promise<Int, NoError>()
-        let q = Promise<Int, NoError>()
+        let p = Promise<Int, Never>()
+        let q = Promise<Int, Never>()
         
         p.completeWith(q.future)
         

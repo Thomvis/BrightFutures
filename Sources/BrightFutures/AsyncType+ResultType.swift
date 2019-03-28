@@ -105,9 +105,9 @@ public extension AsyncType where Value: ResultProtocol {
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
-    func recover(context c: @escaping ExecutionContext = DefaultThreadingModel(), task: @escaping (Value.Error) -> Value.Value) -> Future<Value.Value, NoError> {
-        return self.recoverWith(context: c) { error -> Future<Value.Value, NoError> in
-            return Future<Value.Value, NoError>(value: task(error))
+    func recover(context c: @escaping ExecutionContext = DefaultThreadingModel(), task: @escaping (Value.Error) -> Value.Value) -> Future<Value.Value, Never> {
+        return self.recoverWith(context: c) { error -> Future<Value.Value, Never> in
+            return Future<Value.Value, Never>(value: task(error))
         }
     }
     
@@ -210,22 +210,22 @@ public extension AsyncType where Value: ResultProtocol, Value.Value: AsyncType, 
     
 }
 
-public extension AsyncType where Value: ResultProtocol, Value.Error == NoError {
-    /// 'promotes' a `Future` with error type `NoError` to a `Future` with an error type of choice.
+public extension AsyncType where Value: ResultProtocol, Value.Error == Never {
+    /// 'promotes' a `Future` with error type `Never` to a `Future` with an error type of choice.
     /// This allows the `Future` to be used more easily in combination with other futures
     /// for operations such as `sequence` and `firstCompleted`
-    /// This is a safe operation, because a `Future` with error type `NoError` is guaranteed never to fail
+    /// This is a safe operation, because a `Future` with error type `Never` is guaranteed never to fail
     func promoteError<E>() -> Future<Value.Value, E> {
         return mapError(ImmediateExecutionContext) { $0 as! E } // future will never fail, so this map block will never get called
     }
 }
 
-public extension AsyncType where Value: ResultProtocol, Value.Error == BrightFuturesError<NoError> {
-    /// 'promotes' a `Future` with error type `BrightFuturesError<NoError>` to a `Future` with an
+public extension AsyncType where Value: ResultProtocol, Value.Error == BrightFuturesError<Never> {
+    /// 'promotes' a `Future` with error type `BrightFuturesError<Never>` to a `Future` with an
     /// `BrightFuturesError<E>` error type where `E` can be any type conforming to `ErrorType`.
     /// This allows the `Future` to be used more easily in combination with other futures
     /// for operations such as `sequence` and `firstCompleted`
-    /// This is a safe operation, because a `BrightFuturesError<NoError>` will never be `.External`
+    /// This is a safe operation, because a `BrightFuturesError<Never>` will never be `.External`
     func promoteError<E>() -> Future<Value.Value, BrightFuturesError<E>> {
         return mapError(ImmediateExecutionContext) { err in
             switch err {
@@ -236,7 +236,7 @@ public extension AsyncType where Value: ResultProtocol, Value.Error == BrightFut
             case .illegalState:
                 return BrightFuturesError<E>.illegalState
             case .external(_):
-                fatalError("Encountered BrightFuturesError.External with NoError, which should be impossible")
+                fatalError("Encountered BrightFuturesError.External with Never, which should be impossible")
             }
         }
     }

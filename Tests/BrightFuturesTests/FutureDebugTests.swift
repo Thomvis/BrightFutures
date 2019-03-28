@@ -27,7 +27,7 @@ class FutureDebugTests: XCTestCase {
     
     func testDebugFuture() {
         let logger = TestLogger()
-        let f = Future<Void, NoError>(value: ()).debug(logger: logger, file: file, line: line, function: function)
+        let f = Future<Void, Never>(value: ()).debug(logger: logger, file: file, line: line, function: function)
         let expectedMessage = "\(fileName) at line \(line), func: \(function) - future completed"
         let debugExpectation = self.expectation(description: "debugLogged")
         
@@ -42,7 +42,7 @@ class FutureDebugTests: XCTestCase {
     func testDebugFutureWithIdentifier() {
         let logger = TestLogger()
         
-        let f = Future<Void, NoError>(value: ()).debug(testIdentifier, logger: logger)
+        let f = Future<Void, Never>(value: ()).debug(testIdentifier, logger: logger)
         let debugExpectation = self.expectation(description: "debugLogged")
         
         f.onSuccess { _ in

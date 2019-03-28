@@ -119,7 +119,7 @@ class QueueTests: XCTestCase {
     func testAfterFuture() {
         // unfortunately, the compiler is not able to figure out that we want the
         // future-returning async method
-        let f: Future<String, NoError> = DispatchQueue.global().asyncValueAfter(1.second.fromNow) {
+        let f: Future<String, Never> = DispatchQueue.global().asyncValueAfter(1.second.fromNow) {
             return "fibonacci"
         }
         

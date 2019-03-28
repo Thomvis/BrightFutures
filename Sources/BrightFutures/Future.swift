@@ -82,7 +82,7 @@ public func materialize<T, E>(_ scope: ((T?, E?) -> Void) -> Void) -> Future<T, 
     }
 }
 
-public func materialize<T>(_ scope: ((T) -> Void) -> Void) -> Future<T, NoError> {
+public func materialize<T>(_ scope: ((T) -> Void) -> Void) -> Future<T, Never> {
     return Future { complete in
         scope { val in
             complete(.success(val))
@@ -104,7 +104,7 @@ public func materialize<E>(_ scope: ((E?) -> Void) -> Void) -> Future<Void, E> {
 
 /// Short-hand for `lhs.recover(rhs())`
 /// `rhs` is executed according to the default threading model (see README.md)
-public func ?? <T, E>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping  () -> T) -> Future<T, NoError> {
+public func ?? <T, E>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping  () -> T) -> Future<T, Never> {
     return lhs.recover(context: DefaultThreadingModel(), task: { _ in
         return rhs()
     })
