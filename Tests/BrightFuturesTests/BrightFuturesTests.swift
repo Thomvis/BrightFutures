@@ -1024,7 +1024,7 @@ extension BrightFuturesTests {
                 }
                 
                 let context = randomContext()
-                let e = self.expectation(description: "future completes in context \(context)")
+                let e = self.expectation(description: "future completes in context \(String(describing: context))")
                 
                 future.onComplete(context) { res in
                     e.fulfill()
@@ -1037,7 +1037,7 @@ extension BrightFuturesTests {
                 let f = randomFuture()
                 
                 let context = randomContext()
-                let e = self.expectation(description: "future completes in context \(context)")
+                let e = self.expectation(description: "future completes in context \(String(describing: context))")
                 
                 DispatchQueue.global().async {
                     usleep(arc4random_uniform(100))

@@ -10,26 +10,26 @@ import Foundation
 
 public extension Int {
     
-    public var seconds: DispatchTimeInterval {
+    var seconds: DispatchTimeInterval {
         return DispatchTimeInterval.seconds(self)
     }
     
-    public var second: DispatchTimeInterval {
+    var second: DispatchTimeInterval {
         return seconds
     }
     
-    public var milliseconds: DispatchTimeInterval {
+    var milliseconds: DispatchTimeInterval {
         return DispatchTimeInterval.milliseconds(self)
     }
     
-    public var millisecond: DispatchTimeInterval {
+    var millisecond: DispatchTimeInterval {
         return milliseconds
     }
     
 }
 
 public extension DispatchTimeInterval {
-    public var fromNow: DispatchTime {
+    var fromNow: DispatchTime {
         return DispatchTime.now() + self
     }
 }
