@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import Foundation
-import Result
 
 /// The source of a future. Create a `Promise` when you are
 /// performing an asynchronous task and want to return a future.

@@ -8,7 +8,6 @@
 
 import XCTest
 import BrightFutures
-import Result
 
 class InvalidationTokenTests: XCTestCase {
 
@@ -30,7 +29,7 @@ class InvalidationTokenTests: XCTestCase {
         token.invalidate()
         XCTAssert(token.future.result?.error != nil, "future should have an error")
         if let error = token.future.result?.error {
-            XCTAssert(error == BrightFuturesError<NoError>.invalidationTokenInvalidated)
+            XCTAssert(error == BrightFuturesError<Never>.invalidationTokenInvalidated)
         }
     }
     
@@ -60,7 +59,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, NoError>(value: 3).onSuccess(token.validContext) { val in
+        Future<Int, Never>(value: 3).onSuccess(token.validContext) { val in
             XCTAssertEqual(val, 3)
             e.fulfill()
         }
@@ -72,7 +71,7 @@ class InvalidationTokenTests: XCTestCase {
         let token = InvalidationToken()
         
         let e = self.expectation()
-        Future<Int, NoError>(value: 3).onComplete(token.validContext) { res in
+        Future<Int, Never>(value: 3).onComplete(token.validContext) { res in
             XCTAssertEqual(res.value!, 3)
             e.fulfill()
         }

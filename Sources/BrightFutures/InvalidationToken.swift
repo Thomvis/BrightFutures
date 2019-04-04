@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Result
 
 /// The type that all invalidation tokens conform to
 public protocol InvalidationTokenType {
@@ -16,7 +15,7 @@ public protocol InvalidationTokenType {
     var isInvalid : Bool { get }
     
     /// The future will fail with .InvalidationTokenInvalidated when the token invalidates
-    var future: Future<NoValue, BrightFuturesError<NoError>> { get }
+    var future: Future<NoValue, BrightFuturesError<Never>> { get }
     
     /// This context executes as long as the token is valid. If the token is invalid, the given blocks are discarded
     func validContext(_ parentContext: @escaping ExecutionContext) -> ExecutionContext
@@ -50,7 +49,7 @@ public protocol ManualInvalidationTokenType : InvalidationTokenType {
 /// A default invalidation token implementation
 public class InvalidationToken : ManualInvalidationTokenType {
    
-    public let future = Future<NoValue, BrightFuturesError<NoError>>()
+    public let future = Future<NoValue, BrightFuturesError<Never>>()
     
     /// Creates a new valid token
     public init() { }

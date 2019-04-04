@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Result
 
 public protocol LoggerType {
     func log(message: String)
@@ -39,7 +38,7 @@ public struct Logger: LoggerType {
 }
 
 public extension AsyncType {
-    public func debug(_ identifier: String? = nil, logger: LoggerType = Logger(), file: String = #file, line: UInt = #line, function: String = #function, context c: @escaping ExecutionContext = DefaultThreadingModel()) -> Self {
+    func debug(_ identifier: String? = nil, logger: LoggerType = Logger(), file: String = #file, line: UInt = #line, function: String = #function, context c: @escaping ExecutionContext = DefaultThreadingModel()) -> Self {
         return andThen(context: c, callback: { result in
             let message = logger.message(for: result, with: identifier, file: file, line: line, function: function)
             logger.log(message: message)
