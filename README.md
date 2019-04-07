@@ -331,7 +331,7 @@ If you are looking for a way to cancel a running task, you could look into using
 
 ## Credits
 
-BrightFutures' primary author is [Thomas Visser](https://twitter.com/thomvis88). He is lead iOS Engineer at [Highstreet](http://www.highstreetapp.com/). We welcome any feedback and pull requests. Get your name on [this list](https://github.com/Thomvis/BrightFutures/graphs/contributors)!
+BrightFutures' primary author is [Thomas Visser](https://twitter.com/thomvis). He is lead iOS Engineer at [Highstreet](http://www.highstreetapp.com/). We welcome any feedback and pull requests. Get your name on [this list](https://github.com/Thomvis/BrightFutures/graphs/contributors)!
 
 BrightFutures was inspired by Facebook's [BFTasks](https://github.com/BoltsFramework/Bolts-iOS), the Promises & Futures implementation in [Scala](http://docs.scala-lang.org/overviews/core/futures.html) and Max Howell's [PromiseKit](https://github.com/mxcl/PromiseKit).
 
