@@ -13,7 +13,7 @@ The stability of BrightFutures has been proven through extensive use in producti
 ## Latest news
 [![Join the chat at https://gitter.im/Thomvis/BrightFutures](https://badges.gitter.im/Thomvis/BrightFutures.svg)](https://gitter.im/Thomvis/BrightFutures?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Travis CI build status badge](https://travis-ci.org/Thomvis/BrightFutures.svg?branch=master)](https://travis-ci.org/Thomvis/BrightFutures) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage) [![CocoaPods version](https://img.shields.io/cocoapods/v/BrightFutures.svg)](https://cocoapods.org/pods/BrightFutures) [![CocoaPods](https://img.shields.io/cocoapods/metrics/doc-percent/BrightFutures.svg?maxAge=2592000)](http://cocoadocs.org/docsets/BrightFutures)
 
-BrightFutures 7.0 is now available! This update adds Swift 4.2 compatibility.
+BrightFutures 8.0 is now available! This update adds Swift 5 compatibility.
 
 ## Installation
 ### [CocoaPods](http://cocoapods.org/)
@@ -38,11 +38,10 @@ BrightFutures 7.0 is now available! This update adds Swift 4.2 compatibility.
 2. Run `carthage update` and follow the steps as described in Carthage's [README](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application).
 
 ## Documentation
-- API documentation is available at the wonderful [cocoadocs.org](http://cocoadocs.org/docsets/BrightFutures)
 - This README covers almost all features of BrightFutures
 - The [tests](Tests/BrightFuturesTests) contain (trivial) usage examples for every feature (97% test coverage)
 - The primary author, Thomas Visser, gave [a talk](https://www.youtube.com/watch?v=lgJT2KMMEmU) at the April 2015 CocoaHeadsNL meetup
-- The [Highstreet Watch App](https://github.com/GetHighstreet/HighstreetWatchApp) is an Open Source WatchKit app that makes extensive use of BrightFutures
+- The [Highstreet Watch App](https://github.com/GetHighstreet/HighstreetWatchApp) was an Open Source WatchKit app that made extensive use of an earlier version of BrightFutures
 
 ## Examples
 We write a lot of asynchronous code. Whether we're waiting for something to come in from the network or want to perform an expensive calculation off the main thread and then update the UI, we often do the 'fire and callback' dance. Here's a typical snippet of asynchronous code:
@@ -97,10 +96,10 @@ enum ReadmeError: Error {
 
 let f = DispatchQueue.global().asyncResult { () -> Result<Date, ReadmeError> in
     if let now = serverTime() {
-        return Result(value: now)
+        return .success(now)
     }
     
-    return Result(error: ReadmeError.TimeServiceError)
+    return .failure(ReadmeError.TimeServiceError)
 }
 
 f.onSuccess { value in
@@ -116,7 +115,7 @@ Instead of wrapping existing expressions, it is often a better idea to use a Fut
 Now let's assume the role of an API author who wants to use BrightFutures. A Future is designed to be read-only, except for the site where the Future is created. This is achieved via an initialiser on Future that takes a closure, the completion scope, in which you can complete the Future. The completion scope has one parameter that is also a closure which is invoked to set the value (or error) in the Future.
 
 ```swift
-func asyncCalculation() -> Future<String, NoError> {
+func asyncCalculation() -> Future<String, Never> {
     return Future { complete in
         DispatchQueue.global().async {
             // do a complicated task and then hand the result to the promise:
@@ -126,7 +125,7 @@ func asyncCalculation() -> Future<String, NoError> {
 }
 ```
 
-`NoError` indicates that the `Future` cannot fail. This is guaranteed by the type system, since `NoError` has no initializers. As an alternative to the completion scope, you could also create a `Promise`, which is the writeable equivalent of a Future, and store it somewhere for later use.
+`Never` indicates that the `Future` cannot fail. This is guaranteed by the type system, since `Never` has no initializers. As an alternative to the completion scope, you could also create a `Promise`, which is the writeable equivalent of a Future, and store it somewhere for later use.
 
 ## Callbacks
 You can be informed of the result of a `Future` by registering callbacks: `onComplete`, `onSuccess` and `onFailure`. The order in which the callbacks are executed upon completion of the future is not guaranteed, but it is guaranteed that the callbacks are executed serially. It is not safe to add a new callback from within a callback of the same future.
@@ -138,7 +137,7 @@ Using the `andThen` function on a `Future`, the order of callbacks can be explic
 ```swift
 var answer = 10
     
-let _ = Future<Int, NoError>(value: 4).andThen { result in
+let _ = Future<Int, Never>(value: 4).andThen { result in
     switch result {
     case .success(let val):
         answer *= val
@@ -188,8 +187,8 @@ fibonacciFuture(10).flatMap { number in
 ### zip
 
 ```swift
-let f = Future<Int, NoError>(value: 1)
-let f1 = Future<Int, NoError>(value: 2)
+let f = Future<Int, Never>(value: 1)
+let f1 = Future<Int, Never>(value: 2)
 
 f.zip(f1).onSuccess { a, b in
     // a is 1, b is 2
@@ -198,13 +197,13 @@ f.zip(f1).onSuccess { a, b in
 
 ### filter
 ```swift
-Future<Int, NoError>(value: 3)
+Future<Int, Never>(value: 3)
     .filter { $0 > 5 }
     .onComplete { result in
         // failed with error NoSuchElementError
     }
 
-Future<String, NoError>(value: "Swift")
+Future<String, Never>(value: "Swift")
     .filter { $0.hasPrefix("Sw") }
     .onComplete { result in
         // succeeded with value "Swift"
@@ -270,7 +269,7 @@ fibonacciSequence.sequence().onSuccess { fibNumbers in
 To simplify working with `DispatchTime` and `DispatchTimeInterval`, we recommend to use this [extension](https://gist.github.com/Thomvis/b378f926b6e1a48973f694419ed73aca).
 
 ```swift
-Future<Int, NoError>(value: 3).delay(2.seconds).andThen { result in
+Future<Int, Never>(value: 3).delay(2.seconds).andThen { result in
     // execute after two additional seconds
 }
 ```
@@ -289,7 +288,7 @@ If you want to have custom threading behavior, skip do do not the section. next 
 The default threading behavior can be overridden by providing explicit execution contexts. You can choose from any of the built-in contexts or easily create your own. Default contexts include: any dispatch queue, any `NSOperationQueue` and the `ImmediateExecutionContext` for when you don't want to switch threads/queues.
 
 ```swift
-let f = Future<Int, NoError> { complete in
+let f = Future<Int, Never> { complete in
     DispatchQueue.global().async {
         complete(.success(fibonacci(10)))
     }
