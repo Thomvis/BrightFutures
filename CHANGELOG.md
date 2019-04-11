@@ -1,3 +1,11 @@
+# 8.0.0
+Adds support for Swift 5 and Xcode 10.2. Previous versions of Swift are no longer supported.
+
+- Migrated from [antitypical/Result](https://github.com/antitypical/Result) to the new Result type in the standard library
+- Removed `NoError` in favor of `Never` from the standard library
+
+Thanks to [kimdv](https://github.com/kimdv) for doing most of the migration work!
+
 # 7.0.1
 - Updates Result dependency to 4.1 compatible versions. ([#203](https://github.com/Thomvis/BrightFutures/pull/203]) , thanks [Jeroenbb94](https://github.com/Jeroenbb94)!)
 - Fixes an issue related to the threadDictionary on Linux ([#204](https://github.com/Thomvis/BrightFutures/pull/204), thanks [jgh-](https://github.com/jgh-)!)
