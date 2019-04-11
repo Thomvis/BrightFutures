@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import XCTest
-import Result
 import BrightFutures
 
 extension Result {
@@ -161,23 +160,9 @@ class ResultTests: XCTestCase {
         XCTAssert(r.isFailure)
         XCTAssertEqual(r.error!, MathError.divisionByZero)
     }
-
-    func testRecoverNeeded() {
-        let r = divide(10, 0).recover(2)
-        XCTAssertEqual(r, 2)
-        
-        XCTAssertEqual(divide(10, 0) ?? 2, 2)
-    }
-
-    func testRecoverUnneeded() {
-        let r = divide(10, 3).recover(10)
-        XCTAssertEqual(r, 3)
-        
-        XCTAssertEqual(divide(10, 3) ?? 10, 3)
-    }
     
     func testFlattenInnerSuccess() {
-        let fr = Result<Result<Int, NoError>, NoError>.success(.success(3)).flatten()
+        let fr = Result<Result<Int, Never>, Never>.success(.success(3)).flatten()
         XCTAssert(fr.isSuccess)
         XCTAssertEqual(fr.value, 3)
     }
@@ -195,7 +180,7 @@ class ResultTests: XCTestCase {
     }
     
     func testFlattenFutureInResultSuccess() {
-        let f = Result<Future<Int, NoError>, NoError>.success(Future<Int, NoError>(value: 1)).flatten()
+        let f = Result<Future<Int, Never>, Never>.success(Future<Int, Never>(value: 1)).flatten()
         XCTAssert(f.isSuccess)
         XCTAssertEqual(f.value, 1)
     }
@@ -219,8 +204,8 @@ enum MathError: Error {
 
 func divide(_ a: Int, _ b: Int) -> Result<Int, MathError> {
     if (b == 0) {
-        return Result(error: .divisionByZero)
+        return .failure(.divisionByZero)
     }
     
-    return Result(value: a / b)
+    return .success(a / b)
 }

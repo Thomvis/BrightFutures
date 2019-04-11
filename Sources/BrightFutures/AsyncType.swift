@@ -25,18 +25,18 @@ public protocol AsyncType {
 
 public extension AsyncType {
     /// `true` if the future completed (either `isSuccess` or `isFailure` will be `true`)
-    public var isCompleted: Bool {
+    var isCompleted: Bool {
         return result != nil
     }
     
     /// Blocks the current thread until the future is completed and then returns the result
-    public func forced() -> Value {
+    func forced() -> Value {
         return forced(DispatchTime.distantFuture)!
     }
     
     /// Blocks the current thread until the future is completed, but no longer than the given timeout
     /// If the future did not complete before the timeout, `nil` is returned, otherwise the result of the future is returned
-    public func forced(_ timeout: DispatchTime) -> Value? {
+    func forced(_ timeout: DispatchTime) -> Value? {
         if let result = result {
             return result
         }
@@ -56,7 +56,7 @@ public extension AsyncType {
     /// Alias of delay(queue:interval:)
     /// Will pass the main queue if we are currently on the main thread, or the
     /// global queue otherwise
-    public func delay(_ interval: DispatchTimeInterval) -> Self {
+    func delay(_ interval: DispatchTimeInterval) -> Self {
         if Thread.isMainThread {
             return delay(DispatchQueue.main, interval: interval)
         }
@@ -69,7 +69,7 @@ public extension AsyncType {
     /// The delay is implemented using dispatch_after. The given queue is passed to that function.
     /// If you want a delay of 0 to mean 'delay until next runloop', you will want to pass the main
     /// queue.
-    public func delay(_ queue: DispatchQueue, interval: DispatchTimeInterval) -> Self {
+    func delay(_ queue: DispatchQueue, interval: DispatchTimeInterval) -> Self {
         return Self { complete in
             onComplete(ImmediateExecutionContext) { result in
                 queue.asyncAfter(deadline: DispatchTime.now() + interval) {
@@ -82,7 +82,7 @@ public extension AsyncType {
     /// Adds the given closure as a callback for when this future completes.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
     /// Returns a future that completes with the result from this future but only after executing the given closure
-    public func andThen(context c: @escaping ExecutionContext = DefaultThreadingModel(), callback: @escaping (Self.Value) -> Void) -> Self {
+    func andThen(context c: @escaping ExecutionContext = DefaultThreadingModel(), callback: @escaping (Self.Value) -> Void) -> Self {
         return Self { complete in
             onComplete(c) { result in
                 callback(result)
@@ -93,7 +93,7 @@ public extension AsyncType {
 }
 
 public extension AsyncType where Value: AsyncType {
-    public func flatten() -> Self.Value {
+    func flatten() -> Self.Value {
         return Self.Value { complete in
             self.onComplete(ImmediateExecutionContext) { value in
                 value.onComplete(ImmediateExecutionContext, callback: complete)

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 import Foundation
-import Result
 
 extension Sequence {
     /// Turns a sequence of T's into an array of `Future<U>`'s by calling the given closure for each element in the sequence.
@@ -96,10 +95,10 @@ extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: Re
         }.flatMap(context) { val -> Result<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> in
             for elem in val {
                 if (p(elem)) {
-                    return Result(value: elem)
+                    return .success(elem)
                 }
             }
-            return Result(error: .noSuchElement)
+            return .failure(.noSuchElement)
         }
     }
 }
@@ -109,14 +108,14 @@ extension Sequence where Iterator.Element: ResultProtocol {
     /// If one of the results in the given sequence is a .failure, the returned result is a .failure with the
     /// error from the first failed result from the sequence.
     public func sequence() -> Result<[Iterator.Element.Value], Iterator.Element.Error> {
-        return reduce(Result(value: [])) { (res, elem) -> Result<[Iterator.Element.Value], Iterator.Element.Error> in
+        return reduce(.success([])) { (res, elem) -> Result<[Iterator.Element.Value], Iterator.Element.Error> in
             switch res {
             case .success(let resultSequence):
                 return elem.analysis(ifSuccess: {
                     let newSeq = resultSequence + [$0]
-                    return Result(value: newSeq)
+                    return .success(newSeq)
                 }, ifFailure: {
-                    return Result(error: $0)
+                    return .failure($0)
                 })
             case .failure(_):
                 return res
