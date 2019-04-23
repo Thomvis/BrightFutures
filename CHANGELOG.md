@@ -1,3 +1,6 @@
+# 8.0.1
+- Fixes an issue that broke Swift Package Manager support. ([#208](https://github.com/Thomvis/BrightFutures/pull/208), thanks [slessans](https://github.com/slessans)!)
+
 # 8.0.0
 Adds support for Swift 5 and Xcode 10.2. Previous versions of Swift are no longer supported.
 
