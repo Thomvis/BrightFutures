@@ -357,6 +357,23 @@ extension BrightFuturesTests {
         self.waitForExpectations(timeout: 2, handler: nil)
     }
 
+    func testMapByKeyPath() {
+        struct S {
+            let a: Int
+        }
+
+        let e = self.expectation()
+
+        DispatchQueue.global().asyncValue {
+            S(a: 10)
+        }.map(\.a).onSuccess { keyPathValue in
+            XCTAssertEqual(keyPathValue, 10)
+            e.fulfill()
+        }
+
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+
     func testRecover() {
         let e = self.expectation()
         Future<Int, TestError>(error: TestError.justAnError).recover { _ in
