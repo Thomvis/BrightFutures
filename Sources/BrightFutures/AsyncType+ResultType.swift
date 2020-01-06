@@ -86,7 +86,12 @@ public extension AsyncType where Value: ResultProtocol {
     func map<U>(_ f: @escaping (Value.Value) -> U) -> Future<U, Value.Error> {
         return self.map(DefaultThreadingModel(), f: f)
     }
-    
+
+    /// Similar to `func map<U>(_ f: @escaping (Value.Value) -> U) -> Future<U, Value.Error>`, but using `KeyPath` instead of a closure
+    func map<U>(_ keyPath: KeyPath<Value.Value, U>) -> Future<U, Value.Error> {
+        return self.map(DefaultThreadingModel(), keyPath: keyPath)
+    }
+
     /// Returns a future that succeeds with the value returned from the given closure when it is invoked with the success value
     /// from this future. If this future fails, the returned future fails with the same error.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
@@ -101,7 +106,20 @@ public extension AsyncType where Value: ResultProtocol {
         
         return res
     }
-    
+
+    /// Similar to `func map<U>(_ context: @escaping ExecutionContext, f: @escaping (Value.Value) -> U) -> Future<U, Value.Error>`, but using `KeyPath` instead of a closure
+    func map<U>(_ context: @escaping ExecutionContext, keyPath: KeyPath<Value.Value, U>) -> Future<U, Value.Error> {
+        let res = Future<U, Value.Error>()
+
+        self.onComplete(context, callback: { (result: Value) in
+            result.analysis(
+                ifSuccess: { res.success($0[keyPath: keyPath]) },
+                ifFailure: { res.failure($0) })
+        })
+
+        return res
+    }
+
     /// Returns a future that completes with this future if this future succeeds or with the value returned from the given closure
     /// when it is invoked with the error that this future failed with.
     /// The closure is executed on the given context. If no context is given, the behavior is defined by the default threading model (see README.md)
