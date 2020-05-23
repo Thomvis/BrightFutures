@@ -939,6 +939,7 @@ extension BrightFuturesTests {
         
         futures.firstCompleted().onSuccess { _ in
             XCTAssert(false)
+            e.fulfill()
         }.onFailure { error in
             switch error {
             case .justAnError:
