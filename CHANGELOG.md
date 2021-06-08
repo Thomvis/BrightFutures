@@ -1,3 +1,8 @@
+# 8.0.5
+Adds support for Swift 5.4 and Xcode 12.5.
+
+- Updated precompiled frameworks (BrightFutures.framework.zip)
+
 # 8.0.1
 - Fixes an issue that broke Swift Package Manager support. ([#208](https://github.com/Thomvis/BrightFutures/pull/208), thanks [slessans](https://github.com/slessans)!)
 
