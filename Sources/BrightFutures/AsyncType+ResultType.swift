@@ -236,8 +236,8 @@ public extension AsyncType where Value: ResultProtocol, Value.Error == Never {
             switch result.result {
             case .success(let value):
                 res.success(value)
-            case .failure(let error):
-                return res.failure(error as! E) // future will never fail, so this cast will never get called
+            case .failure:
+                break // future will never fail, so this cast will never get called
             }
         }
         
@@ -273,18 +273,16 @@ public extension AsyncType where Value: ResultProtocol, Value.Value == NoValue {
     /// for operations such as `sequence` and `firstCompleted`
     /// This is a safe operation, because a `Future` with value type `NoValue` is guaranteed never to succeed
     func promoteValue<T>() -> Future<T, Value.Error> {
-        let res = Future<T, Value.Error>()
-        
-        self.onComplete(immediateExecutionContext) { result in
-            switch result.result {
-            case .success(let value):
-                res.success(value as! T) // future will never succeed, so this cast will never get called
-            case .failure(let error):
-                return res.failure(error)
+        Future { completion in
+            self.onComplete(immediateExecutionContext) { result in
+                switch result.result {
+                case .success:
+                    break // future will never succeed, so this cast will never get called
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
-        
-        return res
     }
 }
 
