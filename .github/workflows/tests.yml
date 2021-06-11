@@ -16,6 +16,6 @@ jobs:
       - name: iOS
         run: xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-iOS -sdk iphonesimulator -destination "platform=iOS Simulator,OS=14.4,name=iPhone 12 mini"
       - name: tvOS
-        run: xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=14.4,name=Apple TV 4K"
+        run: xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=14.3,name=Apple TV 4K"
       - name: watchOS
         run: xcodebuild build -project BrightFutures.xcodeproj -scheme BrightFutures-watchOS -sdk watchsimulator
