@@ -34,7 +34,7 @@ class ExecutionContextTests: XCTestCase {
         
         counter.i = 1
         
-        ImmediateOnMainExecutionContext {
+        immediateOnMainExecutionContext {
             XCTAssert(Thread.isMainThread)
             counter.i = 2
         }
@@ -45,7 +45,7 @@ class ExecutionContextTests: XCTestCase {
     func testImmediateOnMainThreadContextOnBackgroundThread() {
         let e = self.expectation()
         DispatchQueue.global().async {
-            ImmediateOnMainExecutionContext {
+            immediateOnMainExecutionContext {
                 XCTAssert(Thread.isMainThread)
                 e.fulfill()
             }

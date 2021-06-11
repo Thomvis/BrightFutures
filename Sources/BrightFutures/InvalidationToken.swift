@@ -26,10 +26,10 @@ extension InvalidationTokenType {
     /// Alias of context(parentContext:task:) which uses the default threading model
     /// Due to a limitation of the Swift compiler, we cannot express this with a single method
     public var validContext: ExecutionContext {
-        return validContext(DefaultThreadingModel())
+        return validContext(defaultContext())
     }
     
-    public func validContext(_ parentContext: @escaping ExecutionContext = DefaultThreadingModel()) -> ExecutionContext {
+    public func validContext(_ parentContext: @escaping ExecutionContext = defaultContext()) -> ExecutionContext {
         return { task in
             parentContext {
                 if !self.isInvalid {

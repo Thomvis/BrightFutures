@@ -62,7 +62,7 @@ extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: Re
     /// in the given context.
     public func fold<R>(_ context: @escaping ExecutionContext, zero: R, f: @escaping (R, Iterator.Element.Value.Value) -> R) -> Future<R, Iterator.Element.Value.Error> {
         return reduce(Future<R, Iterator.Element.Value.Error>(value: zero)) { zero, elem in
-            return zero.flatMap(MaxStackDepthExecutionContext) { zeroVal in
+            return zero.flatMap(maxStackDepthExecutionContext) { zeroVal in
                 elem.map(context) { elemVal in
                     return f(zeroVal, elemVal)
                 }
@@ -74,7 +74,7 @@ extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: Re
     /// If one of the futures in the given sequence fails, the returned future will fail
     /// with the error of the first future that comes first in the list.
     public func sequence() -> Future<[Iterator.Element.Value.Value], Iterator.Element.Value.Error> {
-        return traverse(ImmediateExecutionContext) {
+        return traverse(immediateExecutionContext) {
             return $0
         }
     }
@@ -90,7 +90,7 @@ extension Sequence where Iterator.Element: AsyncType, Iterator.Element.Value: Re
     /// error of the first failed future in the sequence.
     /// If no futures in the sequence pass the test, a future with an error with NoSuchElement is returned.
     public func find(_ context: @escaping ExecutionContext, p: @escaping (Iterator.Element.Value.Value) -> Bool) -> Future<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> {
-        return sequence().mapError(ImmediateExecutionContext) { error in
+        return sequence().mapError(immediateExecutionContext) { error in
             return BrightFuturesError(external: error)
         }.flatMap(context) { val -> Result<Iterator.Element.Value.Value, BrightFuturesError<Iterator.Element.Value.Error>> in
             for elem in val {

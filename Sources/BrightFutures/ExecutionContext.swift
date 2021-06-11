@@ -27,12 +27,12 @@ import Foundation
 public typealias ExecutionContext = (@escaping () -> Void) -> Void
 
 /// Immediately executes the given task. No threading, no semaphores.
-public let ImmediateExecutionContext: ExecutionContext = { task in
+public let immediateExecutionContext: ExecutionContext = { task in
     task()
 }
 
 /// Runs immediately if on the main thread, otherwise asynchronously on the main thread
-public let ImmediateOnMainExecutionContext: ExecutionContext = { task in
+public let immediateOnMainExecutionContext: ExecutionContext = { task in
     if Thread.isMainThread {
         task()
     } else {
@@ -41,9 +41,9 @@ public let ImmediateOnMainExecutionContext: ExecutionContext = { task in
 }
 
 /// From https://github.com/BoltsFramework/Bolts-Swift/blob/5fe4df7acb384a93ad93e8595d42e2b431fdc266/Sources/BoltsSwift/Executor.swift#L56
-public let MaxStackDepthExecutionContext: ExecutionContext = { task in
+public let maxStackDepthExecutionContext: ExecutionContext = { task in
     struct Static {
-        static let taskDepthKey = "com.bolts.TaskDepthKey"
+        static let taskDepthKey = "nl.thomvis.BrightFutures"
         static let maxTaskDepth = 20
     }
     
@@ -64,10 +64,6 @@ public let MaxStackDepthExecutionContext: ExecutionContext = { task in
         localThreadDictionary[Static.taskDepthKey] = previousDepth
     }
 }
-
-public typealias ThreadingModel = () -> ExecutionContext
-
-public var DefaultThreadingModel: ThreadingModel = defaultContext
 
 /// Defines BrightFutures' default threading behavior:
 /// - if on the main thread, `DispatchQueue.main.context` is returned
