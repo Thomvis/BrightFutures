@@ -1,0 +1,20 @@
+name: "BrightFutures"
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Test
+    runs-on: macOS-latest
+    env: 
+      DEVELOPER_DIR: /Applications/Xcode_12.5.app/Contents/Developer
+
+    steps:
+      - name: macOS
+        run: xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-Mac
+      - name: iOS
+        run: xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-iOS -sdk iphonesimulator -destination "platform=iOS Simulator,OS=14.5,name=iPhone 12 mini"
+      - name: tvOS
+        run: xcodebuild test -project BrightFutures.xcodeproj -scheme BrightFutures-tvOS -sdk appletvsimulator -destination "OS=14.5,name=Apple TV 4K (2nd generation)"
+      - name: watchOS
+        run: xcodebuild build -project BrightFutures.xcodeproj -scheme BrightFutures-watchOS -sdk watchsimulator
