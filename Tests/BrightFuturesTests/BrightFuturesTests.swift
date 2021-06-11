@@ -111,6 +111,29 @@ extension BrightFuturesTests {
         }
     }
     
+    func testFailedAfterFuture() {
+        let f = Future<Int, TestError>(error: .justAnError, delay: 1.second)
+        
+        XCTAssertFalse(f.isCompleted)
+        
+        Thread.sleep(forTimeInterval: 0.2)
+
+        XCTAssertFalse(f.isCompleted)
+        
+        Thread.sleep(forTimeInterval: 1.0)
+
+        XCTAssert(f.isCompleted)
+        
+        if let error = f.error {
+            switch error {
+            case .justAnError:
+                XCTAssert(true)
+            case .justAnotherError:
+                XCTAssert(false)
+            }
+        }
+    }
+    
     // this is inherently impossible to test, but we'll give it a try
     func testNeverCompletingFuture() {
         let f = Future<Int, Never>()
@@ -889,6 +912,34 @@ extension BrightFuturesTests {
         
         futures.firstCompleted().onSuccess { val in
             XCTAssertEqual(val, 9)
+            e.fulfill()
+        }
+        
+        self.waitForExpectations(timeout: 2, handler: nil)
+    }
+    
+    func testUtilsFirstCompletedWithError() {
+        let futures: [Future<Int, TestError>] = [
+            Future(value: 3, delay: 500.milliseconds),
+            Future(error: .justAnotherError, delay: 300.milliseconds),
+            Future(value: 23, delay: 400.milliseconds),
+            Future(value: 4, delay: 300.milliseconds),
+            Future(error: .justAnError, delay: 100.milliseconds),
+            Future(value: 83, delay: 400.milliseconds),
+        ]
+        
+        let e = self.expectation()
+        
+        futures.firstCompleted().onSuccess { _ in
+            XCTAssert(false)
+            e.fulfill()
+        }.onFailure { error in
+            switch error {
+            case .justAnError:
+                XCTAssert(true)
+            case .justAnotherError:
+                XCTAssert(false)
+            }
             e.fulfill()
         }
         
