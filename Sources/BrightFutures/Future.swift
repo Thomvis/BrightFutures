@@ -118,6 +118,5 @@ public func ?? <T, E, E1>(_ lhs: Future<T, E>, rhs: @autoclosure @escaping () ->
     })
 }
 
-/// Can be used as the value type of a `Future` or `Result` to indicate it can never be a success.
-/// This is guaranteed by the type system, because `NoValue` has no possible values and thus cannot be created.
+@available(*, deprecated, renamed: "Never")
 public enum NoValue { }

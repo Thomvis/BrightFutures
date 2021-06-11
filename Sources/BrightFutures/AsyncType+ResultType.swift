@@ -267,7 +267,7 @@ public extension AsyncType where Value: ResultProtocol, Value.Error == BrightFut
     }
 }
 
-public extension AsyncType where Value: ResultProtocol, Value.Value == NoValue {
+public extension AsyncType where Value: ResultProtocol, Value.Value == Never {
     /// 'promotes' a `Future` with value type `NoValue` to a `Future` with a value type of choice.
     /// This allows the `Future` to be used more easily in combination with other futures
     /// for operations such as `sequence` and `firstCompleted`

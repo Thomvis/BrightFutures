@@ -54,10 +54,6 @@ extension BrightFuturesTests {
             successExpectation.fulfill()
         }
         
-        f.onFailure { _ in
-            XCTFail("failure block should not get called")
-        }
-        
         self.waitForExpectations(timeout: 2, handler: nil)
     }
     
@@ -167,8 +163,8 @@ extension BrightFuturesTests {
             override var _code: Int { return 2 }
         }
         
-        let f: Future<NoValue, TestError> = Future(error: SubError())
-        let f1: Future<NoValue, SubError> = f.forceType()
+        let f: Future<Never, TestError> = Future(error: SubError())
+        let f1: Future<Never, SubError> = f.forceType()
         
         XCTAssertEqual(f1.result!.error!._code, 2, "Should be a SubError")
     }
@@ -401,9 +397,6 @@ extension BrightFuturesTests {
         
         DispatchQueue.global().asyncValue {
             3
-        }.recover { _ in
-            XCTFail("recover task should not be executed")
-            return 5
         }.onSuccess { value in
             XCTAssert(value == 3)
             e.fulfill()
@@ -993,7 +986,7 @@ extension BrightFuturesTests {
     }
     
     func testPromoteValue() {
-        let _: Future<Int, TestError> = Future<NoValue, TestError>().promoteValue()
+        let _: Future<Int, TestError> = Future<Never, TestError>().promoteValue()
     }
  
     func testFlatten() {
@@ -1129,9 +1122,7 @@ extension BrightFuturesTests {
     func testRelease() {
         weak var f: Future<Int, Never>? = nil
         
-        var f1: Future<Int, Never>? = Future<Int, Never>().map { $0 }.recover { _ in
-            0
-        }.onSuccess { _ in }.onComplete { _ in }
+        var f1: Future<Int, Never>? = Future<Int, Never>().map { $0 }.onSuccess { _ in }.onComplete { _ in }
         
         f = f1
         XCTAssertNotNil(f1);
