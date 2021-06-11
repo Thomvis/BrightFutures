@@ -71,3 +71,13 @@ public let maxStackDepthExecutionContext: ExecutionContext = { task in
 public func defaultContext() -> ExecutionContext {
     return (Thread.isMainThread ? DispatchQueue.main : DispatchQueue.global()).context
 }
+
+// Deprecations
+@available(*, deprecated, renamed: "immediateExecutionContext")
+public let ImmediateExecutionContext = immediateExecutionContext
+@available(*, deprecated, renamed: "immediateOnMainExecutionContext")
+public let ImmediateOnMainExecutionContext = immediateOnMainExecutionContext
+@available(*, deprecated, renamed: "maxStackDepthExecutionContext")
+public let MaxStackDepthExecutionContext = maxStackDepthExecutionContext
+@available(*, deprecated, renamed: "defaultContext")
+public let DefaultThreadingModel = defaultContext
