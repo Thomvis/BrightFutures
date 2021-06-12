@@ -1,3 +1,10 @@
+# 8.1.0
+- Adds support for Swift 5.4 and Xcode 12.5. ([#216](https://github.com/Thomvis/BrightFutures/pull/216) & [#218](https://github.com/Thomvis/BrightFutures/pull/218), thanks [MagFer](https://github.com/MagFer), [MultiColourPixel](https://github.com/MultiColourPixel) & [paiv](https://github.com/paiv))
+- Adds `Future.init(error: E, delay: DispatchTimeInterval)` ([#215](https://github.com/Thomvis/BrightFutures/pull/215), thanks [RomanPodymov](https://github.com/RomanPodymov))
+- Fixed casing of various global constants. ([#176](https://github.com/Thomvis/BrightFutures/pull/176), thanks [Sajjon](https://github.com/Sajjon))
+- Deprecated `NoValue` in favor of `Never`
+
+
 # 8.0.1
 - Fixes an issue that broke Swift Package Manager support. ([#208](https://github.com/Thomvis/BrightFutures/pull/208), thanks [slessans](https://github.com/slessans)!)
 
