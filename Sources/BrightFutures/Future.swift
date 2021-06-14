@@ -30,6 +30,7 @@ import Foundation
 /// subsequent actions (e.g. map, flatMap, recover, andThen, etc.).
 ///
 /// For more info, see the project README.md
+@dynamicMemberLookup
 public final class Future<T, E: Error>: Async<Result<T, E>> {
     
     public typealias CompletionCallback = (_ result: Result<T,E>) -> Void
@@ -70,6 +71,10 @@ public final class Future<T, E: Error>: Async<Result<T, E>> {
     
     public required init(resolver: (_ result: @escaping (Value) -> Void) -> Void) {
         super.init(resolver: resolver)
+    }
+
+    public subscript<U>(dynamicMember keyPath: KeyPath<T, U>) -> Future<U, E> {
+        map(immediateExecutionContext) { $0[keyPath: keyPath] }
     }
     
 }

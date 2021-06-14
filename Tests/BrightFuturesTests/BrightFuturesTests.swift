@@ -1188,6 +1188,16 @@ extension BrightFuturesTests {
         XCTAssertEqual(a.description, "Async<Int>(Optional(1))")
         XCTAssertEqual(a.debugDescription, a.description)
     }
+
+    func testDynamicMemberLookup() {
+        struct Person {
+            let name: String
+        }
+
+        let f = Future<Person, Never>(value: Person(name: "Thomas"))
+        let f1 = f.name
+        XCTAssertEqual(f1.value!, "Thomas")
+    }
     
 }
 
