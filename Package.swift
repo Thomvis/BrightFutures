@@ -12,5 +12,9 @@ let package = Package(
         .target(
             name: "BrightFutures",
             dependencies: []),
+        .testTarget(
+            name: "BrightFuturesTests",
+            dependencies: ["BrightFutures"],
+            path: "Tests/BrightFuturesTests")
     ]
 )
