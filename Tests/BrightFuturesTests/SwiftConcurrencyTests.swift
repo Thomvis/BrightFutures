@@ -11,7 +11,7 @@ import XCTest
 import BrightFutures
 
 #if swift(>=5.5)
-@available(iOS 15.0, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 class SwiftConcurrencyTests: XCTestCase {
     func testAsyncResult() async {
         let a = Async(result: 1)

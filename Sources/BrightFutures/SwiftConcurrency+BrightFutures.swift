@@ -9,7 +9,7 @@
 import Foundation
 
 #if swift(>=5.5)
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public extension Async {
     @_disfavoredOverload
     func get() async -> Value {
@@ -21,7 +21,7 @@ public extension Async {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public extension Async where Value: ResultProtocol {
     @_disfavoredOverload
     func get() async throws -> Value.Value {
@@ -33,7 +33,7 @@ public extension Async where Value: ResultProtocol {
     }
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13.0, macOS 10.15, tvOS 13.0, watchOS 6.0, *)
 public extension Async where Value: ResultProtocol, Value.Error == Never {
     func get() async -> Value.Value {
         await withCheckedContinuation { continuation in
