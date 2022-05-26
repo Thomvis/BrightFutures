@@ -102,6 +102,13 @@
 		E98FD7851DC3D88600DCD9C9 /* PromiseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD73C1DC3D82400DCD9C9 /* PromiseTests.swift */; };
 		E98FD7861DC3D88600DCD9C9 /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD73D1DC3D82400DCD9C9 /* QueueTests.swift */; };
 		E98FD7871DC3D88600DCD9C9 /* ResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E98FD73E1DC3D82400DCD9C9 /* ResultTests.swift */; };
+		E9D137222677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137212677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift */; };
+		E9D137232677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137212677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift */; };
+		E9D137242677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137212677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift */; };
+		E9D137252677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137212677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift */; };
+		E9D1372B2677D2A300A76068 /* SwiftConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137262677D26300A76068 /* SwiftConcurrencyTests.swift */; };
+		E9D1372C2677D2A400A76068 /* SwiftConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137262677D26300A76068 /* SwiftConcurrencyTests.swift */; };
+		E9D1372D2677D2A500A76068 /* SwiftConcurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9D137262677D26300A76068 /* SwiftConcurrencyTests.swift */; };
 		E9D45B0B1AF00659000F6CA7 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9D45B001AF00659000F6CA7 /* BrightFutures.framework */; };
 		E9DF0821194470060083F7F2 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; };
 		E9F496E31B0397EA00F82839 /* BrightFutures.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = E9DF0815194470060083F7F2 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -190,6 +197,8 @@
 		E9CBFD091B8264D800702394 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/iOS/Result.framework; sourceTree = "<group>"; };
 		E9CBFD0B1B8264E500702394 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
 		E9CBFD121B8268FB00702394 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9D137212677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftConcurrency+BrightFutures.swift"; sourceTree = "<group>"; };
+		E9D137262677D26300A76068 /* SwiftConcurrencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftConcurrencyTests.swift; sourceTree = "<group>"; };
 		E9D45B001AF00659000F6CA7 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9D45B0A1AF00659000F6CA7 /* BrightFutures-MacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BrightFutures-MacTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DF0815194470060083F7F2 /* BrightFutures.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BrightFutures.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -339,6 +348,7 @@
 				E98FD6F41DC3D81600DCD9C9 /* Result+BrightFutures.swift */,
 				C34BB4B5224A9E3500921D21 /* ResultProtocol.swift */,
 				E98FD6F51DC3D81600DCD9C9 /* SequenceType+BrightFutures.swift */,
+				E9D137212677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift */,
 				E9DF0818194470060083F7F2 /* Supporting Files */,
 			);
 			name = BrightFutures;
@@ -366,6 +376,7 @@
 				E98FD73C1DC3D82400DCD9C9 /* PromiseTests.swift */,
 				E98FD73D1DC3D82400DCD9C9 /* QueueTests.swift */,
 				E98FD73E1DC3D82400DCD9C9 /* ResultTests.swift */,
+				E9D137262677D26300A76068 /* SwiftConcurrencyTests.swift */,
 				E9DF0825194470060083F7F2 /* Supporting Files */,
 			);
 			name = BrightFuturesTests;
@@ -652,6 +663,7 @@
 				E98FD7311DC3D81600DCD9C9 /* Result+BrightFutures.swift in Sources */,
 				E98FD6FD1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7051DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
+				E9D137252677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */,
 				E98FD7151DC3D81600DCD9C9 /* Future.swift in Sources */,
 				E98FD7091DC3D81600DCD9C9 /* Dispatch+BrightFutures.swift in Sources */,
 				E98FD7191DC3D81600DCD9C9 /* InvalidationToken.swift in Sources */,
@@ -678,6 +690,7 @@
 				E98FD76B1DC3D88000DCD9C9 /* QueueTests.swift in Sources */,
 				5045199A216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */,
 				E98FD7651DC3D88000DCD9C9 /* ErrorsTests.swift in Sources */,
+				E9D1372D2677D2A500A76068 /* SwiftConcurrencyTests.swift in Sources */,
 				E98FD7661DC3D88000DCD9C9 /* ExecutionContextTests.swift in Sources */,
 				E98FD7671DC3D88000DCD9C9 /* FutureDebugTests.swift in Sources */,
 				E98FD7641DC3D88000DCD9C9 /* BrightFuturesTests.swift in Sources */,
@@ -692,6 +705,7 @@
 				E98FD7301DC3D81600DCD9C9 /* Result+BrightFutures.swift in Sources */,
 				E98FD6FC1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7041DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
+				E9D137242677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */,
 				E98FD7141DC3D81600DCD9C9 /* Future.swift in Sources */,
 				E98FD7081DC3D81600DCD9C9 /* Dispatch+BrightFutures.swift in Sources */,
 				E98FD7181DC3D81600DCD9C9 /* InvalidationToken.swift in Sources */,
@@ -715,6 +729,7 @@
 				E98FD72F1DC3D81600DCD9C9 /* Result+BrightFutures.swift in Sources */,
 				E98FD6FB1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7031DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
+				E9D137232677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */,
 				E98FD7131DC3D81600DCD9C9 /* Future.swift in Sources */,
 				E98FD7071DC3D81600DCD9C9 /* Dispatch+BrightFutures.swift in Sources */,
 				E98FD7171DC3D81600DCD9C9 /* InvalidationToken.swift in Sources */,
@@ -741,6 +756,7 @@
 				E98FD7861DC3D88600DCD9C9 /* QueueTests.swift in Sources */,
 				5045199C216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */,
 				E98FD7801DC3D88600DCD9C9 /* ErrorsTests.swift in Sources */,
+				E9D1372C2677D2A400A76068 /* SwiftConcurrencyTests.swift in Sources */,
 				E98FD7811DC3D88600DCD9C9 /* ExecutionContextTests.swift in Sources */,
 				E98FD7821DC3D88600DCD9C9 /* FutureDebugTests.swift in Sources */,
 				E98FD77F1DC3D88600DCD9C9 /* BrightFuturesTests.swift in Sources */,
@@ -755,6 +771,7 @@
 				E98FD6FA1DC3D81600DCD9C9 /* AsyncType.swift in Sources */,
 				E98FD7021DC3D81600DCD9C9 /* AsyncType+ResultType.swift in Sources */,
 				E98FD7121DC3D81600DCD9C9 /* Future.swift in Sources */,
+				E9D137222677CDBB00A76068 /* SwiftConcurrency+BrightFutures.swift in Sources */,
 				E98FD7061DC3D81600DCD9C9 /* Dispatch+BrightFutures.swift in Sources */,
 				C34BB4B6224A9E3600921D21 /* ResultProtocol.swift in Sources */,
 				E98FD7161DC3D81600DCD9C9 /* InvalidationToken.swift in Sources */,
@@ -781,6 +798,7 @@
 				E98FD77D1DC3D88200DCD9C9 /* QueueTests.swift in Sources */,
 				5045199B216DDA7B002B3F48 /* Number+BrightFutures.swift in Sources */,
 				E98FD7771DC3D88200DCD9C9 /* ErrorsTests.swift in Sources */,
+				E9D1372B2677D2A300A76068 /* SwiftConcurrencyTests.swift in Sources */,
 				E98FD7781DC3D88200DCD9C9 /* ExecutionContextTests.swift in Sources */,
 				E98FD7791DC3D88200DCD9C9 /* FutureDebugTests.swift in Sources */,
 				E98FD7761DC3D88200DCD9C9 /* BrightFuturesTests.swift in Sources */,
