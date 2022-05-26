@@ -1,3 +1,8 @@
+# 8.2.0
+- Adds support for Swift 5.6 and Xcode 13.3.
+- Adds support for awaiting a Future's value.
+- Adds support for @dynamicMemberLookup.
+
 # 8.1.0
 - Adds support for Swift 5.4 and Xcode 12.5. ([#216](https://github.com/Thomvis/BrightFutures/pull/216) & [#218](https://github.com/Thomvis/BrightFutures/pull/218), thanks [MagFer](https://github.com/MagFer), [MultiColourPixel](https://github.com/MultiColourPixel) & [paiv](https://github.com/paiv))
 - Adds `Future.init(error: E, delay: DispatchTimeInterval)` ([#215](https://github.com/Thomvis/BrightFutures/pull/215), thanks [RomanPodymov](https://github.com/RomanPodymov))
