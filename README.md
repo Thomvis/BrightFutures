@@ -1,6 +1,24 @@
 BrightFutures
 =============
 
+BrightFutures has reached end-of-life. After a long period of limited development activity, Swift's Async/Await has made the library obsolete. Please consider migrating from BrightFutures to async/await. When you do so, the async `get()` method will prove to be useful:
+
+```swift
+// in an async context...
+
+let userFuture = User.logIn(username, password)
+let user = try await userFuture.get()
+
+// or simply:
+let posts = try await Posts.fetchPosts(user).get()
+```
+
+
+
+The remainder of the README has not been updated recently, but is preserved for historic reasons.
+
+---
+
 How do you leverage the power of Swift to write great asynchronous code? BrightFutures is our answer.
 
 BrightFutures implements proven [functional concepts](http://en.wikipedia.org/wiki/Futures_and_promises) in Swift to provide a powerful alternative to completion blocks and support typesafe error handling in asynchronous code.
