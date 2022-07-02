@@ -1,7 +1,7 @@
 BrightFutures
 =============
 
-BrightFutures has reached end-of-life. After a long period of limited development activity, Swift's Async/Await has made the library obsolete. Please consider migrating from BrightFutures to async/await. When you do so, the async `get()` method will prove to be useful:
+**:warning: BrightFutures has reached end-of-life.** After a long period of limited development activity, Swift's Async/Await has made the library obsolete. Please consider migrating from BrightFutures to async/await. When you do so, the async `get()` method will prove to be useful:
 
 ```swift
 // in an async context...
